@@ -16,6 +16,8 @@ public interface GroupService {
 
     public Boolean changeNameById(int id, String name);
 
+    public Boolean changeDescriptionById(int id, String description);
+
     public Boolean addWithTeacher(Group group, GroupTeacher groupTeacher);
 
     public List<Group> getGroupsByTeacher(int teacher_id);

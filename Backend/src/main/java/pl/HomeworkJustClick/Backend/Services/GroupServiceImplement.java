@@ -61,6 +61,18 @@ public class GroupServiceImplement implements GroupService {
     }
 
     @Override
+    public Boolean changeDescriptionById(int id, String description) {
+        if (groupRepository.findById(id).isPresent()) {
+            Group group = groupRepository.findById(id).get();
+            group.setDescription(description);
+            groupRepository.save(group);
+            return true;
+        } else {
+            return null;
+        }
+    }
+
+    @Override
     public Boolean addWithTeacher(Group group, GroupTeacher groupTeacher) {
         groupRepository.save(group);
         groupTeacherRepository.save(groupTeacher);
