@@ -83,4 +83,20 @@ public class GroupTeacherServiceImplement implements GroupTeacherService{
         }
     }
 
+    @Override
+    public Boolean deleteTeacherFromGroup (int group_id, int teacher_id) {
+        if(groupTeacherRepository.countTeachersInGroup(group_id) > 1) {
+            GroupTeacher groupTeacher = groupTeacherRepository.getGroupTeacherObjectByTeacherAndGroup(teacher_id, group_id);
+            groupTeacherRepository.deleteById(groupTeacher.getId());
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public int countTeachersInGroup (int group_id) {
+        return groupTeacherRepository.countTeachersInGroup(group_id);
+    }
+
 }

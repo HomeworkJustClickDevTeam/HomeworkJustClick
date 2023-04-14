@@ -80,4 +80,15 @@ public class GroupStudentServiceImplement implements GroupStudentService{
             return false;
         }
     }
+
+    @Override
+    public Boolean deleteStudentFromGroup (int group_id, int student_id) {
+        if (groupStudentRepository.getGroupStudentByStudentAndGroup(student_id, group_id) != 0){
+            GroupStudent groupStudent = groupStudentRepository.getGroupStudentObjectByStudentAndGroup(student_id, group_id);
+            groupStudentRepository.deleteById(groupStudent.getId());
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

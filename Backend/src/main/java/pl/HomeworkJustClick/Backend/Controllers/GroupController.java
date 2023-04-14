@@ -128,4 +128,24 @@ public class GroupController {
         return groupList;
     }
 
+    @DeleteMapping("/group/deleteStudent/{student_id}/{group_id}")
+    public ResponseEntity<Void> deleteStudentFromGroup(@PathVariable("student_id") int student_id, @PathVariable("group_id") int group_id) {
+        if(groupStudentService.deleteStudentFromGroup(group_id, student_id)) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+    }
+
+    @DeleteMapping("/group/deleteTeacher/{teacher_id}/{group_id}")
+    public ResponseEntity<Void> deleteTeacherFromGroup(@PathVariable("teacher_id") int teacher_id, @PathVariable("group_id") int group_id) {
+        if(groupTeacherService.deleteTeacherFromGroup(group_id, teacher_id)) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else if(groupTeacherService.countTeachersInGroup(group_id) < 2) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+    }
+
 }

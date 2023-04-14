@@ -17,4 +17,6 @@ public interface GroupStudentService {
     public Boolean changeDescriptionById (int id, String description);
 
     public Boolean addStudentToGroup (int group_id, int student_id);
+
+    public Boolean deleteStudentFromGroup (int group_id, int student_id);
 }
