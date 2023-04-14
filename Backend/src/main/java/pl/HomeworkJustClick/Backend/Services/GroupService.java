@@ -19,4 +19,6 @@ public interface GroupService {
     public Boolean addWithTeacher(Group group, GroupTeacher groupTeacher);
 
     public List<Group> getGroupsByTeacher(int teacher_id);
+
+    public List<Group> getGroupsByStudent(int student_id);
 }

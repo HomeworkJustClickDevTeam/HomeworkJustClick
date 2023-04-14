@@ -71,4 +71,9 @@ public class GroupServiceImplement implements GroupService {
     public List<Group> getGroupsByTeacher(int teacher_id) {
         return groupRepository.getGroupTeachersByTeacher(teacher_id);
     }
+
+    @Override
+    public List<Group> getGroupsByStudent(int student_id) {
+        return groupRepository.getGroupStudentsByStudent(student_id);
+    }
 }

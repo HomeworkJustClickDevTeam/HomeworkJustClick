@@ -12,6 +12,7 @@ import pl.HomeworkJustClick.Backend.Services.GroupStudentService;
 import pl.HomeworkJustClick.Backend.Services.GroupTeacherService;
 import pl.HomeworkJustClick.Backend.Services.UserService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -93,6 +94,29 @@ public class GroupController {
     @GetMapping("/groups/byTeacher/{id}")
     public List<Group> getGroupsByUserIdWhereUserIsTeacher(@PathVariable("id") int id){
         return groupService.getGroupsByTeacher(id);
+    }
+
+    @PostMapping("/group/addStudent/{student_id}/{group_id}")
+    public ResponseEntity<Void> addStudentToGroup(@PathVariable("student_id") int student_id, @PathVariable("group_id") int group_id) {
+        if (groupStudentService.addStudentToGroup(group_id, student_id)) {
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+    }
+
+    @GetMapping("/groups/byStudent/{id}")
+    public List<Group> getGroupsByUserIdWhereUserIsStudent(@PathVariable("id") int id){
+        return groupService.getGroupsByStudent(id);
+    }
+
+    @GetMapping("/groups/byUser/{id}")
+    public List<Group> getGroupsByUserId(@PathVariable("id") int id) {
+        List<Group> groupListTeacher = groupService.getGroupsByTeacher(id);
+        List<Group> groupListStudent = groupService.getGroupsByStudent(id);
+        List<Group> groupList = new ArrayList<>(groupListTeacher);
+        groupList.addAll(groupListStudent);
+        return groupList;
     }
 
 }

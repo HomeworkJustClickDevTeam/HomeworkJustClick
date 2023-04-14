@@ -89,4 +89,9 @@ public class UserServiceImplement implements UserService{
     public List<User> getTeachersByGroup(int group_id) {
         return userRepository.getGroupTeachersByGroup(group_id);
     }
+
+    @Override
+    public List<User> getStudentsByGroup(int group_id) {
+        return userRepository.getGroupStudentsByGroup(group_id);
+    }
 }

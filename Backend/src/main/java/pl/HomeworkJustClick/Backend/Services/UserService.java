@@ -18,4 +18,6 @@ public interface UserService {
     public Boolean changeIndexById(int id, int index);
 
     public List<User> getTeachersByGroup(int group_id);
+
+    public List<User> getStudentsByGroup(int group_id);
 }

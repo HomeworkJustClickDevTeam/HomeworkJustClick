@@ -70,4 +70,9 @@ public class UserController {
     public List<User> getTeachersByGroup(@PathVariable("group_id") int group_id) {
         return userService.getTeachersByGroup(group_id);
     }
+
+    @GetMapping("/user/getStudentsByGroup/{group_id}")
+    public List<User> getStudentsByGroup(@PathVariable("group_id") int group_id) {
+        return userService.getStudentsByGroup(group_id);
+    }
 }
