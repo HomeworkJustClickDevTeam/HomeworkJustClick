@@ -20,4 +20,8 @@ public interface GroupTeacherService {
 
     public Boolean addTeacherToGroup (int group_id, int teacher_id);
 
+    public Boolean deleteTeacherFromGroup (int group_id, int teacher_id);
+
+    public int countTeachersInGroup (int group_id);
+
 }
