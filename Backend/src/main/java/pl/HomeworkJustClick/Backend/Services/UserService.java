@@ -16,4 +16,6 @@ public interface UserService {
     public Boolean delete(int id);
 
     public Boolean changeIndexById(int id, int index);
+
+    public List<User> getTeachersByGroup(int group_id);
 }

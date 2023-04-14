@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.HomeworkJustClick.Backend.Entities.Group;
 import pl.HomeworkJustClick.Backend.Entities.User;
+import pl.HomeworkJustClick.Backend.Services.GroupTeacherService;
 import pl.HomeworkJustClick.Backend.Services.UserService;
 
 import java.util.List;
@@ -14,6 +16,9 @@ import java.util.List;
 public class UserController {
     @Autowired
     UserService userService;
+
+    @Autowired
+    GroupTeacherService groupTeacherService;
 
     @GetMapping("/users")
     public List<User> getAll() {
@@ -59,5 +64,10 @@ public class UserController {
         } else {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
+    }
+
+    @GetMapping("/user/getTeachersByGroup/{group_id}")
+    public List<User> getTeachersByGroup(@PathVariable("group_id") int group_id) {
+        return userService.getTeachersByGroup(group_id);
     }
 }

@@ -89,4 +89,10 @@ public class GroupController {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
     }
+
+    @GetMapping("/groups/byTeacher/{id}")
+    public List<Group> getGroupsByUserIdWhereUserIsTeacher(@PathVariable("id") int id){
+        return groupService.getGroupsByTeacher(id);
+    }
+
 }

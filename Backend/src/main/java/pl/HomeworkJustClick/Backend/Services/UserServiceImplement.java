@@ -2,15 +2,21 @@ package pl.HomeworkJustClick.Backend.Services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.HomeworkJustClick.Backend.Entities.GroupTeacher;
 import pl.HomeworkJustClick.Backend.Entities.User;
+import pl.HomeworkJustClick.Backend.Repositories.GroupTeacherRepository;
 import pl.HomeworkJustClick.Backend.Repositories.UserRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class UserServiceImplement implements UserService{
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    GroupTeacherRepository groupTeacherRepository;
 
     @Override
     public List<User> getAll() {
@@ -77,5 +83,10 @@ public class UserServiceImplement implements UserService{
         } else {
             return null;
         }
+    }
+
+    @Override
+    public List<User> getTeachersByGroup(int group_id) {
+        return userRepository.getGroupTeachersByGroup(group_id);
     }
 }

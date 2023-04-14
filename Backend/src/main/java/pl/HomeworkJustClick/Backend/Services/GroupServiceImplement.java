@@ -7,6 +7,7 @@ import pl.HomeworkJustClick.Backend.Entities.GroupTeacher;
 import pl.HomeworkJustClick.Backend.Repositories.GroupRepository;
 import pl.HomeworkJustClick.Backend.Repositories.GroupTeacherRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -64,5 +65,10 @@ public class GroupServiceImplement implements GroupService {
         groupRepository.save(group);
         groupTeacherRepository.save(groupTeacher);
         return true;
+    }
+
+    @Override
+    public List<Group> getGroupsByTeacher(int teacher_id) {
+        return groupRepository.getGroupTeachersByTeacher(teacher_id);
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import pl.HomeworkJustClick.Backend.Enums.Role;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -57,6 +58,22 @@ public class User implements UserDetails {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
+    @OneToMany(
+            mappedBy = "user",
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    @JsonIgnore
+    private List<GroupStudent> groupStudents = new ArrayList<>();
+
+    @OneToMany(
+            mappedBy = "user",
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    @JsonIgnore
+    private List<GroupTeacher> groupTeachers = new ArrayList<>();
+
     @Override
     public String getUsername() {
         return email;
@@ -94,6 +111,18 @@ public class User implements UserDetails {
         this.index = index;
         this.firstname = firstname;
         this.lastname = surname;
+    }
+
+    public User(String email, String password, boolean isVerified, Role role, int index, String firstname, String lastname, List<GroupStudent> groupStudents, List<GroupTeacher> groupTeachers) {
+        this.email = email;
+        this.password = password;
+        this.isVerified = isVerified;
+        this.role = role;
+        this.index = index;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.groupStudents = groupStudents;
+        this.groupTeachers = groupTeachers;
     }
 
     public int getId() {
@@ -158,5 +187,21 @@ public class User implements UserDetails {
 
     public void setLastname(String surname) {
         this.lastname = surname;
+    }
+
+    public List<GroupStudent> getGroupStudents() {
+        return groupStudents;
+    }
+
+    public void setGroupStudents(List<GroupStudent> groupStudents) {
+        this.groupStudents = groupStudents;
+    }
+
+    public List<GroupTeacher> getGroupTeachers() {
+        return groupTeachers;
+    }
+
+    public void setGroupTeachers(List<GroupTeacher> groupTeachers) {
+        this.groupTeachers = groupTeachers;
     }
 }

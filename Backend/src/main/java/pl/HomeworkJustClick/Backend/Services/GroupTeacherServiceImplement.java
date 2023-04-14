@@ -4,10 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.HomeworkJustClick.Backend.Entities.Group;
 import pl.HomeworkJustClick.Backend.Entities.GroupTeacher;
+import pl.HomeworkJustClick.Backend.Entities.User;
 import pl.HomeworkJustClick.Backend.Repositories.GroupRepository;
 import pl.HomeworkJustClick.Backend.Repositories.GroupTeacherRepository;
 import pl.HomeworkJustClick.Backend.Repositories.UserRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -74,4 +76,5 @@ public class GroupTeacherServiceImplement implements GroupTeacherService{
             return false;
         }
     }
+
 }
