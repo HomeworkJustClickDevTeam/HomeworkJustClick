@@ -1,5 +1,6 @@
 package pl.HomeworkJustClick.Backend.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,6 +31,7 @@ public class User implements UserDetails {
     @Column(name = "email")
     private String email;
 
+    @JsonIgnore
     @Column(name = "password")
     private String password;
 
@@ -40,6 +42,16 @@ public class User implements UserDetails {
     @Column(name = "role")
     private Role role;
 
+    @Column(name="index")
+    private int index;
+
+    @Column(name="firstname")
+    private String firstname;
+
+    @Column(name="lastname")
+    private String lastname;
+
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
@@ -50,24 +62,101 @@ public class User implements UserDetails {
         return email;
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isEnabled() {
         return true;
     }
 
+    public User(String email, String password, boolean isVerified, Role role, int index, String firstname, String surname) {
+        this.email = email;
+        this.password = password;
+        this.isVerified = isVerified;
+        this.role = role;
+        this.index = index;
+        this.firstname = firstname;
+        this.lastname = surname;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public boolean isVerified() {
+        return isVerified;
+    }
+
+    public void setVerified(boolean verified) {
+        isVerified = verified;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String surname) {
+        this.lastname = surname;
+    }
 }

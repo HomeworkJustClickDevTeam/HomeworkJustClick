@@ -4,58 +4,57 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.HomeworkJustClick.Backend.Entities.Student;
-import pl.HomeworkJustClick.Backend.Services.StudentService;
+import pl.HomeworkJustClick.Backend.Entities.User;
+import pl.HomeworkJustClick.Backend.Services.UserService;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-public class StudentController {
-
+public class UserController {
     @Autowired
-    StudentService studentService;
+    UserService userService;
 
-    @GetMapping("/students")
-    public List<Student> getAll() {
-        return studentService.getAll();
+    @GetMapping("/users")
+    public List<User> getAll() {
+        return userService.getAll();
     }
 
-    @GetMapping("student/{id}")
-    public Student getById(@PathVariable("id") int id) {
-        return studentService.getById(id);
+    @GetMapping("user/{id}")
+    public User getById(@PathVariable("id") int id) {
+        return userService.getById(id);
     }
 
-    @PostMapping("/student")
-    public ResponseEntity<Void> add(@RequestBody Student student) {
-        if(studentService.add(student)) {
+    @PostMapping("/user")
+    public ResponseEntity<Void> add(@RequestBody User user) {
+        if(userService.add(user)) {
             return new ResponseEntity<>(HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
     }
 
-    @PutMapping("/student/{id}")
-    public ResponseEntity<Void> update(@PathVariable("id") int id, @RequestBody Student updatedStudent){
-        if(studentService.update(id, updatedStudent)){
+    @PutMapping("/user/{id}")
+    public ResponseEntity<Void> update(@PathVariable("id") int id, @RequestBody User updatedUser){
+        if(userService.update(id, updatedUser)){
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
 
-    @DeleteMapping("/student/{id}")
+    @DeleteMapping("/user/{id}")
     public ResponseEntity<Void> delete (@PathVariable("id") int id) {
-        if(studentService.delete(id)) {
+        if(userService.delete(id)) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
 
-    @PutMapping("/student/index/{id}")
+    @PutMapping("/user/index/{id}")
     public ResponseEntity<Void> updateIndex(@PathVariable("id") int id, @RequestBody int index){
-        if(studentService.changeIndexById(id, index)){
+        if(userService.changeIndexById(id, index)){
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
