@@ -60,8 +60,17 @@ public class GroupController {
     }
 
     @PutMapping("/group/name/{id}")
-    public ResponseEntity<Void> updateIndex(@PathVariable("id") int id, @RequestBody String name){
+    public ResponseEntity<Void> updateName(@PathVariable("id") int id, @RequestBody String name){
         if(groupService.changeNameById(id, name)){
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+    }
+
+    @PutMapping("/group/description/{id}")
+    public ResponseEntity<Void> updateDescription(@PathVariable("id") int id, @RequestBody String description){
+        if(groupService.changeDescriptionById(id, description)){
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
