@@ -6,9 +6,7 @@ import pl.HomeworkJustClick.Backend.Auth.RegisterRequest;
 
 public interface AuthenticationService {
 
-    public AuthenticationResponse registerStudent(RegisterRequest request);
-
-    public AuthenticationResponse registerTeacher(RegisterRequest request);
+    public AuthenticationResponse registerUser(RegisterRequest request);
 
     public AuthenticationResponse registerAdmin(RegisterRequest request);
 

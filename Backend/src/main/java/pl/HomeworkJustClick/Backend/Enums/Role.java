@@ -1,9 +1,7 @@
 package pl.HomeworkJustClick.Backend.Enums;
 
 public enum Role {
-    STUDENT,
-    TEACHER,
+    USER,
     ADMIN,
-
     NONE
 }
