@@ -66,6 +66,15 @@ public class UserController {
         }
     }
 
+    @PutMapping("/user/color/{id}")
+    public ResponseEntity<Void> updateColor(@PathVariable("id") int id, @RequestBody int color){
+        if(color >= 0 && color <20 && userService.changeColorById(id, color)){
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+    }
+
     @GetMapping("/user/getTeachersByGroup/{group_id}")
     public List<User> getTeachersByGroup(@PathVariable("group_id") int group_id) {
         return userService.getTeachersByGroup(group_id);

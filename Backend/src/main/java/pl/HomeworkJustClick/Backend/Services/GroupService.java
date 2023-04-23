@@ -2,6 +2,7 @@ package pl.HomeworkJustClick.Backend.Services;
 
 import pl.HomeworkJustClick.Backend.Entities.Group;
 import pl.HomeworkJustClick.Backend.Entities.GroupTeacher;
+import pl.HomeworkJustClick.Backend.Responses.GroupResponse;
 
 import java.util.List;
 
@@ -10,13 +11,15 @@ public interface GroupService {
 
     public Group getById(int id);
 
-    public Boolean add(Group group);
+    public GroupResponse add(Group group);
 
     public Boolean delete(int id);
 
     public Boolean changeNameById(int id, String name);
 
     public Boolean changeDescriptionById(int id, String description);
+
+    public Boolean changeColorById(int id, int color);
 
     public Boolean addWithTeacher(Group group, GroupTeacher groupTeacher);
 

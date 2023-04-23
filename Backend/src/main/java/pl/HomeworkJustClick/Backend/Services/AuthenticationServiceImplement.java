@@ -6,14 +6,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.HomeworkJustClick.Backend.Auth.AuthenticationRequest;
-import pl.HomeworkJustClick.Backend.Auth.AuthenticationResponse;
+import pl.HomeworkJustClick.Backend.Responses.AuthenticationResponse;
 import pl.HomeworkJustClick.Backend.Auth.RegisterRequest;
 import pl.HomeworkJustClick.Backend.Config.JwtService;
 import pl.HomeworkJustClick.Backend.Entities.User;
 import pl.HomeworkJustClick.Backend.Enums.Role;
 import pl.HomeworkJustClick.Backend.Repositories.UserRepository;
 
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -42,8 +41,10 @@ public class AuthenticationServiceImplement implements AuthenticationService{
                     .lastname(request.getLastname())
                     .build();
             userRepository.save(user);
+            user.setColor(user.getId()%20);
+            userRepository.save(user);
             var jwtToken = jwtService.generateToken(user);
-            return AuthenticationResponse.builder().token(jwtToken).id(user.getId()).role(user.getRole()).message("ok").build();
+            return AuthenticationResponse.builder().token(jwtToken).id(user.getId()).role(user.getRole()).color(user.getColor()).message("ok").build();
         }
     }
 
@@ -57,10 +58,14 @@ public class AuthenticationServiceImplement implements AuthenticationService{
                     .password(passwordEncoder.encode(request.getPassword()))
                     .role(Role.ADMIN)
                     .isVerified(true)
+                    .firstname(request.getFirstname())
+                    .lastname(request.getLastname())
                     .build();
             userRepository.save(user);
+            user.setColor(user.getId()%20);
+            userRepository.save(user);
             var jwtToken = jwtService.generateToken(user);
-            return AuthenticationResponse.builder().token(jwtToken).id(user.getId()).role(user.getRole()).build();
+            return AuthenticationResponse.builder().token(jwtToken).id(user.getId()).role(user.getRole()).color(user.getColor()).build();
         }
     }
 
@@ -81,6 +86,6 @@ public class AuthenticationServiceImplement implements AuthenticationService{
         }
         var jwtToken = jwtService.generateToken(user);
         var id = user.getId();
-        return AuthenticationResponse.builder().token(jwtToken).id(id).role(user.getRole()).message("ok").build();
+        return AuthenticationResponse.builder().token(jwtToken).id(id).role(user.getRole()).message("ok").color(user.getColor()).build();
     }
 }

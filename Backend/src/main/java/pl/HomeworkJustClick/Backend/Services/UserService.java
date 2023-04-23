@@ -20,4 +20,6 @@ public interface UserService {
     public List<User> getTeachersByGroup(int group_id);
 
     public List<User> getStudentsByGroup(int group_id);
+
+    public Boolean changeColorById(int id, int color);
 }

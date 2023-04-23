@@ -9,9 +9,9 @@ import java.util.List;
 
 public interface GroupRepository extends JpaRepository<Group, Integer> {
 
-    @Query(value = "select g.id, g.name, g.description from _group g join _group_teacher gt on g.id = gt.group_id where gt.user_id = :teacher_id", nativeQuery = true)
+    @Query(value = "select g.* from _group g join _group_teacher gt on g.id = gt.group_id where gt.user_id = :teacher_id", nativeQuery = true)
     List<Group> getGroupTeachersByTeacher(int teacher_id);
 
-    @Query(value = "select g.id, g.name, g.description from _group g join _group_student gs on g.id = gs.group_id where gs.user_id = :student_id", nativeQuery = true)
+    @Query(value = "select g.* from _group g join _group_student gs on g.id = gs.group_id where gs.user_id = :student_id", nativeQuery = true)
     List<Group> getGroupStudentsByStudent(int student_id);
 }

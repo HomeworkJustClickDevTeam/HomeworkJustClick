@@ -52,6 +52,9 @@ public class User implements UserDetails {
     @Column(name="lastname")
     private String lastname;
 
+    @Column(name="color")
+    private int color;
+
     @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -103,7 +106,7 @@ public class User implements UserDetails {
         return true;
     }
 
-    public User(String email, String password, boolean isVerified, Role role, int index, String firstname, String surname) {
+    public User(String email, String password, boolean isVerified, Role role, int index, String firstname, String surname, int color) {
         this.email = email;
         this.password = password;
         this.isVerified = isVerified;
@@ -111,9 +114,10 @@ public class User implements UserDetails {
         this.index = index;
         this.firstname = firstname;
         this.lastname = surname;
+        this.color = color;
     }
 
-    public User(String email, String password, boolean isVerified, Role role, int index, String firstname, String lastname, List<GroupStudent> groupStudents, List<GroupTeacher> groupTeachers) {
+    public User(String email, String password, boolean isVerified, Role role, int index, String firstname, String lastname, List<GroupStudent> groupStudents, List<GroupTeacher> groupTeachers, int color) {
         this.email = email;
         this.password = password;
         this.isVerified = isVerified;
@@ -123,6 +127,7 @@ public class User implements UserDetails {
         this.lastname = lastname;
         this.groupStudents = groupStudents;
         this.groupTeachers = groupTeachers;
+        this.color = color;
     }
 
     public int getId() {
@@ -187,6 +192,14 @@ public class User implements UserDetails {
 
     public void setLastname(String surname) {
         this.lastname = surname;
+    }
+
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
     }
 
     public List<GroupStudent> getGroupStudents() {

@@ -1,7 +1,7 @@
 package pl.HomeworkJustClick.Backend.Services;
 
 import pl.HomeworkJustClick.Backend.Auth.AuthenticationRequest;
-import pl.HomeworkJustClick.Backend.Auth.AuthenticationResponse;
+import pl.HomeworkJustClick.Backend.Responses.AuthenticationResponse;
 import pl.HomeworkJustClick.Backend.Auth.RegisterRequest;
 
 public interface AuthenticationService {
