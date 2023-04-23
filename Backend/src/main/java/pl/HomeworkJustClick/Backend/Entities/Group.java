@@ -30,6 +30,9 @@ public class Group {
     @Column(name="description")
     private String description;
 
+    @Column(name="color")
+    int color;
+
     @OneToMany(
             mappedBy = "group",
             orphanRemoval = true,
@@ -64,6 +67,22 @@ public class Group {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
     }
 
     public List<GroupStudent> getGroupStudents() {

@@ -1,4 +1,4 @@
-package pl.HomeworkJustClick.Backend.Auth;
+package pl.HomeworkJustClick.Backend.Responses;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,4 +16,5 @@ public class AuthenticationResponse {
     private int id;
     private Role role;
     private String message;
+    private int color;
 }

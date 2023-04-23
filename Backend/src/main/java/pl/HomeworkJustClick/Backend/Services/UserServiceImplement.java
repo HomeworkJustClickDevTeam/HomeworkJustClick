@@ -51,6 +51,9 @@ public class UserServiceImplement implements UserService{
             if (updatedUser.getIndex() != user.getIndex()) {
                 user.setIndex(updatedUser.getIndex());
             }
+            if (updatedUser.getColor() != user.getColor()) {
+                user.setColor(updatedUser.getColor());
+            }
 
             try {
                 userRepository.save(user);
@@ -78,6 +81,18 @@ public class UserServiceImplement implements UserService{
         if (userRepository.findById(id).isPresent()) {
             User user = userRepository.findById(id).get();
             user.setIndex(index);
+            userRepository.save(user);
+            return true;
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public Boolean changeColorById(int id, int color) {
+        if (userRepository.findById(id).isPresent()) {
+            User user = userRepository.findById(id).get();
+            user.setColor(color);
             userRepository.save(user);
             return true;
         } else {

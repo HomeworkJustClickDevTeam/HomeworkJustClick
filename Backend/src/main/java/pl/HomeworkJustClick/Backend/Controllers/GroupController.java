@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.HomeworkJustClick.Backend.Entities.Group;
 import pl.HomeworkJustClick.Backend.Entities.GroupTeacher;
-import pl.HomeworkJustClick.Backend.Entities.User;
+import pl.HomeworkJustClick.Backend.Responses.GroupResponse;
 import pl.HomeworkJustClick.Backend.Services.GroupService;
 import pl.HomeworkJustClick.Backend.Services.GroupStudentService;
 import pl.HomeworkJustClick.Backend.Services.GroupTeacherService;
@@ -42,12 +42,9 @@ public class GroupController {
     }
 
     @PostMapping("/group")
-    public ResponseEntity<Void> add(@RequestBody Group group) {
-        if(groupService.add(group)) {
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        } else {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
+    public ResponseEntity<GroupResponse> add(@RequestBody Group group) {
+        GroupResponse response = groupService.add(group);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/group/{id}")
@@ -77,15 +74,21 @@ public class GroupController {
         }
     }
 
+    @PutMapping("/group/color/{id}")
+    public ResponseEntity<Void> updateColor(@PathVariable("id") int id, @RequestBody int color){
+        if(color >= 0 && color <20 && groupService.changeColorById(id, color)){
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+    }
+
     @PostMapping("/group/withTeacher/{id}")
-    public ResponseEntity<Void> addWithTeacher(@PathVariable("id") int id, @RequestBody Group group) {
-        if(groupService.add(group)) {
-            GroupTeacher groupTeacher = new GroupTeacher(group, userService.getById(id), "");
-            if(groupTeacherService.add(groupTeacher)) {
-                return new ResponseEntity<>(HttpStatus.CREATED);
-            } else {
-                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-            }
+    public ResponseEntity<GroupResponse> addWithTeacher(@PathVariable("id") int id, @RequestBody Group group) {
+        GroupResponse response = groupService.add(group);
+        GroupTeacher groupTeacher = new GroupTeacher(group, userService.getById(id), "");
+        if(groupTeacherService.add(groupTeacher)) {
+            return ResponseEntity.ok(response);
         } else {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
