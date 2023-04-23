@@ -17,4 +17,7 @@ public class AuthenticationResponse {
     private Role role;
     private String message;
     private int color;
+    private String name;
+    private String lastname;
+    private int index;
 }
