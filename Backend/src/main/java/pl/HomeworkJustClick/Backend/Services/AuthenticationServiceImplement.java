@@ -44,7 +44,7 @@ public class AuthenticationServiceImplement implements AuthenticationService{
             user.setColor(user.getId()%20);
             userRepository.save(user);
             var jwtToken = jwtService.generateToken(user);
-            return AuthenticationResponse.builder().token(jwtToken).id(user.getId()).role(user.getRole()).color(user.getColor()).message("ok").build();
+            return AuthenticationResponse.builder().token(jwtToken).id(user.getId()).name(user.getFirstname()).lastname(user.getLastname()).role(user.getRole()).color(user.getColor()).index(user.getIndex()).message("ok").build();
         }
     }
 
@@ -65,7 +65,7 @@ public class AuthenticationServiceImplement implements AuthenticationService{
             user.setColor(user.getId()%20);
             userRepository.save(user);
             var jwtToken = jwtService.generateToken(user);
-            return AuthenticationResponse.builder().token(jwtToken).id(user.getId()).role(user.getRole()).color(user.getColor()).build();
+            return AuthenticationResponse.builder().token(jwtToken).id(user.getId()).name(user.getFirstname()).lastname(user.getLastname()).role(user.getRole()).color(user.getColor()).index(user.getIndex()).message("ok").build();
         }
     }
 
@@ -86,6 +86,6 @@ public class AuthenticationServiceImplement implements AuthenticationService{
         }
         var jwtToken = jwtService.generateToken(user);
         var id = user.getId();
-        return AuthenticationResponse.builder().token(jwtToken).id(id).role(user.getRole()).message("ok").color(user.getColor()).build();
+        return AuthenticationResponse.builder().token(jwtToken).id(id).role(user.getRole()).message("ok").color(user.getColor()).name(user.getFirstname()).lastname(user.getLastname()).index(user.getIndex()).build();
     }
 }
