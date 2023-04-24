@@ -79,7 +79,16 @@ public class GroupController {
         if(color >= 0 && color <20 && groupService.changeColorById(id, color)){
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+    }
+
+    @PutMapping("/group/archive/{id}")
+    public ResponseEntity<Void> archiveGroup(@PathVariable("id") int id, @RequestBody int color){
+        if(groupService.archiveGroup(id)){
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
     }
 

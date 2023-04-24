@@ -33,6 +33,9 @@ public class Group {
     @Column(name="color")
     int color;
 
+    @Column(name="isArchived")
+    boolean isArchived;
+
     @OneToMany(
             mappedBy = "group",
             orphanRemoval = true,
@@ -83,6 +86,14 @@ public class Group {
 
     public void setColor(int color) {
         this.color = color;
+    }
+
+    public boolean isArchived() {
+        return isArchived;
+    }
+
+    public void setArchived(boolean archived) {
+        isArchived = archived;
     }
 
     public List<GroupStudent> getGroupStudents() {
