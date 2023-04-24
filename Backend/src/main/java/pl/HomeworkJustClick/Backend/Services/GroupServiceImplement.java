@@ -98,7 +98,24 @@ public class GroupServiceImplement implements GroupService {
     }
 
     @Override
+    public Boolean archiveGroup(int id) {
+        if (groupRepository.findById(id).isPresent()) {
+            Group group = groupRepository.findById(id).get();
+            if(group.isArchived()) {
+                return false;
+            } else {
+                group.setArchived(true);
+            }
+            groupRepository.save(group);
+            return true;
+        } else {
+            return null;
+        }
+    }
+
+    @Override
     public Boolean addWithTeacher(Group group, GroupTeacher groupTeacher) {
+        group.setArchived(false);
         groupRepository.save(group);
         groupTeacherRepository.save(groupTeacher);
         return true;

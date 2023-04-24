@@ -14,4 +14,5 @@ public class GroupResponse {
     private String name;
     private String description;
     private int color;
+    private boolean isArchived;
 }
