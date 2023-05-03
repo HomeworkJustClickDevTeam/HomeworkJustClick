@@ -37,9 +37,8 @@ public class Group {
     @Column(name="isArchived")
     boolean isArchived;
 
-    @OneToMany
-    @JoinColumn(name = "group_id")
-    private Set<Assignment> assignments;
+    @OneToMany(mappedBy = "group")
+    private List<Assignment> assignments;
 
     @OneToMany(
             mappedBy = "group",

@@ -56,9 +56,8 @@ public class User implements UserDetails {
     @Column(name="color")
     private int color;
 
-    @OneToMany
-    @JoinColumn(name = "user_id")
-    private Set<Assignment> assignments;
+    @OneToMany(mappedBy = "user")
+    private List<Assignment> assignments;
 
     @JsonIgnore
     @Override

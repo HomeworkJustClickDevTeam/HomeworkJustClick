@@ -8,10 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 
 @Builder
@@ -28,41 +24,63 @@ public class Assignment {
     private int id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    @JoinColumn(name = "userId")
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "group_id", insertable = false, updatable = false)
+    @JoinColumn(name = "groupId")
     private Group group;
 
-    @Column(name = "task_content")
-    private String task_content;
+    @Column(name = "taskDescription")
+    private String taskDescription;
 
-    @Column(name = "creation_datetime", updatable = false)
+    @Column(name = "creationDatetime", updatable = false, nullable = false)
     @CreationTimestamp
-    private OffsetDateTime creation_datetime;
+    private OffsetDateTime creationDatetime;
 
-    @Column(name = "last_modified_datetime")
+    @Column(name = "lastModifiedDatetime")
     @UpdateTimestamp
-    private OffsetDateTime last_modified_datetime;
+    private OffsetDateTime lastModifiedDatetime;
 
-    @Column(name = "completion_datetime", nullable = true)
-    private OffsetDateTime completion_datetime;
+    @Column(name = "completionDatetime")
+    private OffsetDateTime completionDatetime;
 
-    public Assignment(int id) {
-        this.id = id;
+    @Column(name = "result")
+    private double result;
+
+    @Column(name = "title")
+    private String title;
+
+    public Assignment(String title) {
+        this.title = title;
+    }
+
+    public double getResult() {
+        return result;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setResult(double result) {
+        this.result = result;
     }
 
     public int getId() {
         return id;
     }
 
-    public OffsetDateTime getCreation_datetime() {
-        return creation_datetime;
+    public OffsetDateTime getCreationDatetime() {
+        return creationDatetime;
     }
 
-    public OffsetDateTime getLast_modified_datetime() {
-        return last_modified_datetime;
+    public OffsetDateTime getLastModifiedDatetime() {
+        return lastModifiedDatetime;
     }
 
     public User getUser() {
@@ -81,19 +99,19 @@ public class Assignment {
         this.group = group;
     }
 
-    public String getTask_content() {
-        return task_content;
+    public String getTaskDescription() {
+        return taskDescription;
     }
 
-    public void setTask_content(String task_content) {
-        this.task_content = task_content;
+    public void setTaskDescription(String taskContent) {
+        this.taskDescription = taskContent;
     }
 
-    public OffsetDateTime getCompletion_datetime() {
-        return completion_datetime;
+    public OffsetDateTime getCompletionDatetime() {
+        return completionDatetime;
     }
 
-    public void setCompletion_datetime(OffsetDateTime completion_datetime) {
-        this.completion_datetime = completion_datetime;
+    public void setCompletionDatetime(OffsetDateTime completionDatetime) {
+        this.completionDatetime = completionDatetime;
     }
 }
