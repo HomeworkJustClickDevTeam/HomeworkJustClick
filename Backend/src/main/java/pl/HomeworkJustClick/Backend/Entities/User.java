@@ -14,6 +14,7 @@ import pl.HomeworkJustClick.Backend.Enums.Role;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Builder
@@ -54,6 +55,10 @@ public class User implements UserDetails {
 
     @Column(name="color")
     private int color;
+
+    @OneToMany
+    @JoinColumn(name = "user_id")
+    private Set<Assignment> assignments;
 
     @JsonIgnore
     @Override

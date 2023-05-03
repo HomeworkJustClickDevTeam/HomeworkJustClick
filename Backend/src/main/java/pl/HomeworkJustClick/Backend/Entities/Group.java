@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Builder
@@ -35,6 +36,10 @@ public class Group {
 
     @Column(name="isArchived")
     boolean isArchived;
+
+    @OneToMany
+    @JoinColumn(name = "group_id")
+    private Set<Assignment> assignments;
 
     @OneToMany(
             mappedBy = "group",
