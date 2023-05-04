@@ -25,7 +25,7 @@ public class UserController {
         return userService.getAll();
     }
 
-    @GetMapping("user/{id}")
+    @GetMapping("/user/{id}")
     public User getById(@PathVariable("id") int id) {
         return userService.getById(id);
     }
@@ -84,4 +84,6 @@ public class UserController {
     public List<User> getStudentsByGroup(@PathVariable("group_id") int group_id) {
         return userService.getStudentsByGroup(group_id);
     }
+
+
 }

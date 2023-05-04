@@ -14,6 +14,7 @@ import pl.HomeworkJustClick.Backend.Enums.Role;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Builder
@@ -54,6 +55,10 @@ public class User implements UserDetails {
 
     @Column(name="color")
     private int color;
+
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private List<Assignment> assignments = new ArrayList<>();
 
     @JsonIgnore
     @Override
@@ -216,5 +221,13 @@ public class User implements UserDetails {
 
     public void setGroupTeachers(List<GroupTeacher> groupTeachers) {
         this.groupTeachers = groupTeachers;
+    }
+
+    public List<Assignment> getAssignments() {
+        return assignments;
+    }
+
+    public void setAssignments(List<Assignment> assignments) {
+        this.assignments = assignments;
     }
 }

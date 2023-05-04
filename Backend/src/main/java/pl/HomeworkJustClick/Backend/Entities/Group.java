@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Builder
@@ -35,6 +36,10 @@ public class Group {
 
     @Column(name="isArchived")
     boolean isArchived;
+
+    @OneToMany(mappedBy = "group")
+    @JsonIgnore
+    private List<Assignment> assignments = new ArrayList<>();
 
     @OneToMany(
             mappedBy = "group",
@@ -110,5 +115,13 @@ public class Group {
 
     public void setGroupTeachers(List<GroupTeacher> groupTeachers) {
         this.groupTeachers = groupTeachers;
+    }
+
+    public List<Assignment> getAssignments() {
+        return assignments;
+    }
+
+    public void setAssignments(List<Assignment> assignments) {
+        this.assignments = assignments;
     }
 }

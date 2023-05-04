@@ -36,7 +36,7 @@ public class GroupController {
         return groupService.getAll();
     }
 
-    @GetMapping("group/{id}")
+    @GetMapping("/group/{id}")
     public Group getById(@PathVariable("id") int id) {
         return groupService.getById(id);
     }
