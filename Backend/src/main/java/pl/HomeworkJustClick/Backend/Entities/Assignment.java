@@ -15,7 +15,7 @@ import java.time.OffsetDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "_assignments")
+@Table(name = "_assignment")
 public class Assignment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,11 +24,11 @@ public class Assignment {
     private int id;
 
     @ManyToOne
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "userId", nullable = true)
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "groupId")
+    @JoinColumn(name = "groupId", nullable = true)
     private Group group;
 
     @Column(name = "taskDescription")
@@ -46,16 +46,26 @@ public class Assignment {
     private OffsetDateTime completionDatetime;
 
     @Column(name = "result")
-    private double result;
+    private Double result;
 
     @Column(name = "title")
     private String title;
+    @Column(name = "visible", columnDefinition = "boolean default false", nullable = false)
+    private Boolean visible = false;
 
     public Assignment(String title) {
         this.title = title;
     }
 
-    public double getResult() {
+    public Boolean getVisible() {
+        return visible;
+    }
+
+    public void setVisible(Boolean visible) {
+        this.visible = visible;
+    }
+
+    public Double getResult() {
         return result;
     }
 
@@ -67,7 +77,7 @@ public class Assignment {
         this.title = title;
     }
 
-    public void setResult(double result) {
+    public void setResult(Double result) {
         this.result = result;
     }
 

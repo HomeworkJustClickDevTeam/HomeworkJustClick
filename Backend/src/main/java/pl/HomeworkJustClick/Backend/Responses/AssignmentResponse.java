@@ -15,9 +15,12 @@ import java.time.OffsetDateTime;
 @NoArgsConstructor
 public class AssignmentResponse {
     private int id;
-    private int user_id;
-    private int group_id;
+    private String title;
+    private Boolean visible;
+    private Integer user_id;
+    private Integer group_id;
     private String taskDescription;
+    private Double result;
     private OffsetDateTime creationDatetime;
     private OffsetDateTime lastModifiedDatetime;
     private OffsetDateTime completionDatetime;

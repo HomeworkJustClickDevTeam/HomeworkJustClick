@@ -5,7 +5,11 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.HomeworkJustClick.Backend.Entities.Assignment;
+import pl.HomeworkJustClick.Backend.Entities.Group;
+import pl.HomeworkJustClick.Backend.Entities.User;
 import pl.HomeworkJustClick.Backend.Repositories.AssignmentRepository;
+import pl.HomeworkJustClick.Backend.Repositories.GroupRepository;
+import pl.HomeworkJustClick.Backend.Repositories.UserRepository;
 import pl.HomeworkJustClick.Backend.Responses.AssignmentResponse;
 
 import java.time.OffsetDateTime;
@@ -20,6 +24,10 @@ public class AssignmentServiceImplement implements AssignmentService {
 
     @Autowired
     AssignmentRepository assignmentRepository;
+    @Autowired
+    GroupRepository groupRepository;
+    @Autowired
+    UserRepository userRepository;
     @Override
     public List<Assignment> getAll() {
         return assignmentRepository.findAll();
@@ -37,9 +45,21 @@ public class AssignmentServiceImplement implements AssignmentService {
     }
 
     @Override
-    public Boolean add(Assignment assignment) {
-        assignmentRepository.save(assignment);
-        return true;
+    @Transactional
+    public AssignmentResponse add(Assignment assignment) {
+        entityManager.persist(assignment);
+        return AssignmentResponse.builder()
+                .id(assignment.getId())
+                .user_id((assignment.getUser() == null) ? null : assignment.getUser().getId())
+                .group_id((assignment.getGroup() == null) ? null : assignment.getGroup().getId())
+                .taskDescription(assignment.getTaskDescription())
+                .creationDatetime(assignment.getCreationDatetime())
+                .lastModifiedDatetime(assignment.getLastModifiedDatetime())
+                .completionDatetime(assignment.getCompletionDatetime())
+                .result(assignment.getResult())
+                .title(assignment.getTitle())
+                .visible(assignment.getVisible())
+                .build();
     }
 
     @Override
@@ -87,4 +107,62 @@ public class AssignmentServiceImplement implements AssignmentService {
             return null;
         }
     }
+
+    @Override
+    public Boolean changeResult(int id, Double result) {
+        if(assignmentRepository.findById(id).isPresent()){
+            Assignment assignment = assignmentRepository.findById(id).get();
+            assignment.setResult(result);
+            assignmentRepository.save(assignment);
+            return true;
+        }
+        else {
+            return null;
+        }
+    }
+
+    @Override
+    public Boolean changeVisibility(int id, Boolean visible) {
+        if(assignmentRepository.findById(id).isPresent()){
+            Assignment assignment = assignmentRepository.findById(id).get();
+            assignment.setVisible(visible);
+            assignmentRepository.save(assignment);
+            return true;
+        }
+        else {
+            return null;
+        }
+    }
+
+    @Override
+    public Boolean changeUser(int id, int userId) {
+        if(assignmentRepository.findById(id).isPresent() && userRepository.findById(userId).isPresent())
+        {
+            Assignment assignment = assignmentRepository.findById(id).get();
+            User user = userRepository.findById(userId).get();
+            assignment.setUser(user);
+            assignmentRepository.save(assignment);
+            return true;
+        }
+        else{
+            return null;
+        }
+    }
+
+    @Override
+    public Boolean changeGroup(int id, int groupId) {
+        if(assignmentRepository.findById(id).isPresent() && groupRepository.findById(groupId).isPresent())
+        {
+            Assignment assignment = assignmentRepository.findById(id).get();
+            Group group = groupRepository.findById(groupId).get();
+            assignment.setGroup(group);
+            assignmentRepository.save(assignment);
+            return true;
+        }
+        else{
+            return null;
+        }
+    }
+
+
 }

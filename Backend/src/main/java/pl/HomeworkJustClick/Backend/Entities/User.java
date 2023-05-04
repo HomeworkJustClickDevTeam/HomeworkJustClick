@@ -57,7 +57,8 @@ public class User implements UserDetails {
     private int color;
 
     @OneToMany(mappedBy = "user")
-    private List<Assignment> assignments;
+    @JsonIgnore
+    private List<Assignment> assignments = new ArrayList<>();
 
     @JsonIgnore
     @Override
@@ -220,5 +221,13 @@ public class User implements UserDetails {
 
     public void setGroupTeachers(List<GroupTeacher> groupTeachers) {
         this.groupTeachers = groupTeachers;
+    }
+
+    public List<Assignment> getAssignments() {
+        return assignments;
+    }
+
+    public void setAssignments(List<Assignment> assignments) {
+        this.assignments = assignments;
     }
 }

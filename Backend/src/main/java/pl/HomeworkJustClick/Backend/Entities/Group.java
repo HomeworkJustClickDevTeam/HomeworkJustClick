@@ -38,7 +38,8 @@ public class Group {
     boolean isArchived;
 
     @OneToMany(mappedBy = "group")
-    private List<Assignment> assignments;
+    @JsonIgnore
+    private List<Assignment> assignments = new ArrayList<>();
 
     @OneToMany(
             mappedBy = "group",
@@ -114,5 +115,13 @@ public class Group {
 
     public void setGroupTeachers(List<GroupTeacher> groupTeachers) {
         this.groupTeachers = groupTeachers;
+    }
+
+    public List<Assignment> getAssignments() {
+        return assignments;
+    }
+
+    public void setAssignments(List<Assignment> assignments) {
+        this.assignments = assignments;
     }
 }
