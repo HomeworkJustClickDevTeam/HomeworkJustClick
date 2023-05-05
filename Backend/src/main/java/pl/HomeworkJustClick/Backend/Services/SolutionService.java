@@ -10,7 +10,7 @@ public interface SolutionService {
     Solution getById(int id);
     SolutionResponse add(Solution solution);
     Boolean delete(int id);
-    Boolean changeUser(int id, int userId);
-    Boolean changeAssignment(int id, int assignmentId);
+    Boolean changeUserById(int id, int userId);
+    Boolean changeAssignmentById(int id, int assignmentId);
 
 }

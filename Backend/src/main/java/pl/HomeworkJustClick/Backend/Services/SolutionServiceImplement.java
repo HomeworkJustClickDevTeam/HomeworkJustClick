@@ -64,7 +64,7 @@ public class SolutionServiceImplement implements SolutionService{
     }
 
     @Override
-    public Boolean changeUser(int id, int userId) {
+    public Boolean changeUserById(int id, int userId) {
         if(solutionRepository.findById(id).isPresent() && userRepository.findById(userId).isPresent()){
             Solution solution = solutionRepository.findById(id).get();
             User user = userRepository.findById(userId).get();
@@ -78,7 +78,7 @@ public class SolutionServiceImplement implements SolutionService{
     }
 
     @Override
-    public Boolean changeAssignment(int id, int assignmentId) {
+    public Boolean changeAssignmentById(int id, int assignmentId) {
         if(solutionRepository.findById(id).isPresent() && assignmentRepository.findById(assignmentId).isPresent()){
             Solution solution = solutionRepository.findById(id).get();
             Assignment assignment = assignmentRepository.findById(assignmentId).get();

@@ -39,6 +39,10 @@ public class Solution {
     @UpdateTimestamp
     private OffsetDateTime lastModifiedDatetime;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "evaluationId", referencedColumnName = "id")
+    private Evaluation evaluation;
+
     public Solution(User user, Assignment assignment){
         this.assignment = assignment;
         this.user = user;
@@ -62,5 +66,13 @@ public class Solution {
 
     public OffsetDateTime getLastModifiedDatetime() {
         return lastModifiedDatetime;
+    }
+
+    public Evaluation getEvaluation() {
+        return evaluation;
+    }
+
+    public void setEvaluation(Evaluation evaluation) {
+        this.evaluation = evaluation;
     }
 }
