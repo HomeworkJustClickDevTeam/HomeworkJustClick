@@ -50,8 +50,8 @@ public class AssignmentServiceImplement implements AssignmentService {
         entityManager.persist(assignment);
         return AssignmentResponse.builder()
                 .id(assignment.getId())
-                .user_id((assignment.getUser() == null) ? null : assignment.getUser().getId())
-                .group_id((assignment.getGroup() == null) ? null : assignment.getGroup().getId())
+                .userId((assignment.getUser() == null) ? null : assignment.getUser().getId())
+                .groupId((assignment.getGroup() == null) ? null : assignment.getGroup().getId())
                 .taskDescription(assignment.getTaskDescription())
                 .creationDatetime(assignment.getCreationDatetime())
                 .lastModifiedDatetime(assignment.getLastModifiedDatetime())

@@ -60,6 +60,10 @@ public class User implements UserDetails {
     @JsonIgnore
     private List<Assignment> assignments = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @JsonIgnore
+    private List<Solution> solutions = new ArrayList<>();
+
     @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -137,6 +141,14 @@ public class User implements UserDetails {
 
     public int getId() {
         return id;
+    }
+
+    public List<Solution> getSolutions() {
+        return solutions;
+    }
+
+    public void setSolutions(List<Solution> solutions) {
+        this.solutions = solutions;
     }
 
     public void setId(int id) {

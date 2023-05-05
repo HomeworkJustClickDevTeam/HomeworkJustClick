@@ -1,6 +1,7 @@
 package pl.HomeworkJustClick.Backend.Entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +10,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Builder
 @Data
@@ -30,6 +33,10 @@ public class Assignment {
     @ManyToOne
     @JoinColumn(name = "groupId", nullable = true)
     private Group group;
+
+    @OneToMany(mappedBy = "assignment")
+    @JsonIgnore
+    private List<Solution> solutions = new ArrayList<>();
 
     @Column(name = "taskDescription")
     private String taskDescription;
@@ -95,6 +102,14 @@ public class Assignment {
 
     public User getUser() {
         return user;
+    }
+
+    public List<Solution> getSolutions() {
+        return solutions;
+    }
+
+    public void setSolutions(List<Solution> solutions) {
+        this.solutions = solutions;
     }
 
     public void setUser(User user) {
