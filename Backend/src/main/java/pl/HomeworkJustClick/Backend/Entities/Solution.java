@@ -24,11 +24,11 @@ public class Solution {
     private int id;
 
     @ManyToOne
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "userId", nullable = false)
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "assignmentId")
+    @JoinColumn(name = "assignmentId", nullable = false)
     private Assignment assignment;
 
     @Column(name = "creationDatetime", updatable = false, nullable = false)

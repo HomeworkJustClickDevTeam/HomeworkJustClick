@@ -1,5 +1,6 @@
 package pl.HomeworkJustClick.Backend.Responses;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,15 +12,10 @@ import java.time.OffsetDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AssignmentResponse {
+public class SolutionResponse {
     private int id;
-    private String title;
-    private Boolean visible;
     private Integer userId;
-    private Integer groupId;
-    private String taskDescription;
-    private Double result;
-    private OffsetDateTime creationDatetime;
+    private Integer assignmentId;
+    private OffsetDateTime creationDateTime;
     private OffsetDateTime lastModifiedDatetime;
-    private OffsetDateTime completionDatetime;
 }
