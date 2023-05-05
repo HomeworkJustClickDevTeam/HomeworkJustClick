@@ -17,7 +17,6 @@ public interface AssignmentService {
     public Boolean changeTitleById(int id, String title);
     public Boolean changeTaskDescriptionById(int id, String taskDescription);
     public Boolean changeCompletionDatetime(int id, OffsetDateTime completionDatetime);
-    public Boolean changeResult(int id, Double result);
     public Boolean changeVisibility(int id, Boolean visible);
     public Boolean changeUser(int id, int userId);
     public Boolean changeGroup(int id, int groupId);

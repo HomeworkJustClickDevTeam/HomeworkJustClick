@@ -64,6 +64,10 @@ public class User implements UserDetails {
     @JsonIgnore
     private List<Solution> solutions = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private List<Evaluation> evaluations = new ArrayList<>();
+
     @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -165,6 +169,14 @@ public class User implements UserDetails {
 
     public String getPassword() {
         return password;
+    }
+
+    public List<Evaluation> getEvaluations() {
+        return evaluations;
+    }
+
+    public void setEvaluations(List<Evaluation> evaluations) {
+        this.evaluations = evaluations;
     }
 
     public void setPassword(String password) {

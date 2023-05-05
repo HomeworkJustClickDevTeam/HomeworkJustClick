@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pl.HomeworkJustClick.Backend.Entities.User;
 
 import java.time.OffsetDateTime;
 
@@ -11,14 +12,13 @@ import java.time.OffsetDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AssignmentResponse {
+public class EvaluationResponse {
     private int id;
-    private String title;
-    private Boolean visible;
+    private Double result;
     private Integer userId;
-    private Integer groupId;
-    private String taskDescription;
+    private Integer solutionId;
     private OffsetDateTime creationDatetime;
     private OffsetDateTime lastModifiedDatetime;
-    private OffsetDateTime completionDatetime;
+    private String comment;
+    private Double grade;
 }

@@ -56,7 +56,6 @@ public class AssignmentServiceImplement implements AssignmentService {
                 .creationDatetime(assignment.getCreationDatetime())
                 .lastModifiedDatetime(assignment.getLastModifiedDatetime())
                 .completionDatetime(assignment.getCompletionDatetime())
-                .result(assignment.getResult())
                 .title(assignment.getTitle())
                 .visible(assignment.getVisible())
                 .build();
@@ -104,19 +103,6 @@ public class AssignmentServiceImplement implements AssignmentService {
             assignmentRepository.save(assignment);
             return true;
         }else {
-            return null;
-        }
-    }
-
-    @Override
-    public Boolean changeResult(int id, Double result) {
-        if(assignmentRepository.findById(id).isPresent()){
-            Assignment assignment = assignmentRepository.findById(id).get();
-            assignment.setResult(result);
-            assignmentRepository.save(assignment);
-            return true;
-        }
-        else {
             return null;
         }
     }

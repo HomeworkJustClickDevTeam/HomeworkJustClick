@@ -38,15 +38,6 @@ public class AssignmentController {
         }
     }
 
-    @PutMapping("/assignment/result/{id}")
-    public ResponseEntity<Void> updateResult(@PathVariable("id") int id, @RequestBody Double result){
-        if(assignmentService.changeResult(id, result)){
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-    }
     @PutMapping("/assignment/visibility/{id}")
     public ResponseEntity<Void> updateVisibility(@PathVariable("id") int id, @RequestBody Boolean visible){
         if(assignmentService.changeVisibility(id, visible)){
@@ -84,7 +75,7 @@ public class AssignmentController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
-    @PutMapping("/assignment/setUser/{user_id}/{assignment_id}")
+    @PutMapping("/assignment/user/{user_id}/{assignment_id}")
     public ResponseEntity<Void> updateUser(@PathVariable("user_id") int userId, @PathVariable("assignment_id") int assignmentId){
         if(assignmentService.changeUser(assignmentId, userId)){
             return new ResponseEntity<>(HttpStatus.OK);
@@ -93,7 +84,7 @@ public class AssignmentController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
-    @PutMapping("/assignment/setGroup/{group_id}/{assignment_id}")
+    @PutMapping("/assignment/group/{group_id}/{assignment_id}")
     public ResponseEntity<Void> updateGroup(@PathVariable("group_id") int groupId, @PathVariable("assignment_id") int assignmentId){
         if(assignmentService.changeGroup(assignmentId, groupId)){
             return new ResponseEntity<>(HttpStatus.OK);

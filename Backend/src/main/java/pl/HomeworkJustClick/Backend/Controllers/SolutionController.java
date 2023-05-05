@@ -25,18 +25,18 @@ public class SolutionController {
         SolutionResponse response = solutionService.add(solution);
         return ResponseEntity.ok(response);
     }
-    @PutMapping("/solution/setUser/{user_id}/{id}")
+    @PutMapping("/solution/user/{user_id}/{id}")
     public ResponseEntity<Void> updateUser(@PathVariable("user_id") int userId, @PathVariable("id") int id){
-        if(solutionService.changeUser(id, userId)){
+        if(solutionService.changeUserById(id, userId)){
             return new ResponseEntity<>(HttpStatus.OK);
         }
         else {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
-    @PutMapping("/solution/setAssignment/{assignment_id}/{id}")
+    @PutMapping("/solution/assignment/{assignment_id}/{id}")
     public ResponseEntity<Void> updateAssignment(@PathVariable("assignment_id") int assignmentId, @PathVariable("id") int id){
-        if(solutionService.changeAssignment(id, assignmentId)){
+        if(solutionService.changeAssignmentById(id, assignmentId)){
             return new ResponseEntity<>(HttpStatus.OK);
         }
         else {

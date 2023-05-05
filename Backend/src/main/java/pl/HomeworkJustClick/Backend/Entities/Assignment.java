@@ -34,7 +34,7 @@ public class Assignment {
     @JoinColumn(name = "groupId", nullable = true)
     private Group group;
 
-    @OneToMany(mappedBy = "assignment")
+    @OneToMany(mappedBy = "assignment", orphanRemoval = true)
     @JsonIgnore
     private List<Solution> solutions = new ArrayList<>();
 
@@ -52,9 +52,6 @@ public class Assignment {
     @Column(name = "completionDatetime")
     private OffsetDateTime completionDatetime;
 
-    @Column(name = "result")
-    private Double result;
-
     @Column(name = "title")
     private String title;
     @Column(name = "visible", columnDefinition = "boolean default false", nullable = false)
@@ -71,21 +68,12 @@ public class Assignment {
     public void setVisible(Boolean visible) {
         this.visible = visible;
     }
-
-    public Double getResult() {
-        return result;
-    }
-
     public String getTitle() {
         return title;
     }
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public void setResult(Double result) {
-        this.result = result;
     }
 
     public int getId() {
