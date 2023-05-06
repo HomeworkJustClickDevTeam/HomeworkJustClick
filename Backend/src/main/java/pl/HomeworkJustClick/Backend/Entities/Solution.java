@@ -1,5 +1,6 @@
 package pl.HomeworkJustClick.Backend.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +10,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Builder
 @Data
@@ -30,6 +33,10 @@ public class Solution {
     @ManyToOne
     @JoinColumn(name = "assignmentId", nullable = false)
     private Assignment assignment;
+
+    @OneToMany(mappedBy = "solution", orphanRemoval = true)
+    @JsonIgnore
+    private List<File> files = new ArrayList<>();
 
     @Column(name = "creationDatetime", updatable = false, nullable = false)
     @CreationTimestamp

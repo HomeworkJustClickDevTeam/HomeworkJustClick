@@ -38,6 +38,10 @@ public class Assignment {
     @JsonIgnore
     private List<Solution> solutions = new ArrayList<>();
 
+    @OneToMany(mappedBy = "assignment", orphanRemoval = true)
+    @JsonIgnore
+    private List<File> files = new ArrayList<>();
+
     @Column(name = "taskDescription")
     private String taskDescription;
 
