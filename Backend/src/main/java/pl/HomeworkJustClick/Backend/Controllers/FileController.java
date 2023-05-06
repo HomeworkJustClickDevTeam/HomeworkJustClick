@@ -56,4 +56,14 @@ public class FileController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
+
+    @GetMapping("/files/byAssignment/{id}")
+    public List<File> getFilesByAssignment(@PathVariable("id") int id) {
+        return fileService.getFilesByAssignment(id);
+    }
+
+    @GetMapping("/files/bySolution/{id}")
+    public List<File> getFilesBySolution(@PathVariable("id") int id) {
+        return fileService.getFilesBySolution(id);
+    }
 }

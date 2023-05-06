@@ -16,4 +16,8 @@ public interface FileService {
     public FileResponse addWithSolution (File file, int solution_id);
 
     public Boolean delete(int id);
+
+    public List<File> getFilesByAssignment(int id);
+
+    public List<File> getFilesBySolution(int id);
 }

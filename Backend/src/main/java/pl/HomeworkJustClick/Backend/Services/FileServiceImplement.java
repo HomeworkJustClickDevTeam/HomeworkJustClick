@@ -73,4 +73,14 @@ public class FileServiceImplement implements FileService {
             return false;
         }
     }
+
+    @Override
+    public List<File> getFilesByAssignment(int id) {
+        return fileRepository.getFilesByAssignmentId(id);
+    }
+
+    @Override
+    public List<File> getFilesBySolution(int id) {
+        return fileRepository.getFilesBySolutionId(id);
+    }
 }
