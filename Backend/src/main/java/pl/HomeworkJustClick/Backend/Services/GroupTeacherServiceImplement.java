@@ -99,4 +99,10 @@ public class GroupTeacherServiceImplement implements GroupTeacherService{
         return groupTeacherRepository.countTeachersInGroup(group_id);
     }
 
+    @Override
+    public Boolean checkForTeacherInGroup(int teacher_id, int group_id) {
+        int groupTeacherCheck = groupTeacherRepository.getGroupTeacherByTeacherAndGroup(teacher_id, group_id);
+        return groupTeacherCheck != 0;
+    }
+
 }

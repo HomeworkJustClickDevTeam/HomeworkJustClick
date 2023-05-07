@@ -130,4 +130,5 @@ public class GroupServiceImplement implements GroupService {
     public List<Group> getGroupsByStudent(int student_id) {
         return groupRepository.getGroupStudentsByStudent(student_id);
     }
+
 }

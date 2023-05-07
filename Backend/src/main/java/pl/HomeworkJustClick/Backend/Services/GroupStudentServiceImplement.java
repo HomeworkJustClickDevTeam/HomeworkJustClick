@@ -91,4 +91,10 @@ public class GroupStudentServiceImplement implements GroupStudentService{
             return false;
         }
     }
+
+    @Override
+    public Boolean checkForStudentInGroup(int student_id, int group_id) {
+        int groupStudentCheck = groupStudentRepository.getGroupStudentByStudentAndGroup(student_id, group_id);
+        return groupStudentCheck != 0;
+    }
 }

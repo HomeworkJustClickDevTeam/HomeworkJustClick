@@ -160,4 +160,14 @@ public class GroupController {
         }
     }
 
+    @GetMapping("/group/teacherCheck/{teacher_id}/{group_id}")
+    public Boolean checkForTeacherInGroup(@PathVariable("teacher_id") int teacher_id, @PathVariable("group_id") int group_id) {
+        return groupTeacherService.checkForTeacherInGroup(teacher_id, group_id);
+    }
+
+    @GetMapping("/group/studentCheck/{student_id}/{group_id}")
+    public Boolean checkForStudentInGroup(@PathVariable("student_id") int student_id, @PathVariable("group_id") int group_id) {
+        return groupStudentService.checkForStudentInGroup(student_id, group_id);
+    }
+
 }
