@@ -28,4 +28,14 @@ public class FileService {
             return null;
         }
     }
+
+    public Boolean deleteFile(String id) {
+        try {
+            fileRepository.deleteById(id);
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+    }
+
 }

@@ -19,4 +19,6 @@ public interface GroupStudentService {
     public Boolean addStudentToGroup (int group_id, int student_id);
 
     public Boolean deleteStudentFromGroup (int group_id, int student_id);
+
+    public Boolean checkForStudentInGroup(int student_id, int group_id);
 }

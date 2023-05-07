@@ -3,6 +3,7 @@ package pl.HomeworkJustClick.HomeworkJustClick;
 import org.bson.types.Binary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,8 +26,17 @@ public class FileController {
 
     @GetMapping("/file/{id}")
     @ResponseBody
-    public ResponseEntity<File> getFile(@PathVariable String id) {
+    public ResponseEntity<File> getFile(@PathVariable("id") String id) {
         File file = fileService.getFile(id);
         return ResponseEntity.ok().body(file);
+    }
+
+    @DeleteMapping("/file/{id}")
+    public ResponseEntity<Void> delete(@PathVariable("id") String id) {
+        if(fileService.deleteFile(id)){
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
     }
 }

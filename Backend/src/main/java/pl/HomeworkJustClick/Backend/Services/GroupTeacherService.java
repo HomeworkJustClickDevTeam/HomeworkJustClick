@@ -24,4 +24,6 @@ public interface GroupTeacherService {
 
     public int countTeachersInGroup (int group_id);
 
+    public Boolean checkForTeacherInGroup(int teacher_id, int group_id);
+
 }

@@ -9,6 +9,6 @@ To run PostgreSQL backend type:
 
 To run MongoDB backend type:
 ```bash
-  docker compose -f docker-compose.yaml -d
+  docker compose -f docker-compose.yaml up
 ```
-
+or run file docker-compose.yaml
