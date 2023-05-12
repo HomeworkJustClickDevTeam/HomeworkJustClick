@@ -12,3 +12,8 @@ To run MongoDB backend type:
   docker compose -f docker-compose.yaml up
 ```
 or run file docker-compose.yaml
+
+Swagger UI link:
+```bash
+  localhost:8080/swagger/ui.html
+```
