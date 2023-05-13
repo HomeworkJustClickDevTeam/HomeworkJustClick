@@ -72,7 +72,7 @@ public class SecurityConfig {
                 .disable()
                 .authorizeHttpRequests()
                 .requestMatchers("/api/auth/**",
-                        "/swagger/**")
+                        "/api/swagger/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
