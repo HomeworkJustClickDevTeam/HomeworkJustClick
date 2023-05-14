@@ -1,5 +1,7 @@
 package pl.HomeworkJustClick.Backend.Controllers;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +17,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
+@SecurityRequirement(name = "Bearer Authentication")
+@Tag(name = "Assignment")
 public class AssignmentController {
     @Autowired
     AssignmentService assignmentService;
