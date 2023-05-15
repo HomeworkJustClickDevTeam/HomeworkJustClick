@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import common_request from "../../services/default-request-database";
+import {GroupCreate} from "../../types/types";
 
 function CreateGroup() {
     const [group,setGroup] = useState<GroupCreate>({

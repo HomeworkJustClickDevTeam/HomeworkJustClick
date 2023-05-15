@@ -1,10 +1,10 @@
 import {useNavigate} from "react-router-dom";
+import {useContext} from "react";
+import userContext from "../../../UserContext";
 
-type Props = {
-    setLoggedIn : (loggedIn: boolean) => void
-}
-function LogOut ({setLoggedIn}: Props){
 
+function LogOut (){
+    const {setLoggedIn} = useContext(userContext)
     const navigate = useNavigate()
     const handleLogout = () => {
         setLoggedIn(false)

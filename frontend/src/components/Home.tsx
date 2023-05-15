@@ -1,14 +1,12 @@
-import {useEffect, useState} from "react";
-
-
+import { useEffect, useState} from "react";
 import LogOut from "./user/Logedd/LogOut";
-import GroupDisplayerItem from "./group/GroupDisplayerItem";
+import GroupDisplayerItem from "./group/displayer/GroupDisplayerItem";
 import { Link } from "react-router-dom";
-import {groupFilter} from "./group/GroupFilter";
+import {groupFilter} from "./group/filter/GroupFilter";
+import {Group} from "../types/types";
 
 
-function Home({setLoggedIn}: PropsForLogin){
-
+function Home(){
     const [groups,setGroups] = useState<Group []>()
 
     const {teacherUserGroups,studentsUserGroups,allUserGroups} = groupFilter({setGroups})
@@ -33,7 +31,7 @@ function Home({setLoggedIn}: PropsForLogin){
         <button onClick={studentsUserGroups}>Grupy uczniowskie użytkownika</button>
         <button onClick={teacherUserGroups}> Grupy nauczycielskie użytkownika</button>
         <button onClick={allUserGroups}>Wszystkie grupy użytkownika</button>
-        <LogOut setLoggedIn={setLoggedIn} />
+        <LogOut/>
        </>
     )
 }

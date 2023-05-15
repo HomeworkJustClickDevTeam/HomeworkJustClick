@@ -1,3 +1,4 @@
+import {PropsForGroupItem} from "../../../types/types";
 
 function GroupDisplayerItem ({group}:PropsForGroupItem){
 

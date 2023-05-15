@@ -1,13 +1,16 @@
-import React, {ChangeEvent, useState} from "react";
+import React, {ChangeEvent, useContext, useState} from "react";
 import common_request from "../../../services/default-request-database";
 import {useNavigate} from "react-router-dom";
+import {LoginUser} from "../../../types/types";
+import UserContext from "../../../UserContext";
 
 
-const Login = ( {setLoggedIn}: PropsForLogin) => {
+const Login = ( ) => {
    const [user,setUser] = useState<LoginUser>({
        email: "",
        password: ""
    })
+   const {setLoggedIn} = useContext(UserContext)
    const navigate = useNavigate()
    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
        event.preventDefault()
@@ -18,7 +21,7 @@ const Login = ( {setLoggedIn}: PropsForLogin) => {
                 localStorage.setItem("token",response.data.token)
                 localStorage.setItem("id",response.data.id)
                 setLoggedIn(true)
-                console.log(response.data)
+                common_request.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`
                 navigate("/")
             }else {
                 console.log("Zle haslo / uzytkownik")
