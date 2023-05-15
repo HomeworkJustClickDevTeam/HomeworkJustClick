@@ -14,4 +14,7 @@ public interface SolutionRepository extends JpaRepository<Solution, Integer> {
     @Query(value = "select * from _solution where assignment_id = :assignment_id", nativeQuery = true)
     List<Solution> getSolutionsByAssignmentId(int assignment_id);
 
+    @Query(value = "select COUNT(*) from _solution where assignment_id = :assignment_id", nativeQuery = true)
+    int countSolutionsByAssignmentId(int assignment_id);
+
 }

@@ -117,5 +117,9 @@ public class AssignmentController {
         }
     }
 
+    @GetMapping("/assignments/unchecked/{group_id}")
+    public List<AssignmentResponse> getUncheckedAssignmentsInGroup(@PathVariable("group_id") int group_id){
+        return assignmentService.getUncheckedAssignmentsByGroup(group_id);
+    }
 
 }

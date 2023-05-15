@@ -25,4 +25,6 @@ public interface AssignmentService {
     public Boolean changeUser(int id, int userId);
     public Boolean changeGroup(int id, int groupId);
     public List<AssignmentResponse> getAssignmentsByGroupId(int id);
+
+    public List<AssignmentResponse> getUncheckedAssignmentsByGroup(int group_id);
 }

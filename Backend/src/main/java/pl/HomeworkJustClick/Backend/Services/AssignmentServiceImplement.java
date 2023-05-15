@@ -7,9 +7,7 @@ import org.springframework.stereotype.Service;
 import pl.HomeworkJustClick.Backend.Entities.Assignment;
 import pl.HomeworkJustClick.Backend.Entities.Group;
 import pl.HomeworkJustClick.Backend.Entities.User;
-import pl.HomeworkJustClick.Backend.Repositories.AssignmentRepository;
-import pl.HomeworkJustClick.Backend.Repositories.GroupRepository;
-import pl.HomeworkJustClick.Backend.Repositories.UserRepository;
+import pl.HomeworkJustClick.Backend.Repositories.*;
 import pl.HomeworkJustClick.Backend.Responses.AssignmentResponse;
 
 import java.time.OffsetDateTime;
@@ -26,10 +24,19 @@ public class AssignmentServiceImplement implements AssignmentService {
 
     @Autowired
     AssignmentRepository assignmentRepository;
+
     @Autowired
     GroupRepository groupRepository;
+
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    SolutionRepository solutionRepository;
+
+    @Autowired
+    EvaluationRepository evaluationRepository;
+
     @Override
     public List<Assignment> getAll() {
         return assignmentRepository.findAll();
@@ -190,6 +197,33 @@ public class AssignmentServiceImplement implements AssignmentService {
                     .build());
         }
         return assignmentResponses;
+    }
+
+    @Override
+    public List<AssignmentResponse> getUncheckedAssignmentsByGroup(int group_id) {
+        List<Assignment> assignmentsInGroup = assignmentRepository.getAssignmentsByGroupId(group_id);
+        List<AssignmentResponse> ucheckedAssignments = new ArrayList<>();
+        for(Assignment assignment : assignmentsInGroup) {
+            int assignment_id = assignment.getId();
+            int solutions_count = solutionRepository.countSolutionsByAssignmentId(assignment_id);
+            int evaluations_count = evaluationRepository.countEvaluationsByAssignment(assignment_id);
+            if (solutions_count != 0 && solutions_count - evaluations_count > 0){
+                ucheckedAssignments.add(
+                        AssignmentResponse.builder()
+                                .id(assignment.getId())
+                                .userId(assignment.getUser().getId())
+                                .groupId(assignment.getGroup().getId())
+                                .taskDescription(assignment.getTaskDescription())
+                                .creationDatetime(assignment.getCreationDatetime())
+                                .lastModifiedDatetime(assignment.getLastModifiedDatetime())
+                                .completionDatetime(assignment.getCompletionDatetime())
+                                .title(assignment.getTitle())
+                                .visible(assignment.getVisible())
+                                .build()
+                );
+            }
+        }
+        return ucheckedAssignments;
     }
 
 }
