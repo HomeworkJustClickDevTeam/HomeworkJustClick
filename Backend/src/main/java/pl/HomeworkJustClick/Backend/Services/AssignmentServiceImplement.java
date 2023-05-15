@@ -59,10 +59,10 @@ public class AssignmentServiceImplement implements AssignmentService {
 
     @Override
     public Boolean delete(int id) {
-        try{
+        if(assignmentRepository.existsById(id)) {
             assignmentRepository.deleteById(id);
             return true;
-        } catch (IllegalArgumentException e){
+        } else {
             return false;
         }
     }

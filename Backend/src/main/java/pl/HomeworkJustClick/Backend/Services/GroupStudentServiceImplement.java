@@ -45,10 +45,10 @@ public class GroupStudentServiceImplement implements GroupStudentService{
 
     @Override
     public Boolean delete(int id) {
-        try {
+        if(groupStudentRepository.existsById(id)) {
             groupStudentRepository.deleteById(id);
             return true;
-        } catch (IllegalArgumentException e) {
+        } else {
             return false;
         }
     }

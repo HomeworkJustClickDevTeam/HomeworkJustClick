@@ -50,10 +50,10 @@ public class GroupServiceImplement implements GroupService {
 
     @Override
     public Boolean delete(int id) {
-        try {
+        if (groupRepository.existsById(id)) {
             groupRepository.deleteById(id);
             return true;
-        } catch (IllegalArgumentException e) {
+        } else {
             return false;
         }
     }

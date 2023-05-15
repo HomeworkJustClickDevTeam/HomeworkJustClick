@@ -64,10 +64,10 @@ public class UserServiceImplement implements UserService{
 
     @Override
     public Boolean delete(int id) {
-        try {
+        if(userRepository.existsById(id)) {
             userRepository.deleteById(id);
             return true;
-        } catch (IllegalArgumentException e) {
+        } else  {
             return false;
         }
     }

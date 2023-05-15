@@ -63,10 +63,10 @@ public class FileServiceImplement implements FileService {
 
     @Override
     public Boolean delete(int id){
-        try {
+        if(fileRepository.existsById(id)) {
             fileRepository.deleteById(id);
             return true;
-        } catch (IllegalArgumentException e) {
+        } else  {
             return false;
         }
     }

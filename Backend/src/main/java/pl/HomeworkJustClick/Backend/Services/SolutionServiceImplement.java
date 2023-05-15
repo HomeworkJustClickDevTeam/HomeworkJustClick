@@ -50,11 +50,10 @@ public class SolutionServiceImplement implements SolutionService{
 
     @Override
     public Boolean delete(int id) {
-        try {
+        if (solutionRepository.existsById(id)) {
             solutionRepository.deleteById(id);
             return true;
-        }
-        catch (IllegalArgumentException e){
+        } else {
             return false;
         }
     }

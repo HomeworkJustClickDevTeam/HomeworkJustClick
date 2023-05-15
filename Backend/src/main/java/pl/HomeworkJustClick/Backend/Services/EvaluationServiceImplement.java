@@ -53,11 +53,10 @@ public class EvaluationServiceImplement implements EvaluationService {
 
     @Override
     public Boolean delete(int id) {
-        try{
+        if(evaluationRepository.existsById(id)){
             evaluationRepository.deleteById(id);
             return true;
-        }
-        catch (IllegalArgumentException e){
+        } else {
             return false;
         }
     }

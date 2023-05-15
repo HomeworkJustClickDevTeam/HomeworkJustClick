@@ -47,10 +47,10 @@ public class GroupTeacherServiceImplement implements GroupTeacherService{
 
     @Override
     public Boolean delete(int id) {
-        try {
+        if(groupTeacherRepository.existsById(id)) {
             groupTeacherRepository.deleteById(id);
             return true;
-        } catch (IllegalArgumentException e) {
+        } else  {
             return false;
         }
     }
