@@ -26,13 +26,20 @@ public class Solution {
     @Column(name = "id", updatable = false, unique = true, nullable = false)
     private int id;
 
-    @ManyToOne
-    @JoinColumn(name = "userId", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "Fk_user"))
+    @JsonIgnore
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "assignmentId", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "assignment_id", nullable = false, foreignKey = @ForeignKey(name = "Fk_assignment"))
+    @JsonIgnore
     private Assignment assignment;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "group_id", nullable = false, foreignKey = @ForeignKey(name = "Fk_group"))
+    @JsonIgnore
+    private Group group;
 
     @OneToMany(mappedBy = "solution", orphanRemoval = true)
     @JsonIgnore
@@ -46,9 +53,8 @@ public class Solution {
     @UpdateTimestamp
     private OffsetDateTime lastModifiedDatetime;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "evaluationId", referencedColumnName = "id")
-    private Evaluation evaluation;
+    @Column(name = "comment")
+    private String comment;
 
     public Solution(User user, Assignment assignment){
         this.assignment = assignment;
@@ -75,11 +81,4 @@ public class Solution {
         return lastModifiedDatetime;
     }
 
-    public Evaluation getEvaluation() {
-        return evaluation;
-    }
-
-    public void setEvaluation(Evaluation evaluation) {
-        this.evaluation = evaluation;
-    }
 }

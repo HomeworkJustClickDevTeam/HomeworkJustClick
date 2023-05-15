@@ -30,10 +30,18 @@ public class Evaluation {
 
     @ManyToOne
     @JoinColumn(name="userId", nullable = false)
+    @JsonIgnore
     private User user;
 
-    @OneToOne(mappedBy = "evaluation")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "solution_id", nullable = false, foreignKey = @ForeignKey(name = "Fk_solution"))
+    @JsonIgnore
     private Solution solution;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "group_id", nullable = false, foreignKey = @ForeignKey(name = "Fk_group"))
+    @JsonIgnore
+    private Group group;
 
     @Column(name = "creationDatetime", updatable = false, nullable = false)
     @CreationTimestamp

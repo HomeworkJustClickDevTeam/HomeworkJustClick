@@ -17,6 +17,7 @@ public class EvaluationResponse {
     private Double result;
     private Integer userId;
     private Integer solutionId;
+    private Integer groupId;
     private OffsetDateTime creationDatetime;
     private OffsetDateTime lastModifiedDatetime;
     private String comment;
