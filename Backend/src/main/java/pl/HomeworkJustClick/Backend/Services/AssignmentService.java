@@ -6,12 +6,13 @@ import pl.HomeworkJustClick.Backend.Responses.AssignmentResponse;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public interface AssignmentService {
 
     public List<Assignment> getAll();
-    public Assignment getById(int id);
+    public Optional<Assignment> getById(int id);
     public AssignmentResponse add(Assignment assignment);
     public Boolean delete(int id);
     public Boolean changeTitleById(int id, String title);

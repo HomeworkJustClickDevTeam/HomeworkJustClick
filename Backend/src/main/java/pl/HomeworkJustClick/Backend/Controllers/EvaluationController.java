@@ -11,6 +11,7 @@ import pl.HomeworkJustClick.Backend.Responses.EvaluationResponse;
 import pl.HomeworkJustClick.Backend.Services.EvaluationService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -22,7 +23,10 @@ public class EvaluationController {
     @GetMapping("/evaluations")
     public List<Evaluation> getAll(){return evaluationService.getAll();}
     @GetMapping("/evaluations/{id}")
-    public Evaluation getById(@PathVariable("id") int id){return evaluationService.getById(id);}
+    public ResponseEntity<Evaluation> getById(@PathVariable("id") int id){
+        Optional<Evaluation> evaluation = evaluationService.getById(id);
+        return evaluation.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
     @PostMapping("/evaluation")
     public ResponseEntity<EvaluationResponse> add(@RequestBody Evaluation evaluation){
         EvaluationResponse response = evaluationService.add(evaluation);
@@ -34,7 +38,7 @@ public class EvaluationController {
             return new ResponseEntity<>(HttpStatus.OK);
         }
         else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -44,7 +48,7 @@ public class EvaluationController {
             return new ResponseEntity<>(HttpStatus.OK);
         }
         else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
     }
@@ -54,7 +58,7 @@ public class EvaluationController {
             return new ResponseEntity<>(HttpStatus.OK);
         }
         else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
     @PutMapping("/evaluation/solution/{solution_id}/{id}")
@@ -63,7 +67,7 @@ public class EvaluationController {
             return new ResponseEntity<>(HttpStatus.OK);
         }
         else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
     @PutMapping("/evaluation/comment/{id}")
@@ -72,7 +76,7 @@ public class EvaluationController {
             return new ResponseEntity<>(HttpStatus.OK);
         }
         else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -82,7 +86,7 @@ public class EvaluationController {
             return new ResponseEntity<>(HttpStatus.OK);
         }
         else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 

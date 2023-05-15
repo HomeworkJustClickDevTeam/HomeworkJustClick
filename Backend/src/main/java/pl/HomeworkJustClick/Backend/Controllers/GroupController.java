@@ -16,6 +16,7 @@ import pl.HomeworkJustClick.Backend.Services.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -41,8 +42,9 @@ public class GroupController {
     }
 
     @GetMapping("/group/{id}")
-    public Group getById(@PathVariable("id") int id) {
-        return groupService.getById(id);
+    public ResponseEntity<Group> getById(@PathVariable("id") int id) {
+        Optional<Group> group = groupService.getById(id);
+        return group.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping("/group")
@@ -56,7 +58,7 @@ public class GroupController {
         if(groupService.delete(id)) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -65,7 +67,7 @@ public class GroupController {
         if(groupService.changeNameById(id, name)){
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -74,7 +76,7 @@ public class GroupController {
         if(groupService.changeDescriptionById(id, description)){
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -83,16 +85,31 @@ public class GroupController {
         if(color >= 0 && color <20 && groupService.changeColorById(id, color)){
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @PutMapping("/group/archive/{id}")
-    public ResponseEntity<Void> archiveGroup(@PathVariable("id") int id, @RequestBody int color){
-        if(groupService.archiveGroup(id)){
+    public ResponseEntity<Void> archiveGroup(@PathVariable("id") int id){
+        int response = groupService.archiveGroup(id);
+        if(response == 0){
             return new ResponseEntity<>(HttpStatus.OK);
-        } else {
+        } else if (response == 1) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/group/unarchive/{id}")
+    public ResponseEntity<Void> unarchiveGroup(@PathVariable("id") int id){
+        int response = groupService.unarchiveGroup(id);
+        if(response == 0){
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else if (response == 1) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -149,7 +166,7 @@ public class GroupController {
         if(groupStudentService.deleteStudentFromGroup(group_id, student_id)) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -160,7 +177,7 @@ public class GroupController {
         } else if(groupTeacherService.countTeachersInGroup(group_id) < 2) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         } else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 

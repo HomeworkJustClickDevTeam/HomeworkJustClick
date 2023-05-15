@@ -4,12 +4,13 @@ import pl.HomeworkJustClick.Backend.Entities.File;
 import pl.HomeworkJustClick.Backend.Responses.FileResponse;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface FileService {
 
     public List<File> getAll();
 
-    public File getById(int id);
+    public Optional<File> getById(int id);
 
     public FileResponse addWithAssignment (File file, int assignment_id);
 

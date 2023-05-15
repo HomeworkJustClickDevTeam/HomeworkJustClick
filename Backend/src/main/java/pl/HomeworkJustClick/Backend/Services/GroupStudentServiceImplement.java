@@ -10,6 +10,7 @@ import pl.HomeworkJustClick.Backend.Repositories.GroupTeacherRepository;
 import pl.HomeworkJustClick.Backend.Repositories.UserRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class GroupStudentServiceImplement implements GroupStudentService{
@@ -32,12 +33,8 @@ public class GroupStudentServiceImplement implements GroupStudentService{
     }
 
     @Override
-    public GroupStudent getById(int id) {
-        if (groupStudentRepository.findById(id).isPresent()) {
-            return groupStudentRepository.findById(id).get();
-        } else {
-            return null;
-        }
+    public Optional<GroupStudent> getById(int id) {
+        return groupStudentRepository.findById(id);
     }
 
     @Override
@@ -64,7 +61,7 @@ public class GroupStudentServiceImplement implements GroupStudentService{
             groupStudentRepository.save(groupStudent);
             return true;
         } else {
-            return null;
+            return false;
         }
     }
 

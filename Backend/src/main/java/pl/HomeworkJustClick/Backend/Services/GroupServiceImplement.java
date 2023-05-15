@@ -11,6 +11,7 @@ import pl.HomeworkJustClick.Backend.Repositories.GroupTeacherRepository;
 import pl.HomeworkJustClick.Backend.Responses.GroupResponse;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class GroupServiceImplement implements GroupService {
@@ -33,12 +34,8 @@ public class GroupServiceImplement implements GroupService {
     }
 
     @Override
-    public Group getById(int id) {
-        if (groupRepository.findById(id).isPresent()) {
-            return groupRepository.findById(id).get();
-        } else {
-            return null;
-        }
+    public Optional<Group> getById(int id) {
+        return groupRepository.findById(id);
     }
 
     @Override
@@ -69,7 +66,7 @@ public class GroupServiceImplement implements GroupService {
             groupRepository.save(group);
             return true;
         } else {
-            return null;
+            return false;
         }
     }
 
@@ -81,7 +78,7 @@ public class GroupServiceImplement implements GroupService {
             groupRepository.save(group);
             return true;
         } else {
-            return null;
+            return false;
         }
     }
 
@@ -93,23 +90,39 @@ public class GroupServiceImplement implements GroupService {
             groupRepository.save(group);
             return true;
         } else {
-            return null;
+            return false;
         }
     }
 
     @Override
-    public Boolean archiveGroup(int id) {
+    public int archiveGroup(int id) {
         if (groupRepository.findById(id).isPresent()) {
             Group group = groupRepository.findById(id).get();
             if(group.isArchived()) {
-                return false;
+                return 1;
             } else {
                 group.setArchived(true);
             }
             groupRepository.save(group);
-            return true;
+            return 0;
         } else {
-            return null;
+            return 2;
+        }
+    }
+
+    @Override
+    public int unarchiveGroup(int id) {
+        if (groupRepository.findById(id).isPresent()) {
+            Group group = groupRepository.findById(id).get();
+            if(!group.isArchived()) {
+                return 1;
+            } else {
+                group.setArchived(true);
+            }
+            groupRepository.save(group);
+            return 0;
+        } else {
+            return 2;
         }
     }
 

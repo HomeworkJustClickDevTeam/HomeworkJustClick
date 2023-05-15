@@ -12,6 +12,7 @@ import pl.HomeworkJustClick.Backend.Repositories.UserRepository;
 import pl.HomeworkJustClick.Backend.Responses.SolutionResponse;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SolutionServiceImplement implements SolutionService{
@@ -31,13 +32,8 @@ public class SolutionServiceImplement implements SolutionService{
     }
 
     @Override
-    public Solution getById(int id) {
-        if(solutionRepository.findById(id).isPresent()){
-            return solutionRepository.findById(id).get();
-        }
-        else {
-            return null;
-        }
+    public Optional<Solution> getById(int id) {
+        return solutionRepository.findById(id);
     }
 
     @Override
@@ -73,7 +69,7 @@ public class SolutionServiceImplement implements SolutionService{
             return true;
         }
         else {
-            return null;
+            return false;
         }
     }
 
@@ -87,7 +83,7 @@ public class SolutionServiceImplement implements SolutionService{
             return true;
         }
         else {
-            return null;
+            return false;
         }
     }
 }

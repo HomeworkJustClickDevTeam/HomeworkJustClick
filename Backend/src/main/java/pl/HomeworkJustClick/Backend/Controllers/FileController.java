@@ -12,6 +12,7 @@ import pl.HomeworkJustClick.Backend.Responses.FileResponse;
 import pl.HomeworkJustClick.Backend.Services.FileService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -28,15 +29,16 @@ public class FileController {
     }
 
     @GetMapping("/file/{id}")
-    public File getById(@PathVariable("id") int id) {
-        return fileService.getById(id);
+    public ResponseEntity<File> getById(@PathVariable("id") int id) {
+        Optional<File> file = fileService.getById(id);
+        return file.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping("/file/withAssignment/{id}")
     public ResponseEntity<FileResponse> addWithAssignment(@RequestBody File file, @PathVariable("id") int id) {
         FileResponse response = fileService.addWithAssignment(file, id);
         if(response==null){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
             return ResponseEntity.ok(response);
         }
@@ -46,7 +48,7 @@ public class FileController {
     public ResponseEntity<FileResponse> addWithSolution(@RequestBody File file, @PathVariable("id") int id) {
         FileResponse response = fileService.addWithSolution(file, id);
         if(response==null){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
             return ResponseEntity.ok(response);
         }
@@ -57,7 +59,7 @@ public class FileController {
         if(fileService.delete(id)) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 

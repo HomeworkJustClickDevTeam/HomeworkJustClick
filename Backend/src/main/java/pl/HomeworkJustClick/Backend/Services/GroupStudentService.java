@@ -3,12 +3,13 @@ package pl.HomeworkJustClick.Backend.Services;
 import pl.HomeworkJustClick.Backend.Entities.GroupStudent;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface GroupStudentService {
 
     public List<GroupStudent> getAll();
 
-    public GroupStudent getById(int id);
+    public Optional<GroupStudent> getById(int id);
 
     public Boolean add(GroupStudent groupStudent);
 
