@@ -11,6 +11,7 @@ import pl.HomeworkJustClick.Backend.Repositories.SolutionRepository;
 import pl.HomeworkJustClick.Backend.Responses.FileResponse;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FileServiceImplement implements FileService {
@@ -32,12 +33,8 @@ public class FileServiceImplement implements FileService {
     }
 
     @Override
-    public File getById(int id) {
-        if (fileRepository.findById(id).isPresent()) {
-            return fileRepository.findById(id).get();
-        } else {
-            return null;
-        }
+    public Optional<File> getById(int id) {
+        return fileRepository.findById(id);
     }
 
     @Override
@@ -66,10 +63,10 @@ public class FileServiceImplement implements FileService {
 
     @Override
     public Boolean delete(int id){
-        try {
+        if(fileRepository.existsById(id)) {
             fileRepository.deleteById(id);
             return true;
-        } catch (IllegalArgumentException e) {
+        } else  {
             return false;
         }
     }

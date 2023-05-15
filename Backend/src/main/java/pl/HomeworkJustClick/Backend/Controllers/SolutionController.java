@@ -11,6 +11,7 @@ import pl.HomeworkJustClick.Backend.Responses.SolutionResponse;
 import pl.HomeworkJustClick.Backend.Services.SolutionService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -23,7 +24,10 @@ public class SolutionController {
     @GetMapping("/solutions")
     public List<Solution> getAll(){return solutionService.getAll();}
     @GetMapping("/solution/{id}")
-    public Solution getById(@PathVariable("id") int id){return solutionService.getById(id);}
+    public ResponseEntity<Solution> getById(@PathVariable("id") int id){
+        Optional<Solution> solution = solutionService.getById(id);
+        return solution.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
     @PostMapping("/solution")
     public ResponseEntity<SolutionResponse> add(@RequestBody Solution solution){
         SolutionResponse response = solutionService.add(solution);
@@ -35,7 +39,7 @@ public class SolutionController {
             return new ResponseEntity<>(HttpStatus.OK);
         }
         else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
     @PutMapping("/solution/assignment/{assignment_id}/{id}")
@@ -44,7 +48,7 @@ public class SolutionController {
             return new ResponseEntity<>(HttpStatus.OK);
         }
         else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 }

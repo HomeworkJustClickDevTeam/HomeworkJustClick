@@ -12,6 +12,7 @@ import pl.HomeworkJustClick.Backend.Services.GroupTeacherService;
 import pl.HomeworkJustClick.Backend.Services.UserService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -30,7 +31,7 @@ public class UserController {
     }
 
     @GetMapping("/user/{id}")
-    public User getById(@PathVariable("id") int id) {
+    public Optional<User> getById(@PathVariable("id") int id) {
         return userService.getById(id);
     }
 

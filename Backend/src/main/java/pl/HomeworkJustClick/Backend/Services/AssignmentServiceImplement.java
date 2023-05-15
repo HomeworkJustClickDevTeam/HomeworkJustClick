@@ -14,6 +14,7 @@ import pl.HomeworkJustClick.Backend.Responses.AssignmentResponse;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AssignmentServiceImplement implements AssignmentService {
@@ -35,13 +36,8 @@ public class AssignmentServiceImplement implements AssignmentService {
 
 
     @Override
-    public Assignment getById(int id) {
-        if(assignmentRepository.findById(id).isPresent()){
-            return assignmentRepository.findById(id).get();
-        }
-        else{
-            return null;
-        }
+    public Optional<Assignment> getById(int id) {
+        return assignmentRepository.findById(id);
     }
 
     @Override
@@ -63,10 +59,10 @@ public class AssignmentServiceImplement implements AssignmentService {
 
     @Override
     public Boolean delete(int id) {
-        try{
+        if(assignmentRepository.existsById(id)) {
             assignmentRepository.deleteById(id);
             return true;
-        } catch (IllegalArgumentException e){
+        } else {
             return false;
         }
     }
@@ -79,7 +75,7 @@ public class AssignmentServiceImplement implements AssignmentService {
             assignmentRepository.save(assignment);
             return true;
         }else {
-            return null;
+            return false;
         }
     }
 
@@ -91,7 +87,7 @@ public class AssignmentServiceImplement implements AssignmentService {
             assignmentRepository.save(assignment);
             return true;
         }else {
-            return null;
+            return false;
         }
     }
 
@@ -103,7 +99,7 @@ public class AssignmentServiceImplement implements AssignmentService {
             assignmentRepository.save(assignment);
             return true;
         }else {
-            return null;
+            return false;
         }
     }
 
@@ -116,7 +112,7 @@ public class AssignmentServiceImplement implements AssignmentService {
             return true;
         }
         else {
-            return null;
+            return false;
         }
     }
 
@@ -131,7 +127,7 @@ public class AssignmentServiceImplement implements AssignmentService {
             return true;
         }
         else{
-            return null;
+            return false;
         }
     }
 
@@ -146,7 +142,7 @@ public class AssignmentServiceImplement implements AssignmentService {
             return true;
         }
         else{
-            return null;
+            return false;
         }
     }
 

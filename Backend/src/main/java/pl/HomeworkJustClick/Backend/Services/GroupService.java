@@ -5,11 +5,12 @@ import pl.HomeworkJustClick.Backend.Entities.GroupTeacher;
 import pl.HomeworkJustClick.Backend.Responses.GroupResponse;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface GroupService {
     public List<Group> getAll();
 
-    public Group getById(int id);
+    public Optional<Group> getById(int id);
 
     public GroupResponse add(Group group);
 
@@ -21,7 +22,9 @@ public interface GroupService {
 
     public Boolean changeColorById(int id, int color);
 
-    public Boolean archiveGroup(int id);
+    public int archiveGroup(int id);
+
+    public int unarchiveGroup(int id);
 
     public Boolean addWithTeacher(Group group, GroupTeacher groupTeacher);
 

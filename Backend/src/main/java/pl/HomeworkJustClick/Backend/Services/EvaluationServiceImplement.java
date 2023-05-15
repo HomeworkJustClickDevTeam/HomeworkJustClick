@@ -12,6 +12,7 @@ import pl.HomeworkJustClick.Backend.Repositories.UserRepository;
 import pl.HomeworkJustClick.Backend.Responses.EvaluationResponse;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EvaluationServiceImplement implements EvaluationService {
@@ -31,13 +32,8 @@ public class EvaluationServiceImplement implements EvaluationService {
     }
 
     @Override
-    public Evaluation getById(int id) {
-        if(evaluationRepository.findById(id).isPresent()){
-            return evaluationRepository.findById(id).get();
-        }
-        else {
-            return null;
-        }
+    public Optional<Evaluation> getById(int id) {
+        return evaluationRepository.findById(id);
     }
 
     @Override
@@ -57,11 +53,10 @@ public class EvaluationServiceImplement implements EvaluationService {
 
     @Override
     public Boolean delete(int id) {
-        try{
+        if(evaluationRepository.existsById(id)){
             evaluationRepository.deleteById(id);
             return true;
-        }
-        catch (IllegalArgumentException e){
+        } else {
             return false;
         }
     }
@@ -75,7 +70,7 @@ public class EvaluationServiceImplement implements EvaluationService {
             return true;
         }
         else{
-            return null;
+            return false;
         }
     }
 
@@ -89,7 +84,7 @@ public class EvaluationServiceImplement implements EvaluationService {
             return true;
         }
         else{
-            return null;
+            return false;
         }
     }
 
@@ -103,7 +98,7 @@ public class EvaluationServiceImplement implements EvaluationService {
             return true;
         }
         else{
-            return null;
+            return false;
         }
     }
 
@@ -116,7 +111,7 @@ public class EvaluationServiceImplement implements EvaluationService {
             return true;
         }
         else{
-            return null;
+            return false;
         }
     }
 
@@ -129,7 +124,7 @@ public class EvaluationServiceImplement implements EvaluationService {
             return true;
         }
         else{
-            return null;
+            return false;
         }
     }
 }

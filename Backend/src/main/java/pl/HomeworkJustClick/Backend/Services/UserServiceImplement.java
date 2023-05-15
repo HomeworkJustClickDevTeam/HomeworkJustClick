@@ -9,6 +9,7 @@ import pl.HomeworkJustClick.Backend.Repositories.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImplement implements UserService{
@@ -24,12 +25,8 @@ public class UserServiceImplement implements UserService{
     }
 
     @Override
-    public User getById(int id) {
-        if (userRepository.findById(id).isPresent()) {
-            return userRepository.findById(id).get();
-        } else {
-            return null;
-        }
+    public Optional<User> getById(int id) {
+        return userRepository.findById(id);
     }
 
     @Override
@@ -42,10 +39,10 @@ public class UserServiceImplement implements UserService{
     public Boolean update(int id, User updatedUser) {
         if (userRepository.findById(id).isPresent()) {
             User user = userRepository.getReferenceById(id);
-            if (updatedUser.getFirstname() != null) {
+            if (!updatedUser.getFirstname().isEmpty() && !updatedUser.getFirstname().equals(user.getFirstname())) {
                 user.setFirstname(updatedUser.getFirstname());
             }
-            if (updatedUser.getLastname() != null) {
+            if (!updatedUser.getLastname().isEmpty() && !updatedUser.getLastname().equals(user.getLastname())) {
                 user.setLastname(updatedUser.getLastname());
             }
             if (updatedUser.getIndex() != user.getIndex()) {
@@ -54,7 +51,6 @@ public class UserServiceImplement implements UserService{
             if (updatedUser.getColor() != user.getColor()) {
                 user.setColor(updatedUser.getColor());
             }
-
             try {
                 userRepository.save(user);
                 return true;
@@ -68,10 +64,10 @@ public class UserServiceImplement implements UserService{
 
     @Override
     public Boolean delete(int id) {
-        try {
+        if(userRepository.existsById(id)) {
             userRepository.deleteById(id);
             return true;
-        } catch (IllegalArgumentException e) {
+        } else  {
             return false;
         }
     }
@@ -84,7 +80,7 @@ public class UserServiceImplement implements UserService{
             userRepository.save(user);
             return true;
         } else {
-            return null;
+            return false;
         }
     }
 
@@ -96,7 +92,7 @@ public class UserServiceImplement implements UserService{
             userRepository.save(user);
             return true;
         } else {
-            return null;
+            return false;
         }
     }
 
