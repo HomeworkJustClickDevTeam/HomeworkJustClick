@@ -53,6 +53,9 @@ public class Solution {
     @UpdateTimestamp
     private OffsetDateTime lastModifiedDatetime;
 
+    @Column(name = "comment")
+    private String comment;
+
     public Solution(User user, Assignment assignment){
         this.assignment = assignment;
         this.user = user;

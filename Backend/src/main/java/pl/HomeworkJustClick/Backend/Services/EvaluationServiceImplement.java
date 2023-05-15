@@ -1,8 +1,10 @@
 package pl.HomeworkJustClick.Backend.Services;
 
 import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.HomeworkJustClick.Backend.Entities.Assignment;
 import pl.HomeworkJustClick.Backend.Entities.Evaluation;
 import pl.HomeworkJustClick.Backend.Entities.Solution;
 import pl.HomeworkJustClick.Backend.Entities.User;
@@ -10,6 +12,7 @@ import pl.HomeworkJustClick.Backend.Repositories.EvaluationRepository;
 import pl.HomeworkJustClick.Backend.Repositories.SolutionRepository;
 import pl.HomeworkJustClick.Backend.Repositories.UserRepository;
 import pl.HomeworkJustClick.Backend.Responses.EvaluationResponse;
+import pl.HomeworkJustClick.Backend.Responses.SolutionResponse;
 
 import java.util.List;
 import java.util.Optional;
@@ -44,11 +47,38 @@ public class EvaluationServiceImplement implements EvaluationService {
                 .result(evaluation.getResult())
                 .userId(evaluation.getUser().getId())
                 .solutionId(evaluation.getSolution().getId())
+                .groupId(evaluation.getGroup().getId())
                 .creationDatetime(evaluation.getCreationDatetime())
                 .lastModifiedDatetime(evaluation.getLastModifiedDatetime())
                 .comment(evaluation.getComment())
                 .grade(evaluation.getGrade())
                 .build();
+    }
+
+    @Override
+    @Transactional
+    public EvaluationResponse addWithUserAndSolution(Evaluation evaluation, int user_id, int solution_id) {
+        Optional<User> user = userRepository.findById(user_id);
+        Optional<Solution> solution = solutionRepository.findById(solution_id);
+        if(user.isPresent() && solution.isPresent()) {
+            evaluation.setSolution(solution.get());
+            evaluation.setUser(user.get());
+            evaluation.setGroup(solution.get().getGroup());
+            entityManager.persist(evaluation);
+            return EvaluationResponse.builder()
+                    .id(evaluation.getId())
+                    .result(evaluation.getResult())
+                    .userId(evaluation.getUser().getId())
+                    .solutionId(evaluation.getSolution().getId())
+                    .groupId(evaluation.getGroup().getId())
+                    .creationDatetime(evaluation.getCreationDatetime())
+                    .lastModifiedDatetime(evaluation.getLastModifiedDatetime())
+                    .comment(evaluation.getComment())
+                    .grade(evaluation.getGrade())
+                    .build();
+        } else {
+            return EvaluationResponse.builder().build();
+        }
     }
 
     @Override

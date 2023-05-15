@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.HomeworkJustClick.Backend.Entities.Evaluation;
+import pl.HomeworkJustClick.Backend.Entities.Solution;
 import pl.HomeworkJustClick.Backend.Responses.EvaluationResponse;
 import pl.HomeworkJustClick.Backend.Services.EvaluationService;
 
@@ -32,6 +33,17 @@ public class EvaluationController {
         EvaluationResponse response = evaluationService.add(evaluation);
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/evaluation/withUserAndSolution/{user_id}/{solution_id}")
+    public ResponseEntity<EvaluationResponse> addWithUserAndSolution(@RequestBody Evaluation evaluation, @PathVariable("user_id") int user_id, @PathVariable("solution_id") int solution_id) {
+        EvaluationResponse response = evaluationService.addWithUserAndSolution(evaluation, user_id, solution_id);
+        if(response.getId()!=0) {
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
+    }
+
     @DeleteMapping("/evaluation/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") int id){
         if(evaluationService.delete(id)){

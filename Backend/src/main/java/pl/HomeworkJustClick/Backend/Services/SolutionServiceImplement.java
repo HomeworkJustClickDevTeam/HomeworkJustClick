@@ -49,6 +49,7 @@ public class SolutionServiceImplement implements SolutionService{
                 .assignmentId(solution.getAssignment().getId())
                 .creationDateTime(solution.getCreationDatetime())
                 .lastModifiedDatetime(solution.getLastModifiedDatetime())
+                .comment(solution.getComment())
                 .build();
     }
 
@@ -69,6 +70,7 @@ public class SolutionServiceImplement implements SolutionService{
                     .groupId(assignment.get().getGroup().getId())
                     .creationDateTime(solution.getCreationDatetime())
                     .lastModifiedDatetime(solution.getLastModifiedDatetime())
+                    .comment(solution.getComment())
                     .build();
         } else {
             return SolutionResponse.builder().build();
@@ -125,6 +127,7 @@ public class SolutionServiceImplement implements SolutionService{
                     .groupId(solution.getGroup().getId())
                     .creationDateTime(solution.getCreationDatetime())
                     .lastModifiedDatetime(solution.getLastModifiedDatetime())
+                    .comment(solution.getComment())
                     .build());
         }
         return solutionResponses;
@@ -142,6 +145,7 @@ public class SolutionServiceImplement implements SolutionService{
                     .groupId(solution.getGroup().getId())
                     .creationDateTime(solution.getCreationDatetime())
                     .lastModifiedDatetime(solution.getLastModifiedDatetime())
+                    .comment(solution.getComment())
                     .build());
         }
         return solutionResponses;

@@ -19,4 +19,5 @@ public class SolutionResponse {
     private Integer groupId;
     private OffsetDateTime creationDateTime;
     private OffsetDateTime lastModifiedDatetime;
+    private String comment;
 }
