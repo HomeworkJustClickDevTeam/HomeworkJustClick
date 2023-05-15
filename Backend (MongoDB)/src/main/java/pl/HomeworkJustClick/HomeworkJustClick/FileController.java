@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -27,8 +28,8 @@ public class FileController {
     @GetMapping("/file/{id}")
     @ResponseBody
     public ResponseEntity<File> getFile(@PathVariable("id") String id) {
-        File file = fileService.getFile(id);
-        return ResponseEntity.ok().body(file);
+        Optional<File> file = fileService.getFile(id);
+        return file.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @DeleteMapping("/file/{id}")
@@ -36,7 +37,7 @@ public class FileController {
         if(fileService.deleteFile(id)){
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 }
