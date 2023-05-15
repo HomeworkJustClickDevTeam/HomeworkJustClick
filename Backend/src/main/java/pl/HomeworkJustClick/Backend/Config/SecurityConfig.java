@@ -23,50 +23,9 @@ public class SecurityConfig {
     private static final String[] AUTH_WHITELIST = {
         "/swagger-ui.html","/v3/api-docs"
     };
-    private static final String[] ADMIN_URLs = {
-            "/api/test/admin"
-    };
-
-    private static final String[] TEACHER_URLs = {
-            "/api/test/teacher"
-    };
-
-    private static final String[] STUDENT_URLs = {
-            "/api/test/student"
-    };
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-
-
-
-//        httpSecurity
-//                .csrf()
-//                .disable()
-//                .authorizeHttpRequests()
-//                .requestMatchers("/api/auth/**")
-//                .permitAll()
-//                .and()
-//                .authorizeHttpRequests()
-//                .requestMatchers(ADMIN_URLs)
-//                .hasAuthority("ADMIN")
-//                .and()
-//                .authorizeHttpRequests()
-//                .requestMatchers(TEACHER_URLs)
-//                .hasAuthority("TEACHER")
-//                .and()
-//                .authorizeHttpRequests()
-//                .requestMatchers(STUDENT_URLs)
-//                .hasAuthority("STUDENT")
-//                .anyRequest()
-//                .authenticated()
-//                .and()
-//                .sessionManagement()
-//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//                .and()
-//                .authenticationProvider(authenticationProvider)
-//                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-
         httpSecurity
                 .csrf()
                 .disable()
