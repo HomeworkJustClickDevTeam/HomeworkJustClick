@@ -13,6 +13,7 @@ import pl.HomeworkJustClick.Backend.Repositories.UserRepository;
 import pl.HomeworkJustClick.Backend.Responses.AssignmentResponse;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,6 +56,31 @@ public class AssignmentServiceImplement implements AssignmentService {
                 .title(assignment.getTitle())
                 .visible(assignment.getVisible())
                 .build();
+    }
+
+    @Override
+    @Transactional
+    public AssignmentResponse addWithUserAndGroup(Assignment assignment, int user_id, int group_id) {
+        Optional<User> user = userRepository.findById(user_id);
+        Optional<Group> group = groupRepository.findById(group_id);
+        if(user.isPresent() && group.isPresent()) {
+            assignment.setGroup(group.get());
+            assignment.setUser(user.get());
+            entityManager.persist(assignment);
+            return AssignmentResponse.builder()
+                    .id(assignment.getId())
+                    .userId(user_id)
+                    .groupId(group_id)
+                    .taskDescription(assignment.getTaskDescription())
+                    .creationDatetime(assignment.getCreationDatetime())
+                    .lastModifiedDatetime(assignment.getLastModifiedDatetime())
+                    .completionDatetime(assignment.getCompletionDatetime())
+                    .title(assignment.getTitle())
+                    .visible(assignment.getVisible())
+                    .build();
+        } else {
+            return AssignmentResponse.builder().build();
+        }
     }
 
     @Override
@@ -146,5 +172,24 @@ public class AssignmentServiceImplement implements AssignmentService {
         }
     }
 
+    @Override
+    public List<AssignmentResponse> getAssignmentsByGroupId(int id) {
+        List<Assignment> assignments = assignmentRepository.getAssignmentsByGroupId(id);
+        List<AssignmentResponse> assignmentResponses = new ArrayList<>();
+        for(Assignment assignment : assignments) {
+            assignmentResponses.add(AssignmentResponse.builder()
+                    .id(assignment.getId())
+                    .userId(assignment.getUser().getId())
+                    .groupId(assignment.getGroup().getId())
+                    .taskDescription(assignment.getTaskDescription())
+                    .creationDatetime(assignment.getCreationDatetime())
+                    .lastModifiedDatetime(assignment.getLastModifiedDatetime())
+                    .completionDatetime(assignment.getCompletionDatetime())
+                    .title(assignment.getTitle())
+                    .visible(assignment.getVisible())
+                    .build());
+        }
+        return assignmentResponses;
+    }
 
 }
