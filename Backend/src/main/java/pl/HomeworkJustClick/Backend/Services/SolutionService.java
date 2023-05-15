@@ -7,11 +7,23 @@ import java.util.List;
 import java.util.Optional;
 
 public interface SolutionService {
+
     List<Solution> getAll();
+
     Optional<Solution> getById(int id);
+
     SolutionResponse add(Solution solution);
+
+    public SolutionResponse addWithUserAndAssignment(Solution solution, int user_id, int assignment_id);
+
     Boolean delete(int id);
+
     Boolean changeUserById(int id, int userId);
+
     Boolean changeAssignmentById(int id, int assignmentId);
+
+    public List<SolutionResponse> getSolutionsByGroupId(int id);
+
+    public List<SolutionResponse> getSolutionsByAssignmentId(int id);
 
 }

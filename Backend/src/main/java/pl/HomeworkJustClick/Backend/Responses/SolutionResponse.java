@@ -16,6 +16,7 @@ public class SolutionResponse {
     private int id;
     private Integer userId;
     private Integer assignmentId;
+    private Integer groupId;
     private OffsetDateTime creationDateTime;
     private OffsetDateTime lastModifiedDatetime;
 }

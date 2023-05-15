@@ -32,7 +32,8 @@ public class Evaluation {
     @JoinColumn(name="userId", nullable = false)
     private User user;
 
-    @OneToOne(mappedBy = "evaluation")
+    @OneToOne
+    @JoinColumn(name="solution_id", referencedColumnName = "id", nullable = false, foreignKey = @ForeignKey(name = "Fk_solution"))
     private Solution solution;
 
     @Column(name = "creationDatetime", updatable = false, nullable = false)
