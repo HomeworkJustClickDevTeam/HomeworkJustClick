@@ -26,6 +26,7 @@ public class FileServiceImplement implements FileService {
     SolutionRepository solutionRepository;
 
     EntityManager entityManager;
+    public FileServiceImplement(EntityManager entityManager) {this.entityManager = entityManager;};
 
     @Override
     public List<File> getAll() {
