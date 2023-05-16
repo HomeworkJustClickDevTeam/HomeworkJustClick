@@ -44,6 +44,16 @@ public class CommentServiceImplement implements CommentService {
         return commentRepository.findById(id);
     }
 
+    @Override
+    public List<Comment> getCommentsByUser (int user_id) {
+        return commentRepository.getCommentsByUser(user_id);
+    }
+
+    @Override
+    public List<Comment> getCommentsByEvaluation (int evaluation_id) {
+        return commentRepository.getCommentsByEvaluation(evaluation_id);
+    }
+
     @Transactional
     @Override
     public CommentResponse addWithUser(Comment comment, int user_id) {

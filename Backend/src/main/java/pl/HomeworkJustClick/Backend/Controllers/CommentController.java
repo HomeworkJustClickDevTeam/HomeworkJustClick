@@ -38,6 +38,16 @@ public class CommentController {
         return comment.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    @GetMapping("/comments/byUser/{user_id}")
+    public List<Comment> getByUser(@PathVariable("user_id") int id) {
+        return commentService.getCommentsByUser(id);
+    }
+
+    @GetMapping("/comments/byEvaluation/{evaluation_id}")
+    public List<Comment> getByEvaluation(@PathVariable("evaluation_id") int id) {
+        return commentService.getCommentsByEvaluation(id);
+    }
+
     @PostMapping("/comment/addWithUser/{user_id}")
     public ResponseEntity<CommentResponse> addWithUser(@PathVariable("user_id") int user_id, @RequestBody Comment comment) {
         CommentResponse response = commentService.addWithUser(comment, user_id);
@@ -58,6 +68,15 @@ public class CommentController {
     @DeleteMapping("/comment/{id}")
     public ResponseEntity<Void> delete (@PathVariable("id") int id) {
         if (commentService.delete(id)) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @DeleteMapping("/comment/fromEvaluation/{comment_id}/{evaluation_id}")
+    public ResponseEntity<Void> deleteCommentFromEvaluation (@PathVariable("comment_id") int comment_id, @PathVariable("evaluation_id") int evaluation_id) {
+        if(commentEvaluationService.deleteFromEvaluation(comment_id, evaluation_id)){
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

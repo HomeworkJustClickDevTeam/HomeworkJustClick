@@ -69,6 +69,17 @@ public class CommentEvaluationServiceImplement implements CommentEvaluationServi
     }
 
     @Override
+    public Boolean deleteFromEvaluation(int comment_id, int evaluation_id) {
+        Optional<CommentEvaluation> commentEvaluationOptional = commentEvaluationRepository.getCommentEvaluationByCommentAndEvaluation(comment_id, evaluation_id);
+        if(commentEvaluationOptional.isPresent()) {
+            commentEvaluationRepository.deleteById(commentEvaluationOptional.get().getId());
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
     public Boolean changeDescriptionById(int id, String description) {
         Optional<CommentEvaluation> commentEvaluationOptional = commentEvaluationRepository.findById(id);
         if (commentEvaluationOptional.isPresent()) {

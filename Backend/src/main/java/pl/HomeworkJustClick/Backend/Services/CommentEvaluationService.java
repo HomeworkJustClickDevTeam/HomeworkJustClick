@@ -17,5 +17,7 @@ public interface CommentEvaluationService {
 
     public Boolean delete(int id);
 
+    public Boolean deleteFromEvaluation(int comment_id, int evaluation_id);
+
     public Boolean changeDescriptionById(int id, String description);
 }

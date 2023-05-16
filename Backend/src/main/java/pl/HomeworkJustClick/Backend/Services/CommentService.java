@@ -12,6 +12,10 @@ public interface CommentService {
 
     public Optional<Comment> getById(int id);
 
+    public List<Comment> getCommentsByUser (int user_id);
+
+    public List<Comment> getCommentsByEvaluation (int evaluation_id);
+
     public CommentResponse addWithUser(Comment comment, int user_id);
 
     public Boolean delete (int id);
