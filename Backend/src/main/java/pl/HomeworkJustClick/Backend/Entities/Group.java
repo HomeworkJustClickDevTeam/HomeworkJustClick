@@ -37,7 +37,11 @@ public class Group {
     @Column(name="isArchived")
     boolean isArchived;
 
-    @OneToMany(mappedBy = "group")
+    @OneToMany(
+            mappedBy = "group",
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
     @JsonIgnore
     private List<Assignment> assignments = new ArrayList<>();
 

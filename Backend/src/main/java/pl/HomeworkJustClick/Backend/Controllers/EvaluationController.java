@@ -82,15 +82,6 @@ public class EvaluationController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-    @PutMapping("/evaluation/comment/{id}")
-    public ResponseEntity<Void> updateComment(@RequestBody String comment, @PathVariable("id") int id){
-        if(evaluationService.changeCommentById(id, comment)){
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
 
     @PutMapping("/evaluation/grade/{id}")
     public ResponseEntity<Void> updateGrade(@RequestBody Double grade, @PathVariable("id") int id){

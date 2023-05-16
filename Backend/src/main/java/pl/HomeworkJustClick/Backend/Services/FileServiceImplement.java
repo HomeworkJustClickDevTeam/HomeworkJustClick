@@ -42,6 +42,7 @@ public class FileServiceImplement implements FileService {
     public FileResponse addWithAssignment (File file, int assignment_id) {
         if(assignmentRepository.findById(assignment_id).isPresent()) {
             file.setAssignment(assignmentRepository.findById(assignment_id).get());
+            file.setSolution(null);
             entityManager.persist(file);
             return FileResponse.builder().id(file.getId()).name(file.getName()).format(file.getFormat()).mongo_id(file.getMongo_id()).build();
         } else {
@@ -54,6 +55,7 @@ public class FileServiceImplement implements FileService {
     public FileResponse addWithSolution (File file, int solution_id) {
         if(solutionRepository.findById(solution_id).isPresent()) {
             file.setSolution(solutionRepository.findById(solution_id).get());
+            file.setAssignment(null);
             entityManager.persist(file);
             return FileResponse.builder().id(file.getId()).name(file.getName()).format(file.getFormat()).mongo_id(file.getMongo_id()).build();
         } else {

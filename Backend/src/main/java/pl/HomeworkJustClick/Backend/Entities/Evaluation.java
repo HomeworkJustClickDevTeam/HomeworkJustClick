@@ -11,6 +11,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Builder
 @Data
@@ -51,11 +53,16 @@ public class Evaluation {
     @UpdateTimestamp
     private OffsetDateTime lastModifiedDatetime;
 
-    @Column(name = "comment")
-    private String comment;
-
     @Column(name = "grade")
     private Double grade;
+
+    @OneToMany(
+            mappedBy = "evaluation",
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    @JsonIgnore
+    private List<CommentEvaluation> commentEvaluations = new ArrayList<>();
 
     public Evaluation(User user, Solution solution){
         this.user = user;
@@ -96,14 +103,6 @@ public class Evaluation {
 
     public void setSolution(Solution solution) {
         this.solution = solution;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
     }
 
     public Double getGrade() {

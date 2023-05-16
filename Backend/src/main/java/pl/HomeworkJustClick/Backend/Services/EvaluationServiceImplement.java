@@ -50,7 +50,6 @@ public class EvaluationServiceImplement implements EvaluationService {
                 .groupId(evaluation.getGroup().getId())
                 .creationDatetime(evaluation.getCreationDatetime())
                 .lastModifiedDatetime(evaluation.getLastModifiedDatetime())
-                .comment(evaluation.getComment())
                 .grade(evaluation.getGrade())
                 .build();
     }
@@ -73,7 +72,6 @@ public class EvaluationServiceImplement implements EvaluationService {
                     .groupId(evaluation.getGroup().getId())
                     .creationDatetime(evaluation.getCreationDatetime())
                     .lastModifiedDatetime(evaluation.getLastModifiedDatetime())
-                    .comment(evaluation.getComment())
                     .grade(evaluation.getGrade())
                     .build();
         } else {
@@ -132,18 +130,6 @@ public class EvaluationServiceImplement implements EvaluationService {
         }
     }
 
-    @Override
-    public Boolean changeCommentById(int id, String comment) {
-        if(evaluationRepository.findById(id).isPresent()){
-            Evaluation evaluation = evaluationRepository.findById(id).get();
-            evaluation.setComment(comment);
-            evaluationRepository.save(evaluation);
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
 
     @Override
     public Boolean changeGradeById(int id, Double grade) {

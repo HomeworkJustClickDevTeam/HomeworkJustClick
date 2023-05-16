@@ -225,5 +225,4 @@ public class AssignmentServiceImplement implements AssignmentService {
         }
         return ucheckedAssignments;
     }
-
 }
