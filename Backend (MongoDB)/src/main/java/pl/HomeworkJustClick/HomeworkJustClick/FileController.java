@@ -19,7 +19,8 @@ public class FileController {
     FileService fileService;
 
     @PostMapping("/file")
-    public ResponseEntity<FileResponse> add(@RequestParam("name") String name, @RequestParam("file")MultipartFile file) throws IOException {
+    public ResponseEntity<FileResponse> add(@RequestParam("file")MultipartFile file) throws IOException {
+        String name = file.getOriginalFilename();
         String format = name.split("\\.")[1];
         FileResponse response = fileService.addFile(name, format, file);
         return ResponseEntity.ok(response);
