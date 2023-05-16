@@ -1,6 +1,7 @@
 package pl.HomeworkJustClick.Backend.Services;
 
 import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.HomeworkJustClick.Backend.Entities.Comment;
@@ -43,6 +44,7 @@ public class CommentServiceImplement implements CommentService {
         return commentRepository.findById(id);
     }
 
+    @Transactional
     @Override
     public CommentResponse addWithUser(Comment comment, int user_id) {
         Optional<User> user = userRepository.findById(user_id);
