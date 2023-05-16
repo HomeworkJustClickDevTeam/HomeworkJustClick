@@ -24,8 +24,6 @@ public interface EvaluationService {
 
     Boolean changeSolutionById(int id, int solutionId);
 
-    Boolean changeCommentById(int id, String comment);
-
     Boolean changeGradeById(int id, Double grade);
 
 }

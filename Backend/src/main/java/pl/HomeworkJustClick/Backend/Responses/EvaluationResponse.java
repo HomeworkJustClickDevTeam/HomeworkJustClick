@@ -20,6 +20,5 @@ public class EvaluationResponse {
     private Integer groupId;
     private OffsetDateTime creationDatetime;
     private OffsetDateTime lastModifiedDatetime;
-    private String comment;
     private Double grade;
 }
