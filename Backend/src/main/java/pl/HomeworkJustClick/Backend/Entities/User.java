@@ -33,7 +33,7 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id", updatable = false, unique = true, nullable = false)
-    @Schema(example = "1")
+    @Schema(example = "0")
     private int id;
 
     @Column(name = "email")

@@ -26,11 +26,15 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api")
 @SecurityRequirement(name = "Bearer Authentication")
-@Tag(name = "User")
+@Tag(name = "User", description = "User related calls.")
 @ApiResponse(
         responseCode = "403",
         description = "Something is wrong with the token.",
         content = @Content()
+)
+@ApiResponse(
+        responseCode = "200",
+        description = "OK."
 )
 public class UserController {
     @Autowired
@@ -40,7 +44,7 @@ public class UserController {
     GroupTeacherService groupTeacherService;
 
     @GetMapping("/users")
-    @Operation(summary = "Return list of all users in DB.",
+    @Operation(summary = "Returns list of all users in DB.",
                 responses =
                     @ApiResponse(
                         responseCode = "200",
@@ -56,17 +60,29 @@ public class UserController {
 
     @GetMapping("/user/{id}")
     @Operation(
-            summary = "Get user by his id.",
+            summary = "Gets user by his id.",
             responses = {
                     @ApiResponse(
-                            responseCode = "200",
-                            description = "No user with this id in DB.",
+                            responseCode = "204",
+                            description = "No user with this id in the DB.",
                             content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = User.class))
                     )
             }
     )
-    public Optional<User> getById(@PathVariable("id") int id) {
-        return userService.getById(id);
+    public ResponseEntity<User> getById(@PathVariable("id") int id) {
+        if(userService.getById(id).isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        else {
+            return new ResponseEntity<>(userService.getById(id).get(), HttpStatus.OK);
+        }
     }
 
     @PostMapping("/user")
@@ -81,9 +97,8 @@ public class UserController {
 
     @PutMapping("/user/{id}")
     @Operation(
-            summary = "Update user with given id.",
+            summary = "Updates user with given id.",
             description = "Change whole User object for a given id.",
-
             responses = {
                     @ApiResponse(
                             responseCode = "204",
@@ -92,8 +107,9 @@ public class UserController {
                     ),
                     @ApiResponse(
                             responseCode = "200",
-                            description = "OK.",
-                            content = @Content
+                            content = @Content(
+                                mediaType = "application/json",
+                                schema = @Schema(implementation = User.class))
                     )
             }
     )
@@ -107,6 +123,16 @@ public class UserController {
     }
 
     @DeleteMapping("/user/{id}")
+    @Operation(
+            summary = "Deletes user with given id.",
+            responses = {
+                @ApiResponse(
+                        responseCode = "204",
+                        description = "Missing user with this id.",
+                        content = @Content
+                )
+            }
+    )
     public ResponseEntity<Void> delete (@PathVariable("id") int id) {
         if(userService.delete(id)) {
             return new ResponseEntity<>(HttpStatus.OK);
@@ -116,6 +142,16 @@ public class UserController {
     }
 
     @PutMapping("/user/index/{id}")
+    @Operation(
+            summary = "Changes index of user with given id.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "204",
+                            description = "Missing user with this id.",
+                            content = @Content
+                    )
+            }
+    )
     public ResponseEntity<Void> updateIndex(@PathVariable("id") int id, @RequestBody int index){
         if(userService.changeIndexById(id, index)){
             return new ResponseEntity<>(HttpStatus.OK);
@@ -125,6 +161,16 @@ public class UserController {
     }
 
     @PutMapping("/user/color/{id}")
+    @Operation(
+            summary = "Changes color of user with given id.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "204",
+                            description = "Missing user with this id or color out of range.",
+                            content = @Content
+                    )
+            }
+    )
     public ResponseEntity<Void> updateColor(@PathVariable("id") int id, @RequestBody int color){
         if(color >= 0 && color <20 && userService.changeColorById(id, color)){
             return new ResponseEntity<>(HttpStatus.OK);
@@ -134,14 +180,58 @@ public class UserController {
     }
 
     @GetMapping("/user/getTeachersByGroup/{group_id}")
-    public List<User> getTeachersByGroup(@PathVariable("group_id") int group_id) {
-        return userService.getTeachersByGroup(group_id);
+    @Operation(
+            summary = "Gets all teachers within a given group.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "204",
+                            description = "No teachers in the group with given id.",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "List returned.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = User.class)))
+                    )
+            }
+    )
+    public ResponseEntity<List<User>> getTeachersByGroup(@PathVariable("group_id") int group_id) {
+        if(userService.getTeachersByGroup(group_id).isEmpty())
+        {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        else {
+            return new ResponseEntity<>(userService.getTeachersByGroup(group_id), HttpStatus.OK);
+        }
     }
 
     @GetMapping("/user/getStudentsByGroup/{group_id}")
-    public List<User> getStudentsByGroup(@PathVariable("group_id") int group_id) {
-        return userService.getStudentsByGroup(group_id);
+    @Operation(
+            summary = "Gets all students within a given group.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "204",
+                            description = "No students in the group with given id.",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "List returned.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = User.class)))
+                    )
+            }
+    )
+    public ResponseEntity<List<User>> getStudentsByGroup(@PathVariable("group_id") int group_id) {
+        if(userService.getStudentsByGroup(group_id).isEmpty())
+        {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        else {
+            return new ResponseEntity<>(userService.getTeachersByGroup(group_id), HttpStatus.OK);
+        }
     }
-
-
 }
