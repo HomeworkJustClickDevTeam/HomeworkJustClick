@@ -1,6 +1,7 @@
 package pl.HomeworkJustClick.Backend.Entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -42,6 +43,7 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
+    @Schema(description = "The values are listed in the same order as in backend, so you can use names or numbers 0-2.", implementation = Role.class)
     private Role role;
 
     @Column(name="index")

@@ -13,7 +13,7 @@ To run MongoDB backend type:
 ```
 or run file docker-compose.yaml
 
-Swagger UI link:
+Swagger UI (POSTGRES) link:
 ```bash
   localhost:8080/api/swagger/ui.html
 ```
