@@ -210,7 +210,7 @@ public class GroupController {
         } else if (groupStudentService.checkForStudentInGroup(user_id, group_id)) {
             return "Student";
         } else {
-            return "None";
+            return "User not in group";
         }
     }
 
