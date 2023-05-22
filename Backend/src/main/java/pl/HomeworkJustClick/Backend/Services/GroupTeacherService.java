@@ -5,12 +5,13 @@ import pl.HomeworkJustClick.Backend.Entities.GroupTeacher;
 import pl.HomeworkJustClick.Backend.Entities.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface GroupTeacherService {
 
     public List<GroupTeacher> getAll();
 
-    public GroupTeacher getById(int id);
+    public Optional<GroupTeacher> getById(int id);
 
     public Boolean add(GroupTeacher groupTeacher);
 

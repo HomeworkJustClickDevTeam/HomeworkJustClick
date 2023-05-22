@@ -14,6 +14,7 @@ import pl.HomeworkJustClick.Backend.Services.AssignmentService;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -26,19 +27,37 @@ public class AssignmentController {
     @GetMapping("/assignments")
     public List<Assignment> getAll(){return assignmentService.getAll();}
     @GetMapping("/assignment/{id}")
-    public Assignment getById(@PathVariable("id") int id){return assignmentService.getById(id);}
+    public ResponseEntity<Assignment> getById(@PathVariable("id") int id){
+        Optional<Assignment> assignment = assignmentService.getById(id);
+        return assignment.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @GetMapping("/assignments/byGroupId/{id}")
+    public List<AssignmentResponse> getAssignmentsByGroupId(@PathVariable("id") int id) {
+        return assignmentService.getAssignmentsByGroupId(id);
+    }
+
     @PostMapping("/assignment")
     public ResponseEntity<AssignmentResponse> add(@RequestBody Assignment assignment){
         AssignmentResponse response = assignmentService.add(assignment);
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/assignment/withUserAndGroup/{user_id}/{group_id}")
+    public ResponseEntity<AssignmentResponse> addWithUserAndGroup(@PathVariable("user_id") int user_id, @PathVariable("group_id") int group_id, @RequestBody Assignment assignment) {
+        AssignmentResponse response = assignmentService.addWithUserAndGroup(assignment, user_id, group_id);
+        if(response.getId()!=0){
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
     @DeleteMapping("/assignment/{id}")
     public ResponseEntity<Void> delete (@PathVariable("id") int id){
         if(assignmentService.delete(id)){
             return new ResponseEntity<>(HttpStatus.OK);
         }
         else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -48,7 +67,7 @@ public class AssignmentController {
             return new ResponseEntity<>(HttpStatus.OK);
         }
         else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
     @PutMapping("/assignment/title/{id}")
@@ -57,7 +76,7 @@ public class AssignmentController {
             return new ResponseEntity<>(HttpStatus.OK);
         }
         else{
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -67,7 +86,7 @@ public class AssignmentController {
             return new ResponseEntity<>(HttpStatus.OK);
         }
         else{
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
     @PutMapping("/assignment/completionDatetime/{id}")
@@ -76,7 +95,7 @@ public class AssignmentController {
             return new ResponseEntity<>(HttpStatus.OK);
         }
         else{
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
     @PutMapping("/assignment/user/{user_id}/{assignment_id}")
@@ -85,7 +104,7 @@ public class AssignmentController {
             return new ResponseEntity<>(HttpStatus.OK);
         }
         else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
     @PutMapping("/assignment/group/{group_id}/{assignment_id}")
@@ -94,9 +113,13 @@ public class AssignmentController {
             return new ResponseEntity<>(HttpStatus.OK);
         }
         else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
+    @GetMapping("/assignments/unchecked/{group_id}")
+    public List<AssignmentResponse> getUncheckedAssignmentsInGroup(@PathVariable("group_id") int group_id){
+        return assignmentService.getUncheckedAssignmentsByGroup(group_id);
+    }
 
 }

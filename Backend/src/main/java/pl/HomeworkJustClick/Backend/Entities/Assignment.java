@@ -1,6 +1,5 @@
 package pl.HomeworkJustClick.Backend.Entities;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -15,8 +14,8 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Builder
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -28,12 +27,14 @@ public class Assignment {
     @Column(name = "id", updatable = false, unique = true, nullable = false)
     private int id;
 
-    @ManyToOne
-    @JoinColumn(name = "userId", nullable = true)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "Fk_user"))
+    @JsonIgnore
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "groupId", nullable = true)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "group_id", nullable = false, foreignKey = @ForeignKey(name = "Fk_group"))
+    @JsonIgnore
     private Group group;
 
     @OneToMany(mappedBy = "assignment", orphanRemoval = true)

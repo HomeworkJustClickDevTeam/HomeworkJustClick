@@ -7,10 +7,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.HomeworkJustClick.Backend.Entities.Evaluation;
+import pl.HomeworkJustClick.Backend.Entities.Solution;
 import pl.HomeworkJustClick.Backend.Responses.EvaluationResponse;
 import pl.HomeworkJustClick.Backend.Services.EvaluationService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -22,19 +24,33 @@ public class EvaluationController {
     @GetMapping("/evaluations")
     public List<Evaluation> getAll(){return evaluationService.getAll();}
     @GetMapping("/evaluations/{id}")
-    public Evaluation getById(@PathVariable("id") int id){return evaluationService.getById(id);}
+    public ResponseEntity<Evaluation> getById(@PathVariable("id") int id){
+        Optional<Evaluation> evaluation = evaluationService.getById(id);
+        return evaluation.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
     @PostMapping("/evaluation")
     public ResponseEntity<EvaluationResponse> add(@RequestBody Evaluation evaluation){
         EvaluationResponse response = evaluationService.add(evaluation);
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/evaluation/withUserAndSolution/{user_id}/{solution_id}")
+    public ResponseEntity<EvaluationResponse> addWithUserAndSolution(@RequestBody Evaluation evaluation, @PathVariable("user_id") int user_id, @PathVariable("solution_id") int solution_id) {
+        EvaluationResponse response = evaluationService.addWithUserAndSolution(evaluation, user_id, solution_id);
+        if(response.getId()!=0) {
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
+    }
+
     @DeleteMapping("/evaluation/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") int id){
         if(evaluationService.delete(id)){
             return new ResponseEntity<>(HttpStatus.OK);
         }
         else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -44,7 +60,7 @@ public class EvaluationController {
             return new ResponseEntity<>(HttpStatus.OK);
         }
         else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
     }
@@ -54,7 +70,7 @@ public class EvaluationController {
             return new ResponseEntity<>(HttpStatus.OK);
         }
         else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
     @PutMapping("/evaluation/solution/{solution_id}/{id}")
@@ -63,16 +79,7 @@ public class EvaluationController {
             return new ResponseEntity<>(HttpStatus.OK);
         }
         else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-    }
-    @PutMapping("/evaluation/comment/{id}")
-    public ResponseEntity<Void> updateComment(@RequestBody String comment, @PathVariable("id") int id){
-        if(evaluationService.changeCommentById(id, comment)){
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -82,7 +89,7 @@ public class EvaluationController {
             return new ResponseEntity<>(HttpStatus.OK);
         }
         else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 

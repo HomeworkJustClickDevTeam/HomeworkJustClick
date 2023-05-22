@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Service
 public class FileService {
@@ -21,19 +22,15 @@ public class FileService {
         return FileResponse.builder().id(_file.getId()).name(_file.getName()).format(_file.getFormat()).build();
     }
 
-    public File getFile(String id) {
-        if(fileRepository.findById(id).isPresent()) {
-            return fileRepository.findById(id).get();
-        } else {
-            return null;
-        }
+    public Optional<File> getFile(String id) {
+        return fileRepository.findById(id);
     }
 
     public Boolean deleteFile(String id) {
-        try {
+        if(fileRepository.existsById(id)) {
             fileRepository.deleteById(id);
             return true;
-        } catch (IllegalArgumentException e) {
+        } else  {
             return false;
         }
     }

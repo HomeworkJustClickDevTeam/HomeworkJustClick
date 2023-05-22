@@ -7,13 +7,13 @@ import org.springframework.stereotype.Service;
 import pl.HomeworkJustClick.Backend.Entities.Assignment;
 import pl.HomeworkJustClick.Backend.Entities.Group;
 import pl.HomeworkJustClick.Backend.Entities.User;
-import pl.HomeworkJustClick.Backend.Repositories.AssignmentRepository;
-import pl.HomeworkJustClick.Backend.Repositories.GroupRepository;
-import pl.HomeworkJustClick.Backend.Repositories.UserRepository;
+import pl.HomeworkJustClick.Backend.Repositories.*;
 import pl.HomeworkJustClick.Backend.Responses.AssignmentResponse;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AssignmentServiceImplement implements AssignmentService {
@@ -24,10 +24,19 @@ public class AssignmentServiceImplement implements AssignmentService {
 
     @Autowired
     AssignmentRepository assignmentRepository;
+
     @Autowired
     GroupRepository groupRepository;
+
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    SolutionRepository solutionRepository;
+
+    @Autowired
+    EvaluationRepository evaluationRepository;
+
     @Override
     public List<Assignment> getAll() {
         return assignmentRepository.findAll();
@@ -35,13 +44,8 @@ public class AssignmentServiceImplement implements AssignmentService {
 
 
     @Override
-    public Assignment getById(int id) {
-        if(assignmentRepository.findById(id).isPresent()){
-            return assignmentRepository.findById(id).get();
-        }
-        else{
-            return null;
-        }
+    public Optional<Assignment> getById(int id) {
+        return assignmentRepository.findById(id);
     }
 
     @Override
@@ -62,11 +66,36 @@ public class AssignmentServiceImplement implements AssignmentService {
     }
 
     @Override
+    @Transactional
+    public AssignmentResponse addWithUserAndGroup(Assignment assignment, int user_id, int group_id) {
+        Optional<User> user = userRepository.findById(user_id);
+        Optional<Group> group = groupRepository.findById(group_id);
+        if(user.isPresent() && group.isPresent()) {
+            assignment.setGroup(group.get());
+            assignment.setUser(user.get());
+            entityManager.persist(assignment);
+            return AssignmentResponse.builder()
+                    .id(assignment.getId())
+                    .userId(user_id)
+                    .groupId(group_id)
+                    .taskDescription(assignment.getTaskDescription())
+                    .creationDatetime(assignment.getCreationDatetime())
+                    .lastModifiedDatetime(assignment.getLastModifiedDatetime())
+                    .completionDatetime(assignment.getCompletionDatetime())
+                    .title(assignment.getTitle())
+                    .visible(assignment.getVisible())
+                    .build();
+        } else {
+            return AssignmentResponse.builder().build();
+        }
+    }
+
+    @Override
     public Boolean delete(int id) {
-        try{
+        if(assignmentRepository.existsById(id)) {
             assignmentRepository.deleteById(id);
             return true;
-        } catch (IllegalArgumentException e){
+        } else {
             return false;
         }
     }
@@ -79,7 +108,7 @@ public class AssignmentServiceImplement implements AssignmentService {
             assignmentRepository.save(assignment);
             return true;
         }else {
-            return null;
+            return false;
         }
     }
 
@@ -91,7 +120,7 @@ public class AssignmentServiceImplement implements AssignmentService {
             assignmentRepository.save(assignment);
             return true;
         }else {
-            return null;
+            return false;
         }
     }
 
@@ -103,7 +132,7 @@ public class AssignmentServiceImplement implements AssignmentService {
             assignmentRepository.save(assignment);
             return true;
         }else {
-            return null;
+            return false;
         }
     }
 
@@ -116,7 +145,7 @@ public class AssignmentServiceImplement implements AssignmentService {
             return true;
         }
         else {
-            return null;
+            return false;
         }
     }
 
@@ -131,7 +160,7 @@ public class AssignmentServiceImplement implements AssignmentService {
             return true;
         }
         else{
-            return null;
+            return false;
         }
     }
 
@@ -146,9 +175,54 @@ public class AssignmentServiceImplement implements AssignmentService {
             return true;
         }
         else{
-            return null;
+            return false;
         }
     }
 
+    @Override
+    public List<AssignmentResponse> getAssignmentsByGroupId(int id) {
+        List<Assignment> assignments = assignmentRepository.getAssignmentsByGroupId(id);
+        List<AssignmentResponse> assignmentResponses = new ArrayList<>();
+        for(Assignment assignment : assignments) {
+            assignmentResponses.add(AssignmentResponse.builder()
+                    .id(assignment.getId())
+                    .userId(assignment.getUser().getId())
+                    .groupId(assignment.getGroup().getId())
+                    .taskDescription(assignment.getTaskDescription())
+                    .creationDatetime(assignment.getCreationDatetime())
+                    .lastModifiedDatetime(assignment.getLastModifiedDatetime())
+                    .completionDatetime(assignment.getCompletionDatetime())
+                    .title(assignment.getTitle())
+                    .visible(assignment.getVisible())
+                    .build());
+        }
+        return assignmentResponses;
+    }
 
+    @Override
+    public List<AssignmentResponse> getUncheckedAssignmentsByGroup(int group_id) {
+        List<Assignment> assignmentsInGroup = assignmentRepository.getAssignmentsByGroupId(group_id);
+        List<AssignmentResponse> ucheckedAssignments = new ArrayList<>();
+        for(Assignment assignment : assignmentsInGroup) {
+            int assignment_id = assignment.getId();
+            int solutions_count = solutionRepository.countSolutionsByAssignmentId(assignment_id);
+            int evaluations_count = evaluationRepository.countEvaluationsByAssignment(assignment_id);
+            if (solutions_count != 0 && solutions_count - evaluations_count > 0){
+                ucheckedAssignments.add(
+                        AssignmentResponse.builder()
+                                .id(assignment.getId())
+                                .userId(assignment.getUser().getId())
+                                .groupId(assignment.getGroup().getId())
+                                .taskDescription(assignment.getTaskDescription())
+                                .creationDatetime(assignment.getCreationDatetime())
+                                .lastModifiedDatetime(assignment.getLastModifiedDatetime())
+                                .completionDatetime(assignment.getCompletionDatetime())
+                                .title(assignment.getTitle())
+                                .visible(assignment.getVisible())
+                                .build()
+                );
+            }
+        }
+        return ucheckedAssignments;
+    }
 }

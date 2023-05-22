@@ -12,6 +12,7 @@ import pl.HomeworkJustClick.Backend.Repositories.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class GroupTeacherServiceImplement implements GroupTeacherService{
@@ -34,12 +35,8 @@ public class GroupTeacherServiceImplement implements GroupTeacherService{
     }
 
     @Override
-    public GroupTeacher getById(int id) {
-        if (groupTeacherRepository.findById(id).isPresent()) {
-            return groupTeacherRepository.findById(id).get();
-        } else {
-            return null;
-        }
+    public Optional<GroupTeacher> getById(int id) {
+        return groupTeacherRepository.findById(id);
     }
 
     @Override
@@ -50,10 +47,10 @@ public class GroupTeacherServiceImplement implements GroupTeacherService{
 
     @Override
     public Boolean delete(int id) {
-        try {
+        if(groupTeacherRepository.existsById(id)) {
             groupTeacherRepository.deleteById(id);
             return true;
-        } catch (IllegalArgumentException e) {
+        } else  {
             return false;
         }
     }
@@ -66,7 +63,7 @@ public class GroupTeacherServiceImplement implements GroupTeacherService{
             groupTeacherRepository.save(groupTeacher);
             return true;
         } else {
-            return null;
+            return false;
         }
     }
 

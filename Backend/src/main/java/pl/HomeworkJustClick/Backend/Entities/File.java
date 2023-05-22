@@ -1,5 +1,6 @@
 package pl.HomeworkJustClick.Backend.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,10 +32,12 @@ public class File {
 
     @ManyToOne
     @JoinColumn(name = "assignmentId")
+    @JsonIgnore
     private Assignment assignment;
 
     @ManyToOne
     @JoinColumn(name = "solutionId")
+    @JsonIgnore
     private Solution solution;
 
     public File(String name, String format, String mongo_id) {
