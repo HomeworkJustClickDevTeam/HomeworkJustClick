@@ -1,6 +1,9 @@
 package pl.HomeworkJustClick.Backend.Controllers;
 
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -24,6 +27,11 @@ import java.util.Optional;
 @RequestMapping("/api")
 @SecurityRequirement(name = "Bearer Authentication")
 @Tag(name = "User")
+@ApiResponse(
+        responseCode = "403",
+        description = "Something is wrong with the token.",
+        content = @Content()
+)
 public class UserController {
     @Autowired
     UserService userService;
@@ -32,16 +40,37 @@ public class UserController {
     GroupTeacherService groupTeacherService;
 
     @GetMapping("/users")
+    @Operation(summary = "Return list of all users in DB.",
+                responses =
+                    @ApiResponse(
+                        responseCode = "200",
+                        description = "List returned.",
+                        content = @Content(
+                                mediaType = "application/json",
+                                array = @ArraySchema(schema = @Schema(implementation = User.class)))
+                    )
+    )
     public List<User> getAll() {
         return userService.getAll();
     }
 
     @GetMapping("/user/{id}")
+    @Operation(
+            summary = "Get user by his id.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "No user with this id in DB.",
+                            content = @Content
+                    )
+            }
+    )
     public Optional<User> getById(@PathVariable("id") int id) {
         return userService.getById(id);
     }
 
     @PostMapping("/user")
+    @Hidden
     public ResponseEntity<Void> add(@RequestBody User user) {
         if(userService.add(user)) {
             return new ResponseEntity<>(HttpStatus.CREATED);
@@ -51,7 +80,25 @@ public class UserController {
     }
 
     @PutMapping("/user/{id}")
-    public ResponseEntity<Void> update(@PathVariable("id") int id, @RequestBody User updatedUser){
+    @Operation(
+            summary = "Update user with given id.",
+            description = "Change whole User object for a given id.",
+
+            responses = {
+                    @ApiResponse(
+                            responseCode = "204",
+                            description = "Missing user with this id in the DB or wrongly filled json body.",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK.",
+                            content = @Content
+                    )
+            }
+    )
+    public ResponseEntity<Void> update(
+            @PathVariable("id") int id,@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Empty fields will be ignored. Id field is ignored but needed in JSON.") @RequestBody User updatedUser){
         if(userService.update(id, updatedUser)){
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
