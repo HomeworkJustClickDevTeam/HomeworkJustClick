@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import pl.HomeworkJustClick.Backend.Entities.Group;
 import pl.HomeworkJustClick.Backend.Entities.GroupTeacher;
@@ -195,6 +196,22 @@ public class GroupController {
     @GetMapping("/group/studentCheck/{student_id}/{group_id}")
     public Boolean checkForStudentInGroup(@PathVariable("student_id") int student_id, @PathVariable("group_id") int group_id) {
         return groupStudentService.checkForStudentInGroup(student_id, group_id);
+    }
+
+    @GetMapping("/group/userCheck/{user_id}/{group_id}")
+    public Boolean checkForUserInGroup(@PathVariable("user_id") int user_id, @PathVariable("group_id") int group_id) {
+        return groupTeacherService.checkForTeacherInGroup(user_id, group_id) || groupStudentService.checkForStudentInGroup(user_id, group_id);
+    }
+
+    @GetMapping("/group/userCheckWithRole/{user_id}/{group_id}")
+    public String checkForUserInGroupWithRole(@PathVariable("user_id") int user_id, @PathVariable("group_id") int group_id) {
+        if(groupTeacherService.checkForTeacherInGroup(user_id, group_id)) {
+            return "Teacher";
+        } else if (groupStudentService.checkForStudentInGroup(user_id, group_id)) {
+            return "Student";
+        } else {
+            return "None";
+        }
     }
 
 }
