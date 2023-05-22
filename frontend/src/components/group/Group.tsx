@@ -3,10 +3,11 @@ import {useContext, useEffect, useState} from "react";
 import userContext from "../../UserContext";
 import common_request from "../../services/default-request-database";
 import {InGroup} from "../../types/types";
-import UsersInGroupDisplayer from "./displayer/UsersInGroupDisplayer";
 
-function GroupFullDesc() {
-    const {id} = useParams()
+import Users from "./users/Users";
+
+function Group() {
+    const {id=""} = useParams<{id:string}>()
     const {loggedIn} = useContext(userContext)
     const [inGroup, setInGroup] = useState<InGroup>({
         student: false,
@@ -45,25 +46,21 @@ function GroupFullDesc() {
             checkIsInGroup()
         }
         , [])
+
+    async function addToGroup() {
+        await common_request.post(`/group/addStudent/${localStorage.getItem("id")}/${id}`)
+        checkIsInGroup()
+    }
+
     if (loggedIn) {
         if (inGroup.student || inGroup.teacher) {
             return (
-                <>
-                    <UsersInGroupDisplayer id={id}/>
-                    <Link to="">
-                        <button>
-                            Zadania domowe
-                        </button>
-                    </Link>
-                    <Link to="/">
-                        <button type="button">
-                            Strona główna
-                        </button>
-                    </Link>
-                </>)
+                <Users id={id} role={inGroup} />
+            )
         } else {
             return (<h1>
                 Nie jestes w grupie
+                <button onClick={addToGroup}> Add to group</button>
             </h1>)
         }
     } else {
@@ -77,8 +74,6 @@ function GroupFullDesc() {
             </>
         )
     }
-
-
 }
 
-export default GroupFullDesc
+export default Group

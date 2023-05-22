@@ -1,6 +1,6 @@
 import { useEffect, useState} from "react";
-import LogOut from "./user/Logedd/LogOut";
-import GroupDisplayerItem from "./group/displayer/GroupDisplayerItem";
+import LogOut from "./user/logging/LogOut";
+import GroupItem from "./group/groupItems/GroupItem";
 import { Link } from "react-router-dom";
 import {groupFilter} from "./group/filter/GroupFilter";
 import {Group} from "../types/types";
@@ -23,7 +23,7 @@ function Home(){
            <div >
            {
                groups?.map(group =>
-                   <GroupDisplayerItem group={group} key={group.id} />
+                   <GroupItem group={group} key={group.id} />
                    )
 
            }

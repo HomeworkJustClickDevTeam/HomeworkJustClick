@@ -54,3 +54,27 @@ interface GroupProp {
     id:string | undefined
 
 }
+interface Assigment {
+    title:string,
+    visible: boolean,
+    taskDescription:string,
+    completionDatetime: Date,
+    id:number
+}
+interface AssigmentToSend {
+    title:string,
+    visible: boolean,
+    taskDescription:string,
+    completionDatetime: Date,
+}
+interface AssigmentItemProps {
+    assigment: Assigment;
+    idGroup: string
+}
+interface UserInGroupProp{
+    id:string,
+    role:InGroup
+}
+interface UserItemToDisplay{
+    userToShow: UserToShow
+}

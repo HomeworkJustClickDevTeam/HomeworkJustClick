@@ -1,6 +1,7 @@
 import React, {ChangeEvent, useState} from "react";
 import common_request from "../../services/default-request-database";
 import {useNavigate} from "react-router-dom";
+import {RegisterUser} from "../../types/types";
 
 const Register = () => {
 

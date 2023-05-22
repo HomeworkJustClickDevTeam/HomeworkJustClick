@@ -1,14 +1,15 @@
 import axios from "axios";
 
-const common_request = axios.create({
-    baseURL:"http://localhost:8080/api",
-    timeout: 8000,
+const file_sender = axios.create({
+    baseURL:"http://localhost:8082/api/",
+    timeout: 8082,
     headers:{
-        'Content-Type': "application/json",
+        'Content-Type': 'multipart/form-data',
         'Access-Control-Allow-Origin':'http://localhost:3000',
         ...(localStorage.getItem('token') && {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
         })
     }
+
 })
-export default common_request;
+export default file_sender
