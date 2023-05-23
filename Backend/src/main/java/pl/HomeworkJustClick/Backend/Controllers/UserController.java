@@ -63,7 +63,7 @@ public class UserController {
             summary = "Gets user by his id.",
             responses = {
                     @ApiResponse(
-                            responseCode = "204",
+                            responseCode = "404",
                             description = "No user with this id in the DB.",
                             content = @Content
                     ),
@@ -78,7 +78,7 @@ public class UserController {
     )
     public ResponseEntity<User> getById(@PathVariable("id") int id) {
         if(userService.getById(id).isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
             return new ResponseEntity<>(userService.getById(id).get(), HttpStatus.OK);
@@ -101,8 +101,8 @@ public class UserController {
             description = "Change whole User object for a given id.",
             responses = {
                     @ApiResponse(
-                            responseCode = "204",
-                            description = "Missing user with this id in the DB or wrongly filled json body.",
+                            responseCode = "404",
+                            description = "Missing user with this id in the DB.",
                             content = @Content
                     ),
                     @ApiResponse(
@@ -110,6 +110,13 @@ public class UserController {
                             content = @Content(
                                 mediaType = "application/json",
                                 schema = @Schema(implementation = User.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Something is wrong with JSON user object.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = User.class))
                     )
             }
     )
@@ -117,8 +124,12 @@ public class UserController {
             @PathVariable("id") int id,@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Empty fields will be ignored. Id field is ignored but needed in JSON.") @RequestBody User updatedUser){
         if(userService.update(id, updatedUser)){
             return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        else if(userService.update(id, updatedUser) == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -127,7 +138,7 @@ public class UserController {
             summary = "Deletes user with given id.",
             responses = {
                 @ApiResponse(
-                        responseCode = "204",
+                        responseCode = "404",
                         description = "Missing user with this id.",
                         content = @Content
                 )
@@ -137,7 +148,7 @@ public class UserController {
         if(userService.delete(id)) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -146,7 +157,7 @@ public class UserController {
             summary = "Changes index of user with given id.",
             responses = {
                     @ApiResponse(
-                            responseCode = "204",
+                            responseCode = "404",
                             description = "Missing user with this id.",
                             content = @Content
                     )
@@ -156,7 +167,7 @@ public class UserController {
         if(userService.changeIndexById(id, index)){
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -165,17 +176,25 @@ public class UserController {
             summary = "Changes color of user with given id.",
             responses = {
                     @ApiResponse(
-                            responseCode = "204",
-                            description = "Missing user with this id or color out of range.",
+                            responseCode = "404",
+                            description = "Missing user with this id.",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Color id out of range.",
                             content = @Content
                     )
             }
     )
     public ResponseEntity<Void> updateColor(@PathVariable("id") int id, @RequestBody int color){
-        if(color >= 0 && color <20 && userService.changeColorById(id, color)){
+        if(color < 0 || color >= 20) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        else if(userService.changeColorById(id, color)){
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -184,7 +203,7 @@ public class UserController {
             summary = "Gets all teachers within a given group.",
             responses = {
                     @ApiResponse(
-                            responseCode = "204",
+                            responseCode = "404",
                             description = "No teachers in the group with given id.",
                             content = @Content
                     ),
@@ -200,7 +219,7 @@ public class UserController {
     public ResponseEntity<List<User>> getTeachersByGroup(@PathVariable("group_id") int group_id) {
         if(userService.getTeachersByGroup(group_id).isEmpty())
         {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
             return new ResponseEntity<>(userService.getTeachersByGroup(group_id), HttpStatus.OK);
@@ -212,7 +231,7 @@ public class UserController {
             summary = "Gets all students within a given group.",
             responses = {
                     @ApiResponse(
-                            responseCode = "204",
+                            responseCode = "404",
                             description = "No students in the group with given id.",
                             content = @Content
                     ),
@@ -228,7 +247,7 @@ public class UserController {
     public ResponseEntity<List<User>> getStudentsByGroup(@PathVariable("group_id") int group_id) {
         if(userService.getStudentsByGroup(group_id).isEmpty())
         {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
             return new ResponseEntity<>(userService.getTeachersByGroup(group_id), HttpStatus.OK);

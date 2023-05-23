@@ -37,7 +37,7 @@ public class User implements UserDetails {
     private int id;
 
     @Column(name = "email")
-    @Schema(example = "najman@gmail.com")
+    @Schema(example = "example@gmail.com")
     private String email;
 
     @JsonIgnore
@@ -59,16 +59,16 @@ public class User implements UserDetails {
     private int index;
 
     @Column(name="firstname")
-    @Schema(example = "Marcin")
+    @Schema(example = "Example")
     private String firstname;
 
     @Column(name="lastname")
-    @Schema(example = "Najman")
+    @Schema(example = "Exampler")
     private String lastname;
 
     @Column(name="color")
     @Schema(example = "0")
-    @Max(20)
+    @Max(19)
     @Min(0)
     private int color;
 
@@ -127,7 +127,7 @@ public class User implements UserDetails {
     private List<GroupTeacher> groupTeachers = new ArrayList<>();
 
     @Override
-    @Schema(example = "naj1231")
+    @Schema(example = "exampleman1231")
     public String getUsername() {
         return email;
     }
