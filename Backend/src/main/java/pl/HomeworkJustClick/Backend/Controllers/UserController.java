@@ -182,7 +182,7 @@ public class UserController {
                     ),
                     @ApiResponse(
                             responseCode = "400",
-                            description = "Color id out of range.",
+                            description = "Color value out of range.",
                             content = @Content
                     )
             }

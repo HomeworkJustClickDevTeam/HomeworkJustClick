@@ -82,6 +82,27 @@ public class SolutionController {
         return ResponseEntity.ok(response);
     }
 
+    @DeleteMapping("/solution/{id}")
+    @Operation(
+            summary = "Deletes solution with given id.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Missing solution with this id.",
+                            content = @Content
+                    )
+            }
+    )
+
+    public ResponseEntity<Void> delete(@PathVariable("id") int id){
+        if(solutionService.delete(id)){
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
     @PostMapping("/solution/withUserAndAssignment/{user_id}/{assignment_id}")
     @Operation(
             summary = "Creates solution with user and assignment already attached to it.",

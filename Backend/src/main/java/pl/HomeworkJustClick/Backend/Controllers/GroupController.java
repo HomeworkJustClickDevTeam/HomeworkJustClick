@@ -1,5 +1,11 @@
 package pl.HomeworkJustClick.Backend.Controllers;
 
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +15,7 @@ import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import pl.HomeworkJustClick.Backend.Entities.Group;
 import pl.HomeworkJustClick.Backend.Entities.GroupTeacher;
+import pl.HomeworkJustClick.Backend.Entities.Solution;
 import pl.HomeworkJustClick.Backend.Entities.User;
 import pl.HomeworkJustClick.Backend.Responses.GroupResponse;
 import pl.HomeworkJustClick.Backend.Services.GroupService;
@@ -23,7 +30,16 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api")
 @SecurityRequirement(name = "Bearer Authentication")
-@Tag(name = "Group")
+@Tag(name = "Group", description = "Group related calls.")
+@ApiResponse(
+        responseCode = "403",
+        description = "Something is wrong with the token.",
+        content = @Content()
+)
+@ApiResponse(
+        responseCode = "200",
+        description = "OK."
+)
 public class GroupController {
 
     @Autowired
@@ -39,23 +55,68 @@ public class GroupController {
     UserService userService;
 
     @GetMapping("/groups")
+    @Operation(
+            summary = "Returns list of all groups in DB.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "List returned",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = Group.class))
+                            )
+                    )
+            }
+    )
+
     public List<Group> getAll() {
         return groupService.getAll();
     }
 
     @GetMapping("/group/{id}")
+    @Operation(
+            summary = "Gets group by it's id.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "No group with this id in the DB.",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = Solution.class))
+
+                    )
+            }
+    )
+
     public ResponseEntity<Group> getById(@PathVariable("id") int id) {
         Optional<Group> group = groupService.getById(id);
         return group.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping("/group")
+    @Hidden
     public ResponseEntity<GroupResponse> add(@RequestBody Group group) {
         GroupResponse response = groupService.add(group);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/group/{id}")
+    @Operation(
+            summary = "Deletes group with given id.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Missing group with this id.",
+                            content = @Content
+                    )
+            }
+    )
+
     public ResponseEntity<Void> delete (@PathVariable("id") int id) {
         if(groupService.delete(id)) {
             return new ResponseEntity<>(HttpStatus.OK);
@@ -65,6 +126,16 @@ public class GroupController {
     }
 
     @PutMapping("/group/name/{id}")
+    @Operation(
+            summary = "Updates name of the group with given id.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Could not find group with given id.",
+                            content = @Content
+                    )
+            }
+    )
     public ResponseEntity<Void> updateName(@PathVariable("id") int id, @RequestBody String name){
         if(groupService.changeNameById(id, name)){
             return new ResponseEntity<>(HttpStatus.OK);
@@ -74,6 +145,16 @@ public class GroupController {
     }
 
     @PutMapping("/group/description/{id}")
+    @Operation(
+            summary = "Updates description of the group with given id.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Could not find description with given id.",
+                            content = @Content
+                    )
+            }
+    )
     public ResponseEntity<Void> updateDescription(@PathVariable("id") int id, @RequestBody String description){
         if(groupService.changeDescriptionById(id, description)){
             return new ResponseEntity<>(HttpStatus.OK);
@@ -83,8 +164,25 @@ public class GroupController {
     }
 
     @PutMapping("/group/color/{id}")
+    @Operation(
+            summary = "Updates color of the group with given id.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Could not find group with given id.",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Color value out of range.",
+                            content = @Content
+                    )
+            }
+    )
     public ResponseEntity<Void> updateColor(@PathVariable("id") int id, @RequestBody int color){
-        if(color >= 0 && color <20 && groupService.changeColorById(id, color)){
+        if(color < 0 || color >= 20){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }else if(groupService.changeColorById(id, color)){
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -92,30 +190,75 @@ public class GroupController {
     }
 
     @PutMapping("/group/archive/{id}")
+    @Operation(
+            summary = "Archives group with given id.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Could not find group with given id.",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Group already archived.",
+                            content = @Content
+                    )
+            }
+    )
     public ResponseEntity<Void> archiveGroup(@PathVariable("id") int id){
         int response = groupService.archiveGroup(id);
         if(response == 0){
             return new ResponseEntity<>(HttpStatus.OK);
         } else if (response == 1) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @PutMapping("/group/unarchive/{id}")
+    @Operation(
+            summary = "Unarchives group with given id.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Could not find group with given id.",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Group already unarchived.",
+                            content = @Content
+                    )
+            }
+    )
     public ResponseEntity<Void> unarchiveGroup(@PathVariable("id") int id){
         int response = groupService.unarchiveGroup(id);
         if(response == 0){
             return new ResponseEntity<>(HttpStatus.OK);
         } else if (response == 1) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @PostMapping("/group/withTeacher/{id}")
+    @Operation(
+            summary = "Creates group with user as a teacher already associated with it (group).",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Could not find user with given id.",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Group already unarchived.",
+                            content = @Content
+                    )
+            }
+    )
     public ResponseEntity<GroupResponse> addWithTeacher(@PathVariable("id") int id, @RequestBody Group group) {
         GroupResponse response = groupService.add(group);
         Optional<User> user = userService.getById(id);
