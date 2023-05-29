@@ -1,7 +1,12 @@
 package pl.HomeworkJustClick.Backend.Entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,32 +33,43 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id", updatable = false, unique = true, nullable = false)
+    @Schema(example = "0")
     private int id;
 
     @Column(name = "email")
+    @Schema(example = "example@gmail.com")
     private String email;
 
     @JsonIgnore
     @Column(name = "password")
+    @Schema(example = "123123")
     private String password;
 
     @Column(name="isVerified")
+    @Schema(example = "true", allowableValues = {"true", "false"})
     private boolean isVerified;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
+    @Schema(description = "The values are listed in the same order as in backend, so you can use names or numbers 0-2.", implementation = Role.class, example = "USER")
     private Role role;
 
     @Column(name="index")
+    @Schema(example = "12345")
     private int index;
 
     @Column(name="firstname")
+    @Schema(example = "Example")
     private String firstname;
 
     @Column(name="lastname")
+    @Schema(example = "Exampler")
     private String lastname;
 
     @Column(name="color")
+    @Schema(example = "0")
+    @Max(19)
+    @Min(0)
     private int color;
 
     @OneToMany(
@@ -111,6 +127,7 @@ public class User implements UserDetails {
     private List<GroupTeacher> groupTeachers = new ArrayList<>();
 
     @Override
+    @Schema(example = "exampleman1231")
     public String getUsername() {
         return email;
     }

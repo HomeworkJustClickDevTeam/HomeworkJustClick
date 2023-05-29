@@ -1,5 +1,6 @@
 package pl.HomeworkJustClick.Backend.Auth;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,6 +14,7 @@ public class RegisterRequest {
 
     private String firstname;
     private String lastname;
+    @Schema(example = "dadwa@wda.com")
     private String email;
     private String password;
 }
