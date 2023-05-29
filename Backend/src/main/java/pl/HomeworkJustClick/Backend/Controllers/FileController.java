@@ -54,6 +54,16 @@ public class FileController {
         }
     }
 
+    @PostMapping("/file/listWithSolution/{id}")
+    public ResponseEntity<Void> addListWithSolution(@RequestBody List<File> fileList, @PathVariable("id") int id) {
+        boolean response = fileService.addListWithSolution(fileList, id);
+        if(response){
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
     @DeleteMapping("/file/{id}")
     public ResponseEntity<Void> delete (@PathVariable("id") int id) {
         if(fileService.delete(id)) {

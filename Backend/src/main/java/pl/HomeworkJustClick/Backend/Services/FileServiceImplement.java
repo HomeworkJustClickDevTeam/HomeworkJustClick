@@ -65,6 +65,21 @@ public class FileServiceImplement implements FileService {
     }
 
     @Override
+    @Transactional
+    public boolean addListWithSolution (List<File> fileList, int solution_id) {
+        if(solutionRepository.findById(solution_id).isPresent()) {
+            fileList.forEach(file -> {
+                file.setSolution(solutionRepository.findById(solution_id).get());
+                file.setAssignment(null);
+                entityManager.persist(file);
+            });
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
     public Boolean delete(int id){
         if(fileRepository.existsById(id)) {
             fileRepository.deleteById(id);
