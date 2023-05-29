@@ -17,6 +17,7 @@ import pl.HomeworkJustClick.Backend.Responses.SolutionResponse;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
 @RequiredArgsConstructor
@@ -61,20 +62,31 @@ public class EvaluationServiceImplement implements EvaluationService {
         Optional<User> user = userRepository.findById(user_id);
         Optional<Solution> solution = solutionRepository.findById(solution_id);
         if(user.isPresent() && solution.isPresent()) {
-            evaluation.setSolution(solution.get());
-            evaluation.setUser(user.get());
-            evaluation.setGroup(solution.get().getGroup());
-            entityManager.persist(evaluation);
-            return EvaluationResponse.builder()
-                    .id(evaluation.getId())
-                    .result(evaluation.getResult())
-                    .userId(evaluation.getUser().getId())
-                    .solutionId(evaluation.getSolution().getId())
-                    .groupId(evaluation.getGroup().getId())
-                    .creationDatetime(evaluation.getCreationDatetime())
-                    .lastModifiedDatetime(evaluation.getLastModifiedDatetime())
-                    .grade(evaluation.getGrade())
-                    .build();
+            List<User> userList = userRepository.getGroupTeachersByGroup(solution.get().getGroup().getId());
+            AtomicBoolean ok = new AtomicBoolean(false);
+            userList.forEach(user1 -> {
+                if (user1.getId() == user_id) {
+                    ok.set(true);
+                }
+            });
+            if(ok.get()) {
+                evaluation.setSolution(solution.get());
+                evaluation.setUser(user.get());
+                evaluation.setGroup(solution.get().getGroup());
+                entityManager.persist(evaluation);
+                return EvaluationResponse.builder()
+                        .id(evaluation.getId())
+                        .result(evaluation.getResult())
+                        .userId(evaluation.getUser().getId())
+                        .solutionId(evaluation.getSolution().getId())
+                        .groupId(evaluation.getGroup().getId())
+                        .creationDatetime(evaluation.getCreationDatetime())
+                        .lastModifiedDatetime(evaluation.getLastModifiedDatetime())
+                        .grade(evaluation.getGrade())
+                        .build();
+            } else {
+                return EvaluationResponse.builder().forbidden(true).build();
+            }
         } else {
             return EvaluationResponse.builder().build();
         }

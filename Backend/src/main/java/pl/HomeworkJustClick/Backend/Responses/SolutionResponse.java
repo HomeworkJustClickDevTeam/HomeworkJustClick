@@ -20,4 +20,5 @@ public class SolutionResponse {
     private OffsetDateTime creationDateTime;
     private OffsetDateTime lastModifiedDatetime;
     private String comment;
+    private boolean forbidden;
 }

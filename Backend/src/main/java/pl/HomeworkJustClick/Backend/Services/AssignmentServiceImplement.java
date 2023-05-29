@@ -3,7 +3,6 @@ package pl.HomeworkJustClick.Backend.Services;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.HomeworkJustClick.Backend.Entities.Assignment;
 import pl.HomeworkJustClick.Backend.Entities.Group;
@@ -15,6 +14,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
 @RequiredArgsConstructor
@@ -66,22 +66,33 @@ public class AssignmentServiceImplement implements AssignmentService {
         Optional<User> user = userRepository.findById(user_id);
         Optional<Group> group = groupRepository.findById(group_id);
         if(user.isPresent() && group.isPresent()) {
-            assignment.setGroup(group.get());
-            assignment.setUser(user.get());
-            entityManager.persist(assignment);
-            return AssignmentResponse.builder()
-                    .id(assignment.getId())
-                    .userId(user_id)
-                    .groupId(group_id)
-                    .taskDescription(assignment.getTaskDescription())
-                    .creationDatetime(assignment.getCreationDatetime())
-                    .lastModifiedDatetime(assignment.getLastModifiedDatetime())
-                    .completionDatetime(assignment.getCompletionDatetime())
-                    .title(assignment.getTitle())
-                    .visible(assignment.getVisible())
-                    .build();
+            List<User> userList = userRepository.getGroupTeachersByGroup(group_id);
+            AtomicBoolean ok = new AtomicBoolean(false);
+            userList.forEach(user1 -> {
+                if (user1.getId() == user_id) {
+                    ok.set(true);
+                }
+            });
+            if(ok.get()) {
+                assignment.setGroup(group.get());
+                assignment.setUser(user.get());
+                entityManager.persist(assignment);
+                return AssignmentResponse.builder()
+                        .id(assignment.getId())
+                        .userId(user_id)
+                        .groupId(group_id)
+                        .taskDescription(assignment.getTaskDescription())
+                        .creationDatetime(assignment.getCreationDatetime())
+                        .lastModifiedDatetime(assignment.getLastModifiedDatetime())
+                        .completionDatetime(assignment.getCompletionDatetime())
+                        .title(assignment.getTitle())
+                        .visible(assignment.getVisible())
+                        .build();
+            } else {
+                return AssignmentResponse.builder().build();
+            }
         } else {
-            return AssignmentResponse.builder().build();
+            return AssignmentResponse.builder().forbidden(true).build();
         }
     }
 
