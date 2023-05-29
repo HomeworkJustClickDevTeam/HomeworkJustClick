@@ -2,6 +2,7 @@ package pl.HomeworkJustClick.Backend.Controllers;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,12 +19,12 @@ import java.util.Optional;
 @RequestMapping("/api")
 @SecurityRequirement(name = "Bearer Authentication")
 @Tag(name = "User")
+@RequiredArgsConstructor
 public class UserController {
-    @Autowired
-    UserService userService;
 
-    @Autowired
-    GroupTeacherService groupTeacherService;
+    private final UserService userService;
+
+    private final GroupTeacherService groupTeacherService;
 
     @GetMapping("/users")
     public List<User> getAll() {

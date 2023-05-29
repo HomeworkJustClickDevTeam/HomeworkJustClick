@@ -2,12 +2,11 @@ package pl.HomeworkJustClick.Backend.Controllers;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.HomeworkJustClick.Backend.Entities.Evaluation;
-import pl.HomeworkJustClick.Backend.Entities.Solution;
 import pl.HomeworkJustClick.Backend.Responses.EvaluationResponse;
 import pl.HomeworkJustClick.Backend.Services.EvaluationService;
 
@@ -18,9 +17,11 @@ import java.util.Optional;
 @RequestMapping("/api")
 @SecurityRequirement(name = "Bearer Authentication")
 @Tag(name = "Evaluation")
+@RequiredArgsConstructor
 public class EvaluationController {
-    @Autowired
-    EvaluationService evaluationService;
+
+    private final EvaluationService evaluationService;
+
     @GetMapping("/evaluations")
     public List<Evaluation> getAll(){return evaluationService.getAll();}
     @GetMapping("/evaluations/{id}")

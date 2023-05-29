@@ -20,9 +20,10 @@ import java.util.Optional;
 @RequestMapping("/api")
 @SecurityRequirement(name = "Bearer Authentication")
 @Tag(name = "Assignment")
+@RequiredArgsConstructor
 public class AssignmentController {
-    @Autowired
-    AssignmentService assignmentService;
+
+    private final AssignmentService assignmentService;
 
     @GetMapping("/assignments")
     public List<Assignment> getAll(){return assignmentService.getAll();}

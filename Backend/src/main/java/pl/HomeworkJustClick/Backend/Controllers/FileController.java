@@ -3,7 +3,7 @@ package pl.HomeworkJustClick.Backend.Controllers;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,10 +18,10 @@ import java.util.Optional;
 @RequestMapping("/api")
 @SecurityRequirement(name = "Bearer Authentication")
 @Tag(name = "File")
+@RequiredArgsConstructor
 public class FileController {
 
-    @Autowired
-    FileService fileService;
+    private final FileService fileService;
 
     @GetMapping("/files")
     public List<File> getAll() {
@@ -41,6 +41,16 @@ public class FileController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
             return ResponseEntity.ok(response);
+        }
+    }
+
+    @PostMapping("/file/listWithAssignment/{id}")
+    public ResponseEntity<Void> addListWithAssignment(@RequestBody List<File> fileList, @PathVariable("id") int id) {
+        boolean response = fileService.addListWithAssignment(fileList, id);
+        if(response){
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 

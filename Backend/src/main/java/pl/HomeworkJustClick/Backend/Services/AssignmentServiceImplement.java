@@ -2,6 +2,7 @@ package pl.HomeworkJustClick.Backend.Services;
 
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.HomeworkJustClick.Backend.Entities.Assignment;
@@ -16,26 +17,20 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class AssignmentServiceImplement implements AssignmentService {
 
-    EntityManager entityManager;
+    private final EntityManager entityManager;
 
-    public AssignmentServiceImplement(EntityManager entityManager){this.entityManager = entityManager;}
+    private final AssignmentRepository assignmentRepository;
 
-    @Autowired
-    AssignmentRepository assignmentRepository;
+    private final GroupRepository groupRepository;
 
-    @Autowired
-    GroupRepository groupRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    UserRepository userRepository;
+    private final SolutionRepository solutionRepository;
 
-    @Autowired
-    SolutionRepository solutionRepository;
-
-    @Autowired
-    EvaluationRepository evaluationRepository;
+    private final EvaluationRepository evaluationRepository;
 
     @Override
     public List<Assignment> getAll() {

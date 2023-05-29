@@ -2,6 +2,7 @@ package pl.HomeworkJustClick.Backend.Services;
 
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.HomeworkJustClick.Backend.Entities.Group;
@@ -14,19 +15,14 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class GroupServiceImplement implements GroupService {
 
-    EntityManager entityManager;
+    private final EntityManager entityManager;
 
-    public GroupServiceImplement(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
+    private final GroupRepository groupRepository;
 
-    @Autowired
-    GroupRepository groupRepository;
-
-    @Autowired
-    GroupTeacherRepository groupTeacherRepository;
+    private final GroupTeacherRepository groupTeacherRepository;
 
     @Override
     public List<Group> getAll() {
