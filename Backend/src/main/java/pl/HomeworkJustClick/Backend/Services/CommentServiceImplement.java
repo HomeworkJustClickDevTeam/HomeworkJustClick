@@ -2,6 +2,7 @@ package pl.HomeworkJustClick.Backend.Services;
 
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.HomeworkJustClick.Backend.Entities.Comment;
@@ -18,21 +19,18 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class CommentServiceImplement implements CommentService {
 
-    EntityManager entityManager;
-    public CommentServiceImplement(EntityManager entityManager){this.entityManager = entityManager;}
+    private final EntityManager entityManager;
 
-    @Autowired
-    CommentRepository commentRepository;
+    private final CommentRepository commentRepository;
 
-    @Autowired
-    CommentEvaluationRepository commentEvaluationRepository;
+    private final CommentEvaluationRepository commentEvaluationRepository;
 
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    private EvaluationRepository evaluationRepository;
+    private final UserRepository userRepository;
+
+    private final  EvaluationRepository evaluationRepository;
 
     @Override
     public List<Comment> getAll() {

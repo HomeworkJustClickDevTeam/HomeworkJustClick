@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api")
 @SecurityRequirement(name = "Bearer Authentication")
+@RequiredArgsConstructor
 @Tag(name = "User", description = "User related calls.")
 @ApiResponse(
         responseCode = "403",
@@ -37,11 +39,10 @@ import java.util.Optional;
         description = "OK."
 )
 public class UserController {
-    @Autowired
-    UserService userService;
 
-    @Autowired
-    GroupTeacherService groupTeacherService;
+    private final UserService userService;
+
+    private final GroupTeacherService groupTeacherService;
 
     @GetMapping("/users")
     @Operation(summary = "Returns list of all users in DB.",
@@ -253,4 +254,6 @@ public class UserController {
             return new ResponseEntity<>(userService.getTeachersByGroup(group_id), HttpStatus.OK);
         }
     }
+
+
 }

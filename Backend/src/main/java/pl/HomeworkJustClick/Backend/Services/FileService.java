@@ -21,4 +21,8 @@ public interface FileService {
     public List<File> getFilesByAssignment(int id);
 
     public List<File> getFilesBySolution(int id);
+
+    public boolean addListWithSolution (List<File> fileList, int solution_id);
+
+    public boolean addListWithAssignment (List<File> fileList, int assignment_id);
 }

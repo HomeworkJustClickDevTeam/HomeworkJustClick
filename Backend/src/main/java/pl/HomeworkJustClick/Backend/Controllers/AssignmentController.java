@@ -20,9 +20,10 @@ import java.util.Optional;
 @RequestMapping("/api")
 @SecurityRequirement(name = "Bearer Authentication")
 @Tag(name = "Assignment")
+@RequiredArgsConstructor
 public class AssignmentController {
-    @Autowired
-    AssignmentService assignmentService;
+
+    private final AssignmentService assignmentService;
 
     @GetMapping("/assignments")
     public List<Assignment> getAll(){return assignmentService.getAll();}
@@ -46,9 +47,13 @@ public class AssignmentController {
     @PostMapping("/assignment/withUserAndGroup/{user_id}/{group_id}")
     public ResponseEntity<AssignmentResponse> addWithUserAndGroup(@PathVariable("user_id") int user_id, @PathVariable("group_id") int group_id, @RequestBody Assignment assignment) {
         AssignmentResponse response = assignmentService.addWithUserAndGroup(assignment, user_id, group_id);
-        if(response.getId()!=0){
+        if(response.getId()!=0) {
             return new ResponseEntity<>(response, HttpStatus.OK);
-        } else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else if (response.isForbidden()) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        } else {
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
     }
 
     @DeleteMapping("/assignment/{id}")

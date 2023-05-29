@@ -2,10 +2,9 @@ package pl.HomeworkJustClick.Backend.Controllers;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import pl.HomeworkJustClick.Backend.Entities.Group;
 import pl.HomeworkJustClick.Backend.Entities.GroupTeacher;
@@ -24,19 +23,16 @@ import java.util.Optional;
 @RequestMapping("/api")
 @SecurityRequirement(name = "Bearer Authentication")
 @Tag(name = "Group")
+@RequiredArgsConstructor
 public class GroupController {
 
-    @Autowired
-    GroupService groupService;
+    private final GroupService groupService;
 
-    @Autowired
-    GroupTeacherService groupTeacherService;
+    private final GroupTeacherService groupTeacherService;
 
-    @Autowired
-    GroupStudentService groupStudentService;
+    private final GroupStudentService groupStudentService;
 
-    @Autowired
-    UserService userService;
+    private final UserService userService;
 
     @GetMapping("/groups")
     public List<Group> getAll() {
