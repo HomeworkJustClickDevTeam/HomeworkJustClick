@@ -18,6 +18,7 @@ import pl.HomeworkJustClick.Backend.Responses.SolutionResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
 @RequiredArgsConstructor
@@ -59,19 +60,32 @@ public class SolutionServiceImplement implements SolutionService{
         Optional<User> user = userRepository.findById(user_id);
         Optional<Assignment> assignment = assignmentRepository.findById(assignment_id);
         if(user.isPresent() && assignment.isPresent()) {
-            solution.setAssignment(assignment.get());
-            solution.setUser(user.get());
-            solution.setGroup(assignment.get().getGroup());
-            entityManager.persist(solution);
-            return SolutionResponse.builder()
-                    .id(solution.getId())
-                    .userId(user_id)
-                    .assignmentId(assignment_id)
-                    .groupId(assignment.get().getGroup().getId())
-                    .creationDateTime(solution.getCreationDatetime())
-                    .lastModifiedDatetime(solution.getLastModifiedDatetime())
-                    .comment(solution.getComment())
-                    .build();
+            List<User> userList = userRepository.getGroupStudentsByGroup(assignment.get().getGroup().getId());
+            System.out.println(assignment.get().getGroup().getId());
+            AtomicBoolean ok = new AtomicBoolean(false);
+            userList.forEach(user1 -> {
+                if (user1.getId() == user_id) {
+                    ok.set(true);
+                }
+            });
+            System.out.println(ok);
+            if(ok.get()) {
+                solution.setAssignment(assignment.get());
+                solution.setUser(user.get());
+                solution.setGroup(assignment.get().getGroup());
+                entityManager.persist(solution);
+                return SolutionResponse.builder()
+                        .id(solution.getId())
+                        .userId(user_id)
+                        .assignmentId(assignment_id)
+                        .groupId(assignment.get().getGroup().getId())
+                        .creationDateTime(solution.getCreationDatetime())
+                        .lastModifiedDatetime(solution.getLastModifiedDatetime())
+                        .comment(solution.getComment())
+                        .build();
+            } else {
+                return SolutionResponse.builder().forbidden(true).build();
+            }
         } else {
             return SolutionResponse.builder().build();
         }

@@ -21,4 +21,5 @@ public class EvaluationResponse {
     private OffsetDateTime creationDatetime;
     private OffsetDateTime lastModifiedDatetime;
     private Double grade;
+    private boolean forbidden;
 }

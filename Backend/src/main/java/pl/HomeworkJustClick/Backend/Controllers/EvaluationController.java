@@ -40,8 +40,10 @@ public class EvaluationController {
         EvaluationResponse response = evaluationService.addWithUserAndSolution(evaluation, user_id, solution_id);
         if(response.getId()!=0) {
             return new ResponseEntity<>(response, HttpStatus.OK);
+        } else if (response.isForbidden()){
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         } else {
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 

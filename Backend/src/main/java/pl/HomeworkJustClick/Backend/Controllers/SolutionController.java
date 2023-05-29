@@ -41,6 +41,8 @@ public class SolutionController {
         SolutionResponse response = solutionService.addWithUserAndAssignment(solution,user_id, assignment_id);
         if(response.getId()!=0) {
             return new ResponseEntity<>(response, HttpStatus.OK);
+        } else if (response.isForbidden()) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         } else {
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         }
