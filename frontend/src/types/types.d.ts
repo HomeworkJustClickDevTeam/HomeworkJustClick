@@ -12,7 +12,7 @@ interface LoginUser {
     password: string
 }
 
-interface Group {
+type Group = {
     id: number,
     name: string,
     description: string,
@@ -37,12 +37,11 @@ interface InGroup {
     teacher: boolean
 }
 
-type PropsForLogin = {
-    loggedIn: boolean,
-    setLoggedIn: Dispatch<SetStateAction<boolean>>
+interface PropsForLogin  {
+   state:applicationState
 }
 
-type PropsForGroupItem = {
+interface PropsForGroupItem {
     group: Group,
     key: number
 }
@@ -54,7 +53,7 @@ interface GroupProp {
     id:string | undefined
 
 }
-interface Assigment {
+type Assigment = {
     title:string,
     visible: boolean,
     taskDescription:string,
@@ -77,4 +76,33 @@ interface UserInGroupProp{
 }
 interface UserItemToDisplay{
     userToShow: UserToShow
+}
+type FileRespondMongo = {
+    id : string,
+    name: string,
+    format:string
+}
+type SolutionToSend = {
+    creationDatetime:string,
+    lastModifiedDatetime: string,
+    comment:string
+}
+interface userState{
+    token: string,
+    userId: string,
+}
+interface applicationState{
+    loggedIn: boolean,
+    homePageIn: boolean,
+    userState: userState
+}
+type Action =
+    | { type: 'login'; data: User }
+    | { type: 'logout' }
+    | {type:'homePageOut'}
+    | {type:'homePageIn'}
+
+interface groupContext{
+    role:string
+    setRole: Dispatch<SetStateAction<string>>
 }
