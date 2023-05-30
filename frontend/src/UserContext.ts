@@ -1,7 +1,10 @@
-import {createContext} from "react";
-import {PropsForLogin} from "./types/types";
-const UserContext = createContext<PropsForLogin>({
-    loggedIn:false,
-    setLoggedIn: () =>{}
+import { createContext } from "react"
+import { applicationState } from "./types/types"
+const UserContext = createContext<applicationState>(<applicationState>{
+  loggedIn: false,
+  userState: {
+    token: "",
+    userId: "",
+  },
 })
 export default UserContext
