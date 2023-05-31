@@ -26,4 +26,12 @@ public interface EvaluationService {
 
     Boolean changeGradeById(int id, Double grade);
 
+    public List<Evaluation> getAllEvaluationsByStudent(int student_id);
+
+    public List<Evaluation> getAllEvaluationsByStudentInGroup(int student_id, int group_id);
+
+    public List<Evaluation> getAllEvaluationsByAssignment(int assignment_id);
+
+    public Evaluation getEvaluationBySolution(int solution_id);
+
 }

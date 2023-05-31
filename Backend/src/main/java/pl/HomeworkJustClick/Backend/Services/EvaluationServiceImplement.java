@@ -156,4 +156,25 @@ public class EvaluationServiceImplement implements EvaluationService {
             return false;
         }
     }
+
+    @Override
+    public List<Evaluation> getAllEvaluationsByStudent(int student_id) {
+        return evaluationRepository.getAllEvaluationsByStudent(student_id);
+    }
+
+    @Override
+    public List<Evaluation> getAllEvaluationsByStudentInGroup(int student_id, int group_id){
+        return evaluationRepository.getAllEvaluationsByStudentInGroup(student_id, group_id);
+    }
+
+    @Override
+    public List<Evaluation> getAllEvaluationsByAssignment(int assignment_id){
+        return evaluationRepository.getEvaluationsByAssignment(assignment_id);
+    }
+
+    @Override
+    public Evaluation getEvaluationBySolution(int solution_id){
+        return evaluationRepository.getEvaluationBySolution(solution_id);
+    }
+
 }
