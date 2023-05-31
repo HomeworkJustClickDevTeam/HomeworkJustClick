@@ -231,4 +231,55 @@ public class AssignmentServiceImplement implements AssignmentService {
         }
         return ucheckedAssignments;
     }
+
+    @Override
+    public List<Assignment> getAllAssignmentsByGroupIdAndUserId(int group_id, int user_id) {
+        return assignmentRepository.getAllAssignmentsByGroupIdAndUserId(group_id, user_id);
+    }
+
+    @Override
+    public List<Assignment> getUndoneAssignmentsByGroupIdAndUserId(int group_id, int user_id){
+        return assignmentRepository.getUndoneAssignmentsByGroupIdAndUserId(group_id, user_id);
+    }
+
+    @Override
+    public List<Assignment> getUndoneAssignmentsByStudent(int student_id) {
+        return assignmentRepository.getUndoneAssignmentsByStudent(student_id);
+    }
+
+    @Override
+    public List<Assignment> getDoneAssignmentsByGroupIdAndUserId(int group_id, int user_id) {
+        return assignmentRepository.getDoneAssignmentsByGroupIdAndUserId(group_id, user_id);
+    }
+
+    @Override
+    public List<Assignment> getDoneAssignmentsByStudent(int student_id){
+        return assignmentRepository.getDoneAssignmentsByStudent(student_id);
+    }
+
+    @Override
+    public List<Assignment> getExpiredUndoneAssignmentsByGroupIdAndUserId(int group_id, int user_id) {
+        return assignmentRepository.getExpiredUndoneAssignmentsByGroupIdAndUserId(group_id, user_id);
+    }
+
+    @Override
+    public List<Assignment> getExpiredUndoneAssignmentsByStudent(int student_id){
+        return assignmentRepository.getExpiredUndoneAssignmentsByStudent(student_id);
+    }
+
+    @Override
+    public List<Assignment> getNonExpiredUndoneAssignmentsByGroupIdAndUserId(int group_id, int user_id) {
+        return assignmentRepository.getNonExpiredUndoneAssignmentsByGroupIdAndUserId(group_id, user_id);
+    }
+
+    @Override
+    public List<Assignment> getNonExpiredUndoneAssignmentsByStudent(int student_id) {
+        return assignmentRepository.getNonExpiredUndoneAssignmentsByStudent(student_id);
+    }
+
+    @Override
+    public List<Assignment> getAllAssignmentsByStudent(int user_id){
+        return assignmentRepository.getAllAssignmentsByUser(user_id);
+    }
+
 }

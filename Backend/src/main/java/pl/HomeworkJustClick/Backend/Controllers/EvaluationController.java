@@ -96,4 +96,24 @@ public class EvaluationController {
         }
     }
 
+    @GetMapping("/evaluations/byStudent/{student_id}")
+    public List<Evaluation> getAllEvaluationsByStudent(@PathVariable("student_id") int student_id) {
+        return evaluationService.getAllEvaluationsByStudent(student_id);
+    }
+
+    @GetMapping("/evaluations/byStudentAndGroup/{student_id}/{group_id}")
+    public List<Evaluation> getAllEvaluationsByStudentInGroup(@PathVariable("student_id") int student_id, @PathVariable("group_id") int group_id) {
+        return evaluationService.getAllEvaluationsByStudentInGroup(student_id, group_id);
+    }
+
+    @GetMapping("/evaluations/byAssignment/{assignment_id}")
+    public List<Evaluation> getAllEvaluationsByAssignment(@PathVariable("assignment_id") int assignment_id) {
+        return evaluationService.getAllEvaluationsByAssignment(assignment_id);
+    }
+
+    @GetMapping("/evaluation/bySolution/{solution_id}")
+    public Evaluation getEvaluationBySolution(@PathVariable("solution_id") int solution_id) {
+        return evaluationService.getEvaluationBySolution(solution_id);
+    }
+
 }
