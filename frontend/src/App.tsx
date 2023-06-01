@@ -12,16 +12,18 @@ import UserContext from "./UserContext"
 import AssignmentsDisplayer from "./components/assigments/assigmentDisplayer/AssignmentsDisplayer"
 import AddAssigment from "./components/assigments/AddAssigment"
 import AssigmentSpec from "./components/assigments/AssigmentSpec"
-import { Action, applicationState } from "./types/types"
+import { Action, ApplicationState } from "./types/types"
 import { useImmerReducer } from "use-immer"
 import DispatchContext from "./DispatchContext"
 import Header from "./components/header/Header"
 import Users from "./components/group/users/Users"
-import GroupContext from "./GroupContext"
 import NotFound from "./components/errors/NotFound"
+import GroupRoleContext from "./GroupRoleContext"
+import GroupSetRoleContext from "./GroupSetRoleContext"
+import AssignmentsTypes from "./components/assigments/AssignmentsTypes"
 
 function App() {
-  const initialState: applicationState = {
+  const initialState: ApplicationState = {
     loggedIn: Boolean(localStorage.getItem("token")),
     homePageIn: true,
     userState: {
@@ -30,7 +32,7 @@ function App() {
     },
   }
   const [role, setRole] = useState<string>("")
-  function ourReducer(draft: applicationState, action: Action) {
+  function ourReducer(draft: ApplicationState, action: Action) {
     switch (action.type) {
       case "login":
         draft.loggedIn = true
@@ -47,7 +49,7 @@ function App() {
         break
     }
   }
-  const [state, dispatch] = useImmerReducer<applicationState, Action>(
+  const [state, dispatch] = useImmerReducer<ApplicationState, Action>(
     ourReducer,
     initialState
   )
@@ -65,31 +67,49 @@ function App() {
   return (
     <UserContext.Provider value={state}>
       <DispatchContext.Provider value={dispatch}>
-        <GroupContext.Provider value={{ role, setRole }}>
-          <BrowserRouter>
-            <Header />
-            <Routes>
-              <Route
-                path="/"
-                element={state.loggedIn ? <Home /> : <HomeGuest />}
-              />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/create/group" element={<CreateGroup />} />
-              <Route path="/group/:id" element={<Group />}>
-                <Route path="users" element={<Users />} />
-                <Route path="assignments" element={<AssignmentsDisplayer />} />
-                <Route path="assignments/add" element={<AddAssigment />} />
+        <GroupRoleContext.Provider value={{ role }}>
+          <GroupSetRoleContext.Provider value={{ setRole }}>
+            <BrowserRouter>
+              <Header />
+              <Routes>
                 <Route
-                  path="assigment/:idAssigment"
-                  element={<AssigmentSpec />}
+                  path="/"
+                  element={state.loggedIn ? <Home /> : <HomeGuest />}
                 />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/create/group" element={<CreateGroup />} />
+                <Route path="/group/:id" element={<Group />}>
+                  <Route path="users" element={<Users />} />
+                  <Route
+                    path="assignments"
+                    element={<AssignmentsDisplayer />}
+                  />
+                  <Route
+                    path="assignments/done"
+                    element={<AssignmentsTypes type={"done"} />}
+                  />
+                  <Route
+                    path="assignments/expired"
+                    element={<AssignmentsTypes type={"expired"} />}
+                  />
+                  <Route
+                    path="assignments/todo"
+                    element={<AssignmentsTypes type={"todo"} />}
+                  />
+                  <Route path="assignments/add" element={<AddAssigment />} />
+                  <Route
+                    path="assigment/:idAssigment"
+                    element={<AssigmentSpec />}
+                  />
+
+                  <Route path="*" element={<NotFound />} />
+                </Route>
                 <Route path="*" element={<NotFound />} />
-              </Route>
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </GroupContext.Provider>
+              </Routes>
+            </BrowserRouter>
+          </GroupSetRoleContext.Provider>
+        </GroupRoleContext.Provider>
       </DispatchContext.Provider>
     </UserContext.Provider>
   )
