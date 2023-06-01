@@ -120,6 +120,15 @@ public class AssignmentController {
         }
     }
 
+    @PutMapping("/assignment/max_points/{assignment_id}")
+    public ResponseEntity<Void> updatePoints(@PathVariable("assignment_id") int id, @RequestBody int points) {
+        if(assignmentService.changeMaxPoints(id, points)) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
     @GetMapping("/assignments/unchecked/{group_id}")
     public List<AssignmentResponse> getUncheckedAssignmentsInGroup(@PathVariable("group_id") int group_id){
         return assignmentService.getUncheckedAssignmentsByGroup(group_id);
