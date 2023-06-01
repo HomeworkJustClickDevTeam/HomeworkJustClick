@@ -99,6 +99,43 @@ public class AssignmentServiceImplement implements AssignmentService {
     }
 
     @Override
+    public Boolean update(int id, Assignment updatedAssignment) {
+        Optional<Assignment> assignmentOptional = assignmentRepository.findById(id);
+        if(assignmentOptional.isEmpty()) {
+            return false;
+        }
+        Assignment assignment = assignmentOptional.get();
+        if (!updatedAssignment.getTitle().isEmpty() && !updatedAssignment.getTitle().equals(assignment.getTitle())) {
+            assignment.setTitle(updatedAssignment.getTitle());
+        }
+        if (!updatedAssignment.getVisible().equals(assignment.getVisible())) {
+            assignment.setVisible(updatedAssignment.getVisible());
+        }
+        if (!updatedAssignment.getUser().equals(assignment.getUser())) {
+            assignment.setUser(updatedAssignment.getUser());
+        }
+        if (!updatedAssignment.getGroup().equals(assignment.getGroup())) {
+            assignment.setGroup(updatedAssignment.getGroup());
+        }
+        if (!updatedAssignment.getTaskDescription().isEmpty() && !updatedAssignment.getTaskDescription().equals(assignment.getTaskDescription())) {
+            assignment.setTaskDescription(updatedAssignment.getTaskDescription());
+        }
+        if (!updatedAssignment.getCreationDatetime().equals(assignment.getCreationDatetime())) {
+            assignment.setCreationDatetime(updatedAssignment.getCreationDatetime());
+        }
+        if (!updatedAssignment.getCompletionDatetime().equals(assignment.getCompletionDatetime())) {
+            assignment.setCompletionDatetime(updatedAssignment.getCompletionDatetime());
+        }
+        if (!updatedAssignment.getLastModifiedDatetime().equals(assignment.getLastModifiedDatetime())) {
+            assignment.setLastModifiedDatetime(updatedAssignment.getLastModifiedDatetime());
+        }
+        if (updatedAssignment.getMax_points() >= 0 && updatedAssignment.getMax_points() != assignment.getMax_points()) {
+            assignment.setMax_points(updatedAssignment.getMax_points());
+        }
+        return true;
+    }
+
+    @Override
     public Boolean delete(int id) {
         if(assignmentRepository.existsById(id)) {
             assignmentRepository.deleteById(id);

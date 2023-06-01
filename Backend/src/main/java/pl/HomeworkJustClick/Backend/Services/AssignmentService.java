@@ -17,6 +17,8 @@ public interface AssignmentService {
 
     public Boolean delete(int id);
 
+    public Boolean update(int id, Assignment updatedAssignment);
+
     public Boolean changeTitleById(int id, String title);
 
     public Boolean changeTaskDescriptionById(int id, String taskDescription);
