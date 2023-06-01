@@ -57,6 +57,7 @@ public class AssignmentServiceImplement implements AssignmentService {
                 .completionDatetime(assignment.getCompletionDatetime())
                 .title(assignment.getTitle())
                 .visible(assignment.getVisible())
+                .max_points(assignment.getMax_points())
                 .build();
     }
 
@@ -87,6 +88,7 @@ public class AssignmentServiceImplement implements AssignmentService {
                         .completionDatetime(assignment.getCompletionDatetime())
                         .title(assignment.getTitle())
                         .visible(assignment.getVisible())
+                        .max_points(assignment.getMax_points())
                         .build();
             } else {
                 return AssignmentResponse.builder().build();
@@ -186,6 +188,18 @@ public class AssignmentServiceImplement implements AssignmentService {
     }
 
     @Override
+    public Boolean changeMaxPoints(int id, int points) {
+        if(assignmentRepository.findById(id).isPresent() && points >= 0) {
+            Assignment assignment = assignmentRepository.findById(id).get();
+            assignment.setMax_points(points);
+            assignmentRepository.save(assignment);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
     public List<AssignmentResponse> getAssignmentsByGroupId(int id) {
         List<Assignment> assignments = assignmentRepository.getAssignmentsByGroupId(id);
         List<AssignmentResponse> assignmentResponses = new ArrayList<>();
@@ -200,6 +214,7 @@ public class AssignmentServiceImplement implements AssignmentService {
                     .completionDatetime(assignment.getCompletionDatetime())
                     .title(assignment.getTitle())
                     .visible(assignment.getVisible())
+                    .max_points(assignment.getMax_points())
                     .build());
         }
         return assignmentResponses;
@@ -225,6 +240,7 @@ public class AssignmentServiceImplement implements AssignmentService {
                                 .completionDatetime(assignment.getCompletionDatetime())
                                 .title(assignment.getTitle())
                                 .visible(assignment.getVisible())
+                                .max_points(assignment.getMax_points())
                                 .build()
                 );
             }

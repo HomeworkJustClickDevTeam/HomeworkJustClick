@@ -29,6 +29,8 @@ public interface AssignmentService {
 
     public Boolean changeGroup(int id, int groupId);
 
+    public Boolean changeMaxPoints(int id, int points);
+
     public List<AssignmentResponse> getAssignmentsByGroupId(int id);
 
     public List<AssignmentResponse> getUncheckedAssignmentsByGroup(int group_id);
