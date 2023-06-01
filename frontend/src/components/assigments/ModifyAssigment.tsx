@@ -1,47 +1,50 @@
 import { useNavigate, useParams } from "react-router-dom"
-import { ChangeEvent, useEffect, useState } from "react"
-import { Assigment } from "../../types/types"
+import React, { ChangeEvent, useEffect, useState } from "react"
+import { Assigment, AssigmentProps } from "../../types/types"
 import common_request from "../../services/default-request-database"
 import ReactDatePicker from "react-datepicker"
+import Loading from "../animations/Loading"
 
-function ModifyAssigment() {
+function ModifyAssigment({ assignment }: AssigmentProps) {
   const navigate = useNavigate()
   const { id } = useParams()
-  const [assigment, setAssigment] = useState<Assigment>({
-    title: "",
+  const [isLoading, setIsLoading] = useState<boolean>()
+  const [modifyAssignment, setModifyAssignment] = useState<Assigment>({
     completionDatetime: new Date(),
-    taskDescription: "",
-    visible: false,
     id: 0,
+    taskDescription: "",
+    title: "",
+    visible: false,
+    points: 0,
+  })
+  useEffect(() => {
+    setModifyAssignment(assignment)
+    setIsLoading(false)
   })
 
-  useEffect(() => {
-    common_request
-      .get(`/assigment/${id}`)
-      .then((r) => setAssigment(r.data))
-      .catch((e) => console.log(e))
-  }, [])
   const handleChange = (event: ChangeEvent<HTMLInputElement> | Date) => {
     if (event instanceof Date) {
-      setAssigment((prevState) => ({
+      setModifyAssignment((prevState) => ({
         ...prevState,
         completionDatetime: event,
       }))
     } else {
       const { name, value, type, checked } = event.target
-      setAssigment((prevState) => ({
+      setModifyAssignment((prevState) => ({
         ...prevState,
         [name]: type === "checkbox" ? checked : value,
       }))
+      console.log(modifyAssignment.visible)
     }
   }
+
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
     try {
-      console.log(assigment)
-      common_request.post(
+      console.log(assignment)
+      common_request.put(
         `/assignment/withUserAndGroup/${localStorage.getItem("id")}/${id}`,
-        assigment
+        assignment
       )
       navigate(`/group/${id}/assignments/`)
     } catch (e) {
@@ -49,32 +52,43 @@ function ModifyAssigment() {
     }
   }
 
+  if (isLoading) {
+    return <Loading />
+  }
   return (
     <>
       <form onSubmit={handleSubmit}>
         <label>
-          {" "}
           Tytuł
           <input
             name="title"
             type="text"
             onChange={handleChange}
-            value={assigment.title}
+            value={modifyAssignment.title}
           />
         </label>
         <label>
-          {" "}
+          Punkty
+          <input
+            name="points"
+            type="number"
+            onChange={handleChange}
+            min="1"
+            value={modifyAssignment.points}
+          />
+        </label>
+        <label>
           Opis zadania
           <input
             name="taskDescription"
             type="text"
             onChange={handleChange}
-            value={assigment.taskDescription}
+            value={modifyAssignment.taskDescription}
           />
         </label>
         <ReactDatePicker
           name="completionDatetime"
-          selected={assigment.completionDatetime}
+          selected={modifyAssignment.completionDatetime}
           onChange={(date) => handleChange(date as Date)}
           showTimeSelect
           timeFormat="HH:mm"
@@ -86,11 +100,11 @@ function ModifyAssigment() {
           <input
             name="visible"
             type="checkbox"
-            checked={assigment.visible}
+            checked={modifyAssignment.visible}
             onChange={handleChange}
           />
         </label>
-        <button type="submit">Dodaj zadanie domowe</button>
+        <button type="submit">Zmodyfikuj zadanie domowe</button>
       </form>
     </>
   )
