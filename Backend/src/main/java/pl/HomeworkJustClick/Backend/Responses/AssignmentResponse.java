@@ -1,5 +1,6 @@
 package pl.HomeworkJustClick.Backend.Responses;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,6 +22,7 @@ public class AssignmentResponse {
     private OffsetDateTime creationDatetime;
     private OffsetDateTime lastModifiedDatetime;
     private OffsetDateTime completionDatetime;
+    @JsonIgnore
     private boolean forbidden;
     private int max_points;
 }

@@ -68,12 +68,32 @@ public class SolutionController {
     }
 
     @GetMapping("/solutions/byGroup/{id}")
-    public List<SolutionResponse> getSolutionsnyGroupId(@PathVariable("id") int id) {
+    public List<SolutionResponse> getSolutionsByGroupId(@PathVariable("id") int id) {
         return solutionService.getSolutionsByGroupId(id);
     }
 
     @GetMapping("/solutions/byAssignment/{id}")
-    public List<SolutionResponse> getSolutionsnyAssignmentId(@PathVariable("id") int id) {
+    public List<SolutionResponse> getSolutionsByAssignmentId(@PathVariable("id") int id) {
         return solutionService.getSolutionsByAssignmentId(id);
+    }
+
+    @GetMapping("/solutions/lateByGroup/{group_id}")
+    public List<Solution> getLateSolutionsByGroupId(@PathVariable("group_id") int group_id) {
+        return solutionService.getLateSolutionsByGroup(group_id);
+    }
+
+    @GetMapping("/solutions/lateByGroupAndStudent/{group_id}/{student_id}")
+    public List<Solution> getLateSolutionsByGroupIdAndStudentId(@PathVariable("group_id") int group_id, @PathVariable("student_id") int student_id) {
+        return solutionService.getLateSolutionsByUserAndGroup(student_id, group_id);
+    }
+
+    @GetMapping("/solutions/lateByAssignment/{assignment_id}")
+    public List<Solution> getLateSolutionsByAssignmentId(@PathVariable("assignment_id") int assignment_id) {
+        return solutionService.getLateSolutionsByAssignment(assignment_id);
+    }
+
+    @GetMapping("/solutions/lateByStudent/{student_id}")
+    public List<Solution> getLateSolutionsByStudentId(@PathVariable("student_id") int student_id) {
+        return solutionService.getLateSolutionsByStudent(student_id);
     }
 }
