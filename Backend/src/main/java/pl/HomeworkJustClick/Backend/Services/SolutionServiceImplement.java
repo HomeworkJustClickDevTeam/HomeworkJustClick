@@ -68,7 +68,9 @@ public class SolutionServiceImplement implements SolutionService{
                     ok.set(true);
                 }
             });
-            System.out.println(ok);
+            if (solutionRepository.getSolutionByUserAndAssignment(user_id, assignment_id).isPresent()) {
+                ok.set(false);
+            }
             if(ok.get()) {
                 solution.setAssignment(assignment.get());
                 solution.setUser(user.get());
@@ -163,6 +165,54 @@ public class SolutionServiceImplement implements SolutionService{
                     .build());
         }
         return solutionResponses;
+    }
+
+    @Override
+    public List<Solution> getLateSolutionsByGroup(int group_id) {
+        List<Solution> solutions = solutionRepository.getSolutionsByGroupId(group_id);
+        List<Solution> lateSolutions = new ArrayList<>();
+        solutions.forEach(solution -> {
+            if(solution.getAssignment().getCompletionDatetime().isBefore(solution.getCreationDatetime())) {
+                lateSolutions.add(solution);
+            }
+        });
+        return lateSolutions;
+    }
+
+    @Override
+    public List<Solution> getLateSolutionsByUserAndGroup(int user_id, int group_id) {
+        List<Solution> solutions = solutionRepository.getSolutionsByUserAndGroup(user_id, group_id);
+        List<Solution> lateSolutions = new ArrayList<>();
+        solutions.forEach(solution -> {
+            if(solution.getAssignment().getCompletionDatetime().isBefore(solution.getCreationDatetime())) {
+                lateSolutions.add(solution);
+            }
+        });
+        return lateSolutions;
+    }
+
+    @Override
+    public List<Solution> getLateSolutionsByAssignment(int assignment_id) {
+        List<Solution> solutions = solutionRepository.getSolutionsByAssignmentId(assignment_id);
+        List<Solution> lateSolutions = new ArrayList<>();
+        solutions.forEach(solution -> {
+            if(solution.getAssignment().getCompletionDatetime().isBefore(solution.getCreationDatetime())) {
+                lateSolutions.add(solution);
+            }
+        });
+        return lateSolutions;
+    }
+
+    @Override
+    public List<Solution> getLateSolutionsByStudent(int user_id) {
+        List<Solution> solutions = solutionRepository.getSolutionsByUser(user_id);
+        List<Solution> lateSolutions = new ArrayList<>();
+        solutions.forEach(solution -> {
+            if(solution.getAssignment().getCompletionDatetime().isBefore(solution.getCreationDatetime())) {
+                lateSolutions.add(solution);
+            }
+        });
+        return lateSolutions;
     }
 
 }

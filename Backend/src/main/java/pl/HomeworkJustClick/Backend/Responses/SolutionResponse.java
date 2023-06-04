@@ -1,5 +1,6 @@
 package pl.HomeworkJustClick.Backend.Responses;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,5 +21,6 @@ public class SolutionResponse {
     private OffsetDateTime creationDateTime;
     private OffsetDateTime lastModifiedDatetime;
     private String comment;
+    @JsonIgnore
     private boolean forbidden;
 }
