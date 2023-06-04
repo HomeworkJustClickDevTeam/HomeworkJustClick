@@ -176,60 +176,32 @@ public class SolutionController {
     }
 
     @GetMapping("/solutions/byGroup/{id}")
-    @Operation(
-            summary = "Gets list of solutions for a given group.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "404",
-                            description = "Could not find any solution in the group.",
-                            content = @Content
-                    ),
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "List returned",
-                            content = @Content(
-                                    mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
-                            )
-                    )
-            }
-    )
-    public ResponseEntity<List<SolutionResponse>> getSolutionsByGroupId(@PathVariable("id") int id) {
-        if(solutionService.getSolutionsByGroupId(id).isEmpty())
-        {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        else
-        {
-            return new ResponseEntity<>(solutionService.getSolutionsByGroupId(id), HttpStatus.OK);
-        }
+    public List<SolutionResponse> getSolutionsByGroupId(@PathVariable("id") int id) {
+        return solutionService.getSolutionsByGroupId(id);
     }
 
     @GetMapping("/solutions/byAssignment/{id}")
-    @Operation(
-            summary = "Gets list of solutions for a given assignment.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "404",
-                            description = "Could not find any solution in the assignment.",
-                            content = @Content
-                    ),
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "List returned",
-                            content = @Content(
-                                    mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
-                            )
-                    )
-            }
-    )
-    public ResponseEntity<List<SolutionResponse>> getSolutionsByAssignmentId(@PathVariable("id") int id) {
-        if(solutionService.getSolutionsByAssignmentId(id).isEmpty())
-        {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }else {
-            return new ResponseEntity<>(solutionService.getSolutionsByAssignmentId(id), HttpStatus.OK);
-        }
+    public List<SolutionResponse> getSolutionsByAssignmentId(@PathVariable("id") int id) {
+        return solutionService.getSolutionsByAssignmentId(id);
+    }
+
+    @GetMapping("/solutions/lateByGroup/{group_id}")
+    public List<Solution> getLateSolutionsByGroupId(@PathVariable("group_id") int group_id) {
+        return solutionService.getLateSolutionsByGroup(group_id);
+    }
+
+    @GetMapping("/solutions/lateByGroupAndStudent/{group_id}/{student_id}")
+    public List<Solution> getLateSolutionsByGroupIdAndStudentId(@PathVariable("group_id") int group_id, @PathVariable("student_id") int student_id) {
+        return solutionService.getLateSolutionsByUserAndGroup(student_id, group_id);
+    }
+
+    @GetMapping("/solutions/lateByAssignment/{assignment_id}")
+    public List<Solution> getLateSolutionsByAssignmentId(@PathVariable("assignment_id") int assignment_id) {
+        return solutionService.getLateSolutionsByAssignment(assignment_id);
+    }
+
+    @GetMapping("/solutions/lateByStudent/{student_id}")
+    public List<Solution> getLateSolutionsByStudentId(@PathVariable("student_id") int student_id) {
+        return solutionService.getLateSolutionsByStudent(student_id);
     }
 }
