@@ -67,7 +67,10 @@ public class GroupStudentServiceImplement implements GroupStudentService{
     public Boolean addStudentToGroup (int group_id, int student_id) {
         int groupTeacherCheck = groupTeacherRepository.getGroupTeacherByTeacherAndGroup(student_id, group_id);
         int groupStudentCheck = groupStudentRepository.getGroupStudentByStudentAndGroup(student_id, group_id);
-        if (groupTeacherCheck == 0 && groupStudentCheck == 0 && groupRepository.findById(group_id).isPresent() && userRepository.findById(student_id).isPresent()) {
+        if(groupTeacherCheck != 0 || groupStudentCheck != 0){
+            return null;
+        }
+        else if (groupRepository.findById(group_id).isPresent() && userRepository.findById(student_id).isPresent()) {
             GroupStudent groupStudent = new GroupStudent(groupRepository.findById(group_id).get(), userRepository.findById(student_id).get(), "");
             groupStudentRepository.save(groupStudent);
             return true;

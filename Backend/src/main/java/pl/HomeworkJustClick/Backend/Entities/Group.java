@@ -1,7 +1,10 @@
 package pl.HomeworkJustClick.Backend.Entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,18 +26,25 @@ public class Group {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id", updatable = false, unique = true, nullable = false)
+    @Schema(example = "0")
     private int id;
 
+    @Schema(example = "Example Group")
     @Column(name="name")
     private String name;
 
+    @Schema(example = "Example desc")
     @Column(name="description")
     private String description;
 
+    @Schema(example = "0")
+    @Max(19)
+    @Min(0)
     @Column(name="color")
     int color;
 
     @Column(name="isArchived")
+    @Schema(example = "false")
     boolean isArchived;
 
     @OneToMany(
