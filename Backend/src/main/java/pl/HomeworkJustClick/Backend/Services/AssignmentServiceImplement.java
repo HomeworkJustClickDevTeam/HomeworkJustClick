@@ -2,7 +2,7 @@ package pl.HomeworkJustClick.Backend.Services;
 
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.HomeworkJustClick.Backend.Entities.Assignment;
 import pl.HomeworkJustClick.Backend.Entities.Group;
@@ -14,28 +14,23 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
+@RequiredArgsConstructor
 public class AssignmentServiceImplement implements AssignmentService {
 
-    EntityManager entityManager;
+    private final EntityManager entityManager;
 
-    public AssignmentServiceImplement(EntityManager entityManager){this.entityManager = entityManager;}
+    private final AssignmentRepository assignmentRepository;
 
-    @Autowired
-    AssignmentRepository assignmentRepository;
+    private final GroupRepository groupRepository;
 
-    @Autowired
-    GroupRepository groupRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    UserRepository userRepository;
+    private final SolutionRepository solutionRepository;
 
-    @Autowired
-    SolutionRepository solutionRepository;
-
-    @Autowired
-    EvaluationRepository evaluationRepository;
+    private final EvaluationRepository evaluationRepository;
 
     @Override
     public List<Assignment> getAll() {
@@ -62,6 +57,7 @@ public class AssignmentServiceImplement implements AssignmentService {
                 .completionDatetime(assignment.getCompletionDatetime())
                 .title(assignment.getTitle())
                 .visible(assignment.getVisible())
+                .max_points(assignment.getMax_points())
                 .build();
     }
 
@@ -71,23 +67,72 @@ public class AssignmentServiceImplement implements AssignmentService {
         Optional<User> user = userRepository.findById(user_id);
         Optional<Group> group = groupRepository.findById(group_id);
         if(user.isPresent() && group.isPresent()) {
-            assignment.setGroup(group.get());
-            assignment.setUser(user.get());
-            entityManager.persist(assignment);
-            return AssignmentResponse.builder()
-                    .id(assignment.getId())
-                    .userId(user_id)
-                    .groupId(group_id)
-                    .taskDescription(assignment.getTaskDescription())
-                    .creationDatetime(assignment.getCreationDatetime())
-                    .lastModifiedDatetime(assignment.getLastModifiedDatetime())
-                    .completionDatetime(assignment.getCompletionDatetime())
-                    .title(assignment.getTitle())
-                    .visible(assignment.getVisible())
-                    .build();
+            List<User> userList = userRepository.getGroupTeachersByGroup(group_id);
+            AtomicBoolean ok = new AtomicBoolean(false);
+            userList.forEach(user1 -> {
+                if (user1.getId() == user_id) {
+                    ok.set(true);
+                }
+            });
+            if(ok.get()) {
+                assignment.setGroup(group.get());
+                assignment.setUser(user.get());
+                entityManager.persist(assignment);
+                return AssignmentResponse.builder()
+                        .id(assignment.getId())
+                        .userId(user_id)
+                        .groupId(group_id)
+                        .taskDescription(assignment.getTaskDescription())
+                        .creationDatetime(assignment.getCreationDatetime())
+                        .lastModifiedDatetime(assignment.getLastModifiedDatetime())
+                        .completionDatetime(assignment.getCompletionDatetime())
+                        .title(assignment.getTitle())
+                        .visible(assignment.getVisible())
+                        .max_points(assignment.getMax_points())
+                        .build();
+            } else {
+                return AssignmentResponse.builder().build();
+            }
         } else {
-            return AssignmentResponse.builder().build();
+            return AssignmentResponse.builder().forbidden(true).build();
         }
+    }
+
+    @Override
+    public Boolean update(int id, Assignment updatedAssignment) {
+        Optional<Assignment> assignmentOptional = assignmentRepository.findById(id);
+        if(assignmentOptional.isEmpty()) {
+            return false;
+        }
+        Assignment assignment = assignmentOptional.get();
+        if (!updatedAssignment.getTitle().isEmpty() && !updatedAssignment.getTitle().equals(assignment.getTitle())) {
+            assignment.setTitle(updatedAssignment.getTitle());
+        }
+        if (!updatedAssignment.getVisible().equals(assignment.getVisible())) {
+            assignment.setVisible(updatedAssignment.getVisible());
+        }
+        if (!updatedAssignment.getUser().equals(assignment.getUser())) {
+            assignment.setUser(updatedAssignment.getUser());
+        }
+        if (!updatedAssignment.getGroup().equals(assignment.getGroup())) {
+            assignment.setGroup(updatedAssignment.getGroup());
+        }
+        if (!updatedAssignment.getTaskDescription().isEmpty() && !updatedAssignment.getTaskDescription().equals(assignment.getTaskDescription())) {
+            assignment.setTaskDescription(updatedAssignment.getTaskDescription());
+        }
+        if (!updatedAssignment.getCreationDatetime().equals(assignment.getCreationDatetime())) {
+            assignment.setCreationDatetime(updatedAssignment.getCreationDatetime());
+        }
+        if (!updatedAssignment.getCompletionDatetime().equals(assignment.getCompletionDatetime())) {
+            assignment.setCompletionDatetime(updatedAssignment.getCompletionDatetime());
+        }
+        if (!updatedAssignment.getLastModifiedDatetime().equals(assignment.getLastModifiedDatetime())) {
+            assignment.setLastModifiedDatetime(updatedAssignment.getLastModifiedDatetime());
+        }
+        if (updatedAssignment.getMax_points() >= 0 && updatedAssignment.getMax_points() != assignment.getMax_points()) {
+            assignment.setMax_points(updatedAssignment.getMax_points());
+        }
+        return true;
     }
 
     @Override
@@ -180,6 +225,18 @@ public class AssignmentServiceImplement implements AssignmentService {
     }
 
     @Override
+    public Boolean changeMaxPoints(int id, int points) {
+        if(assignmentRepository.findById(id).isPresent() && points >= 0) {
+            Assignment assignment = assignmentRepository.findById(id).get();
+            assignment.setMax_points(points);
+            assignmentRepository.save(assignment);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
     public List<AssignmentResponse> getAssignmentsByGroupId(int id) {
         List<Assignment> assignments = assignmentRepository.getAssignmentsByGroupId(id);
         List<AssignmentResponse> assignmentResponses = new ArrayList<>();
@@ -194,6 +251,7 @@ public class AssignmentServiceImplement implements AssignmentService {
                     .completionDatetime(assignment.getCompletionDatetime())
                     .title(assignment.getTitle())
                     .visible(assignment.getVisible())
+                    .max_points(assignment.getMax_points())
                     .build());
         }
         return assignmentResponses;
@@ -219,10 +277,62 @@ public class AssignmentServiceImplement implements AssignmentService {
                                 .completionDatetime(assignment.getCompletionDatetime())
                                 .title(assignment.getTitle())
                                 .visible(assignment.getVisible())
+                                .max_points(assignment.getMax_points())
                                 .build()
                 );
             }
         }
         return ucheckedAssignments;
     }
+
+    @Override
+    public List<Assignment> getAllAssignmentsByGroupIdAndUserId(int group_id, int user_id) {
+        return assignmentRepository.getAllAssignmentsByGroupIdAndUserId(group_id, user_id);
+    }
+
+    @Override
+    public List<Assignment> getUndoneAssignmentsByGroupIdAndUserId(int group_id, int user_id){
+        return assignmentRepository.getUndoneAssignmentsByGroupIdAndUserId(group_id, user_id);
+    }
+
+    @Override
+    public List<Assignment> getUndoneAssignmentsByStudent(int student_id) {
+        return assignmentRepository.getUndoneAssignmentsByStudent(student_id);
+    }
+
+    @Override
+    public List<Assignment> getDoneAssignmentsByGroupIdAndUserId(int group_id, int user_id) {
+        return assignmentRepository.getDoneAssignmentsByGroupIdAndUserId(group_id, user_id);
+    }
+
+    @Override
+    public List<Assignment> getDoneAssignmentsByStudent(int student_id){
+        return assignmentRepository.getDoneAssignmentsByStudent(student_id);
+    }
+
+    @Override
+    public List<Assignment> getExpiredUndoneAssignmentsByGroupIdAndUserId(int group_id, int user_id) {
+        return assignmentRepository.getExpiredUndoneAssignmentsByGroupIdAndUserId(group_id, user_id);
+    }
+
+    @Override
+    public List<Assignment> getExpiredUndoneAssignmentsByStudent(int student_id){
+        return assignmentRepository.getExpiredUndoneAssignmentsByStudent(student_id);
+    }
+
+    @Override
+    public List<Assignment> getNonExpiredUndoneAssignmentsByGroupIdAndUserId(int group_id, int user_id) {
+        return assignmentRepository.getNonExpiredUndoneAssignmentsByGroupIdAndUserId(group_id, user_id);
+    }
+
+    @Override
+    public List<Assignment> getNonExpiredUndoneAssignmentsByStudent(int student_id) {
+        return assignmentRepository.getNonExpiredUndoneAssignmentsByStudent(student_id);
+    }
+
+    @Override
+    public List<Assignment> getAllAssignmentsByStudent(int user_id){
+        return assignmentRepository.getAllAssignmentsByUser(user_id);
+    }
+
 }

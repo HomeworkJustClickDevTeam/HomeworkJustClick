@@ -21,4 +21,6 @@ public class AssignmentResponse {
     private OffsetDateTime creationDatetime;
     private OffsetDateTime lastModifiedDatetime;
     private OffsetDateTime completionDatetime;
+    private boolean forbidden;
+    private int max_points;
 }

@@ -3,7 +3,6 @@ package pl.HomeworkJustClick.Backend.Controllers;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.parameters.P;
@@ -20,9 +19,10 @@ import java.util.Optional;
 @RequestMapping("/api")
 @SecurityRequirement(name = "Bearer Authentication")
 @Tag(name = "Assignment")
+@RequiredArgsConstructor
 public class AssignmentController {
-    @Autowired
-    AssignmentService assignmentService;
+
+    private final AssignmentService assignmentService;
 
     @GetMapping("/assignments")
     public List<Assignment> getAll(){return assignmentService.getAll();}
@@ -46,9 +46,13 @@ public class AssignmentController {
     @PostMapping("/assignment/withUserAndGroup/{user_id}/{group_id}")
     public ResponseEntity<AssignmentResponse> addWithUserAndGroup(@PathVariable("user_id") int user_id, @PathVariable("group_id") int group_id, @RequestBody Assignment assignment) {
         AssignmentResponse response = assignmentService.addWithUserAndGroup(assignment, user_id, group_id);
-        if(response.getId()!=0){
+        if(response.getId()!=0) {
             return new ResponseEntity<>(response, HttpStatus.OK);
-        } else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else if (response.isForbidden()) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        } else {
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
     }
 
     @DeleteMapping("/assignment/{id}")
@@ -57,6 +61,15 @@ public class AssignmentController {
             return new ResponseEntity<>(HttpStatus.OK);
         }
         else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/assignment/{id}")
+    public ResponseEntity<Void> update(@PathVariable("id") int id, @RequestBody Assignment assignment) {
+        if(assignmentService.update(id, assignment)) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
@@ -117,9 +130,67 @@ public class AssignmentController {
         }
     }
 
+    @PutMapping("/assignment/max_points/{assignment_id}")
+    public ResponseEntity<Void> updatePoints(@PathVariable("assignment_id") int id, @RequestBody int points) {
+        if(assignmentService.changeMaxPoints(id, points)) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
     @GetMapping("/assignments/unchecked/{group_id}")
     public List<AssignmentResponse> getUncheckedAssignmentsInGroup(@PathVariable("group_id") int group_id){
         return assignmentService.getUncheckedAssignmentsByGroup(group_id);
     }
 
+    @GetMapping("/assignments/allByGroupAndStudent/{group_id}/{student_id}")
+    public List<Assignment> getAllAssigmentsByUserAndGroup(@PathVariable("group_id") int group_id, @PathVariable("student_id") int user_id) {
+        return assignmentService.getAllAssignmentsByGroupIdAndUserId(group_id, user_id);
+    }
+
+    @GetMapping("/assignments/undoneByGroupAndStudent/{group_id}/{student_id}")
+    public List<Assignment> getUndoneAssignmentsByGroupAndStudent(@PathVariable("group_id") int group_id, @PathVariable("student_id") int student_id) {
+        return assignmentService.getUndoneAssignmentsByGroupIdAndUserId(group_id, student_id);
+    }
+
+    @GetMapping("/assignments/undoneByStudent/{student_id}")
+    public List<Assignment> getUndoneAssignmentsByStudent(@PathVariable("student_id") int student_id) {
+        return assignmentService.getUndoneAssignmentsByStudent(student_id);
+    }
+
+    @GetMapping("/assignments/doneByGroupAndStudent/{group_id}/{student_id}")
+    public List<Assignment> getDoneAssignmentsByGroupAndStudent(@PathVariable("group_id") int group_id, @PathVariable("student_id") int student_id) {
+        return assignmentService.getDoneAssignmentsByGroupIdAndUserId(group_id, student_id);
+    }
+
+    @GetMapping("/assignments/doneByStudent/{student_id}")
+    public List<Assignment> getDoneAssignmentsByStudent(@PathVariable("student_id") int student_id) {
+        return assignmentService.getDoneAssignmentsByStudent(student_id);
+    }
+
+    @GetMapping("/assignments/expiredUndoneByGroupAndStudent/{group_id}/{student_id}")
+    public List<Assignment> getExpiredUndoneAssignmentsByGroupAndStudent(@PathVariable("group_id") int group_id, @PathVariable("student_id") int student_id) {
+        return assignmentService.getExpiredUndoneAssignmentsByGroupIdAndUserId(group_id, student_id);
+    }
+
+    @GetMapping("/assignments/expiredUndoneByStudent/{student_id}")
+    public List<Assignment> getExpiredUndoneAssignmentsByStudent(@PathVariable("student_id") int student_id) {
+        return assignmentService.getExpiredUndoneAssignmentsByStudent(student_id);
+    }
+
+    @GetMapping("/assignments/nonExpiredUndoneByGroupAndStudent/{group_id}/{student_id}")
+    public List<Assignment> getNonExpiredUndoneAssignmentsByGroupAndStudent(@PathVariable("group_id") int group_id, @PathVariable("student_id") int student_id) {
+        return assignmentService.getNonExpiredUndoneAssignmentsByGroupIdAndUserId(group_id, student_id);
+    }
+
+    @GetMapping("/assignments/nonExpiredUndoneByStudent/{student_id}")
+    public List<Assignment> getNonExpiredUndoneAssignmentsByStudent(@PathVariable("student_id") int student_id) {
+        return assignmentService.getNonExpiredUndoneAssignmentsByStudent(student_id);
+    }
+
+    @GetMapping("/assignments/byStudent/{student_id}")
+    public List<Assignment> getAllStudentAssignments(@PathVariable("student_id") int id){
+        return assignmentService.getAllAssignmentsByStudent(id);
+    }
 }

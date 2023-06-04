@@ -1,5 +1,6 @@
 package pl.HomeworkJustClick.Backend.Services;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.HomeworkJustClick.Backend.Entities.GroupTeacher;
@@ -12,12 +13,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImplement implements UserService{
-    @Autowired
-    UserRepository userRepository;
 
-    @Autowired
-    GroupTeacherRepository groupTeacherRepository;
+    private final UserRepository userRepository;
+
+    private final GroupTeacherRepository groupTeacherRepository;
 
     @Override
     public List<User> getAll() {

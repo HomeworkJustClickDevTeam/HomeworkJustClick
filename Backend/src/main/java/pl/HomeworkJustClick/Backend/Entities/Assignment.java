@@ -64,6 +64,17 @@ public class Assignment {
     @Column(name = "visible", columnDefinition = "boolean default false", nullable = false)
     private Boolean visible = false;
 
+    public int getMax_points() {
+        return max_points;
+    }
+
+    public void setMax_points(int max_points) {
+        this.max_points = max_points;
+    }
+
+    @Column(name = "max_points")
+    private int max_points;
+
     public Assignment(String title) {
         this.title = title;
     }

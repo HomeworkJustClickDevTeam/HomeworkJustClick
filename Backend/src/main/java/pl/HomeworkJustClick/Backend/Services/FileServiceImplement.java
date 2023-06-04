@@ -2,6 +2,7 @@ package pl.HomeworkJustClick.Backend.Services;
 
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.HomeworkJustClick.Backend.Entities.File;
@@ -14,19 +15,16 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class FileServiceImplement implements FileService {
 
-    @Autowired
-    FileRepository fileRepository;
+    private final FileRepository fileRepository;
 
-    @Autowired
-    AssignmentRepository assignmentRepository;
+    private final AssignmentRepository assignmentRepository;
 
-    @Autowired
-    SolutionRepository solutionRepository;
+    private final SolutionRepository solutionRepository;
 
-    EntityManager entityManager;
-    public FileServiceImplement(EntityManager entityManager) {this.entityManager = entityManager;};
+    private final EntityManager entityManager;
 
     @Override
     public List<File> getAll() {
@@ -61,6 +59,36 @@ public class FileServiceImplement implements FileService {
             return FileResponse.builder().id(file.getId()).name(file.getName()).format(file.getFormat()).mongo_id(file.getMongo_id()).build();
         } else {
             return null;
+        }
+    }
+
+    @Override
+    @Transactional
+    public boolean addListWithSolution (List<File> fileList, int solution_id) {
+        if(solutionRepository.findById(solution_id).isPresent()) {
+            fileList.forEach(file -> {
+                file.setSolution(solutionRepository.findById(solution_id).get());
+                file.setAssignment(null);
+                entityManager.persist(file);
+            });
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    @Transactional
+    public boolean addListWithAssignment (List<File> fileList, int assignment_id) {
+        if(assignmentRepository.findById(assignment_id).isPresent()) {
+            fileList.forEach(file -> {
+                file.setAssignment(assignmentRepository.findById(assignment_id).get());
+                file.setSolution(null);
+                entityManager.persist(file);
+            });
+            return true;
+        } else {
+            return false;
         }
     }
 

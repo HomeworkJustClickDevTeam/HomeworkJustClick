@@ -2,6 +2,7 @@ package pl.HomeworkJustClick.Backend.Services;
 
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.HomeworkJustClick.Backend.Entities.Assignment;
@@ -16,18 +17,19 @@ import pl.HomeworkJustClick.Backend.Responses.SolutionResponse;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
+@RequiredArgsConstructor
 public class EvaluationServiceImplement implements EvaluationService {
-    EntityManager entityManager;
-    public EvaluationServiceImplement(EntityManager entityManager){this.entityManager = entityManager;}
 
-    @Autowired
-    EvaluationRepository evaluationRepository;
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    SolutionRepository solutionRepository;
+    private final EntityManager entityManager;
+
+    private final EvaluationRepository evaluationRepository;
+
+    private final UserRepository userRepository;
+
+    private final SolutionRepository solutionRepository;
 
     @Override
     public List<Evaluation> getAll() {
@@ -60,20 +62,31 @@ public class EvaluationServiceImplement implements EvaluationService {
         Optional<User> user = userRepository.findById(user_id);
         Optional<Solution> solution = solutionRepository.findById(solution_id);
         if(user.isPresent() && solution.isPresent()) {
-            evaluation.setSolution(solution.get());
-            evaluation.setUser(user.get());
-            evaluation.setGroup(solution.get().getGroup());
-            entityManager.persist(evaluation);
-            return EvaluationResponse.builder()
-                    .id(evaluation.getId())
-                    .result(evaluation.getResult())
-                    .userId(evaluation.getUser().getId())
-                    .solutionId(evaluation.getSolution().getId())
-                    .groupId(evaluation.getGroup().getId())
-                    .creationDatetime(evaluation.getCreationDatetime())
-                    .lastModifiedDatetime(evaluation.getLastModifiedDatetime())
-                    .grade(evaluation.getGrade())
-                    .build();
+            List<User> userList = userRepository.getGroupTeachersByGroup(solution.get().getGroup().getId());
+            AtomicBoolean ok = new AtomicBoolean(false);
+            userList.forEach(user1 -> {
+                if (user1.getId() == user_id) {
+                    ok.set(true);
+                }
+            });
+            if(ok.get()) {
+                evaluation.setSolution(solution.get());
+                evaluation.setUser(user.get());
+                evaluation.setGroup(solution.get().getGroup());
+                entityManager.persist(evaluation);
+                return EvaluationResponse.builder()
+                        .id(evaluation.getId())
+                        .result(evaluation.getResult())
+                        .userId(evaluation.getUser().getId())
+                        .solutionId(evaluation.getSolution().getId())
+                        .groupId(evaluation.getGroup().getId())
+                        .creationDatetime(evaluation.getCreationDatetime())
+                        .lastModifiedDatetime(evaluation.getLastModifiedDatetime())
+                        .grade(evaluation.getGrade())
+                        .build();
+            } else {
+                return EvaluationResponse.builder().forbidden(true).build();
+            }
         } else {
             return EvaluationResponse.builder().build();
         }
@@ -143,4 +156,25 @@ public class EvaluationServiceImplement implements EvaluationService {
             return false;
         }
     }
+
+    @Override
+    public List<Evaluation> getAllEvaluationsByStudent(int student_id) {
+        return evaluationRepository.getAllEvaluationsByStudent(student_id);
+    }
+
+    @Override
+    public List<Evaluation> getAllEvaluationsByStudentInGroup(int student_id, int group_id){
+        return evaluationRepository.getAllEvaluationsByStudentInGroup(student_id, group_id);
+    }
+
+    @Override
+    public List<Evaluation> getAllEvaluationsByAssignment(int assignment_id){
+        return evaluationRepository.getEvaluationsByAssignment(assignment_id);
+    }
+
+    @Override
+    public Evaluation getEvaluationBySolution(int solution_id){
+        return evaluationRepository.getEvaluationBySolution(solution_id);
+    }
+
 }
