@@ -28,6 +28,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
+@RequiredArgsConstructor
 @SecurityRequirement(name = "Bearer Authentication")
 @Tag(name = "Group", description = "Group related calls.")
 @ApiResponse(
@@ -39,7 +40,7 @@ import java.util.Optional;
         responseCode = "200",
         description = "OK."
 )
-@RequiredArgsConstructor
+
 public class GroupController {
 
     private final GroupService groupService;
@@ -69,7 +70,7 @@ public class GroupController {
         return groupService.getAll();
     }
 
-    @GetMapping("/group/{id}")
+    @GetMapping("/group/{group_id}")
     @Operation(
             summary = "Gets group by it's id.",
             responses = {
@@ -89,7 +90,7 @@ public class GroupController {
             }
     )
 
-    public ResponseEntity<Group> getById(@PathVariable("id") int id) {
+    public ResponseEntity<Group> getById(@PathVariable("group_id") int id) {
         Optional<Group> group = groupService.getById(id);
         return group.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
@@ -101,7 +102,7 @@ public class GroupController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/group/{id}")
+    @DeleteMapping("/group/{group_id}")
     @Operation(
             summary = "Deletes group with given id.",
             responses = {
@@ -113,7 +114,7 @@ public class GroupController {
             }
     )
 
-    public ResponseEntity<Void> delete (@PathVariable("id") int id) {
+    public ResponseEntity<Void> delete (@PathVariable("group_id") int id) {
         if(groupService.delete(id)) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
@@ -121,7 +122,7 @@ public class GroupController {
         }
     }
 
-    @PutMapping("/group/name/{id}")
+    @PutMapping("/group/name/{group_id}")
     @Operation(
             summary = "Updates name of the group with given id.",
             responses = {
@@ -132,7 +133,7 @@ public class GroupController {
                     )
             }
     )
-    public ResponseEntity<Void> updateName(@PathVariable("id") int id, @RequestBody String name){
+    public ResponseEntity<Void> updateName(@PathVariable("group_id") int id, @RequestBody String name){
         if(groupService.changeNameById(id, name)){
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
@@ -140,7 +141,7 @@ public class GroupController {
         }
     }
 
-    @PutMapping("/group/description/{id}")
+    @PutMapping("/group/description/{group_id}")
     @Operation(
             summary = "Updates description of the group with given id.",
             responses = {
@@ -151,7 +152,7 @@ public class GroupController {
                     )
             }
     )
-    public ResponseEntity<Void> updateDescription(@PathVariable("id") int id, @RequestBody String description){
+    public ResponseEntity<Void> updateDescription(@PathVariable("group_id") int id, @RequestBody String description){
         if(groupService.changeDescriptionById(id, description)){
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
@@ -159,7 +160,7 @@ public class GroupController {
         }
     }
 
-    @PutMapping("/group/color/{id}")
+    @PutMapping("/group/color/{group_id}")
     @Operation(
             summary = "Updates color of the group with given id.",
             responses = {
@@ -175,7 +176,7 @@ public class GroupController {
                     )
             }
     )
-    public ResponseEntity<Void> updateColor(@PathVariable("id") int id, @RequestBody int color){
+    public ResponseEntity<Void> updateColor(@PathVariable("group_id") int id, @RequestBody int color){
         if(color < 0 || color >= 20){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }else if(groupService.changeColorById(id, color)){
@@ -185,7 +186,7 @@ public class GroupController {
         }
     }
 
-    @PutMapping("/group/archive/{id}")
+    @PutMapping("/group/archive/{group_id}")
     @Operation(
             summary = "Archives group with given id.",
             responses = {
@@ -201,7 +202,7 @@ public class GroupController {
                     )
             }
     )
-    public ResponseEntity<Void> archiveGroup(@PathVariable("id") int id){
+    public ResponseEntity<Void> archiveGroup(@PathVariable("group_id") int id){
         int response = groupService.archiveGroup(id);
         if(response == 0){
             return new ResponseEntity<>(HttpStatus.OK);
@@ -212,7 +213,7 @@ public class GroupController {
         }
     }
 
-    @PutMapping("/group/unarchive/{id}")
+    @PutMapping("/group/unarchive/{group_id}")
     @Operation(
             summary = "Unarchives group with given id.",
             responses = {
@@ -228,7 +229,7 @@ public class GroupController {
                     )
             }
     )
-    public ResponseEntity<Void> unarchiveGroup(@PathVariable("id") int id){
+    public ResponseEntity<Void> unarchiveGroup(@PathVariable("group_id") int id){
         int response = groupService.unarchiveGroup(id);
         if(response == 0){
             return new ResponseEntity<>(HttpStatus.OK);
@@ -239,9 +240,9 @@ public class GroupController {
         }
     }
 
-    @PostMapping("/group/withTeacher/{id}")
+    @PostMapping("/group/withTeacher/{group_id}")
     @Operation(
-            summary = "Creates group with user as a teacher already associated with it (group).",
+            summary = "Creates group with user as a teacher already associated with it the group.",
             responses = {
                     @ApiResponse(
                             responseCode = "404",
@@ -249,19 +250,26 @@ public class GroupController {
                             content = @Content
                     ),
                     @ApiResponse(
-                            responseCode = "400",
-                            description = "Group already unarchived.",
+                            responseCode = "403",
+                            description = "Could not create group. The problem might be caused by either auth token or wrongly filled JSON object.",
                             content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = GroupResponse.class))
                     )
             }
     )
-    public ResponseEntity<GroupResponse> addWithTeacher(@PathVariable("id") int id, @RequestBody Group group) {
+    public ResponseEntity<GroupResponse> addWithTeacher(@PathVariable("group_id") int id, @RequestBody Group group) {
         GroupResponse response = groupService.add(group);
         Optional<User> user = userService.getById(id);
         if(user.isPresent()) {
             GroupTeacher groupTeacher = new GroupTeacher(group, user.get(), "");
             if(groupTeacherService.add(groupTeacher)) {
-                return ResponseEntity.ok(response);
+                return new ResponseEntity<>(response, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.FORBIDDEN);
             }
@@ -270,45 +278,162 @@ public class GroupController {
         }
     }
 
-    @PostMapping("/group/addTeacher/{teacher_id}/{group_id}")
-    public ResponseEntity<Void> addTeacherToGroup(@PathVariable("teacher_id") int teacher_id, @PathVariable("group_id") int group_id) {
+
+    @Operation(
+            summary = "Adds teacher with given id to the group with given id.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Could not find user or group with given id.",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "The user with given id is already a student or a teacher in the given group.",
+                            content = @Content
+                    )
+            }
+    )
+    @PostMapping("/group/addTeacher/{user_id}/{group_id}")
+    public ResponseEntity<Void> addTeacherToGroup(@PathVariable("user_id") int teacher_id, @PathVariable("group_id") int group_id) {
         if (groupTeacherService.addTeacherToGroup(group_id, teacher_id)) {
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        } else {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else if (groupTeacherService.addTeacherToGroup(group_id, teacher_id) == null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        else{
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    @GetMapping("/groups/byTeacher/{id}")
-    public List<Group> getGroupsByUserIdWhereUserIsTeacher(@PathVariable("id") int id){
-        return groupService.getGroupsByTeacher(id);
+    @Operation(
+            summary = "Gives a list of groups in which a user with given id is a teacher.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "The user is not present in any group.",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "List returned.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = Group.class))
+                            )
+                    )
+            }
+    )
+    @GetMapping("/groups/byTeacher/{user_id}")
+    public ResponseEntity<List<Group>> getGroupsByUserIdWhereUserIsTeacher(@PathVariable("user_id") int id){
+        if(groupService.getGroupsByTeacher(id).isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        else
+        {
+            return new ResponseEntity<>(groupService.getGroupsByTeacher(id), HttpStatus.OK);
+        }
     }
-
-    @PostMapping("/group/addStudent/{student_id}/{group_id}")
-    public ResponseEntity<Void> addStudentToGroup(@PathVariable("student_id") int student_id, @PathVariable("group_id") int group_id) {
+    @Operation(
+            summary = "Adds student with given id to the group with given id.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Could not find user or group with given id.",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "The user with given id is already a student or a teacher in the given group.",
+                            content = @Content
+                    )
+            }
+    )
+    @PostMapping("/group/addStudent/{user_id}/{group_id}")
+    public ResponseEntity<Void> addStudentToGroup(@PathVariable("user_id") int student_id, @PathVariable("group_id") int group_id) {
         if (groupStudentService.addStudentToGroup(group_id, student_id)) {
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        } else {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else if (groupStudentService.addStudentToGroup(group_id, student_id) == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        else{
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    @GetMapping("/groups/byStudent/{id}")
-    public List<Group> getGroupsByUserIdWhereUserIsStudent(@PathVariable("id") int id){
-        return groupService.getGroupsByStudent(id);
+
+    @Operation(
+            summary = "Gives a list of groups in which a user with given id is a student.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "The user is not present in any group.",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "List returned.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = Group.class))
+                            )
+                    )
+            }
+    )
+    @GetMapping("/groups/byStudent/{user_id}")
+    public ResponseEntity<List<Group>> getGroupsByUserIdWhereUserIsStudent(@PathVariable("user_id") int id){
+        if(groupService.getGroupsByStudent(id).isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        else {
+            return new ResponseEntity<>(groupService.getGroupsByStudent(id), HttpStatus.OK);
+        }
     }
 
-    @GetMapping("/groups/byUser/{id}")
-    public List<Group> getGroupsByUserId(@PathVariable("id") int id) {
+    @Operation(
+            summary = "Gives a list of groups in which a user with given id is a student or a teacher.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "The user is not present in any group.",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "List returned.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = Group.class))
+                            )
+                    )
+            }
+    )
+    @GetMapping("/groups/byUser/{user_id}")
+    public ResponseEntity<List<Group>> getGroupsByUserId(@PathVariable("user_id") int id) {
         List<Group> groupListTeacher = groupService.getGroupsByTeacher(id);
         List<Group> groupListStudent = groupService.getGroupsByStudent(id);
         List<Group> groupList = new ArrayList<>(groupListTeacher);
         groupList.addAll(groupListStudent);
-        return groupList;
+        if(groupList.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        else{
+            return new ResponseEntity<>(groupList, HttpStatus.OK);
+        }
     }
 
-    @DeleteMapping("/group/deleteStudent/{student_id}/{group_id}")
-    public ResponseEntity<Void> deleteStudentFromGroup(@PathVariable("student_id") int student_id, @PathVariable("group_id") int group_id) {
+    @Operation(
+            summary = "Deletes a student with given id from group with given id.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "The user is not present in any group.",
+                            content = @Content
+                    )
+            }
+    )
+    @DeleteMapping("/group/deleteStudent/{user_id}/{group_id}")
+    public ResponseEntity<Void> deleteStudentFromGroup(@PathVariable("user_id") int student_id, @PathVariable("group_id") int group_id) {
         if(groupStudentService.deleteStudentFromGroup(group_id, student_id)) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
@@ -316,40 +441,74 @@ public class GroupController {
         }
     }
 
-    @DeleteMapping("/group/deleteTeacher/{teacher_id}/{group_id}")
-    public ResponseEntity<Void> deleteTeacherFromGroup(@PathVariable("teacher_id") int teacher_id, @PathVariable("group_id") int group_id) {
+    @Operation(
+            summary = "Deletes a teacher with given id from group with given id.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "The user is not present in any group.",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "The user with given id is the only teacher within the group. The group can not exist without a teacher.",
+                            content = @Content
+                    )
+            }
+    )
+    @DeleteMapping("/group/deleteTeacher/{user_id}/{group_id}")
+    public ResponseEntity<Void> deleteTeacherFromGroup(@PathVariable("user_id") int teacher_id, @PathVariable("group_id") int group_id) {
         if(groupTeacherService.deleteTeacherFromGroup(group_id, teacher_id)) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else if(groupTeacherService.countTeachersInGroup(group_id) < 2) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    @GetMapping("/group/teacherCheck/{teacher_id}/{group_id}")
-    public Boolean checkForTeacherInGroup(@PathVariable("teacher_id") int teacher_id, @PathVariable("group_id") int group_id) {
-        return groupTeacherService.checkForTeacherInGroup(teacher_id, group_id);
+    @Operation(
+            summary = "Checks if user with given id is a teacher within a group in given id. Returns true if so, false otherwise. False may also indicates that there is no user in the DB with given id."
+    )
+    @GetMapping("/group/teacherCheck/{user_id}/{group_id}")
+    public ResponseEntity<Boolean> checkForTeacherInGroup(@PathVariable("user_id") int teacher_id, @PathVariable("group_id") int group_id) {
+        return new ResponseEntity<>(groupTeacherService.checkForTeacherInGroup(teacher_id, group_id), HttpStatus.OK);
     }
 
-    @GetMapping("/group/studentCheck/{student_id}/{group_id}")
-    public Boolean checkForStudentInGroup(@PathVariable("student_id") int student_id, @PathVariable("group_id") int group_id) {
+    @Operation(
+            summary = "Checks if user with given id is a student within a group in given id. Returns true if so, false otherwise. False may also indicates that there is no user in the DB with given id."
+    )
+    @GetMapping("/group/studentCheck/{user_id}/{group_id}")
+    public Boolean checkForStudentInGroup(@PathVariable("user_id") int student_id, @PathVariable("group_id") int group_id) {
         return groupStudentService.checkForStudentInGroup(student_id, group_id);
     }
 
+    @Operation(
+            summary = "Checks if user with given id is presnt in a group in given id. Returns true if so, false otherwise. False may also indicates that there is no user in the DB with given id."
+    )
     @GetMapping("/group/userCheck/{user_id}/{group_id}")
     public Boolean checkForUserInGroup(@PathVariable("user_id") int user_id, @PathVariable("group_id") int group_id) {
         return groupTeacherService.checkForTeacherInGroup(user_id, group_id) || groupStudentService.checkForStudentInGroup(user_id, group_id);
     }
 
+    @Operation(
+            summary = "Checks if user with given id is a teacher within a group in given id. Returns true if so, false otherwise. False may also indicates that there is no user in the DB with given id.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "User not in group.",
+                            content = @Content
+                    )
+            }
+    )
     @GetMapping("/group/userCheckWithRole/{user_id}/{group_id}")
-    public String checkForUserInGroupWithRole(@PathVariable("user_id") int user_id, @PathVariable("group_id") int group_id) {
+    public ResponseEntity<String> checkForUserInGroupWithRole(@PathVariable("user_id") int user_id, @PathVariable("group_id") int group_id) {
         if(groupTeacherService.checkForTeacherInGroup(user_id, group_id)) {
-            return "Teacher";
+            return new ResponseEntity<>("Teacher", HttpStatus.OK);
         } else if (groupStudentService.checkForStudentInGroup(user_id, group_id)) {
-            return "Student";
+            return new ResponseEntity<>("Student", HttpStatus.OK);
         } else {
-            return "User not in group";
+            return new ResponseEntity<>("User not in group", HttpStatus.NOT_FOUND);
         }
     }
 

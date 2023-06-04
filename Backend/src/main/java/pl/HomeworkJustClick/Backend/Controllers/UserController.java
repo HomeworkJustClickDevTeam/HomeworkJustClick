@@ -121,6 +121,7 @@ public class UserController {
                     )
             }
     )
+
     public ResponseEntity<Void> update(
             @PathVariable("user_id") int id,@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Empty fields will be ignored. Id field is ignored but needed in JSON.") @RequestBody User updatedUser){
         if(userService.update(id, updatedUser)){
