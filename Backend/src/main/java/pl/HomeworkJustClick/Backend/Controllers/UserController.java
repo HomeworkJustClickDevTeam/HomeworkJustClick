@@ -59,7 +59,7 @@ public class UserController {
         return userService.getAll();
     }
 
-    @GetMapping("/user/{id}")
+    @GetMapping("/user/{user_id}")
     @Operation(
             summary = "Gets user by his id.",
             responses = {
@@ -77,7 +77,7 @@ public class UserController {
                     )
             }
     )
-    public ResponseEntity<User> getById(@PathVariable("id") int id) {
+    public ResponseEntity<User> getById(@PathVariable("user_id") int id) {
         if(userService.getById(id).isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -96,7 +96,7 @@ public class UserController {
         }
     }
 
-    @PutMapping("/user/{id}")
+    @PutMapping("/user/{user_id}")
     @Operation(
             summary = "Updates user with given id.",
             description = "Change whole User object for a given id.",
@@ -122,7 +122,7 @@ public class UserController {
             }
     )
     public ResponseEntity<Void> update(
-            @PathVariable("id") int id,@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Empty fields will be ignored. Id field is ignored but needed in JSON.") @RequestBody User updatedUser){
+            @PathVariable("user_id") int id,@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Empty fields will be ignored. Id field is ignored but needed in JSON.") @RequestBody User updatedUser){
         if(userService.update(id, updatedUser)){
             return new ResponseEntity<>(HttpStatus.OK);
         }
@@ -134,7 +134,7 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("/user/{id}")
+    @DeleteMapping("/user/{user_id}")
     @Operation(
             summary = "Deletes user with given id.",
             responses = {
@@ -145,7 +145,7 @@ public class UserController {
                 )
             }
     )
-    public ResponseEntity<Void> delete (@PathVariable("id") int id) {
+    public ResponseEntity<Void> delete (@PathVariable("user_id") int id) {
         if(userService.delete(id)) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
@@ -153,7 +153,7 @@ public class UserController {
         }
     }
 
-    @PutMapping("/user/index/{id}")
+    @PutMapping("/user/index/{user_id}")
     @Operation(
             summary = "Changes index of user with given id.",
             responses = {
@@ -164,7 +164,7 @@ public class UserController {
                     )
             }
     )
-    public ResponseEntity<Void> updateIndex(@PathVariable("id") int id, @RequestBody int index){
+    public ResponseEntity<Void> updateIndex(@PathVariable("user_id") int id, @RequestBody int index){
         if(userService.changeIndexById(id, index)){
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
@@ -172,7 +172,7 @@ public class UserController {
         }
     }
 
-    @PutMapping("/user/color/{id}")
+    @PutMapping("/user/color/{user_id}")
     @Operation(
             summary = "Changes color of user with given id.",
             responses = {
@@ -188,7 +188,7 @@ public class UserController {
                     )
             }
     )
-    public ResponseEntity<Void> updateColor(@PathVariable("id") int id, @RequestBody int color){
+    public ResponseEntity<Void> updateColor(@PathVariable("user_id") int id, @RequestBody int color){
         if(color < 0 || color >= 20) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
