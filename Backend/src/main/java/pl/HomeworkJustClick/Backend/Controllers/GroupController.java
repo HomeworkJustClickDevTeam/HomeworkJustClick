@@ -479,16 +479,16 @@ public class GroupController {
             summary = "Checks if user with given id is a student within a group in given id. Returns true if so, false otherwise. False may also indicates that there is no user in the DB with given id."
     )
     @GetMapping("/group/studentCheck/{user_id}/{group_id}")
-    public Boolean checkForStudentInGroup(@PathVariable("user_id") int student_id, @PathVariable("group_id") int group_id) {
-        return groupStudentService.checkForStudentInGroup(student_id, group_id);
+    public ResponseEntity<Boolean> checkForStudentInGroup(@PathVariable("user_id") int student_id, @PathVariable("group_id") int group_id) {
+        return new ResponseEntity<>(groupStudentService.checkForStudentInGroup(student_id, group_id), HttpStatus.OK);
     }
 
     @Operation(
-            summary = "Checks if user with given id is presnt in a group in given id. Returns true if so, false otherwise. False may also indicates that there is no user in the DB with given id."
+            summary = "Checks if user with given id is present in a group in given id. Returns true if so, false otherwise. False may also indicates that there is no user in the DB with given id."
     )
     @GetMapping("/group/userCheck/{user_id}/{group_id}")
-    public Boolean checkForUserInGroup(@PathVariable("user_id") int user_id, @PathVariable("group_id") int group_id) {
-        return groupTeacherService.checkForTeacherInGroup(user_id, group_id) || groupStudentService.checkForStudentInGroup(user_id, group_id);
+    public ResponseEntity<Boolean> checkForUserInGroup(@PathVariable("user_id") int user_id, @PathVariable("group_id") int group_id) {
+        return new ResponseEntity<>(groupTeacherService.checkForTeacherInGroup(user_id, group_id) || groupStudentService.checkForStudentInGroup(user_id, group_id), HttpStatus.OK);
     }
 
     @Operation(
@@ -498,6 +498,14 @@ public class GroupController {
                             responseCode = "404",
                             description = "User not in group.",
                             content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK.",
+                            content = @Content(
+                                    mediaType = "string",
+                                    schema = @Schema(implementation = String.class)
+                            )
                     )
             }
     )
