@@ -478,6 +478,7 @@ public class GroupController {
                                     schema = @Schema(implementation = String.class)
                             )
                     )
+            }
     )
     @GetMapping("/group/teacherCheck/{user_id}/{group_id}")
     public ResponseEntity<Boolean> checkForTeacherInGroup(@PathVariable("user_id") int teacher_id, @PathVariable("group_id") int group_id) {
@@ -495,6 +496,7 @@ public class GroupController {
                                     schema = @Schema(implementation = String.class)
                             )
                     )
+            }
     )
     @GetMapping("/group/studentCheck/{user_id}/{group_id}")
     public ResponseEntity<Boolean> checkForStudentInGroup(@PathVariable("user_id") int student_id, @PathVariable("group_id") int group_id) {
