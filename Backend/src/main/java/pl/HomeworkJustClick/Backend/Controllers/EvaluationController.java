@@ -52,7 +52,7 @@ public class EvaluationController {
     public List<Evaluation> getAll(){return evaluationService.getAll();}
 
     @Operation(
-            summary = "Gets evaluation by it's id.",
+            summary = "Returns evaluation by it's id.",
             responses = {
                     @ApiResponse(
                             responseCode = "404",
@@ -215,7 +215,7 @@ public class EvaluationController {
 
     @GetMapping("/evaluations/byStudent/{student_id}")
     @Operation(
-            summary = "Gets list of all evaluations associated with user with given id.",
+            summary = "Returns list of all evaluations associated with user with given id.",
             responses = {
                     @ApiResponse(
                             responseCode = "404",
@@ -242,7 +242,7 @@ public class EvaluationController {
         }
     }
     @Operation(
-            summary = "Gets list of all evaluations associated with user in the group with given ids.",
+            summary = "Returns list of all evaluations associated with user in the group with given ids.",
             responses = {
                     @ApiResponse(
                             responseCode = "404",
@@ -271,7 +271,7 @@ public class EvaluationController {
     }
 
     @Operation(
-            summary = "Gets list of all evaluations associated with assignment.",
+            summary = "Returns list of all evaluations associated with assignment.",
             responses = {
                     @ApiResponse(
                             responseCode = "404",
@@ -300,7 +300,7 @@ public class EvaluationController {
     }
 
     @Operation(
-            summary = "Gets evaluation associated with the solution.",
+            summary = "Returns evaluation associated with the solution.",
             responses = {
                     @ApiResponse(
                             responseCode = "404",

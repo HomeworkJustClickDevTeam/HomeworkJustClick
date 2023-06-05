@@ -61,7 +61,7 @@ public class UserController {
 
     @GetMapping("/user/{user_id}")
     @Operation(
-            summary = "Gets user by his id.",
+            summary = "Returns user by his id.",
             responses = {
                     @ApiResponse(
                             responseCode = "404",
@@ -98,7 +98,7 @@ public class UserController {
 
     @PutMapping("/user/{user_id}")
     @Operation(
-            summary = "Updates user with given id.",
+            summary = "Changes user with given id.",
             description = "Change whole User object for a given id.",
             responses = {
                     @ApiResponse(
@@ -202,7 +202,7 @@ public class UserController {
 
     @GetMapping("/user/getTeachersByGroup/{group_id}")
     @Operation(
-            summary = "Gets all teachers within a given group.",
+            summary = "Returns list of all teachers within a given group.",
             responses = {
                     @ApiResponse(
                             responseCode = "404",
@@ -230,7 +230,7 @@ public class UserController {
 
     @GetMapping("/user/getStudentsByGroup/{group_id}")
     @Operation(
-            summary = "Gets all students within a given group.",
+            summary = "Returns list of all students within a given group.",
             responses = {
                     @ApiResponse(
                             responseCode = "404",

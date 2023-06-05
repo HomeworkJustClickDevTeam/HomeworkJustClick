@@ -56,7 +56,7 @@ public class SolutionController {
     public List<Solution> getAll(){return solutionService.getAll();}
     @GetMapping("/solution/{solution_id}")
     @Operation(
-            summary = "Gets solution by it's id.",
+            summary = "Returns solution by it's id.",
             responses = {
                     @ApiResponse(
                             responseCode = "404",
@@ -176,7 +176,7 @@ public class SolutionController {
     }
 
     @Operation(
-            summary = "Gives all solutions within a group with a given id.",
+            summary = "Returns all solutions within a group with a given id.",
             responses = {
                     @ApiResponse(
                             responseCode = "404",
@@ -204,7 +204,7 @@ public class SolutionController {
     }
 
     @Operation(
-            summary = "Gives list of all solutions for a given assignment id.",
+            summary = "Returns list of all solutions for a given assignment id.",
             responses = {
                     @ApiResponse(
                             responseCode = "404",
@@ -232,7 +232,7 @@ public class SolutionController {
     }
 
     @Operation(
-            summary = "Gives list of all solutions handed late within the group.",
+            summary = "Returns list of all solutions handed late within the group.",
             responses = {
                     @ApiResponse(
                             responseCode = "404",
@@ -260,7 +260,7 @@ public class SolutionController {
     }
 
     @Operation(
-            summary = "Gives list of all solutions handed late within the group by the given student.",
+            summary = "Returns list of all solutions handed late within the group by the given student.",
             responses = {
                     @ApiResponse(
                             responseCode = "404",
@@ -288,7 +288,7 @@ public class SolutionController {
     }
 
     @Operation(
-            summary = "Gives list of all solutions handed late for a given assignment.",
+            summary = "Returns list of all solutions handed late for a given assignment.",
             responses = {
                     @ApiResponse(
                             responseCode = "404",
@@ -316,7 +316,7 @@ public class SolutionController {
     }
 
     @Operation(
-            summary = "Gives list of all solutions handed late by a given user.",
+            summary = "Returns list of all solutions handed late by a given user.",
             responses = {
                     @ApiResponse(
                             responseCode = "404",

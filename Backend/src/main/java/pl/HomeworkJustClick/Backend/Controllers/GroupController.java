@@ -72,7 +72,7 @@ public class GroupController {
 
     @GetMapping("/group/{group_id}")
     @Operation(
-            summary = "Gets group by it's id.",
+            summary = "Returns group by it's id.",
             responses = {
                     @ApiResponse(
                             responseCode = "404",
@@ -124,7 +124,7 @@ public class GroupController {
 
     @PutMapping("/group/name/{group_id}")
     @Operation(
-            summary = "Updates name of the group with given id.",
+            summary = "Changes name of the group with given id.",
             responses = {
                     @ApiResponse(
                             responseCode = "404",
@@ -143,7 +143,7 @@ public class GroupController {
 
     @PutMapping("/group/description/{group_id}")
     @Operation(
-            summary = "Updates description of the group with given id.",
+            summary = "Changes description of the group with given id.",
             responses = {
                     @ApiResponse(
                             responseCode = "404",
@@ -307,7 +307,7 @@ public class GroupController {
     }
 
     @Operation(
-            summary = "Gives a list of groups in which a user with given id is a teacher.",
+            summary = "Returns a list of groups in which a user with given id is a teacher.",
             responses = {
                     @ApiResponse(
                             responseCode = "404",
@@ -363,7 +363,7 @@ public class GroupController {
 
 
     @Operation(
-            summary = "Gives a list of groups in which a user with given id is a student.",
+            summary = "Returns a list of groups in which a user with given id is a student.",
             responses = {
                     @ApiResponse(
                             responseCode = "404",
@@ -391,7 +391,7 @@ public class GroupController {
     }
 
     @Operation(
-            summary = "Gives a list of groups in which a user with given id is a student or a teacher.",
+            summary = "Returns a list of groups in which a user with given id is a student or a teacher.",
             responses = {
                     @ApiResponse(
                             responseCode = "404",
