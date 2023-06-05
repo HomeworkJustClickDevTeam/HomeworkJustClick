@@ -50,12 +50,12 @@ public class AssignmentController {
                             description = "List returned",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = Assignment.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = AssignmentResponse.class))
                             )
                     )
             }
     )
-    public List<Assignment> getAll(){return assignmentService.getAll();}
+    public List<AssignmentResponse> getAll(){return assignmentService.getAll();}
 
     @GetMapping("/assignment/{assignment_id}")
     @Operation(
@@ -71,12 +71,12 @@ public class AssignmentController {
                             description = "OK.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = Assignment.class))
+                                    schema = @Schema(implementation = AssignmentResponse.class))
 
                     )
             }
     )
-    public ResponseEntity<Assignment> getById(@PathVariable("assignment_id") int id){
+    public ResponseEntity<AssignmentResponse> getById(@PathVariable("assignment_id") int id){
         Optional<Assignment> assignment = assignmentService.getById(id);
         return assignment.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
@@ -372,13 +372,13 @@ public class AssignmentController {
                             responseCode = "200",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = Assignment.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = AssignmentResponse.class))
                             )
                     )
             }
     )
-    public ResponseEntity<List<Assignment>> getAllAssignmentsByUserAndGroup(@PathVariable("group_id") int group_id, @PathVariable("student_id") int user_id) {
-        List<Assignment> response = assignmentService.getAllAssignmentsByGroupIdAndUserId(group_id, user_id);
+    public ResponseEntity<List<AssignmentResponse>> getAllAssignmentsByUserAndGroup(@PathVariable("group_id") int group_id, @PathVariable("student_id") int user_id) {
+        List<AssignmentResponse> response = assignmentService.getAllAssignmentsByGroupIdAndUserId(group_id, user_id);
         if(response.isEmpty()){
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         }
@@ -400,13 +400,13 @@ public class AssignmentController {
                             responseCode = "200",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = Assignment.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = AssignmentResponse.class))
                             )
                     )
             }
     )
-    public ResponseEntity<List<Assignment>> getUndoneAssignmentsByGroupAndStudent(@PathVariable("group_id") int group_id, @PathVariable("student_id") int student_id) {
-        List<Assignment> response = assignmentService.getUndoneAssignmentsByGroupIdAndUserId(group_id, student_id);
+    public ResponseEntity<List<AssignmentResponse>> getUndoneAssignmentsByGroupAndStudent(@PathVariable("group_id") int group_id, @PathVariable("student_id") int student_id) {
+        List<AssignmentResponse> response = assignmentService.getUndoneAssignmentsByGroupIdAndUserId(group_id, student_id);
         if(response.isEmpty()){
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         }
@@ -428,13 +428,13 @@ public class AssignmentController {
                             responseCode = "200",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = Assignment.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = AssignmentResponse.class))
                             )
                     )
             }
     )
-    public ResponseEntity<List<Assignment>> getUndoneAssignmentsByStudent(@PathVariable("student_id") int student_id) {
-        List<Assignment> response = assignmentService.getUndoneAssignmentsByStudent(student_id);
+    public ResponseEntity<List<AssignmentResponse>> getUndoneAssignmentsByStudent(@PathVariable("student_id") int student_id) {
+        List<AssignmentResponse> response = assignmentService.getUndoneAssignmentsByStudent(student_id);
         if(response.isEmpty()){
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         }
@@ -456,13 +456,13 @@ public class AssignmentController {
                             responseCode = "200",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = Assignment.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = AssignmentResponse.class))
                             )
                     )
             }
     )
-    public ResponseEntity<List<Assignment>> getDoneAssignmentsByGroupAndStudent(@PathVariable("group_id") int group_id, @PathVariable("student_id") int student_id) {
-        List<Assignment> response = assignmentService.getDoneAssignmentsByGroupIdAndUserId(group_id, student_id);
+    public ResponseEntity<List<AssignmentResponse>> getDoneAssignmentsByGroupAndStudent(@PathVariable("group_id") int group_id, @PathVariable("student_id") int student_id) {
+        List<AssignmentResponse> response = assignmentService.getDoneAssignmentsByGroupIdAndUserId(group_id, student_id);
         if(response.isEmpty()){
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         }
@@ -484,13 +484,13 @@ public class AssignmentController {
                             responseCode = "200",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = Assignment.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = AssignmentResponse.class))
                             )
                     )
             }
     )
-    public ResponseEntity<List<Assignment>> getDoneAssignmentsByStudent(@PathVariable("student_id") int student_id) {
-        List<Assignment> response = assignmentService.getDoneAssignmentsByStudent(student_id);
+    public ResponseEntity<List<AssignmentResponse>> getDoneAssignmentsByStudent(@PathVariable("student_id") int student_id) {
+        List<AssignmentResponse> response = assignmentService.getDoneAssignmentsByStudent(student_id);
         if(response.isEmpty()){
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         }else
@@ -512,13 +512,13 @@ public class AssignmentController {
                             responseCode = "200",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = Assignment.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = AssignmentResponse.class))
                             )
                     )
             }
     )
-    public ResponseEntity<List<Assignment>> getExpiredUndoneAssignmentsByGroupAndStudent(@PathVariable("group_id") int group_id, @PathVariable("student_id") int student_id) {
-        List<Assignment> response = assignmentService.getExpiredUndoneAssignmentsByGroupIdAndUserId(group_id, student_id);
+    public ResponseEntity<List<AssignmentResponse>> getExpiredUndoneAssignmentsByGroupAndStudent(@PathVariable("group_id") int group_id, @PathVariable("student_id") int student_id) {
+        List<AssignmentResponse> response = assignmentService.getExpiredUndoneAssignmentsByGroupIdAndUserId(group_id, student_id);
         if(response.isEmpty()){
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         }else
@@ -540,13 +540,13 @@ public class AssignmentController {
                             responseCode = "200",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = Assignment.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = AssignmentResponse.class))
                             )
                     )
             }
     )
-    public ResponseEntity<List<Assignment>> getExpiredUndoneAssignmentsByStudent(@PathVariable("student_id") int student_id) {
-        List<Assignment> response = assignmentService.getExpiredUndoneAssignmentsByStudent(student_id);
+    public ResponseEntity<List<AssignmentResponse>> getExpiredUndoneAssignmentsByStudent(@PathVariable("student_id") int student_id) {
+        List<AssignmentResponse> response = assignmentService.getExpiredUndoneAssignmentsByStudent(student_id);
         if(response.isEmpty()){
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         }else
@@ -568,13 +568,13 @@ public class AssignmentController {
                             responseCode = "200",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = Assignment.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = AssignmentResponse.class))
                             )
                     )
             }
     )
-    public ResponseEntity<List<Assignment>> getNonExpiredUndoneAssignmentsByGroupAndStudent(@PathVariable("group_id") int group_id, @PathVariable("student_id") int student_id) {
-        List<Assignment> response = assignmentService.getNonExpiredUndoneAssignmentsByGroupIdAndUserId(group_id, student_id);
+    public ResponseEntity<List<AssignmentResponse>> getNonExpiredUndoneAssignmentsByGroupAndStudent(@PathVariable("group_id") int group_id, @PathVariable("student_id") int student_id) {
+        List<AssignmentResponse> response = assignmentService.getNonExpiredUndoneAssignmentsByGroupIdAndUserId(group_id, student_id);
         if(response.isEmpty()){
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         }else
@@ -596,13 +596,13 @@ public class AssignmentController {
                             responseCode = "200",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = Assignment.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = AssignmentResponse.class))
                             )
                     )
             }
     )
-    public ResponseEntity<List<Assignment>> getNonExpiredUndoneAssignmentsByStudent(@PathVariable("student_id") int student_id) {
-        List<Assignment> response = assignmentService.getNonExpiredUndoneAssignmentsByStudent(student_id);
+    public ResponseEntity<List<AssignmentResponse>> getNonExpiredUndoneAssignmentsByStudent(@PathVariable("student_id") int student_id) {
+        List<AssignmentResponse> response = assignmentService.getNonExpiredUndoneAssignmentsByStudent(student_id);
         if(response.isEmpty()){
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         }else
@@ -624,13 +624,13 @@ public class AssignmentController {
                             responseCode = "200",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = Assignment.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = AssignmentResponse.class))
                             )
                     )
             }
     )
-    public ResponseEntity<List<Assignment>> getAllStudentAssignments(@PathVariable("student_id") int id){
-        List<Assignment> response = assignmentService.getAllAssignmentsByStudent(id);
+    public ResponseEntity<List<AssignmentResponse>> getAllStudentAssignments(@PathVariable("student_id") int id){
+        List<AssignmentResponse> response = assignmentService.getAllAssignmentsByStudent(id);
         if(response.isEmpty()){
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         }else

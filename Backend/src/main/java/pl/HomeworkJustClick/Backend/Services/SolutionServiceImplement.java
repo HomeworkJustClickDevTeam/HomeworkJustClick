@@ -3,16 +3,13 @@ package pl.HomeworkJustClick.Backend.Services;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.HomeworkJustClick.Backend.Entities.Assignment;
-import pl.HomeworkJustClick.Backend.Entities.Group;
 import pl.HomeworkJustClick.Backend.Entities.Solution;
 import pl.HomeworkJustClick.Backend.Entities.User;
 import pl.HomeworkJustClick.Backend.Repositories.AssignmentRepository;
 import pl.HomeworkJustClick.Backend.Repositories.SolutionRepository;
 import pl.HomeworkJustClick.Backend.Repositories.UserRepository;
-import pl.HomeworkJustClick.Backend.Responses.AssignmentResponse;
 import pl.HomeworkJustClick.Backend.Responses.SolutionResponse;
 
 import java.util.ArrayList;
@@ -32,13 +29,19 @@ public class SolutionServiceImplement implements SolutionService{
 
     private final AssignmentRepository assignmentRepository;
     @Override
-    public List<Solution> getAll() {
-        return solutionRepository.findAll();
+    public List<SolutionResponse> getAll() {
+        List<Solution> solutionList = solutionRepository.findAll();
+        List<SolutionResponse> responseList = new ArrayList<>();
+        solutionList.forEach(solution -> {
+            responseList.add(buildSolutionResponse(solution));
+        });
+        return responseList;
     }
 
     @Override
-    public Optional<Solution> getById(int id) {
-        return solutionRepository.findById(id);
+    public SolutionResponse getById(int id) {
+        Optional<Solution> solutionOptional = solutionRepository.findById(id);
+        return solutionOptional.map(this::buildSolutionResponse).orElse(null);
     }
 
     @Override
@@ -168,7 +171,7 @@ public class SolutionServiceImplement implements SolutionService{
     }
 
     @Override
-    public List<Solution> getLateSolutionsByGroup(int group_id) {
+    public List<SolutionResponse> getLateSolutionsByGroup(int group_id) {
         List<Solution> solutions = solutionRepository.getSolutionsByGroupId(group_id);
         List<Solution> lateSolutions = new ArrayList<>();
         solutions.forEach(solution -> {
@@ -176,11 +179,15 @@ public class SolutionServiceImplement implements SolutionService{
                 lateSolutions.add(solution);
             }
         });
-        return lateSolutions;
+        List<SolutionResponse> responseList = new ArrayList<>();
+        lateSolutions.forEach(solution -> {
+            responseList.add(buildSolutionResponse(solution));
+        });
+        return responseList;
     }
 
     @Override
-    public List<Solution> getLateSolutionsByUserAndGroup(int user_id, int group_id) {
+    public List<SolutionResponse> getLateSolutionsByUserAndGroup(int user_id, int group_id) {
         List<Solution> solutions = solutionRepository.getSolutionsByUserAndGroup(user_id, group_id);
         List<Solution> lateSolutions = new ArrayList<>();
         solutions.forEach(solution -> {
@@ -188,11 +195,15 @@ public class SolutionServiceImplement implements SolutionService{
                 lateSolutions.add(solution);
             }
         });
-        return lateSolutions;
+        List<SolutionResponse> responseList = new ArrayList<>();
+        lateSolutions.forEach(solution -> {
+            responseList.add(buildSolutionResponse(solution));
+        });
+        return responseList;
     }
 
     @Override
-    public List<Solution> getLateSolutionsByAssignment(int assignment_id) {
+    public List<SolutionResponse> getLateSolutionsByAssignment(int assignment_id) {
         List<Solution> solutions = solutionRepository.getSolutionsByAssignmentId(assignment_id);
         List<Solution> lateSolutions = new ArrayList<>();
         solutions.forEach(solution -> {
@@ -200,11 +211,15 @@ public class SolutionServiceImplement implements SolutionService{
                 lateSolutions.add(solution);
             }
         });
-        return lateSolutions;
+        List<SolutionResponse> responseList = new ArrayList<>();
+        lateSolutions.forEach(solution -> {
+            responseList.add(buildSolutionResponse(solution));
+        });
+        return responseList;
     }
 
     @Override
-    public List<Solution> getLateSolutionsByStudent(int user_id) {
+    public List<SolutionResponse> getLateSolutionsByStudent(int user_id) {
         List<Solution> solutions = solutionRepository.getSolutionsByUser(user_id);
         List<Solution> lateSolutions = new ArrayList<>();
         solutions.forEach(solution -> {
@@ -212,7 +227,123 @@ public class SolutionServiceImplement implements SolutionService{
                 lateSolutions.add(solution);
             }
         });
-        return lateSolutions;
+        List<SolutionResponse> responseList = new ArrayList<>();
+        lateSolutions.forEach(solution -> {
+            responseList.add(buildSolutionResponse(solution));
+        });
+        return responseList;
     }
 
+    @Override
+    public List<SolutionResponse> getUncheckedSolutionsByGroup(int group_id) {
+        List<Solution> solutions = solutionRepository.getUncheckedSolutionsByGroup(group_id);
+        List<SolutionResponse> responseList = new ArrayList<>();
+        solutions.forEach(solution -> {
+            responseList.add(buildSolutionResponse(solution));
+        });
+        return responseList;
+    }
+
+    @Override
+    public List<SolutionResponse> getCheckedSolutionsByGroup(int group_id) {
+        List<Solution> solutions = solutionRepository.getCheckedSolutionsByGroup(group_id);
+
+        List<SolutionResponse> responseList = new ArrayList<>();
+        solutions.forEach(solution -> {
+            responseList.add(buildSolutionResponse(solution));
+        });
+        return responseList;
+    }
+
+    @Override
+    public List<SolutionResponse> getUncheckedSolutionsByStudent(int student_id) {
+        List<Solution> solutions = solutionRepository.getUncheckedSolutionsByStudent(student_id);
+        List<SolutionResponse> responseList = new ArrayList<>();
+        solutions.forEach(solution -> {
+            responseList.add(buildSolutionResponse(solution));
+        });
+        return responseList;
+    }
+
+    @Override
+    public List<SolutionResponse> getCheckedSolutionsByStudent(int student_id) {
+        List<Solution> solutions = solutionRepository.getCheckedSolutionsByStudent(student_id);
+        List<SolutionResponse> responseList = new ArrayList<>();
+        solutions.forEach(solution -> {
+            responseList.add(buildSolutionResponse(solution));
+        });
+        return responseList;
+    }
+
+    @Override
+    public List<SolutionResponse> getUncheckedSolutionsByStudentAndGroup(int student_id, int group_id) {
+        List<Solution> solutions = solutionRepository.getUncheckedSolutionsByStudentAndGroup(student_id, group_id);
+        List<SolutionResponse> responseList = new ArrayList<>();
+        solutions.forEach(solution -> {
+            responseList.add(buildSolutionResponse(solution));
+        });
+        return responseList;
+    }
+
+    @Override
+    public List<SolutionResponse> getCheckedSolutionsByStudentAndGroup(int student_id, int group_id) {
+        List<Solution> solutions = solutionRepository.getCheckedSolutionsByStudentAndGroup(student_id, group_id);
+        List<SolutionResponse> responseList = new ArrayList<>();
+        solutions.forEach(solution -> {
+            responseList.add(buildSolutionResponse(solution));
+        });
+        return responseList;
+    }
+
+    @Override
+    public List<SolutionResponse> getUncheckedSolutionsByAssignment(int assignment_id) {
+        List<Solution> solutions = solutionRepository.getUncheckedSolutionsByAssignment(assignment_id);
+        List<SolutionResponse> responseList = new ArrayList<>();
+        solutions.forEach(solution -> {
+            responseList.add(buildSolutionResponse(solution));
+        });
+        return responseList;
+    }
+
+    @Override
+    public List<SolutionResponse> getCheckedSolutionsByAssignment(int assignment_id) {
+        List<Solution> solutions = solutionRepository.getCheckedSolutionsByAssignment(assignment_id);
+        List<SolutionResponse> responseList = new ArrayList<>();
+        solutions.forEach(solution -> {
+            responseList.add(buildSolutionResponse(solution));
+        });
+        return responseList;
+    }
+
+    @Override
+    public List<SolutionResponse> getUncheckedSolutionsByTeacher(int teacher_id) {
+        List<Solution> solutions = solutionRepository.getUncheckedSolutionsByTeacher(teacher_id);
+        List<SolutionResponse> responseList = new ArrayList<>();
+        solutions.forEach(solution -> {
+            responseList.add(buildSolutionResponse(solution));
+        });
+        return responseList;
+    }
+
+    @Override
+    public List<SolutionResponse> getCheckedSolutionsByTeacher(int teacher_id) {
+        List<Solution> solutions = solutionRepository.getCheckedSolutionsByTeacher(teacher_id);
+        List<SolutionResponse> responseList = new ArrayList<>();
+        solutions.forEach(solution -> {
+            responseList.add(buildSolutionResponse(solution));
+        });
+        return responseList;
+    }
+
+    private SolutionResponse buildSolutionResponse(Solution solution) {
+        return SolutionResponse.builder()
+                .id(solution.getId())
+                .userId(solution.getUser().getId())
+                .groupId(solution.getGroup().getId())
+                .assignmentId(solution.getAssignment().getId())
+                .creationDateTime(solution.getCreationDatetime())
+                .lastModifiedDatetime(solution.getLastModifiedDatetime())
+                .comment(solution.getComment())
+                .build();
+    }
 }
