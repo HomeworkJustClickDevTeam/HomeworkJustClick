@@ -53,7 +53,7 @@ public class SolutionController {
                     )
             }
     )
-    public List<Solution> getAll(){return solutionService.getAll();}
+    public List<SolutionResponse> getAll(){return solutionService.getAll();}
     @GetMapping("/solution/{id}")
     @Operation(
             summary = "Gets solution by it's id.",
@@ -73,9 +73,13 @@ public class SolutionController {
                     )
             }
     )
-    public ResponseEntity<Solution> getById(@PathVariable("id") int id){
-        Optional<Solution> solution = solutionService.getById(id);
-        return solution.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public ResponseEntity<SolutionResponse> getById(@PathVariable("id") int id){
+        SolutionResponse solution = solutionService.getById(id);
+        if (solution != null) {
+            return new ResponseEntity<>(solution, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
     @PostMapping("/solution")
     @Hidden
@@ -186,22 +190,22 @@ public class SolutionController {
     }
 
     @GetMapping("/solutions/lateByGroup/{group_id}")
-    public List<Solution> getLateSolutionsByGroupId(@PathVariable("group_id") int group_id) {
+    public List<SolutionResponse> getLateSolutionsByGroupId(@PathVariable("group_id") int group_id) {
         return solutionService.getLateSolutionsByGroup(group_id);
     }
 
     @GetMapping("/solutions/lateByGroupAndStudent/{group_id}/{student_id}")
-    public List<Solution> getLateSolutionsByGroupIdAndStudentId(@PathVariable("group_id") int group_id, @PathVariable("student_id") int student_id) {
+    public List<SolutionResponse> getLateSolutionsByGroupIdAndStudentId(@PathVariable("group_id") int group_id, @PathVariable("student_id") int student_id) {
         return solutionService.getLateSolutionsByUserAndGroup(student_id, group_id);
     }
 
     @GetMapping("/solutions/lateByAssignment/{assignment_id}")
-    public List<Solution> getLateSolutionsByAssignmentId(@PathVariable("assignment_id") int assignment_id) {
+    public List<SolutionResponse> getLateSolutionsByAssignmentId(@PathVariable("assignment_id") int assignment_id) {
         return solutionService.getLateSolutionsByAssignment(assignment_id);
     }
 
     @GetMapping("/solutions/lateByStudent/{student_id}")
-    public List<Solution> getLateSolutionsByStudentId(@PathVariable("student_id") int student_id) {
+    public List<SolutionResponse> getLateSolutionsByStudentId(@PathVariable("student_id") int student_id) {
         return solutionService.getLateSolutionsByStudent(student_id);
     }
 }

@@ -32,13 +32,19 @@ public class SolutionServiceImplement implements SolutionService{
 
     private final AssignmentRepository assignmentRepository;
     @Override
-    public List<Solution> getAll() {
-        return solutionRepository.findAll();
+    public List<SolutionResponse> getAll() {
+        List<Solution> solutionList = solutionRepository.findAll();
+        List<SolutionResponse> responseList = new ArrayList<>();
+        solutionList.forEach(solution -> {
+            responseList.add(buildSolutionResponse(solution));
+        });
+        return responseList;
     }
 
     @Override
-    public Optional<Solution> getById(int id) {
-        return solutionRepository.findById(id);
+    public SolutionResponse getById(int id) {
+        Optional<Solution> solutionOptional = solutionRepository.findById(id);
+        return solutionOptional.map(this::buildSolutionResponse).orElse(null);
     }
 
     @Override
@@ -168,7 +174,7 @@ public class SolutionServiceImplement implements SolutionService{
     }
 
     @Override
-    public List<Solution> getLateSolutionsByGroup(int group_id) {
+    public List<SolutionResponse> getLateSolutionsByGroup(int group_id) {
         List<Solution> solutions = solutionRepository.getSolutionsByGroupId(group_id);
         List<Solution> lateSolutions = new ArrayList<>();
         solutions.forEach(solution -> {
@@ -176,11 +182,15 @@ public class SolutionServiceImplement implements SolutionService{
                 lateSolutions.add(solution);
             }
         });
-        return lateSolutions;
+        List<SolutionResponse> responseList = new ArrayList<>();
+        lateSolutions.forEach(solution -> {
+            responseList.add(buildSolutionResponse(solution));
+        });
+        return responseList;
     }
 
     @Override
-    public List<Solution> getLateSolutionsByUserAndGroup(int user_id, int group_id) {
+    public List<SolutionResponse> getLateSolutionsByUserAndGroup(int user_id, int group_id) {
         List<Solution> solutions = solutionRepository.getSolutionsByUserAndGroup(user_id, group_id);
         List<Solution> lateSolutions = new ArrayList<>();
         solutions.forEach(solution -> {
@@ -188,11 +198,15 @@ public class SolutionServiceImplement implements SolutionService{
                 lateSolutions.add(solution);
             }
         });
-        return lateSolutions;
+        List<SolutionResponse> responseList = new ArrayList<>();
+        lateSolutions.forEach(solution -> {
+            responseList.add(buildSolutionResponse(solution));
+        });
+        return responseList;
     }
 
     @Override
-    public List<Solution> getLateSolutionsByAssignment(int assignment_id) {
+    public List<SolutionResponse> getLateSolutionsByAssignment(int assignment_id) {
         List<Solution> solutions = solutionRepository.getSolutionsByAssignmentId(assignment_id);
         List<Solution> lateSolutions = new ArrayList<>();
         solutions.forEach(solution -> {
@@ -200,11 +214,15 @@ public class SolutionServiceImplement implements SolutionService{
                 lateSolutions.add(solution);
             }
         });
-        return lateSolutions;
+        List<SolutionResponse> responseList = new ArrayList<>();
+        lateSolutions.forEach(solution -> {
+            responseList.add(buildSolutionResponse(solution));
+        });
+        return responseList;
     }
 
     @Override
-    public List<Solution> getLateSolutionsByStudent(int user_id) {
+    public List<SolutionResponse> getLateSolutionsByStudent(int user_id) {
         List<Solution> solutions = solutionRepository.getSolutionsByUser(user_id);
         List<Solution> lateSolutions = new ArrayList<>();
         solutions.forEach(solution -> {
@@ -212,7 +230,22 @@ public class SolutionServiceImplement implements SolutionService{
                 lateSolutions.add(solution);
             }
         });
-        return lateSolutions;
+        List<SolutionResponse> responseList = new ArrayList<>();
+        lateSolutions.forEach(solution -> {
+            responseList.add(buildSolutionResponse(solution));
+        });
+        return responseList;
     }
 
+    private SolutionResponse buildSolutionResponse(Solution solution) {
+        return SolutionResponse.builder()
+                .id(solution.getId())
+                .userId(solution.getUser().getId())
+                .groupId(solution.getGroup().getId())
+                .assignmentId(solution.getAssignment().getId())
+                .creationDateTime(solution.getCreationDatetime())
+                .lastModifiedDatetime(solution.getLastModifiedDatetime())
+                .comment(solution.getComment())
+                .build();
+    }
 }

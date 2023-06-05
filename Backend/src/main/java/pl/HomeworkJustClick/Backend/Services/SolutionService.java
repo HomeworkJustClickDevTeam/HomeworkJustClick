@@ -8,9 +8,9 @@ import java.util.Optional;
 
 public interface SolutionService {
 
-    List<Solution> getAll();
+    List<SolutionResponse> getAll();
 
-    Optional<Solution> getById(int id);
+    SolutionResponse getById(int id);
 
     SolutionResponse add(Solution solution);
 
@@ -26,12 +26,12 @@ public interface SolutionService {
 
     public List<SolutionResponse> getSolutionsByAssignmentId(int id);
 
-    public List<Solution> getLateSolutionsByGroup(int group_id);
+    public List<SolutionResponse> getLateSolutionsByGroup(int group_id);
 
-    public List<Solution> getLateSolutionsByUserAndGroup(int user_id, int group_id);
+    public List<SolutionResponse> getLateSolutionsByUserAndGroup(int user_id, int group_id);
 
-    public List<Solution> getLateSolutionsByAssignment(int assignment_id);
+    public List<SolutionResponse> getLateSolutionsByAssignment(int assignment_id);
 
-    public List<Solution> getLateSolutionsByStudent(int user_id);
+    public List<SolutionResponse> getLateSolutionsByStudent(int user_id);
 
 }
