@@ -9,8 +9,8 @@ import java.util.Optional;
 
 public interface AssignmentService {
 
-    public List<Assignment> getAll();
-    public Optional<Assignment> getById(int id);
+    public List<AssignmentResponse> getAll();
+    public AssignmentResponse getById(int id);
     public AssignmentResponse add(Assignment assignment);
 
     public AssignmentResponse addWithUserAndGroup(Assignment assignment, int user_id, int group_id);
@@ -37,24 +37,24 @@ public interface AssignmentService {
 
     public List<AssignmentResponse> getUncheckedAssignmentsByGroup(int group_id);
 
-    public List<Assignment> getAllAssignmentsByGroupIdAndUserId(int group_id, int user_id);
+    public List<AssignmentResponse> getAllAssignmentsByGroupIdAndUserId(int group_id, int user_id);
 
-    public List<Assignment> getUndoneAssignmentsByGroupIdAndUserId(int group_id, int user_id);
+    public List<AssignmentResponse> getUndoneAssignmentsByGroupIdAndUserId(int group_id, int user_id);
 
-    public List<Assignment> getDoneAssignmentsByGroupIdAndUserId(int group_id, int user_id);
+    public List<AssignmentResponse> getDoneAssignmentsByGroupIdAndUserId(int group_id, int user_id);
 
-    public List<Assignment> getExpiredUndoneAssignmentsByGroupIdAndUserId(int group_id, int user_id);
+    public List<AssignmentResponse> getExpiredUndoneAssignmentsByGroupIdAndUserId(int group_id, int user_id);
 
-    public List<Assignment> getExpiredUndoneAssignmentsByStudent(int student_id);
+    public List<AssignmentResponse> getExpiredUndoneAssignmentsByStudent(int student_id);
 
-    public List<Assignment> getNonExpiredUndoneAssignmentsByGroupIdAndUserId(int group_id, int user_id);
+    public List<AssignmentResponse> getNonExpiredUndoneAssignmentsByGroupIdAndUserId(int group_id, int user_id);
 
-    public List<Assignment> getNonExpiredUndoneAssignmentsByStudent(int student_id);
+    public List<AssignmentResponse> getNonExpiredUndoneAssignmentsByStudent(int student_id);
 
-    public List<Assignment> getAllAssignmentsByStudent(int user_id);
+    public List<AssignmentResponse> getAllAssignmentsByStudent(int user_id);
 
-    public List<Assignment> getUndoneAssignmentsByStudent(int student_id);
+    public List<AssignmentResponse> getUndoneAssignmentsByStudent(int student_id);
 
-    public List<Assignment> getDoneAssignmentsByStudent(int student_id);
+    public List<AssignmentResponse> getDoneAssignmentsByStudent(int student_id);
 
 }
