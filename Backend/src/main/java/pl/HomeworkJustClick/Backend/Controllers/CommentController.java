@@ -60,7 +60,7 @@ public class CommentController {
 
     @GetMapping("/comment/{comment_id}")
     @Operation(
-            summary = "Gets comment by it's id.",
+            summary = "Returns comment by it's id.",
             responses = {
                     @ApiResponse(
                             responseCode = "404",
