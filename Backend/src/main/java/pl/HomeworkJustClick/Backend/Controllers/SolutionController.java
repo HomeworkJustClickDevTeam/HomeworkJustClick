@@ -61,7 +61,10 @@ public class SolutionController {
                     @ApiResponse(
                             responseCode = "404",
                             description = "No solution with this id in the DB.",
-                            content = @Content
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
                     ),
                     @ApiResponse(
                             responseCode = "200",
@@ -116,7 +119,10 @@ public class SolutionController {
                     @ApiResponse(
                             responseCode = "404",
                             description = "Could not find user or assignment with given id.",
-                            content = @Content
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
                     ),
                     @ApiResponse(
                             responseCode = "200",
@@ -128,7 +134,10 @@ public class SolutionController {
                     @ApiResponse(
                             responseCode = "400",
                             description = "This user does not have access to the assignment or solution with this user and assignment already exists.",
-                            content = @Content
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
 
                     )
             }
@@ -191,7 +200,10 @@ public class SolutionController {
                     @ApiResponse(
                             responseCode = "404",
                             description = "Could not find solution for a group with given id.",
-                            content = @Content
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
                     ),
                     @ApiResponse(
                             responseCode = "200",
@@ -219,7 +231,10 @@ public class SolutionController {
                     @ApiResponse(
                             responseCode = "404",
                             description = "Could not find solution associated with the assignment.",
-                            content = @Content
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
                     ),
                     @ApiResponse(
                             responseCode = "200",
@@ -246,8 +261,11 @@ public class SolutionController {
             responses = {
                     @ApiResponse(
                             responseCode = "404",
-                            description = "Could not find solutions in the group.",
-                            content = @Content
+                            description = "Could not find solutions handed late in the group.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
                     ),
                     @ApiResponse(
                             responseCode = "200",
@@ -275,7 +293,10 @@ public class SolutionController {
                     @ApiResponse(
                             responseCode = "404",
                             description = "Could not find solutions or user in the group.",
-                            content = @Content
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
                     ),
                     @ApiResponse(
                             responseCode = "200",
@@ -302,8 +323,11 @@ public class SolutionController {
             responses = {
                     @ApiResponse(
                             responseCode = "404",
-                            description = "Could not find solutions or assignment.",
-                            content = @Content
+                            description = "Could not find solutions handed late for the assignment.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
                     ),
                     @ApiResponse(
                             responseCode = "200",
@@ -330,8 +354,11 @@ public class SolutionController {
             responses = {
                     @ApiResponse(
                             responseCode = "404",
-                            description = "Could not find solutions handed late for the user.",
-                            content = @Content
+                            description = "Could not find solutions handed late by the user.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
                     ),
                     @ApiResponse(
                             responseCode = "200",
@@ -360,7 +387,10 @@ public class SolutionController {
                     @ApiResponse(
                             responseCode = "404",
                             description = "Could not find any unchecked solutions in this group.",
-                            content = @Content
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
                     ),
                     @ApiResponse(
                             responseCode = "200",
@@ -389,7 +419,10 @@ public class SolutionController {
                     @ApiResponse(
                             responseCode = "404",
                             description = "Could not find any unchecked solutions for the student.",
-                            content = @Content
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
                     ),
                     @ApiResponse(
                             responseCode = "200",
@@ -418,7 +451,10 @@ public class SolutionController {
                     @ApiResponse(
                             responseCode = "404",
                             description = "Could not find any unchecked solutions for the student in the group.",
-                            content = @Content
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
                     ),
                     @ApiResponse(
                             responseCode = "200",
@@ -447,7 +483,10 @@ public class SolutionController {
                     @ApiResponse(
                             responseCode = "404",
                             description = "Could not find any unchecked solutions for the assignment.",
-                            content = @Content
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
                     ),
                     @ApiResponse(
                             responseCode = "200",
@@ -476,7 +515,10 @@ public class SolutionController {
                     @ApiResponse(
                             responseCode = "404",
                             description = "Could not find any unchecked solutions by this teacher.",
-                            content = @Content
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
                     ),
                     @ApiResponse(
                             responseCode = "200",
@@ -505,7 +547,10 @@ public class SolutionController {
                     @ApiResponse(
                             responseCode = "404",
                             description = "Could not find any checked solutions in this group.",
-                            content = @Content
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
                     ),
                     @ApiResponse(
                             responseCode = "200",
@@ -534,7 +579,10 @@ public class SolutionController {
                     @ApiResponse(
                             responseCode = "404",
                             description = "Could not find any checked solutions for the student.",
-                            content = @Content
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
                     ),
                     @ApiResponse(
                             responseCode = "200",
@@ -563,7 +611,10 @@ public class SolutionController {
                     @ApiResponse(
                             responseCode = "404",
                             description = "Could not find any checked solutions for the student in the group.",
-                            content = @Content
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
                     ),
                     @ApiResponse(
                             responseCode = "200",
@@ -592,7 +643,10 @@ public class SolutionController {
                     @ApiResponse(
                             responseCode = "404",
                             description = "Could not find any checked solutions for the assignment.",
-                            content = @Content
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
                     ),
                     @ApiResponse(
                             responseCode = "200",
@@ -621,7 +675,10 @@ public class SolutionController {
                     @ApiResponse(
                             responseCode = "404",
                             description = "Could not find any checked solutions by this teacher.",
-                            content = @Content
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
                     ),
                     @ApiResponse(
                             responseCode = "200",
