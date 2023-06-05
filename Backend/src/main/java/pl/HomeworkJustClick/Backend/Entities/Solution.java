@@ -25,6 +25,7 @@ public class Solution {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id", updatable = false, unique = true, nullable = false)
+    @Schema(example = "0")
     private int id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -55,6 +56,7 @@ public class Solution {
     private OffsetDateTime lastModifiedDatetime;
 
     @Column(name = "comment")
+    @Schema(example = "Example comment")
     private String comment;
 
     public Solution(User user, Assignment assignment){

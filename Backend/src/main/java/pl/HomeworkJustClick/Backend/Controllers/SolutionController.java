@@ -48,32 +48,35 @@ public class SolutionController {
                             description = "List returned",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = Solution.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
                             )
                     )
             }
     )
     public List<SolutionResponse> getAll(){return solutionService.getAll();}
-    @GetMapping("/solution/{id}")
+    @GetMapping("/solution/{solution_id}")
     @Operation(
-            summary = "Gets solution by it's id.",
+            summary = "Returns solution by it's id.",
             responses = {
                     @ApiResponse(
                             responseCode = "404",
                             description = "No solution with this id in the DB.",
-                            content = @Content
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
                     ),
                     @ApiResponse(
                             responseCode = "200",
                             description = "OK.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = Solution.class))
+                                    schema = @Schema(implementation = SolutionResponse.class))
 
                     )
             }
     )
-    public ResponseEntity<SolutionResponse> getById(@PathVariable("id") int id){
+    public ResponseEntity<SolutionResponse> getById(@PathVariable("solution_id") int id){
         SolutionResponse solution = solutionService.getById(id);
         if (solution != null) {
             return new ResponseEntity<>(solution, HttpStatus.OK);
@@ -88,7 +91,7 @@ public class SolutionController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/solution/{id}")
+    @DeleteMapping("/solution/{solution_id}")
     @Operation(
             summary = "Deletes solution with given id.",
             responses = {
@@ -100,7 +103,7 @@ public class SolutionController {
             }
     )
 
-    public ResponseEntity<Void> delete(@PathVariable("id") int id){
+    public ResponseEntity<Void> delete(@PathVariable("solution_id") int id){
         if(solutionService.delete(id)){
             return new ResponseEntity<>(HttpStatus.OK);
         }
@@ -116,7 +119,10 @@ public class SolutionController {
                     @ApiResponse(
                             responseCode = "404",
                             description = "Could not find user or assignment with given id.",
-                            content = @Content
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
                     ),
                     @ApiResponse(
                             responseCode = "200",
@@ -124,6 +130,15 @@ public class SolutionController {
                                     mediaType = "application/json",
                                     schema = @Schema(implementation = SolutionResponse.class)
                             )
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "This user does not have access to the assignment or solution with this user and assignment already exists.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
+
                     )
             }
     )
@@ -134,13 +149,13 @@ public class SolutionController {
         if(response.getId()!=0) {
             return new ResponseEntity<>(response, HttpStatus.OK);
         } else if (response.isForbidden()) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         }
     }
 
-    @PutMapping("/solution/user/{user_id}/{id}")
+    @PutMapping("/solution/user/{user_id}/{solution_id}")
     @Operation(
             summary = "Changes user associated with solution.",
             responses = {
@@ -151,7 +166,7 @@ public class SolutionController {
                     )
             }
     )
-    public ResponseEntity<Void> updateUser(@PathVariable("user_id") int userId, @PathVariable("id") int id){
+    public ResponseEntity<Void> updateUser(@PathVariable("user_id") int userId, @PathVariable("solution_id") int id){
         if(solutionService.changeUserById(id, userId)){
             return new ResponseEntity<>(HttpStatus.OK);
         }
@@ -159,7 +174,7 @@ public class SolutionController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-    @PutMapping("/solution/assignment/{assignment_id}/{id}")
+    @PutMapping("/solution/assignment/{assignment_id}/{solution_id}")
     @Operation(
             summary = "Changes assignment associated with solution.",
             responses = {
@@ -170,7 +185,7 @@ public class SolutionController {
                     )
             }
     )
-    public ResponseEntity<Void> updateAssignment(@PathVariable("assignment_id") int assignmentId, @PathVariable("id") int id){
+    public ResponseEntity<Void> updateAssignment(@PathVariable("assignment_id") int assignmentId, @PathVariable("solution_id") int id){
         if(solutionService.changeAssignmentById(id, assignmentId)){
             return new ResponseEntity<>(HttpStatus.OK);
         }
@@ -179,84 +194,510 @@ public class SolutionController {
         }
     }
 
-    @GetMapping("/solutions/byGroup/{id}")
-    public List<SolutionResponse> getSolutionsByGroupId(@PathVariable("id") int id) {
-        return solutionService.getSolutionsByGroupId(id);
+    @Operation(
+            summary = "Returns all solutions within a group with a given id.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Could not find solution for a group with given id.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "List returned.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
+                    )
+            }
+    )
+    @GetMapping("/solutions/byGroup/{group_id}")
+    public ResponseEntity<List<SolutionResponse>> getSolutionsByGroupId(@PathVariable("group_id") int id) {
+        if(solutionService.getSolutionsByGroupId(id).isEmpty()){
+            return new ResponseEntity<>(solutionService.getSolutionsByGroupId(id), HttpStatus.NOT_FOUND);
+        }
+        else {
+            return new ResponseEntity<>(solutionService.getSolutionsByGroupId(id), HttpStatus.OK);
+        }
     }
 
-    @GetMapping("/solutions/byAssignment/{id}")
-    public List<SolutionResponse> getSolutionsByAssignmentId(@PathVariable("id") int id) {
-        return solutionService.getSolutionsByAssignmentId(id);
+    @Operation(
+            summary = "Returns list of all solutions for a given assignment id.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Could not find solution associated with the assignment.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "List returned.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
+                    )
+            }
+    )
+    @GetMapping("/solutions/byAssignment/{assignment_id}")
+    public ResponseEntity<List<SolutionResponse>> getSolutionsByAssignmentId(@PathVariable("assignment_id") int id) {
+        if(solutionService.getSolutionsByAssignmentId(id).isEmpty()){
+            return new ResponseEntity<>(solutionService.getSolutionsByAssignmentId(id), HttpStatus.NOT_FOUND);
+        }
+        else {
+            return new ResponseEntity<>(solutionService.getSolutionsByAssignmentId(id), HttpStatus.OK);
+        }
     }
 
+    @Operation(
+            summary = "Returns list of all solutions handed late within the group.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Could not find solutions handed late in the group.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "List returned.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
+                    )
+            }
+    )
     @GetMapping("/solutions/lateByGroup/{group_id}")
-    public List<SolutionResponse> getLateSolutionsByGroupId(@PathVariable("group_id") int group_id) {
-        return solutionService.getLateSolutionsByGroup(group_id);
+    public ResponseEntity<List<SolutionResponse>> getLateSolutionsByGroupId(@PathVariable("group_id") int group_id) {
+        if(solutionService.getLateSolutionsByGroup(group_id).isEmpty()){
+            return new ResponseEntity<>(solutionService.getLateSolutionsByGroup(group_id), HttpStatus.NOT_FOUND);
+        }
+        else {
+            return new ResponseEntity<>(solutionService.getLateSolutionsByGroup(group_id), HttpStatus.NOT_FOUND);
+        }
     }
 
+    @Operation(
+            summary = "Returns list of all solutions handed late within the group by the given student.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Could not find solutions or user in the group.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "List returned.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
+                    )
+            }
+    )
     @GetMapping("/solutions/lateByGroupAndStudent/{group_id}/{student_id}")
-    public List<SolutionResponse> getLateSolutionsByGroupIdAndStudentId(@PathVariable("group_id") int group_id, @PathVariable("student_id") int student_id) {
-        return solutionService.getLateSolutionsByUserAndGroup(student_id, group_id);
+    public ResponseEntity<List<SolutionResponse>> getLateSolutionsByGroupIdAndStudentId(@PathVariable("group_id") int group_id, @PathVariable("student_id") int student_id) {
+        if(solutionService.getLateSolutionsByUserAndGroup(student_id, group_id).isEmpty()){
+            return new ResponseEntity<>(solutionService.getLateSolutionsByUserAndGroup(student_id, group_id), HttpStatus.NOT_FOUND);
+        }
+        else {
+            return new ResponseEntity<>(solutionService.getLateSolutionsByUserAndGroup(student_id, group_id), HttpStatus.OK);
+        }
     }
 
+    @Operation(
+            summary = "Returns list of all solutions handed late for a given assignment.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Could not find solutions handed late for the assignment.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "List returned.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
+                    )
+            }
+    )
     @GetMapping("/solutions/lateByAssignment/{assignment_id}")
-    public List<SolutionResponse> getLateSolutionsByAssignmentId(@PathVariable("assignment_id") int assignment_id) {
-        return solutionService.getLateSolutionsByAssignment(assignment_id);
+    public ResponseEntity<List<SolutionResponse>> getLateSolutionsByAssignmentId(@PathVariable("assignment_id") int assignment_id) {
+        if(solutionService.getLateSolutionsByAssignment(assignment_id).isEmpty()){
+            return new ResponseEntity<>(solutionService.getLateSolutionsByAssignment(assignment_id), HttpStatus.NOT_FOUND);
+        }
+        else {
+            return new ResponseEntity<>(solutionService.getLateSolutionsByAssignment(assignment_id), HttpStatus.OK);
+        }
     }
 
+    @Operation(
+            summary = "Returns list of all solutions handed late by a given user.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Could not find solutions handed late by the user.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "List returned.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
+                    )
+            }
+    )
     @GetMapping("/solutions/lateByStudent/{student_id}")
-    public List<SolutionResponse> getLateSolutionsByStudentId(@PathVariable("student_id") int student_id) {
-        return solutionService.getLateSolutionsByStudent(student_id);
+    public ResponseEntity<List<SolutionResponse>> getLateSolutionsByStudentId(@PathVariable("student_id") int student_id) {
+        if(solutionService.getLateSolutionsByStudent(student_id).isEmpty()){
+            return new ResponseEntity<>(solutionService.getLateSolutionsByStudent(student_id), HttpStatus.NOT_FOUND);
+        }
+        else {
+            return new ResponseEntity<>(solutionService.getLateSolutionsByStudent(student_id), HttpStatus.OK);
+        }
     }
 
     @GetMapping("/solutions/uncheckedByGroup/{group_id}")
-    List<SolutionResponse> getUncheckedSolutionsByGroup(@PathVariable("group_id") int group_id){
-        return solutionService.getUncheckedSolutionsByGroup(group_id);
+    @Operation(
+            summary = "Returns list of all unchecked solutions in the group.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Could not find any unchecked solutions in this group.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "List returned.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
+                    )
+            }
+    )
+    ResponseEntity<List<SolutionResponse>> getUncheckedSolutionsByGroup(@PathVariable("group_id") int group_id){
+        List<SolutionResponse> response = solutionService.getUncheckedSolutionsByGroup(group_id);
+        if(response.isEmpty()){
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
+        else {
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
     }
 
     @GetMapping("/solutions/uncheckedByStudent/{student_id}")
-    List<SolutionResponse> getUncheckedSolutionsByStudent(@PathVariable("student_id") int student_id){
-        return solutionService.getUncheckedSolutionsByStudent(student_id);
+    @Operation(
+            summary = "Returns list of all unchecked solutions by a given student.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Could not find any unchecked solutions for the student.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "List returned.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
+                    )
+            }
+    )
+    ResponseEntity<List<SolutionResponse>> getUncheckedSolutionsByStudent(@PathVariable("student_id") int student_id){
+        List<SolutionResponse> response = solutionService.getUncheckedSolutionsByStudent(student_id);
+        if(response.isEmpty()){
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
+        else {
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
     }
 
     @GetMapping("/solutions/uncheckedByStudentAndGroup/{student_id}/{group_id}")
-    List<SolutionResponse> getUncheckedSolutionsByStudentAndGroup(@PathVariable("student_id") int student_id, @PathVariable("group_id") int group_id){
-        return solutionService.getUncheckedSolutionsByStudentAndGroup(student_id, group_id);
+    @Operation(
+            summary = "Returns list of all unchecked solutions by a given student in a group.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Could not find any unchecked solutions for the student in the group.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "List returned.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
+                    )
+            }
+    )
+    ResponseEntity<List<SolutionResponse>> getUncheckedSolutionsByStudentAndGroup(@PathVariable("student_id") int student_id, @PathVariable("group_id") int group_id){
+        List<SolutionResponse> response = solutionService.getUncheckedSolutionsByStudentAndGroup(student_id, group_id);
+        if(response.isEmpty()){
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
+        else {
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
     }
 
     @GetMapping("/solutions/uncheckedByAssignment/{assignment_id}")
-    List<SolutionResponse> getUncheckedSolutionsByAssignment(@PathVariable("assignment_id") int assignment_id){
-        return solutionService.getUncheckedSolutionsByAssignment(assignment_id);
+    @Operation(
+            summary = "Returns list of all unchecked solutions for a given assignment.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Could not find any unchecked solutions for the assignment.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "List returned.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
+                    )
+            }
+    )
+    ResponseEntity<List<SolutionResponse>> getUncheckedSolutionsByAssignment(@PathVariable("assignment_id") int assignment_id){
+        List<SolutionResponse> response = solutionService.getUncheckedSolutionsByAssignment(assignment_id);
+        if(response.isEmpty()){
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
+        else {
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
     }
 
     @GetMapping("/solutions/uncheckedByTeacher/{teacher_id}")
-    List<SolutionResponse> getUncheckedSolutionsByTeacher(@PathVariable("teacher_id") int teacher_id){
-        return solutionService.getUncheckedSolutionsByTeacher(teacher_id);
+    @Operation(
+            summary = "Returns list of all unchecked solutions by a given teacher.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Could not find any unchecked solutions by this teacher.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "List returned.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
+                    )
+            }
+    )
+    ResponseEntity<List<SolutionResponse>> getUncheckedSolutionsByTeacher(@PathVariable("teacher_id") int teacher_id){
+        List<SolutionResponse> response = solutionService.getUncheckedSolutionsByTeacher(teacher_id);
+        if(response.isEmpty()){
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
+        else {
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
     }
 
     @GetMapping("/solutions/checkedByGroup/{group_id}")
-    List<SolutionResponse> getCheckedSolutionsByGroup(@PathVariable("group_id") int group_id){
-        return solutionService.getCheckedSolutionsByGroup(group_id);
+    @Operation(
+            summary = "Returns list of all checked solutions in the group.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Could not find any checked solutions in this group.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "List returned.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
+                    )
+            }
+    )
+    ResponseEntity<List<SolutionResponse>> getCheckedSolutionsByGroup(@PathVariable("group_id") int group_id){
+        List<SolutionResponse> response = solutionService.getCheckedSolutionsByGroup(group_id);
+        if(response.isEmpty()){
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
+        else {
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
     }
 
     @GetMapping("/solutions/checkedByStudent/{student_id}")
-    List<SolutionResponse> getCheckedSolutionsByStudent(@PathVariable("student_id") int student_id){
-        return solutionService.getCheckedSolutionsByStudent(student_id);
+    @Operation(
+            summary = "Returns list of all checked solutions by a given student.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Could not find any checked solutions for the student.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "List returned.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
+                    )
+            }
+    )
+    ResponseEntity<List<SolutionResponse>> getCheckedSolutionsByStudent(@PathVariable("student_id") int student_id){
+        List<SolutionResponse> response = solutionService.getCheckedSolutionsByStudent(student_id);
+        if(response.isEmpty()){
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
+        else {
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
     }
 
     @GetMapping("/solutions/checkedByStudentAndGroup/{student_id}/{group_id}")
-    List<SolutionResponse> getCheckedSolutionsByStudentAndGroup(@PathVariable("student_id") int student_id, @PathVariable("group_id") int group_id){
-        return solutionService.getCheckedSolutionsByStudentAndGroup(student_id, group_id);
+    @Operation(
+            summary = "Returns list of all checked solutions by a given student in a group.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Could not find any checked solutions for the student in the group.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "List returned.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
+                    )
+            }
+    )
+    ResponseEntity<List<SolutionResponse>> getCheckedSolutionsByStudentAndGroup(@PathVariable("student_id") int student_id, @PathVariable("group_id") int group_id){
+        List<SolutionResponse> response = solutionService.getCheckedSolutionsByStudentAndGroup(student_id, group_id);
+        if(response.isEmpty()){
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
+        else {
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
     }
 
     @GetMapping("/solutions/checkedByAssignment/{assignment_id}")
-    List<SolutionResponse> getCheckedSolutionsByAssignment(@PathVariable("assignment_id") int assignment_id){
-        return solutionService.getCheckedSolutionsByAssignment(assignment_id);
+    @Operation(
+            summary = "Returns list of all checked solutions for a given assignment.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Could not find any checked solutions for the assignment.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "List returned.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
+                    )
+            }
+    )
+    ResponseEntity<List<SolutionResponse>> getCheckedSolutionsByAssignment(@PathVariable("assignment_id") int assignment_id){
+        List<SolutionResponse> response = solutionService.getCheckedSolutionsByAssignment(assignment_id);
+        if(response.isEmpty()){
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
+        else {
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
     }
 
     @GetMapping("/solutions/checkedByTeacher/{teacher_id}")
-    List<SolutionResponse> getCheckedSolutionsByTeacher(@PathVariable("teacher_id") int teacher_id){
-        return solutionService.getCheckedSolutionsByTeacher(teacher_id);
+    @Operation(
+            summary = "Returns list of all checked solutions by a given teacher.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Could not find any checked solutions by this teacher.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "List returned.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                            )
+                    )
+            }
+    )
+    ResponseEntity<List<SolutionResponse>> getCheckedSolutionsByTeacher(@PathVariable("teacher_id") int teacher_id){
+        List<SolutionResponse> response = solutionService.getCheckedSolutionsByTeacher(teacher_id);
+        if(response.isEmpty()){
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
+        else {
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
     }
 
 }

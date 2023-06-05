@@ -1,6 +1,7 @@
 package pl.HomeworkJustClick.Backend.Entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,6 +20,7 @@ public class CommentEvaluation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id", updatable = false, unique = true, nullable = false)
+    @Schema(example = "0")
     private int id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -32,6 +34,7 @@ public class CommentEvaluation {
     private Comment comment;
 
     @Column(name = "description")
+    @Schema(example = "Example desc")
     private String description;
 
     public CommentEvaluation(Evaluation evaluation, Comment comment, String description) {

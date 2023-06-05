@@ -1,6 +1,7 @@
 package pl.HomeworkJustClick.Backend.Entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,15 +20,19 @@ public class File {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id", updatable = false, unique = true, nullable = false)
+    @Schema(example = "0")
     private int id;
 
     @Column(name="name")
+    @Schema(example = "Example file")
     private String name;
 
     @Column(name="format")
+    @Schema(example = ".txt")
     private String format;
 
     @Column(name="mongo_id")
+    @Schema(example = "0")
     private String mongo_id;
 
     @ManyToOne

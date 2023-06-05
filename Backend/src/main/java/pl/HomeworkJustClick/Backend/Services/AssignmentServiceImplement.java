@@ -97,10 +97,10 @@ public class AssignmentServiceImplement implements AssignmentService {
                         .max_points(assignment.getMax_points())
                         .build();
             } else {
-                return AssignmentResponse.builder().build();
+                return AssignmentResponse.builder().forbidden(true).build();
             }
         } else {
-            return AssignmentResponse.builder().forbidden(true).build();
+            return AssignmentResponse.builder().build();
         }
     }
 
@@ -266,13 +266,13 @@ public class AssignmentServiceImplement implements AssignmentService {
     @Override
     public List<AssignmentResponse> getUncheckedAssignmentsByGroup(int group_id) {
         List<Assignment> assignmentsInGroup = assignmentRepository.getAssignmentsByGroupId(group_id);
-        List<AssignmentResponse> ucheckedAssignments = new ArrayList<>();
+        List<AssignmentResponse> uncheckedAssignments = new ArrayList<>();
         for(Assignment assignment : assignmentsInGroup) {
             int assignment_id = assignment.getId();
             int solutions_count = solutionRepository.countSolutionsByAssignmentId(assignment_id);
             int evaluations_count = evaluationRepository.countEvaluationsByAssignment(assignment_id);
             if (solutions_count != 0 && solutions_count - evaluations_count > 0){
-                ucheckedAssignments.add(
+                uncheckedAssignments.add(
                         AssignmentResponse.builder()
                                 .id(assignment.getId())
                                 .userId(assignment.getUser().getId())
@@ -288,7 +288,7 @@ public class AssignmentServiceImplement implements AssignmentService {
                 );
             }
         }
-        return ucheckedAssignments;
+        return uncheckedAssignments;
     }
 
     @Override

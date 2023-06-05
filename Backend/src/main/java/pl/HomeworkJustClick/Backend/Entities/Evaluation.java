@@ -2,6 +2,7 @@ package pl.HomeworkJustClick.Backend.Entities;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,9 +26,11 @@ public class Evaluation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id", updatable = false, unique = true, nullable = false)
+    @Schema(example = "0")
     private int id;
 
     @Column(name = "result")
+    @Schema(example = "0.0")
     private Double result;
 
     @ManyToOne
@@ -54,6 +57,7 @@ public class Evaluation {
     private OffsetDateTime lastModifiedDatetime;
 
     @Column(name = "grade")
+    @Schema(example = "3.5")
     private Double grade;
 
     @OneToMany(
