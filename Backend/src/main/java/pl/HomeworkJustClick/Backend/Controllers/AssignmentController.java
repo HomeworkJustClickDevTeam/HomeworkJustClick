@@ -417,7 +417,7 @@ public class AssignmentController {
 
     @GetMapping("/assignments/undoneByStudent/{student_id}")
     @Operation(
-            summary = "Returns undone assignments of a student.",
+            summary = "Returns list of undone assignments of a student.",
             responses = {
                     @ApiResponse(
                             responseCode = "404",
@@ -445,7 +445,7 @@ public class AssignmentController {
 
     @GetMapping("/assignments/doneByGroupAndStudent/{group_id}/{student_id}")
     @Operation(
-            summary = "Returns done assignments of a student in the group.",
+            summary = "Returns list of done assignments of a student in the group.",
             responses = {
                     @ApiResponse(
                             responseCode = "404",
@@ -473,7 +473,7 @@ public class AssignmentController {
 
     @GetMapping("/assignments/doneByStudent/{student_id}")
     @Operation(
-            summary = "Returns done assignments of a student.",
+            summary = "Returns list of done assignments of a student.",
             responses = {
                     @ApiResponse(
                             responseCode = "404",
@@ -501,7 +501,7 @@ public class AssignmentController {
 
     @GetMapping("/assignments/expiredUndoneByGroupAndStudent/{group_id}/{student_id}")
     @Operation(
-            summary = "Returns undone expired assignments of a student in the group.",
+            summary = "Returns list of undone expired assignments of a student in the group.",
             responses = {
                     @ApiResponse(
                             responseCode = "404",
@@ -529,7 +529,7 @@ public class AssignmentController {
 
     @GetMapping("/assignments/expiredUndoneByStudent/{student_id}")
     @Operation(
-            summary = "Returns undone expired assignments of a student.",
+            summary = "Returns list of undone expired assignments of a student.",
             responses = {
                     @ApiResponse(
                             responseCode = "404",
@@ -557,7 +557,7 @@ public class AssignmentController {
 
     @GetMapping("/assignments/nonExpiredUndoneByGroupAndStudent/{group_id}/{student_id}")
     @Operation(
-            summary = "Returns undone non expired assignments of a student and group.",
+            summary = "Returns list of undone non expired assignments of a student and group.",
             responses = {
                     @ApiResponse(
                             responseCode = "404",
@@ -585,7 +585,7 @@ public class AssignmentController {
 
     @GetMapping("/assignments/nonExpiredUndoneByStudent/{student_id}")
     @Operation(
-            summary = "Returns undone non expired assignments of a student.",
+            summary = "Returns list of undone non expired assignments of a student.",
             responses = {
                     @ApiResponse(
                             responseCode = "404",
@@ -613,7 +613,7 @@ public class AssignmentController {
 
     @GetMapping("/assignments/byStudent/{student_id}")
     @Operation(
-            summary = "Returns all student's assignments.",
+            summary = "Returns list of all student's assignments.",
             responses = {
                     @ApiResponse(
                             responseCode = "404",
