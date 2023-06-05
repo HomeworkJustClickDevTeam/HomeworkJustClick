@@ -91,10 +91,10 @@ public class AssignmentServiceImplement implements AssignmentService {
                         .max_points(assignment.getMax_points())
                         .build();
             } else {
-                return AssignmentResponse.builder().build();
+                return AssignmentResponse.builder().forbidden(true).build();
             }
         } else {
-            return AssignmentResponse.builder().forbidden(true).build();
+            return AssignmentResponse.builder().build();
         }
     }
 

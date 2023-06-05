@@ -120,6 +120,12 @@ public class SolutionController {
                                     mediaType = "application/json",
                                     schema = @Schema(implementation = SolutionResponse.class)
                             )
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "This user does not have access to the assignment or solution with this user and assignment already exists.",
+                            content = @Content
+
                     )
             }
     )
@@ -130,7 +136,7 @@ public class SolutionController {
         if(response.getId()!=0) {
             return new ResponseEntity<>(response, HttpStatus.OK);
         } else if (response.isForbidden()) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         }

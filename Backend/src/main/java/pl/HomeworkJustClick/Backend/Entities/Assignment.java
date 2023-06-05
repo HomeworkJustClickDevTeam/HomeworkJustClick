@@ -25,6 +25,7 @@ public class Assignment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id", updatable = false, unique = true, nullable = false)
+    @Schema(example = "0")
     private int id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -46,6 +47,7 @@ public class Assignment {
     private List<File> files = new ArrayList<>();
 
     @Column(name = "taskDescription")
+    @Schema(example = "Example desc")
     private String taskDescription;
 
     @Column(name = "creationDatetime", updatable = false, nullable = false)
@@ -60,9 +62,14 @@ public class Assignment {
     private OffsetDateTime completionDatetime;
 
     @Column(name = "title")
+    @Schema(example = "Example title")
     private String title;
     @Column(name = "visible", columnDefinition = "boolean default false", nullable = false)
+    @Schema(example = "false")
     private Boolean visible = false;
+    @Column(name = "max_points")
+    @Schema(example = "10")
+    private int max_points;
 
     public int getMax_points() {
         return max_points;
@@ -72,8 +79,7 @@ public class Assignment {
         this.max_points = max_points;
     }
 
-    @Column(name = "max_points")
-    private int max_points;
+
 
     public Assignment(String title) {
         this.title = title;
