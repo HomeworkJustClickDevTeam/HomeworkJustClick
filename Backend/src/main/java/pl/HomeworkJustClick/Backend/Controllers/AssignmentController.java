@@ -25,11 +25,15 @@ public class AssignmentController {
     private final AssignmentService assignmentService;
 
     @GetMapping("/assignments")
-    public List<Assignment> getAll(){return assignmentService.getAll();}
+    public List<AssignmentResponse> getAll(){return assignmentService.getAll();}
     @GetMapping("/assignment/{id}")
-    public ResponseEntity<Assignment> getById(@PathVariable("id") int id){
-        Optional<Assignment> assignment = assignmentService.getById(id);
-        return assignment.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public ResponseEntity<AssignmentResponse> getById(@PathVariable("id") int id){
+        AssignmentResponse assignmentResponse = assignmentService.getById(id);
+        if(assignmentResponse!=null) {
+            return new ResponseEntity<>(assignmentResponse, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("/assignments/byGroupId/{id}")
@@ -145,52 +149,52 @@ public class AssignmentController {
     }
 
     @GetMapping("/assignments/allByGroupAndStudent/{group_id}/{student_id}")
-    public List<Assignment> getAllAssigmentsByUserAndGroup(@PathVariable("group_id") int group_id, @PathVariable("student_id") int user_id) {
+    public List<AssignmentResponse> getAllAssigmentsByUserAndGroup(@PathVariable("group_id") int group_id, @PathVariable("student_id") int user_id) {
         return assignmentService.getAllAssignmentsByGroupIdAndUserId(group_id, user_id);
     }
 
     @GetMapping("/assignments/undoneByGroupAndStudent/{group_id}/{student_id}")
-    public List<Assignment> getUndoneAssignmentsByGroupAndStudent(@PathVariable("group_id") int group_id, @PathVariable("student_id") int student_id) {
+    public List<AssignmentResponse> getUndoneAssignmentsByGroupAndStudent(@PathVariable("group_id") int group_id, @PathVariable("student_id") int student_id) {
         return assignmentService.getUndoneAssignmentsByGroupIdAndUserId(group_id, student_id);
     }
 
     @GetMapping("/assignments/undoneByStudent/{student_id}")
-    public List<Assignment> getUndoneAssignmentsByStudent(@PathVariable("student_id") int student_id) {
+    public List<AssignmentResponse> getUndoneAssignmentsByStudent(@PathVariable("student_id") int student_id) {
         return assignmentService.getUndoneAssignmentsByStudent(student_id);
     }
 
     @GetMapping("/assignments/doneByGroupAndStudent/{group_id}/{student_id}")
-    public List<Assignment> getDoneAssignmentsByGroupAndStudent(@PathVariable("group_id") int group_id, @PathVariable("student_id") int student_id) {
+    public List<AssignmentResponse> getDoneAssignmentsByGroupAndStudent(@PathVariable("group_id") int group_id, @PathVariable("student_id") int student_id) {
         return assignmentService.getDoneAssignmentsByGroupIdAndUserId(group_id, student_id);
     }
 
     @GetMapping("/assignments/doneByStudent/{student_id}")
-    public List<Assignment> getDoneAssignmentsByStudent(@PathVariable("student_id") int student_id) {
+    public List<AssignmentResponse> getDoneAssignmentsByStudent(@PathVariable("student_id") int student_id) {
         return assignmentService.getDoneAssignmentsByStudent(student_id);
     }
 
     @GetMapping("/assignments/expiredUndoneByGroupAndStudent/{group_id}/{student_id}")
-    public List<Assignment> getExpiredUndoneAssignmentsByGroupAndStudent(@PathVariable("group_id") int group_id, @PathVariable("student_id") int student_id) {
+    public List<AssignmentResponse> getExpiredUndoneAssignmentsByGroupAndStudent(@PathVariable("group_id") int group_id, @PathVariable("student_id") int student_id) {
         return assignmentService.getExpiredUndoneAssignmentsByGroupIdAndUserId(group_id, student_id);
     }
 
     @GetMapping("/assignments/expiredUndoneByStudent/{student_id}")
-    public List<Assignment> getExpiredUndoneAssignmentsByStudent(@PathVariable("student_id") int student_id) {
+    public List<AssignmentResponse> getExpiredUndoneAssignmentsByStudent(@PathVariable("student_id") int student_id) {
         return assignmentService.getExpiredUndoneAssignmentsByStudent(student_id);
     }
 
     @GetMapping("/assignments/nonExpiredUndoneByGroupAndStudent/{group_id}/{student_id}")
-    public List<Assignment> getNonExpiredUndoneAssignmentsByGroupAndStudent(@PathVariable("group_id") int group_id, @PathVariable("student_id") int student_id) {
+    public List<AssignmentResponse> getNonExpiredUndoneAssignmentsByGroupAndStudent(@PathVariable("group_id") int group_id, @PathVariable("student_id") int student_id) {
         return assignmentService.getNonExpiredUndoneAssignmentsByGroupIdAndUserId(group_id, student_id);
     }
 
     @GetMapping("/assignments/nonExpiredUndoneByStudent/{student_id}")
-    public List<Assignment> getNonExpiredUndoneAssignmentsByStudent(@PathVariable("student_id") int student_id) {
+    public List<AssignmentResponse> getNonExpiredUndoneAssignmentsByStudent(@PathVariable("student_id") int student_id) {
         return assignmentService.getNonExpiredUndoneAssignmentsByStudent(student_id);
     }
 
     @GetMapping("/assignments/byStudent/{student_id}")
-    public List<Assignment> getAllStudentAssignments(@PathVariable("student_id") int id){
+    public List<AssignmentResponse> getAllStudentAssignments(@PathVariable("student_id") int id){
         return assignmentService.getAllAssignmentsByStudent(id);
     }
 }

@@ -33,14 +33,20 @@ public class AssignmentServiceImplement implements AssignmentService {
     private final EvaluationRepository evaluationRepository;
 
     @Override
-    public List<Assignment> getAll() {
-        return assignmentRepository.findAll();
+    public List<AssignmentResponse> getAll() {
+        List<Assignment> assignmentList = assignmentRepository.findAll();
+        List<AssignmentResponse> responseList = new ArrayList<>();
+        assignmentList.forEach(assignment -> {
+            responseList.add(buildAssignmentResponse(assignment));
+        });
+        return responseList;
     }
 
 
     @Override
-    public Optional<Assignment> getById(int id) {
-        return assignmentRepository.findById(id);
+    public AssignmentResponse getById(int id) {
+        Optional<Assignment> assignmentOptional = assignmentRepository.findById(id);
+        return assignmentOptional.map(this::buildAssignmentResponse).orElse(null);
     }
 
     @Override
@@ -286,53 +292,118 @@ public class AssignmentServiceImplement implements AssignmentService {
     }
 
     @Override
-    public List<Assignment> getAllAssignmentsByGroupIdAndUserId(int group_id, int user_id) {
-        return assignmentRepository.getAllAssignmentsByGroupIdAndUserId(group_id, user_id);
+    public List<AssignmentResponse> getAllAssignmentsByGroupIdAndUserId(int group_id, int user_id) {
+        List<Assignment> assignmentList = assignmentRepository.getAllAssignmentsByGroupIdAndUserId(group_id, user_id);
+        List<AssignmentResponse> assignmentResponseList = new ArrayList<>();
+        assignmentList.forEach(assignment -> {
+            assignmentResponseList.add(buildAssignmentResponse(assignment));
+        });
+        return assignmentResponseList;
     }
 
     @Override
-    public List<Assignment> getUndoneAssignmentsByGroupIdAndUserId(int group_id, int user_id){
-        return assignmentRepository.getUndoneAssignmentsByGroupIdAndUserId(group_id, user_id);
+    public List<AssignmentResponse> getUndoneAssignmentsByGroupIdAndUserId(int group_id, int user_id){
+        List<Assignment> assignmentList = assignmentRepository.getUndoneAssignmentsByGroupIdAndUserId(group_id, user_id);
+        List<AssignmentResponse> assignmentResponseList = new ArrayList<>();
+        assignmentList.forEach(assignment -> {
+            assignmentResponseList.add(buildAssignmentResponse(assignment));
+        });
+        return assignmentResponseList;
     }
 
     @Override
-    public List<Assignment> getUndoneAssignmentsByStudent(int student_id) {
-        return assignmentRepository.getUndoneAssignmentsByStudent(student_id);
+    public List<AssignmentResponse> getUndoneAssignmentsByStudent(int student_id) {
+        List<Assignment> assignmentList = assignmentRepository.getUndoneAssignmentsByStudent(student_id);
+        List<AssignmentResponse> assignmentResponseList = new ArrayList<>();
+        assignmentList.forEach(assignment -> {
+            assignmentResponseList.add(buildAssignmentResponse(assignment));
+        });
+        return assignmentResponseList;
     }
 
     @Override
-    public List<Assignment> getDoneAssignmentsByGroupIdAndUserId(int group_id, int user_id) {
-        return assignmentRepository.getDoneAssignmentsByGroupIdAndUserId(group_id, user_id);
+    public List<AssignmentResponse> getDoneAssignmentsByGroupIdAndUserId(int group_id, int user_id) {
+        List<Assignment> assignmentList = assignmentRepository.getDoneAssignmentsByGroupIdAndUserId(group_id, user_id);
+        List<AssignmentResponse> assignmentResponseList = new ArrayList<>();
+        assignmentList.forEach(assignment -> {
+            assignmentResponseList.add(buildAssignmentResponse(assignment));
+        });
+        return assignmentResponseList;
     }
 
     @Override
-    public List<Assignment> getDoneAssignmentsByStudent(int student_id){
-        return assignmentRepository.getDoneAssignmentsByStudent(student_id);
+    public List<AssignmentResponse> getDoneAssignmentsByStudent(int student_id){
+        List<Assignment> assignmentList = assignmentRepository.getDoneAssignmentsByStudent(student_id);
+        List<AssignmentResponse> assignmentResponseList = new ArrayList<>();
+        assignmentList.forEach(assignment -> {
+            assignmentResponseList.add(buildAssignmentResponse(assignment));
+        });
+        return assignmentResponseList;
     }
 
     @Override
-    public List<Assignment> getExpiredUndoneAssignmentsByGroupIdAndUserId(int group_id, int user_id) {
-        return assignmentRepository.getExpiredUndoneAssignmentsByGroupIdAndUserId(group_id, user_id);
+    public List<AssignmentResponse> getExpiredUndoneAssignmentsByGroupIdAndUserId(int group_id, int user_id) {
+        List<Assignment> assignmentList = assignmentRepository.getExpiredUndoneAssignmentsByGroupIdAndUserId(group_id, user_id);
+        List<AssignmentResponse> assignmentResponseList = new ArrayList<>();
+        assignmentList.forEach(assignment -> {
+            assignmentResponseList.add(buildAssignmentResponse(assignment));
+        });
+        return assignmentResponseList;
     }
 
     @Override
-    public List<Assignment> getExpiredUndoneAssignmentsByStudent(int student_id){
-        return assignmentRepository.getExpiredUndoneAssignmentsByStudent(student_id);
+    public List<AssignmentResponse> getExpiredUndoneAssignmentsByStudent(int student_id){
+        List<Assignment> assignmentList = assignmentRepository.getExpiredUndoneAssignmentsByStudent(student_id);
+        List<AssignmentResponse> assignmentResponseList = new ArrayList<>();
+        assignmentList.forEach(assignment -> {
+            assignmentResponseList.add(buildAssignmentResponse(assignment));
+        });
+        return assignmentResponseList;
     }
 
     @Override
-    public List<Assignment> getNonExpiredUndoneAssignmentsByGroupIdAndUserId(int group_id, int user_id) {
-        return assignmentRepository.getNonExpiredUndoneAssignmentsByGroupIdAndUserId(group_id, user_id);
+    public List<AssignmentResponse> getNonExpiredUndoneAssignmentsByGroupIdAndUserId(int group_id, int user_id) {
+        List<Assignment> assignmentList = assignmentRepository.getNonExpiredUndoneAssignmentsByGroupIdAndUserId(group_id, user_id);
+        List<AssignmentResponse> assignmentResponseList = new ArrayList<>();
+        assignmentList.forEach(assignment -> {
+            assignmentResponseList.add(buildAssignmentResponse(assignment));
+        });
+        return assignmentResponseList;
     }
 
     @Override
-    public List<Assignment> getNonExpiredUndoneAssignmentsByStudent(int student_id) {
-        return assignmentRepository.getNonExpiredUndoneAssignmentsByStudent(student_id);
+    public List<AssignmentResponse> getNonExpiredUndoneAssignmentsByStudent(int student_id) {
+        List<Assignment> assignmentList = assignmentRepository.getNonExpiredUndoneAssignmentsByStudent(student_id);
+        List<AssignmentResponse> assignmentResponseList = new ArrayList<>();
+        assignmentList.forEach(assignment -> {
+            assignmentResponseList.add(buildAssignmentResponse(assignment));
+        });
+        return assignmentResponseList;
     }
 
     @Override
-    public List<Assignment> getAllAssignmentsByStudent(int user_id){
-        return assignmentRepository.getAllAssignmentsByUser(user_id);
+    public List<AssignmentResponse> getAllAssignmentsByStudent(int user_id){
+        List<Assignment> assignmentList = assignmentRepository.getAllAssignmentsByUser(user_id);
+        List<AssignmentResponse> assignmentResponseList = new ArrayList<>();
+        assignmentList.forEach(assignment -> {
+            assignmentResponseList.add(buildAssignmentResponse(assignment));
+        });
+        return assignmentResponseList;
+    }
+
+    private AssignmentResponse buildAssignmentResponse(Assignment assignment) {
+        return AssignmentResponse.builder()
+                .id(assignment.getId())
+                .userId((assignment.getUser() == null) ? null : assignment.getUser().getId())
+                .groupId((assignment.getGroup() == null) ? null : assignment.getGroup().getId())
+                .taskDescription(assignment.getTaskDescription())
+                .creationDatetime(assignment.getCreationDatetime())
+                .lastModifiedDatetime(assignment.getLastModifiedDatetime())
+                .completionDatetime(assignment.getCompletionDatetime())
+                .title(assignment.getTitle())
+                .visible(assignment.getVisible())
+                .max_points(assignment.getMax_points())
+                .build();
     }
 
 }
