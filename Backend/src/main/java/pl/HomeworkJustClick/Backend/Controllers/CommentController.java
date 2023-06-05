@@ -25,7 +25,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api")
 @SecurityRequirement(name = "Bearer Authentication")
-@Tag(name = "Comment")
+@Tag(name = "Comment", description = "Comment related calls.")
 @ApiResponse(
         responseCode = "403",
         description = "Something is wrong with the token.",

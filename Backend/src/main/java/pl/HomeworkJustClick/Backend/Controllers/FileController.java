@@ -23,7 +23,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api")
 @SecurityRequirement(name = "Bearer Authentication")
-@Tag(name = "File")
+@Tag(name = "File", description = "File related calls.")
 @ApiResponse(
         responseCode = "403",
         description = "Something is wrong with the token.",
