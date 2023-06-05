@@ -84,7 +84,7 @@ public class GroupController {
                             description = "OK.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = Solution.class))
+                                    schema = @Schema(implementation = Group.class))
 
                     )
             }
@@ -468,7 +468,16 @@ public class GroupController {
     }
 
     @Operation(
-            summary = "Checks if user with given id is a teacher within a group in given id. Returns true if so, false otherwise. False may also indicates that there is no user in the DB with given id."
+            summary = "Checks if user with given id is a teacher within a group in given id. Returns true if so, false otherwise. False may also indicates that there is no user in the DB with given id.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK.",
+                            content = @Content(
+                                    mediaType = "string",
+                                    schema = @Schema(implementation = String.class)
+                            )
+                    )
     )
     @GetMapping("/group/teacherCheck/{user_id}/{group_id}")
     public ResponseEntity<Boolean> checkForTeacherInGroup(@PathVariable("user_id") int teacher_id, @PathVariable("group_id") int group_id) {
@@ -476,7 +485,16 @@ public class GroupController {
     }
 
     @Operation(
-            summary = "Checks if user with given id is a student within a group in given id. Returns true if so, false otherwise. False may also indicates that there is no user in the DB with given id."
+            summary = "Checks if user with given id is a student within a group in given id. Returns true if so, false otherwise. False may also indicates that there is no user in the DB with given id.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK.",
+                            content = @Content(
+                                    mediaType = "string",
+                                    schema = @Schema(implementation = String.class)
+                            )
+                    )
     )
     @GetMapping("/group/studentCheck/{user_id}/{group_id}")
     public ResponseEntity<Boolean> checkForStudentInGroup(@PathVariable("user_id") int student_id, @PathVariable("group_id") int group_id) {
@@ -484,7 +502,17 @@ public class GroupController {
     }
 
     @Operation(
-            summary = "Checks if user with given id is present in a group in given id. Returns true if so, false otherwise. False may also indicates that there is no user in the DB with given id."
+            summary = "Checks if user with given id is present in a group in given id. Returns true if so, false otherwise. False may also indicates that there is no user in the DB with given id.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK.",
+                            content = @Content(
+                                    mediaType = "string",
+                                    schema = @Schema(implementation = String.class)
+                            )
+                    )
+            }
     )
     @GetMapping("/group/userCheck/{user_id}/{group_id}")
     public ResponseEntity<Boolean> checkForUserInGroup(@PathVariable("user_id") int user_id, @PathVariable("group_id") int group_id) {
