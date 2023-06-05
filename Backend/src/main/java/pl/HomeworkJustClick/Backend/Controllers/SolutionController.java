@@ -208,4 +208,55 @@ public class SolutionController {
     public List<SolutionResponse> getLateSolutionsByStudentId(@PathVariable("student_id") int student_id) {
         return solutionService.getLateSolutionsByStudent(student_id);
     }
+
+    @GetMapping("/solutions/uncheckedByGroup/{group_id}")
+    List<SolutionResponse> getUncheckedSolutionsByGroup(@PathVariable("group_id") int group_id){
+        return solutionService.getUncheckedSolutionsByGroup(group_id);
+    }
+
+    @GetMapping("/solutions/uncheckedByStudent/{student_id}")
+    List<SolutionResponse> getUncheckedSolutionsByStudent(@PathVariable("student_id") int student_id){
+        return solutionService.getUncheckedSolutionsByStudent(student_id);
+    }
+
+    @GetMapping("/solutions/uncheckedByStudentAndGroup/{student_id}/{group_id}")
+    List<SolutionResponse> getUncheckedSolutionsByStudentAndGroup(@PathVariable("student_id") int student_id, @PathVariable("group_id") int group_id){
+        return solutionService.getUncheckedSolutionsByStudentAndGroup(student_id, group_id);
+    }
+
+    @GetMapping("/solutions/uncheckedByAssignment/{assignment_id}")
+    List<SolutionResponse> getUncheckedSolutionsByAssignment(@PathVariable("assignment_id") int assignment_id){
+        return solutionService.getUncheckedSolutionsByAssignment(assignment_id);
+    }
+
+    @GetMapping("/solutions/uncheckedByTeacher/{teacher_id}")
+    List<SolutionResponse> getUncheckedSolutionsByTeacher(@PathVariable("teacher_id") int teacher_id){
+        return solutionService.getUncheckedSolutionsByTeacher(teacher_id);
+    }
+
+    @GetMapping("/solutions/checkedByGroup/{group_id}")
+    List<SolutionResponse> getCheckedSolutionsByGroup(@PathVariable("group_id") int group_id){
+        return solutionService.getCheckedSolutionsByGroup(group_id);
+    }
+
+    @GetMapping("/solutions/checkedByStudent/{student_id}")
+    List<SolutionResponse> getCheckedSolutionsByStudent(@PathVariable("student_id") int student_id){
+        return solutionService.getCheckedSolutionsByStudent(student_id);
+    }
+
+    @GetMapping("/solutions/checkedByStudentAndGroup/{student_id}/{group_id}")
+    List<SolutionResponse> getCheckedSolutionsByStudentAndGroup(@PathVariable("student_id") int student_id, @PathVariable("group_id") int group_id){
+        return solutionService.getCheckedSolutionsByStudentAndGroup(student_id, group_id);
+    }
+
+    @GetMapping("/solutions/checkedByAssignment/{assignment_id}")
+    List<SolutionResponse> getCheckedSolutionsByAssignment(@PathVariable("assignment_id") int assignment_id){
+        return solutionService.getCheckedSolutionsByAssignment(assignment_id);
+    }
+
+    @GetMapping("/solutions/checkedByTeacher/{teacher_id}")
+    List<SolutionResponse> getCheckedSolutionsByTeacher(@PathVariable("teacher_id") int teacher_id){
+        return solutionService.getCheckedSolutionsByTeacher(teacher_id);
+    }
+
 }

@@ -14,7 +14,7 @@ public interface SolutionService {
 
     SolutionResponse add(Solution solution);
 
-    public SolutionResponse addWithUserAndAssignment(Solution solution, int user_id, int assignment_id);
+    SolutionResponse addWithUserAndAssignment(Solution solution, int user_id, int assignment_id);
 
     Boolean delete(int id);
 
@@ -22,16 +22,35 @@ public interface SolutionService {
 
     Boolean changeAssignmentById(int id, int assignmentId);
 
-    public List<SolutionResponse> getSolutionsByGroupId(int id);
+    List<SolutionResponse> getSolutionsByGroupId(int id);
 
-    public List<SolutionResponse> getSolutionsByAssignmentId(int id);
+    List<SolutionResponse> getSolutionsByAssignmentId(int id);
 
-    public List<SolutionResponse> getLateSolutionsByGroup(int group_id);
+    List<SolutionResponse> getLateSolutionsByGroup(int group_id);
 
-    public List<SolutionResponse> getLateSolutionsByUserAndGroup(int user_id, int group_id);
+    List<SolutionResponse> getLateSolutionsByUserAndGroup(int user_id, int group_id);
 
-    public List<SolutionResponse> getLateSolutionsByAssignment(int assignment_id);
+    List<SolutionResponse> getLateSolutionsByAssignment(int assignment_id);
 
-    public List<SolutionResponse> getLateSolutionsByStudent(int user_id);
+    List<SolutionResponse> getLateSolutionsByStudent(int user_id);
 
+    List<SolutionResponse> getUncheckedSolutionsByGroup(int group_id);
+
+    List<SolutionResponse> getCheckedSolutionsByGroup(int group_id);
+
+    List<SolutionResponse> getUncheckedSolutionsByStudent(int student_id);
+
+    List<SolutionResponse> getCheckedSolutionsByStudent(int student_id);
+
+    List<SolutionResponse> getUncheckedSolutionsByStudentAndGroup(int student_id, int group_id);
+
+    List<SolutionResponse> getCheckedSolutionsByStudentAndGroup(int student_id, int group_id);
+
+    List<SolutionResponse> getUncheckedSolutionsByAssignment(int assignment_id);
+
+    List<SolutionResponse> getCheckedSolutionsByAssignment(int assignment_id);
+
+    List<SolutionResponse> getUncheckedSolutionsByTeacher(int teacher_id);
+
+    List<SolutionResponse> getCheckedSolutionsByTeacher(int teacher_id);
 }
