@@ -89,7 +89,6 @@ public class GroupController {
                     )
             }
     )
-
     public ResponseEntity<Group> getById(@PathVariable("group_id") int id) {
         Optional<Group> group = groupService.getById(id);
         return group.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));

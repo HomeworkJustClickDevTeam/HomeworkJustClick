@@ -77,9 +77,14 @@ public class AssignmentController {
             }
     )
     public ResponseEntity<AssignmentResponse> getById(@PathVariable("assignment_id") int id){
-        Optional<Assignment> assignment = assignmentService.getById(id);
-        return assignment.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        AssignmentResponse assignmentResponse = assignmentService.getById(id);
+        if(assignmentResponse!=null) {
+            return new ResponseEntity<>(assignmentResponse, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
+
 
     @GetMapping("/assignments/byGroupId/{group_id}")
     @Operation(
