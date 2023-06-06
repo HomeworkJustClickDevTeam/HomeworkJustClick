@@ -6,7 +6,7 @@ import {
   UserToShow,
   UserWithAssignment,
 } from "../../../types/types"
-import postgresqlDatabase from "../../../services/default-request-database"
+import postgresqlDatabase from "../../../services/postgresDatabase"
 import { AxiosResponse } from "axios"
 
 export const SolutionFilter = ({

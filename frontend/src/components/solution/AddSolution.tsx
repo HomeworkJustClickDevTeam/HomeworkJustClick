@@ -1,5 +1,5 @@
 import { ChangeEvent, useContext, useEffect, useState } from "react"
-import mongoDatabase from "../../services/file-sender"
+import mongoDatabase from "../../services/mongoDatabase"
 import {
   AssigmentProps,
   FileRespondMongo,
@@ -7,7 +7,7 @@ import {
   SolutionToSend,
 } from "../../types/types"
 import { useParams } from "react-router-dom"
-import postgresqlDatabase from "../../services/default-request-database"
+import postgresqlDatabase from "../../services/postgresDatabase"
 import AssigmentItem from "../assigments/assigmentDisplayer/assigmentItem/AssigmentItem"
 import userContext from "../../UserContext"
 
@@ -61,6 +61,7 @@ function AddSolution({ assignment }: AssigmentProps) {
     mongoDatabase
       .post("file", formData)
       .then((r) => {
+        console.log(r.data)
         setResponse(r.data)
       })
       .catch()

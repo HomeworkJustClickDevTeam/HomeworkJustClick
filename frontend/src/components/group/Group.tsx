@@ -1,7 +1,7 @@
 import { Outlet, useParams } from "react-router-dom"
 import React, { useContext, useEffect, useState } from "react"
 import userContext from "../../UserContext"
-import postgresqlDatabase from "../../services/default-request-database"
+import postgresqlDatabase from "../../services/postgresDatabase"
 import { Action } from "../../types/types"
 
 import DispatchContext from "../../DispatchContext"

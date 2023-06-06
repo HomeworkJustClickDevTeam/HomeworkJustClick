@@ -1,4 +1,4 @@
-import postgresqlDatabase from "../../../services/default-request-database"
+import postgresqlDatabase from "../../../services/postgresDatabase"
 import { Group, PropsForFiltering } from "../../../types/types"
 
 export const groupFilter = ({ setGroups }: PropsForFiltering) => {

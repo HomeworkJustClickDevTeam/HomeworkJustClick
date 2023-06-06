@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom"
 import { ChangeEvent, useState } from "react"
 import { AssigmentToSend } from "../../types/types"
-import postgresqlDatabase from "../../services/default-request-database"
+import postgresqlDatabase from "../../services/postgresDatabase"
 import ReactDatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 

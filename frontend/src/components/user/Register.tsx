@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useState } from "react"
-import postgresqlDatabase from "../../services/default-request-database"
+import postgresqlDatabase from "../../services/postgresDatabase"
 import { useNavigate } from "react-router-dom"
 import { RegisterUser } from "../../types/types"
 

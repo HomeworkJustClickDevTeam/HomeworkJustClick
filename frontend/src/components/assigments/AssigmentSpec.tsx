@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom"
 import { useContext, useEffect, useState } from "react"
-import postgresqlDatabase from "../../services/default-request-database"
+import postgresqlDatabase from "../../services/postgresDatabase"
 import { Assigment } from "../../types/types"
 import { parseISO } from "date-fns"
 

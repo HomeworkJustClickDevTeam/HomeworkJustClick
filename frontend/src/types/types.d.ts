@@ -135,3 +135,9 @@ interface UserWithAssignment {
   assignment: Assigment
   solution: Solution
 }
+interface FileFromPost {
+  mongo_id: string
+  id: number
+  format: string
+  name: string
+}

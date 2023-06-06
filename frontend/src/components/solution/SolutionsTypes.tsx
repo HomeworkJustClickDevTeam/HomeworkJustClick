@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react"
 import { PropsForType, UserWithAssignment } from "../../types/types"
-import { useParams } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 
 import groupRoleContext from "../../GroupRoleContext"
 import { SolutionFilter } from "./filter/SolutionFilter"
@@ -54,10 +54,15 @@ function SolutionsTypes({ type }: PropsForType) {
     <>
       <ul>
         {usersWithAssigment.map((userWithAssignment) => (
-          <li key={userWithAssignment.user.id}>
-            {userWithAssignment.user.firstname}
-            {userWithAssignment.assignment.title}
-            {userWithAssignment.assignment.max_points}
+          <li key={userWithAssignment.solution.id}>
+            <Link
+              to="/solution"
+              state={{ userWithAssignment: userWithAssignment }}
+            >
+              {userWithAssignment.user.firstname}
+              {userWithAssignment.assignment.title}
+              {userWithAssignment.assignment.max_points}
+            </Link>
           </li>
         ))}
       </ul>

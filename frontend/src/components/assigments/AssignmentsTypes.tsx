@@ -44,7 +44,7 @@ function AssignmentsTypes({ type }: PropsForType) {
     } else {
       navigate(`-/group/${id}`)
     }
-  }, [assignments])
+  }, [type])
   if (isLoading) {
     return (
       <>

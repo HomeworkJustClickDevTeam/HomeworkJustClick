@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { GroupProp, UserToShow } from "../../../../types/types"
-import postgresqlDatabase from "../../../../services/default-request-database"
+import postgresqlDatabase from "../../../../services/postgresDatabase"
 import UserItem from "./UserItem/UserItem"
 
 function StudentsDisplayer({ id }: GroupProp) {

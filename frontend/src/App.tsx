@@ -23,6 +23,7 @@ import GroupSetRoleContext from "./GroupSetRoleContext"
 import AssignmentsTypes from "./components/assigments/AssignmentsTypes"
 import AssignmentsStudentDisplayed from "./components/assigments/assigmentDisplayer/AssignmentsStudentDisplayed"
 import SolutionsTypes from "./components/solution/SolutionsTypes"
+import Solution from "./components/solution/Solution"
 
 function App() {
   const initialState: ApplicationState = {
@@ -122,6 +123,7 @@ function App() {
                   />
                   <Route path="*" element={<NotFound />} />
                 </Route>
+                <Route path="solution" element={<Solution />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>

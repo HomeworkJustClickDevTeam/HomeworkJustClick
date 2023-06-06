@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom"
 import React, { ChangeEvent, useEffect, useState } from "react"
 import { Assigment, AssigmentProps } from "../../types/types"
-import postgresqlDatabase from "../../services/default-request-database"
+import postgresqlDatabase from "../../services/postgresDatabase"
 import ReactDatePicker from "react-datepicker"
 import Loading from "../animations/Loading"
 

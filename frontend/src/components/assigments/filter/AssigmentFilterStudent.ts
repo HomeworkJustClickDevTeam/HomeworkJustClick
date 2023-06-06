@@ -1,5 +1,5 @@
 import { AssigmentFilterProp } from "../../../types/types"
-import postgresqlDatabase from "../../../services/default-request-database"
+import postgresqlDatabase from "../../../services/postgresDatabase"
 
 export const assigmentFilterStudent = ({
   setAssignments,
