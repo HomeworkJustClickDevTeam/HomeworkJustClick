@@ -9,7 +9,7 @@ import HomeGuest from "./components/home/HomeGuest"
 import CreateGroup from "./components/group/CreateGroup"
 import Group from "./components/group/Group"
 import UserContext from "./UserContext"
-import AssignmentsDisplayer from "./components/assigments/assigmentDisplayer/AssignmentsDisplayer"
+import AssignmentsGroupDisplayed from "./components/assigments/assigmentDisplayer/AssignmentsGroupDisplayed"
 import AddAssigment from "./components/assigments/AddAssigment"
 import AssigmentSpec from "./components/assigments/AssigmentSpec"
 import { Action, ApplicationState } from "./types/types"
@@ -21,6 +21,8 @@ import NotFound from "./components/errors/NotFound"
 import GroupRoleContext from "./GroupRoleContext"
 import GroupSetRoleContext from "./GroupSetRoleContext"
 import AssignmentsTypes from "./components/assigments/AssignmentsTypes"
+import AssignmentsStudentDisplayed from "./components/assigments/assigmentDisplayer/AssignmentsStudentDisplayed"
+import SolutionsTypes from "./components/solution/SolutionsTypes"
 
 function App() {
   const initialState: ApplicationState = {
@@ -76,6 +78,10 @@ function App() {
                   path="/"
                   element={state.loggedIn ? <Home /> : <HomeGuest />}
                 />
+                <Route
+                  path="/:id/assignments"
+                  element={<AssignmentsStudentDisplayed />}
+                />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/create/group" element={<CreateGroup />} />
@@ -83,7 +89,7 @@ function App() {
                   <Route path="users" element={<Users />} />
                   <Route
                     path="assignments"
-                    element={<AssignmentsDisplayer />}
+                    element={<AssignmentsGroupDisplayed />}
                   />
                   <Route
                     path="assignments/done"
@@ -102,7 +108,18 @@ function App() {
                     path="assigment/:idAssigment"
                     element={<AssigmentSpec />}
                   />
-
+                  <Route
+                    path="solutions/uncheck"
+                    element={<SolutionsTypes type={"uncheck"} />}
+                  />
+                  <Route
+                    path="solutions/late"
+                    element={<SolutionsTypes type={"late"} />}
+                  />
+                  <Route
+                    path="solutions/check"
+                    element={<SolutionsTypes type={"check"} />}
+                  />
                   <Route path="*" element={<NotFound />} />
                 </Route>
                 <Route path="*" element={<NotFound />} />

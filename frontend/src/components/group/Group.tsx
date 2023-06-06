@@ -1,7 +1,7 @@
 import { Outlet, useParams } from "react-router-dom"
-import React, { useContext, useEffect } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import userContext from "../../UserContext"
-import common_request from "../../services/default-request-database"
+import postgresqlDatabase from "../../services/default-request-database"
 import { Action } from "../../types/types"
 
 import DispatchContext from "../../DispatchContext"
@@ -9,6 +9,7 @@ import GroupHeader from "./GroupHeader"
 
 import GroupSetRoleContext from "../../GroupSetRoleContext"
 import GroupRoleContext from "../../GroupRoleContext"
+import Loading from "../animations/Loading"
 
 function Group() {
   const { id = "" } = useParams<{ id: string }>()
@@ -16,6 +17,7 @@ function Group() {
   const globalDispatch = useContext(DispatchContext)
   const { setRole } = useContext(GroupSetRoleContext)
   const { role } = useContext(GroupRoleContext)
+  const [loading, setLoading] = useState<boolean>(true)
 
   useEffect(() => {
     const action: Action = {
@@ -25,20 +27,23 @@ function Group() {
   }, [])
 
   function checkRole() {
-    common_request
+    postgresqlDatabase
       .get(`/group/userCheckWithRole/${userState.userId}/${id}`)
       .then((r) => setRole(r.data))
-      .catch((e) => console.log(e))
+      .catch(() => setRole("User not in group"))
   }
   useEffect(() => {
     checkRole()
+    setLoading(false)
   }, [])
 
   async function addToGroup() {
-    await common_request.post(
-      `/group/addStudent/${localStorage.getItem("id")}/${id}`
-    )
+    await postgresqlDatabase.post(`/group/addStudent/${userState.userId}/${id}`)
     checkRole()
+  }
+
+  if (loading) {
+    return <Loading />
   }
 
   if (!loggedIn) {

@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom"
 import React, { ChangeEvent, useEffect, useState } from "react"
 import { Assigment, AssigmentProps } from "../../types/types"
-import common_request from "../../services/default-request-database"
+import postgresqlDatabase from "../../services/default-request-database"
 import ReactDatePicker from "react-datepicker"
 import Loading from "../animations/Loading"
 
@@ -15,7 +15,8 @@ function ModifyAssigment({ assignment }: AssigmentProps) {
     taskDescription: "",
     title: "",
     visible: false,
-    points: 0,
+    max_points: 0,
+    groupId: 0,
   })
   useEffect(() => {
     setModifyAssignment(assignment)
@@ -42,7 +43,7 @@ function ModifyAssigment({ assignment }: AssigmentProps) {
     event.preventDefault()
     try {
       console.log(assignment)
-      common_request.put(
+      postgresqlDatabase.put(
         `/assignment/withUserAndGroup/${localStorage.getItem("id")}/${id}`,
         assignment
       )
@@ -74,7 +75,7 @@ function ModifyAssigment({ assignment }: AssigmentProps) {
             type="number"
             onChange={handleChange}
             min="1"
-            value={modifyAssignment.points}
+            value={modifyAssignment.max_points}
           />
         </label>
         <label>

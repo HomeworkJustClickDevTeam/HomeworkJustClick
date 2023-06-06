@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom"
 import { ChangeEvent, useState } from "react"
 import { AssigmentToSend } from "../../types/types"
-import common_request from "../../services/default-request-database"
+import postgresqlDatabase from "../../services/default-request-database"
 import ReactDatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 
@@ -16,26 +16,42 @@ function AddAssigment() {
     points: 0,
   })
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement> | Date) => {
-    if (event instanceof Date) {
-      setAssigment((prevState) => ({
-        ...prevState,
-        completionDatetime: event,
-      }))
-    } else {
-      const { name, value, type, checked } = event.target
-      setAssigment((prevState) => ({
-        ...prevState,
-        [name]: type === "checkbox" ? checked : value,
-      }))
-    }
+  const handleTextChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target
+    setAssigment((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }))
+  }
+
+  const handleNumberChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target
+    setAssigment((prevState) => ({
+      ...prevState,
+      [name]: parseInt(value),
+    }))
+  }
+
+  const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = event.target
+    setAssigment((prevState) => ({
+      ...prevState,
+      [name]: checked,
+    }))
+  }
+
+  const handleDateChange = (date: Date) => {
+    setAssigment((prevState) => ({
+      ...prevState,
+      completionDatetime: date,
+    }))
   }
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
     try {
       console.log(assigment)
-      common_request.post(
+      postgresqlDatabase.post(
         `/assignment/withUserAndGroup/${localStorage.getItem("id")}/${id}`,
         assigment
       )
@@ -49,35 +65,46 @@ function AddAssigment() {
     <>
       <form onSubmit={handleSubmit}>
         <label>
-          {" "}
-          Tytuł
-          <input name="title" type="text" onChange={handleChange} />
+          Tytuł:
+          <input name="title" type="text" onChange={handleTextChange} />
+        </label>
+        <label>
+          Opis zadania:
+          <input
+            name="taskDescription"
+            type="text"
+            onChange={handleTextChange}
+          />
         </label>
         <label>
           {" "}
-          Opis zadania
-          <input name="taskDescription" type="text" onChange={handleChange} />
-        </label>
-        <label>
           Punkty
-          <input name="points" type="number" onChange={handleChange} min="1" />
+          <input
+            name="points"
+            type="number"
+            onChange={handleNumberChange}
+            min="1"
+          />
         </label>
-        <ReactDatePicker
-          name="completionDatetime"
-          selected={assigment.completionDatetime}
-          onChange={(date) => handleChange(date as Date)}
-          showTimeSelect
-          timeFormat="HH:mm"
-          timeIntervals={15}
-          dateFormat="yyyy-MM-dd HH:mm"
-        />
         <label>
-          Visible:
+          Data zrobienia
+          <ReactDatePicker
+            name="completionDatetime"
+            selected={assigment.completionDatetime}
+            onChange={handleDateChange}
+            showTimeSelect
+            timeFormat="HH:mm"
+            timeIntervals={15}
+            dateFormat="yyyy-MM-dd HH:mm"
+          />
+        </label>
+        <label>
+          Widoczne:
           <input
             name="visible"
             type="checkbox"
             checked={assigment.visible}
-            onChange={handleChange}
+            onChange={handleCheckboxChange}
           />
         </label>
         <button type="submit">Dodaj zadanie domowe</button>

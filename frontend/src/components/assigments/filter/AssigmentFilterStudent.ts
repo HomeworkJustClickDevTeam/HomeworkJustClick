@@ -1,5 +1,5 @@
 import { AssigmentFilterProp } from "../../../types/types"
-import common_request from "../../../services/default-request-database"
+import postgresqlDatabase from "../../../services/default-request-database"
 
 export const assigmentFilterStudent = ({
   setAssignments,
@@ -7,21 +7,21 @@ export const assigmentFilterStudent = ({
   userId,
 }: AssigmentFilterProp) => {
   const doneAssignments = (): void => {
-    common_request
+    postgresqlDatabase
       .get(`/assignments/doneByGroupAndStudent/${id}/${userId}`)
       .then((r) => setAssignments(r.data))
       .catch((e) => console.log(e))
   }
 
   const expiredAssignments = (): void => {
-    common_request
+    postgresqlDatabase
       .get(`/assignments/expiredUndoneByGroupAndStudent/${id}/${userId}`)
       .then((r) => setAssignments(r.data))
       .catch((e) => console.log(e))
   }
 
   const noneExpiredAssignments = (): void => {
-    common_request
+    postgresqlDatabase
       .get(`/assignments/undoneByGroupAndStudent/${id}/${userId}`)
       .then((r) => setAssignments(r.data))
   }
