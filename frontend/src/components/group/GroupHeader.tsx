@@ -13,10 +13,18 @@ function GroupHeader() {
         {role === "Student" ? (
           <Link to="assignments/todo">Do wykonania</Link>
         ) : (
-          <Link to="assignments">Do sprawdzenia</Link>
+          <Link to="solutions/uncheck">Do sprawdzenia</Link>
         )}
-        <Link to="assignments/done">Zrobione</Link>
-        <Link to="assignments/expired">Zalagle</Link>
+        {role === "Student" ? (
+          <Link to="assignments/done">Zrobione</Link>
+        ) : (
+          <Link to="solutions/check">Sprawdzone</Link>
+        )}
+        {role === "Student" ? (
+          <Link to="assignments/expired">Zalagle</Link>
+        ) : (
+          <Link to="solutions/late">Spóznione</Link>
+        )}
       </header>
     </>
   )

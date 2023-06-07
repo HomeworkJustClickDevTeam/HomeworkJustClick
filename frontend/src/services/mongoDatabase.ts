@@ -1,6 +1,6 @@
 import axios from "axios"
 
-const file_sender = axios.create({
+const mongoDatabase = axios.create({
   baseURL: "http://localhost:8082/api/",
   timeout: 8082,
   headers: {
@@ -11,4 +11,4 @@ const file_sender = axios.create({
     }),
   },
 })
-export default file_sender
+export default mongoDatabase

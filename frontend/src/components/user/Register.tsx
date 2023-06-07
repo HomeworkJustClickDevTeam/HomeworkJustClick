@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useState } from "react"
-import common_request from "../../services/default-request-database"
+import postgresqlDatabase from "../../services/postgresDatabase"
 import { useNavigate } from "react-router-dom"
 import { RegisterUser } from "../../types/types"
 
@@ -17,7 +17,7 @@ const Register = () => {
     event.preventDefault()
     if (!!user.password && user.password === secondPassword) {
       try {
-        await common_request.post("/auth/register", user)
+        await postgresqlDatabase.post("/auth/register", user)
         navigate("/")
       } catch (e) {
         console.log("Error not send")

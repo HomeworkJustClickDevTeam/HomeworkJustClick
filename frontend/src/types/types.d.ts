@@ -57,13 +57,14 @@ interface AssigmentFilterProp {
 interface GroupProp {
   id: string | undefined
 }
-type Assigment = {
+interface Assigment {
   title: string
   visible: boolean
   taskDescription: string
   completionDatetime: Date
   id: number
-  points: number
+  max_points: number
+  groupId: number
 }
 interface AssigmentToSend {
   title: string
@@ -79,10 +80,6 @@ interface AssigmentItemProps extends AssigmentProps {
   idGroup: string
 }
 
-interface UserInGroupProp {
-  id: string
-  role: InGroup
-}
 interface UserItemToDisplay {
   userToShow: UserToShow
 }
@@ -119,4 +116,28 @@ interface GroupSetRole {
 }
 interface PropsForType {
   type: string
+}
+interface Solution {
+  id: number
+  userId: number
+  assignmentId: number
+  groupId: number
+  creationDateTime: string
+  lastModifiedDateTime: string
+  comment: string
+}
+interface SolutionTypesProp {
+  id: string
+  setUsersWithAssignment: (userWithAssignment: UserWithAssignment[]) => void
+}
+interface UserWithAssignment {
+  user: UserToShow
+  assignment: Assigment
+  solution: Solution
+}
+interface FileFromPost {
+  mongo_id: string
+  id: number
+  format: string
+  name: string
 }
