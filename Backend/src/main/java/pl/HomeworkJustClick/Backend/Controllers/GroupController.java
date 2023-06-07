@@ -239,7 +239,7 @@ public class GroupController {
         }
     }
 
-    @PostMapping("/group/withTeacher/{group_id}")
+    @PostMapping("/group/withTeacher/{teacher_id}")
     @Operation(
             summary = "Creates group with user as a teacher already associated with it the group.",
             responses = {
@@ -262,7 +262,7 @@ public class GroupController {
                     )
             }
     )
-    public ResponseEntity<GroupResponse> addWithTeacher(@PathVariable("group_id") int id, @RequestBody Group group) {
+    public ResponseEntity<GroupResponse> addWithTeacher(@PathVariable("teacher_id") int id, @RequestBody Group group) {
         GroupResponse response = groupService.add(group);
         Optional<User> user = userService.getById(id);
         if(user.isPresent()) {
