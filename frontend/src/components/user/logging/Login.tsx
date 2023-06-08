@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useContext, useState } from "react"
-import common_request from "../../../services/default-request-database"
+import postgresqlDatabase from "../../../services/postgresDatabase"
 import { useNavigate } from "react-router-dom"
 import { Action, LoginUser, userState } from "../../../types/types"
 import DispatchContext from "../../../DispatchContext"
@@ -15,7 +15,7 @@ const Login = () => {
     event.preventDefault()
 
     try {
-      const response = await common_request.post("/auth/authenticate", user)
+      const response = await postgresqlDatabase.post("/auth/authenticate", user)
       if (response.data) {
         const userState: userState = {
           token: response.data.token,

@@ -1,9 +1,9 @@
-import common_request from "../../../services/default-request-database"
+import postgresqlDatabase from "../../../services/postgresDatabase"
 import { Group, PropsForFiltering } from "../../../types/types"
 
 export const groupFilter = ({ setGroups }: PropsForFiltering) => {
   const teacherUserGroups = (): void => {
-    common_request
+    postgresqlDatabase
       .get("/groups/byTeacher/" + localStorage.getItem("id"))
       .then((response) => {
         const groups: Group[] = response.data
@@ -13,7 +13,7 @@ export const groupFilter = ({ setGroups }: PropsForFiltering) => {
   }
 
   const studentsUserGroups = (): void => {
-    common_request
+    postgresqlDatabase
       .get("/groups/byStudent/" + localStorage.getItem("id"))
       .then((response) => {
         const groups: Group[] = response.data
@@ -22,7 +22,7 @@ export const groupFilter = ({ setGroups }: PropsForFiltering) => {
       .catch((e) => console.log(e))
   }
   const allUserGroups = (): void => {
-    common_request
+    postgresqlDatabase
       .get("/groups/byUser/" + localStorage.getItem("id"))
       .then((response) => {
         const groups: Group[] = response.data

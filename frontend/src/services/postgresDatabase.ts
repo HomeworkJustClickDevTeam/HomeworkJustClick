@@ -1,6 +1,6 @@
 import axios from "axios"
 
-const common_request = axios.create({
+const postgresqlDatabase = axios.create({
   baseURL: "http://localhost:8080/api",
   timeout: 8000,
   headers: {
@@ -11,4 +11,4 @@ const common_request = axios.create({
     }),
   },
 })
-export default common_request
+export default postgresqlDatabase

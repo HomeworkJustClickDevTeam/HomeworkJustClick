@@ -1,50 +1,52 @@
 import { useParams } from "react-router-dom"
 import { useContext, useEffect, useState } from "react"
-import common_request from "../../services/default-request-database"
+import postgresqlDatabase from "../../services/postgresDatabase"
 import { Assigment } from "../../types/types"
 import { parseISO } from "date-fns"
 
 import GroupRoleContext from "../../GroupRoleContext"
 import ModifyAssigment from "./ModifyAssigment"
 
+import AddSolution from "../solution/AddSolution"
+import Loading from "../animations/Loading"
+
 function AssigmentSpec() {
   const { idAssigment } = useParams()
   const { role } = useContext(GroupRoleContext)
-  const [assigment, setAssigment] = useState<Assigment>({
+  const [assignment, setAssignment] = useState<Assigment>({
     completionDatetime: new Date(),
     id: 0,
     taskDescription: "",
     title: "",
     visible: false,
-    points: 0,
+    max_points: 0,
+    groupId: 0,
   })
-
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   useEffect(() => {
-    common_request
+    postgresqlDatabase
       .get(`/assignment/${idAssigment}`)
       .then((response) => {
         const responseData = response.data
         const parsedDate = parseISO(responseData.completionDatetime)
-        setAssigment({ ...responseData, completionDatetime: parsedDate })
+        setAssignment({ ...responseData, completionDatetime: parsedDate })
       })
       .catch((error) => {
         console.log("Error fetching assignment:", error)
       })
+    setIsLoading(false)
   }, [])
+  if (isLoading) {
+    return <Loading />
+  }
   return (
     <>
       {role === "Teacher" ? (
-        <ModifyAssigment assignment={assigment} />
+        <ModifyAssigment assignment={assignment} />
       ) : (
-        <>User in progress</>
+        <AddSolution assignment={assignment} />
       )}
     </>
   )
 }
 export default AssigmentSpec
-
-/*
-<h1>{assigment.title}</h1>
-<p>{assigment.taskDescription}</p>
-<h2>{format(assigment.completionDatetime, "dd MMM yyyy, HH:mm")}</h2>
- */
