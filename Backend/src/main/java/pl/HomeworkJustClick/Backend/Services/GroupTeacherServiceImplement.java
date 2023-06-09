@@ -64,7 +64,7 @@ public class GroupTeacherServiceImplement implements GroupTeacherService{
     @Override
     public Boolean addTeacherToGroup (int group_id, int teacher_id) {
         int groupTeacherCheck = groupTeacherRepository.checkForTeacherInGroup(teacher_id, group_id);
-        int groupStudentCheck = groupStudentRepository.getGroupStudentByStudentAndGroup(teacher_id, group_id);
+        int groupStudentCheck = groupStudentRepository.checkForStudentInGroup(teacher_id, group_id);
         if (groupTeacherCheck != 0 || groupStudentCheck != 0){
             return null;
         }
