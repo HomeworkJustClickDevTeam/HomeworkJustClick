@@ -41,6 +41,6 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Integer>
     List<Assignment> getNonExpiredUndoneAssignmentsByStudent(int student_id);
 
     @Query(value = "select a.* from _assignment a join _group_student gs on a.group_id = gs.group_id where gs.user_id = :user_id", nativeQuery = true)
-    List<Assignment> getAllAssignmentsByUser(int user_id);
+    List<Assignment> getAllAssignmentsByStudent(int user_id);
 
 }

@@ -402,7 +402,7 @@ public class AssignmentServiceImplement implements AssignmentService {
 
     @Override
     public List<AssignmentResponse> getAllAssignmentsByStudent(int user_id){
-        List<Assignment> assignmentList = assignmentRepository.getAllAssignmentsByUser(user_id);
+        List<Assignment> assignmentList = assignmentRepository.getAllAssignmentsByStudent(user_id);
         List<AssignmentResponse> assignmentResponseList = new ArrayList<>();
         assignmentList.forEach(assignment -> {
             assignmentResponseList.add(buildAssignmentResponse(assignment));
@@ -527,7 +527,7 @@ public class AssignmentServiceImplement implements AssignmentService {
 
     @Override
     public List<AssignmentResponseExtended> getAllAssignmentsByStudentExtended(int user_id){
-        List<Assignment> assignmentList = assignmentRepository.getAllAssignmentsByUser(user_id);
+        List<Assignment> assignmentList = assignmentRepository.getAllAssignmentsByStudent(user_id);
         List<AssignmentResponseExtended> assignmentResponseList = new ArrayList<>();
         assignmentList.forEach(assignment -> {
             assignmentResponseList.add(buildAssignmentResponseExtended(assignment));
