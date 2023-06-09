@@ -2,10 +2,12 @@ package pl.HomeworkJustClick.Backend.Repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 import pl.HomeworkJustClick.Backend.Entities.Assignment;
 
 import java.util.List;
 
+@Repository
 public interface AssignmentRepository extends JpaRepository<Assignment, Integer> {
 
     @Query(value = "select * from _assignment where group_id = :group_id", nativeQuery = true)

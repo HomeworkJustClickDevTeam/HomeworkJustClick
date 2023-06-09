@@ -2,10 +2,12 @@ package pl.HomeworkJustClick.Backend.Repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 import pl.HomeworkJustClick.Backend.Entities.Evaluation;
 
 import java.util.List;
 
+@Repository
 public interface EvaluationRepository extends JpaRepository<Evaluation, Integer> {
 
     @Query(value = "select e.* from _evaluation e join _solution s on e.solution_id = s.id where s.assignment_id = :assignment_id", nativeQuery = true)

@@ -81,7 +81,7 @@ public class SolutionServiceImplement implements SolutionService{
         Optional<User> user = userRepository.findById(user_id);
         Optional<Assignment> assignment = assignmentRepository.findById(assignment_id);
         if(user.isPresent() && assignment.isPresent()) {
-            List<User> userList = userRepository.getGroupStudentsByGroup(assignment.get().getGroup().getId());
+            List<User> userList = userRepository.getStudentsByGroupId(assignment.get().getGroup().getId());
             System.out.println(assignment.get().getGroup().getId());
             AtomicBoolean ok = new AtomicBoolean(false);
             userList.forEach(user1 -> {

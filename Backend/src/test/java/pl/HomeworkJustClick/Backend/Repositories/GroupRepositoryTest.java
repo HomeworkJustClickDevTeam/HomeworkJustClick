@@ -13,12 +13,12 @@ import pl.HomeworkJustClick.Backend.Enums.Role;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 @DataJpaTest
-public class UserRepositoryTest {
+public class GroupRepositoryTest {
 
     @Autowired
     private UserRepository userRepository;
@@ -43,49 +43,6 @@ public class UserRepositoryTest {
     }
 
     @Test
-    void itShouldGetUserByEmail() {
-        //given
-        String email = "jan_kowalski@gmail.com";
-        String password = "123";
-        boolean isVerified = true;
-        Role role = Role.USER;
-        int index = 123456;
-        String firstname = "Jan";
-        String lastname = "Kowalski";
-        int color = 7;
-        User user = new User(email, password, isVerified, role, index, firstname, lastname, color);
-        userRepository.save(user);
-
-        //when
-        Optional<User> actualUser = userRepository.findByEmail(email);
-
-        //then
-        assertTrue(actualUser.isPresent());
-        assertEquals(actualUser.get(), user);
-    }
-
-    @Test
-    void itShouldNotGetUserByEmail() {
-        //given
-        String email = "jan_kowalski@gmail.com";
-        String password = "123";
-        boolean isVerified = true;
-        Role role = Role.USER;
-        int index = 123456;
-        String firstname = "Jan";
-        String lastname = "Kowalski";
-        int color = 7;
-        User user = new User(email, password, isVerified, role, index, firstname, lastname, color);
-        userRepository.save(user);
-
-        //when
-        Optional<User> actualUser = userRepository.findByEmail("aaa@wp.pl");
-
-        //then
-        assertTrue(actualUser.isEmpty());
-    }
-
-    @Test
     void itShouldGetTeachersByGroupId() {
         //given
         User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
@@ -94,11 +51,11 @@ public class UserRepositoryTest {
         userRepository.save(user);
         groupRepository.save(group);
         groupTeacherRepository.save(groupTeacher);
-        List<User> expectedList = new ArrayList<>();
-        expectedList.add(user);
+        List<Group> expectedList = new ArrayList<>();
+        expectedList.add(group);
 
         //when
-        List<User> actualList = userRepository.getTeachersByGroupId(group.getId());
+        List<Group> actualList = groupRepository.getGroupsByTeacherId(user.getId());
 
         //then
         assertEquals(expectedList, actualList);
@@ -113,11 +70,11 @@ public class UserRepositoryTest {
         userRepository.save(user);
         groupRepository.save(group);
         groupTeacherRepository.save(groupTeacher);
-        List<User> expectedList = new ArrayList<>();
-        expectedList.add(user);
+        List<Group> expectedList = new ArrayList<>();
+        expectedList.add(group);
 
         //when
-        List<User> actualList = userRepository.getTeachersByGroupId(group.getId()+1);
+        List<Group> actualList = groupRepository.getGroupsByTeacherId(user.getId()+1);
 
         //then
         assertNotEquals(expectedList, actualList);
@@ -132,11 +89,11 @@ public class UserRepositoryTest {
         userRepository.save(user);
         groupRepository.save(group);
         groupStudentRepository.save(groupStudent);
-        List<User> expectedList = new ArrayList<>();
-        expectedList.add(user);
+        List<Group> expectedList = new ArrayList<>();
+        expectedList.add(group);
 
         //when
-        List<User> actualList = userRepository.getStudentsByGroupId(group.getId());
+        List<Group> actualList = groupRepository.getGroupsByStudentId(user.getId());
 
         //then
         assertEquals(expectedList, actualList);
@@ -145,19 +102,20 @@ public class UserRepositoryTest {
     @Test
     void itShouldNotGetStudentsByGroupId() {
         //given
-        User user = new User( "jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
         Group group = new Group("Grupa", "opis",5,false);
         GroupStudent groupStudent = new GroupStudent(group, user, "");
         userRepository.save(user);
         groupRepository.save(group);
         groupStudentRepository.save(groupStudent);
-        List<User> expectedList = new ArrayList<>();
-        expectedList.add(user);
+        List<Group> expectedList = new ArrayList<>();
+        expectedList.add(group);
 
         //when
-        List<User> actualList = userRepository.getStudentsByGroupId(group.getId()+1);
+        List<Group> actualList = groupRepository.getGroupsByStudentId(user.getId()+1);
 
         //then
         assertNotEquals(expectedList, actualList);
     }
+
 }

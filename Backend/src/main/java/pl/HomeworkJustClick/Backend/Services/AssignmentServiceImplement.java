@@ -92,7 +92,7 @@ public class AssignmentServiceImplement implements AssignmentService {
         Optional<User> user = userRepository.findById(user_id);
         Optional<Group> group = groupRepository.findById(group_id);
         if(user.isPresent() && group.isPresent()) {
-            List<User> userList = userRepository.getGroupTeachersByGroup(group_id);
+            List<User> userList = userRepository.getTeachersByGroupId(group_id);
             AtomicBoolean ok = new AtomicBoolean(false);
             userList.forEach(user1 -> {
                 if (user1.getId() == user_id) {
