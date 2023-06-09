@@ -41,11 +41,11 @@ public class Group {
     @Max(19)
     @Min(0)
     @Column(name="color")
-    int color;
+    private int color;
 
     @Column(name="isArchived")
     @Schema(example = "false")
-    boolean isArchived;
+    private boolean isArchived;
 
     @OneToMany(
             mappedBy = "group",
@@ -70,6 +70,21 @@ public class Group {
     )
     @JsonIgnore
     private List<GroupTeacher> groupTeachers = new ArrayList<>();
+
+    public Group(String name, String description, int color, boolean isArchived) {
+        this.name = name;
+        this.description = description;
+        this.color = color;
+        this.isArchived = isArchived;
+    }
+
+    public Group(int id, String name, String description, int color, boolean isArchived) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.color = color;
+        this.isArchived = isArchived;
+    }
 
     public Group(String name) {
         this.name = name;
