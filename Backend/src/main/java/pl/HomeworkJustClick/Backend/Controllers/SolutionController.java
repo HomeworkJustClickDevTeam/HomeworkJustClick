@@ -15,9 +15,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.HomeworkJustClick.Backend.Entities.Solution;
 import pl.HomeworkJustClick.Backend.Entities.User;
+import pl.HomeworkJustClick.Backend.Responses.AssignmentResponse;
 import pl.HomeworkJustClick.Backend.Responses.SolutionResponse;
 import pl.HomeworkJustClick.Backend.Services.SolutionService;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,7 +55,11 @@ public class SolutionController {
                     )
             }
     )
-    public List<SolutionResponse> getAll(){return solutionService.getAll();}
+    public List<SolutionResponse> getAll(){
+        List<SolutionResponse> responseList = solutionService.getAll();
+        responseList.sort(Comparator.comparing(SolutionResponse::getCreationDateTime));
+        return responseList;
+    }
     @GetMapping("/solution/{solution_id}")
     @Operation(
             summary = "Returns solution by it's id.",
@@ -218,10 +224,12 @@ public class SolutionController {
     @GetMapping("/solutions/byGroup/{group_id}")
     public ResponseEntity<List<SolutionResponse>> getSolutionsByGroupId(@PathVariable("group_id") int id) {
         if(solutionService.getSolutionsByGroupId(id).isEmpty()){
-            return new ResponseEntity<>(solutionService.getSolutionsByGroupId(id), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
-            return new ResponseEntity<>(solutionService.getSolutionsByGroupId(id), HttpStatus.OK);
+            List<SolutionResponse> responseList = solutionService.getSolutionsByGroupId(id);
+            responseList.sort(Comparator.comparing(SolutionResponse::getCreationDateTime));
+            return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
 
@@ -249,10 +257,12 @@ public class SolutionController {
     @GetMapping("/solutions/byAssignment/{assignment_id}")
     public ResponseEntity<List<SolutionResponse>> getSolutionsByAssignmentId(@PathVariable("assignment_id") int id) {
         if(solutionService.getSolutionsByAssignmentId(id).isEmpty()){
-            return new ResponseEntity<>(solutionService.getSolutionsByAssignmentId(id), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
-            return new ResponseEntity<>(solutionService.getSolutionsByAssignmentId(id), HttpStatus.OK);
+            List<SolutionResponse> responseList = solutionService.getSolutionsByAssignmentId(id);
+            responseList.sort(Comparator.comparing(SolutionResponse::getCreationDateTime));
+            return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
 
@@ -280,10 +290,12 @@ public class SolutionController {
     @GetMapping("/solutions/lateByGroup/{group_id}")
     public ResponseEntity<List<SolutionResponse>> getLateSolutionsByGroupId(@PathVariable("group_id") int group_id) {
         if(solutionService.getLateSolutionsByGroup(group_id).isEmpty()){
-            return new ResponseEntity<>(solutionService.getLateSolutionsByGroup(group_id), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
-            return new ResponseEntity<>(solutionService.getLateSolutionsByGroup(group_id), HttpStatus.NOT_FOUND);
+            List<SolutionResponse> responseList = solutionService.getLateSolutionsByGroup(group_id);
+            responseList.sort(Comparator.comparing(SolutionResponse::getCreationDateTime));
+            return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
         }
     }
 
@@ -311,10 +323,12 @@ public class SolutionController {
     @GetMapping("/solutions/lateByGroupAndStudent/{group_id}/{student_id}")
     public ResponseEntity<List<SolutionResponse>> getLateSolutionsByGroupIdAndStudentId(@PathVariable("group_id") int group_id, @PathVariable("student_id") int student_id) {
         if(solutionService.getLateSolutionsByUserAndGroup(student_id, group_id).isEmpty()){
-            return new ResponseEntity<>(solutionService.getLateSolutionsByUserAndGroup(student_id, group_id), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
-            return new ResponseEntity<>(solutionService.getLateSolutionsByUserAndGroup(student_id, group_id), HttpStatus.OK);
+            List<SolutionResponse> responseList = solutionService.getLateSolutionsByUserAndGroup(student_id, group_id);
+            responseList.sort(Comparator.comparing(SolutionResponse::getCreationDateTime));
+            return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
 
@@ -342,10 +356,12 @@ public class SolutionController {
     @GetMapping("/solutions/lateByAssignment/{assignment_id}")
     public ResponseEntity<List<SolutionResponse>> getLateSolutionsByAssignmentId(@PathVariable("assignment_id") int assignment_id) {
         if(solutionService.getLateSolutionsByAssignment(assignment_id).isEmpty()){
-            return new ResponseEntity<>(solutionService.getLateSolutionsByAssignment(assignment_id), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
-            return new ResponseEntity<>(solutionService.getLateSolutionsByAssignment(assignment_id), HttpStatus.OK);
+            List<SolutionResponse> responseList = solutionService.getLateSolutionsByAssignment(assignment_id);
+            responseList.sort(Comparator.comparing(SolutionResponse::getCreationDateTime));
+            return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
 
@@ -373,10 +389,12 @@ public class SolutionController {
     @GetMapping("/solutions/lateByStudent/{student_id}")
     public ResponseEntity<List<SolutionResponse>> getLateSolutionsByStudentId(@PathVariable("student_id") int student_id) {
         if(solutionService.getLateSolutionsByStudent(student_id).isEmpty()){
-            return new ResponseEntity<>(solutionService.getLateSolutionsByStudent(student_id), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
-            return new ResponseEntity<>(solutionService.getLateSolutionsByStudent(student_id), HttpStatus.OK);
+            List<SolutionResponse> responseList = solutionService.getLateSolutionsByStudent(student_id);
+            responseList.sort(Comparator.comparing(SolutionResponse::getCreationDateTime));
+            return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
 
@@ -405,9 +423,10 @@ public class SolutionController {
     ResponseEntity<List<SolutionResponse>> getUncheckedSolutionsByGroup(@PathVariable("group_id") int group_id){
         List<SolutionResponse> response = solutionService.getUncheckedSolutionsByGroup(group_id);
         if(response.isEmpty()){
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
+            response.sort(Comparator.comparing(SolutionResponse::getCreationDateTime));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
@@ -437,9 +456,10 @@ public class SolutionController {
     ResponseEntity<List<SolutionResponse>> getUncheckedSolutionsByStudent(@PathVariable("student_id") int student_id){
         List<SolutionResponse> response = solutionService.getUncheckedSolutionsByStudent(student_id);
         if(response.isEmpty()){
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
+            response.sort(Comparator.comparing(SolutionResponse::getCreationDateTime));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
@@ -469,9 +489,10 @@ public class SolutionController {
     ResponseEntity<List<SolutionResponse>> getUncheckedSolutionsByStudentAndGroup(@PathVariable("student_id") int student_id, @PathVariable("group_id") int group_id){
         List<SolutionResponse> response = solutionService.getUncheckedSolutionsByStudentAndGroup(student_id, group_id);
         if(response.isEmpty()){
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
+            response.sort(Comparator.comparing(SolutionResponse::getCreationDateTime));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
@@ -501,9 +522,10 @@ public class SolutionController {
     ResponseEntity<List<SolutionResponse>> getUncheckedSolutionsByAssignment(@PathVariable("assignment_id") int assignment_id){
         List<SolutionResponse> response = solutionService.getUncheckedSolutionsByAssignment(assignment_id);
         if(response.isEmpty()){
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
+            response.sort(Comparator.comparing(SolutionResponse::getCreationDateTime));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
@@ -533,9 +555,10 @@ public class SolutionController {
     ResponseEntity<List<SolutionResponse>> getUncheckedSolutionsByTeacher(@PathVariable("teacher_id") int teacher_id){
         List<SolutionResponse> response = solutionService.getUncheckedSolutionsByTeacher(teacher_id);
         if(response.isEmpty()){
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
+            response.sort(Comparator.comparing(SolutionResponse::getCreationDateTime));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
@@ -565,9 +588,10 @@ public class SolutionController {
     ResponseEntity<List<SolutionResponse>> getCheckedSolutionsByGroup(@PathVariable("group_id") int group_id){
         List<SolutionResponse> response = solutionService.getCheckedSolutionsByGroup(group_id);
         if(response.isEmpty()){
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
+            response.sort(Comparator.comparing(SolutionResponse::getCreationDateTime));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
@@ -597,9 +621,10 @@ public class SolutionController {
     ResponseEntity<List<SolutionResponse>> getCheckedSolutionsByStudent(@PathVariable("student_id") int student_id){
         List<SolutionResponse> response = solutionService.getCheckedSolutionsByStudent(student_id);
         if(response.isEmpty()){
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
+            response.sort(Comparator.comparing(SolutionResponse::getCreationDateTime));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
@@ -629,9 +654,10 @@ public class SolutionController {
     ResponseEntity<List<SolutionResponse>> getCheckedSolutionsByStudentAndGroup(@PathVariable("student_id") int student_id, @PathVariable("group_id") int group_id){
         List<SolutionResponse> response = solutionService.getCheckedSolutionsByStudentAndGroup(student_id, group_id);
         if(response.isEmpty()){
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
+            response.sort(Comparator.comparing(SolutionResponse::getCreationDateTime));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
@@ -661,9 +687,10 @@ public class SolutionController {
     ResponseEntity<List<SolutionResponse>> getCheckedSolutionsByAssignment(@PathVariable("assignment_id") int assignment_id){
         List<SolutionResponse> response = solutionService.getCheckedSolutionsByAssignment(assignment_id);
         if(response.isEmpty()){
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
+            response.sort(Comparator.comparing(SolutionResponse::getCreationDateTime));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
@@ -693,9 +720,10 @@ public class SolutionController {
     ResponseEntity<List<SolutionResponse>> getCheckedSolutionsByTeacher(@PathVariable("teacher_id") int teacher_id){
         List<SolutionResponse> response = solutionService.getCheckedSolutionsByTeacher(teacher_id);
         if(response.isEmpty()){
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
+            response.sort(Comparator.comparing(SolutionResponse::getCreationDateTime));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }

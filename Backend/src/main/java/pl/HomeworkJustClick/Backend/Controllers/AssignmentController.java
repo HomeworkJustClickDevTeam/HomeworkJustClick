@@ -20,6 +20,7 @@ import pl.HomeworkJustClick.Backend.Responses.AssignmentResponse;
 import pl.HomeworkJustClick.Backend.Services.AssignmentService;
 
 import java.time.OffsetDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,7 +56,11 @@ public class AssignmentController {
                     )
             }
     )
-    public List<AssignmentResponse> getAll(){return assignmentService.getAll();}
+    public List<AssignmentResponse> getAll(){
+        List<AssignmentResponse> responseList = assignmentService.getAll();
+        responseList.sort(Comparator.comparing(AssignmentResponse::getCompletionDatetime));
+        return responseList;
+    }
 
     @GetMapping("/assignment/{assignment_id}")
     @Operation(
@@ -106,12 +111,13 @@ public class AssignmentController {
             }
     )
     public ResponseEntity<List<AssignmentResponse>> getAssignmentsByGroupId(@PathVariable("group_id") int id) {
-        List<AssignmentResponse> response = assignmentService.getAssignmentsByGroupId(id);
-        if(response.isEmpty()){
-            return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
+        List<AssignmentResponse> responseList = assignmentService.getAssignmentsByGroupId(id);
+        if(responseList.isEmpty()){
+            return new ResponseEntity<>(responseList,HttpStatus.NOT_FOUND);
         }
         else {
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            responseList.sort(Comparator.comparing(AssignmentResponse::getCompletionDatetime));
+            return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
 
@@ -355,12 +361,12 @@ public class AssignmentController {
             }
     )
     public ResponseEntity<List<AssignmentResponse>> getUncheckedAssignmentsInGroup(@PathVariable("group_id") int group_id){
-        List<AssignmentResponse> response = assignmentService.getUncheckedAssignmentsByGroup(group_id);
-        if(response.isEmpty()){
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-        }
-        else {
-            return new ResponseEntity<>(response, HttpStatus.OK);
+        List<AssignmentResponse> responseList = assignmentService.getUncheckedAssignmentsByGroup(group_id);
+        if(responseList.isEmpty()){
+            return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
+        } else {
+            responseList.sort(Comparator.comparing(AssignmentResponse::getCompletionDatetime));
+            return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
 
@@ -383,12 +389,12 @@ public class AssignmentController {
             }
     )
     public ResponseEntity<List<AssignmentResponse>> getAllAssignmentsByUserAndGroup(@PathVariable("group_id") int group_id, @PathVariable("student_id") int user_id) {
-        List<AssignmentResponse> response = assignmentService.getAllAssignmentsByGroupIdAndUserId(group_id, user_id);
-        if(response.isEmpty()){
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-        }
-        else {
-            return new ResponseEntity<>(response, HttpStatus.OK);
+        List<AssignmentResponse> responseList = assignmentService.getAllAssignmentsByGroupIdAndUserId(group_id, user_id);
+        if(responseList.isEmpty()){
+            return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
+        } else {
+            responseList.sort(Comparator.comparing(AssignmentResponse::getCompletionDatetime));
+            return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
 
@@ -411,12 +417,12 @@ public class AssignmentController {
             }
     )
     public ResponseEntity<List<AssignmentResponse>> getUndoneAssignmentsByGroupAndStudent(@PathVariable("group_id") int group_id, @PathVariable("student_id") int student_id) {
-        List<AssignmentResponse> response = assignmentService.getUndoneAssignmentsByGroupIdAndUserId(group_id, student_id);
-        if(response.isEmpty()){
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-        }
-        else {
-            return new ResponseEntity<>(response, HttpStatus.OK);
+        List<AssignmentResponse> responseList = assignmentService.getUndoneAssignmentsByGroupIdAndUserId(group_id, student_id);
+        if(responseList.isEmpty()){
+            return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
+        } else {
+            responseList.sort(Comparator.comparing(AssignmentResponse::getCompletionDatetime));
+            return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
 
@@ -439,12 +445,12 @@ public class AssignmentController {
             }
     )
     public ResponseEntity<List<AssignmentResponse>> getUndoneAssignmentsByStudent(@PathVariable("student_id") int student_id) {
-        List<AssignmentResponse> response = assignmentService.getUndoneAssignmentsByStudent(student_id);
-        if(response.isEmpty()){
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-        }
-        else {
-            return new ResponseEntity<>(response, HttpStatus.OK);
+        List<AssignmentResponse> responseList = assignmentService.getUndoneAssignmentsByStudent(student_id);
+        if(responseList.isEmpty()){
+            return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
+        } else {
+            responseList.sort(Comparator.comparing(AssignmentResponse::getCompletionDatetime));
+            return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
 
@@ -467,12 +473,12 @@ public class AssignmentController {
             }
     )
     public ResponseEntity<List<AssignmentResponse>> getDoneAssignmentsByGroupAndStudent(@PathVariable("group_id") int group_id, @PathVariable("student_id") int student_id) {
-        List<AssignmentResponse> response = assignmentService.getDoneAssignmentsByGroupIdAndUserId(group_id, student_id);
-        if(response.isEmpty()){
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-        }
-        else {
-            return new ResponseEntity<>(response, HttpStatus.OK);
+        List<AssignmentResponse> responseList = assignmentService.getDoneAssignmentsByGroupIdAndUserId(group_id, student_id);
+        if(responseList.isEmpty()){
+            return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
+        } else {
+            responseList.sort(Comparator.comparing(AssignmentResponse::getCompletionDatetime));
+            return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
 
@@ -495,12 +501,12 @@ public class AssignmentController {
             }
     )
     public ResponseEntity<List<AssignmentResponse>> getDoneAssignmentsByStudent(@PathVariable("student_id") int student_id) {
-        List<AssignmentResponse> response = assignmentService.getDoneAssignmentsByStudent(student_id);
-        if(response.isEmpty()){
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-        }else
-        {
-            return new ResponseEntity<>(response, HttpStatus.OK);
+        List<AssignmentResponse> responseList = assignmentService.getDoneAssignmentsByStudent(student_id);
+        if(responseList.isEmpty()){
+            return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
+        } else {
+            responseList.sort(Comparator.comparing(AssignmentResponse::getCompletionDatetime));
+            return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
 
@@ -523,12 +529,12 @@ public class AssignmentController {
             }
     )
     public ResponseEntity<List<AssignmentResponse>> getExpiredUndoneAssignmentsByGroupAndStudent(@PathVariable("group_id") int group_id, @PathVariable("student_id") int student_id) {
-        List<AssignmentResponse> response = assignmentService.getExpiredUndoneAssignmentsByGroupIdAndUserId(group_id, student_id);
-        if(response.isEmpty()){
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-        }else
-        {
-            return new ResponseEntity<>(response, HttpStatus.OK);
+        List<AssignmentResponse> responseList = assignmentService.getExpiredUndoneAssignmentsByGroupIdAndUserId(group_id, student_id);
+        if(responseList.isEmpty()){
+            return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
+        } else {
+            responseList.sort(Comparator.comparing(AssignmentResponse::getCompletionDatetime));
+            return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
 
@@ -551,12 +557,12 @@ public class AssignmentController {
             }
     )
     public ResponseEntity<List<AssignmentResponse>> getExpiredUndoneAssignmentsByStudent(@PathVariable("student_id") int student_id) {
-        List<AssignmentResponse> response = assignmentService.getExpiredUndoneAssignmentsByStudent(student_id);
-        if(response.isEmpty()){
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-        }else
-        {
-            return new ResponseEntity<>(response, HttpStatus.OK);
+        List<AssignmentResponse> responseList = assignmentService.getExpiredUndoneAssignmentsByStudent(student_id);
+        if(responseList.isEmpty()){
+            return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
+        }else {
+            responseList.sort(Comparator.comparing(AssignmentResponse::getCompletionDatetime));
+            return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
 
@@ -579,12 +585,12 @@ public class AssignmentController {
             }
     )
     public ResponseEntity<List<AssignmentResponse>> getNonExpiredUndoneAssignmentsByGroupAndStudent(@PathVariable("group_id") int group_id, @PathVariable("student_id") int student_id) {
-        List<AssignmentResponse> response = assignmentService.getNonExpiredUndoneAssignmentsByGroupIdAndUserId(group_id, student_id);
-        if(response.isEmpty()){
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-        }else
-        {
-            return new ResponseEntity<>(response, HttpStatus.OK);
+        List<AssignmentResponse> responseList = assignmentService.getNonExpiredUndoneAssignmentsByGroupIdAndUserId(group_id, student_id);
+        if(responseList.isEmpty()){
+            return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
+        }else {
+            responseList.sort(Comparator.comparing(AssignmentResponse::getCompletionDatetime));
+            return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
 
@@ -607,12 +613,12 @@ public class AssignmentController {
             }
     )
     public ResponseEntity<List<AssignmentResponse>> getNonExpiredUndoneAssignmentsByStudent(@PathVariable("student_id") int student_id) {
-        List<AssignmentResponse> response = assignmentService.getNonExpiredUndoneAssignmentsByStudent(student_id);
-        if(response.isEmpty()){
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-        }else
-        {
-            return new ResponseEntity<>(response, HttpStatus.OK);
+        List<AssignmentResponse> responseList = assignmentService.getNonExpiredUndoneAssignmentsByStudent(student_id);
+        if(responseList.isEmpty()){
+            return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
+        } else {
+            responseList.sort(Comparator.comparing(AssignmentResponse::getCompletionDatetime));
+            return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
 
@@ -635,12 +641,12 @@ public class AssignmentController {
             }
     )
     public ResponseEntity<List<AssignmentResponse>> getAllStudentAssignments(@PathVariable("student_id") int id){
-        List<AssignmentResponse> response = assignmentService.getAllAssignmentsByStudent(id);
-        if(response.isEmpty()){
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-        }else
-        {
-            return new ResponseEntity<>(response, HttpStatus.OK);
+        List<AssignmentResponse> responseList = assignmentService.getAllAssignmentsByStudent(id);
+        if(responseList.isEmpty()){
+            return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
+        } else {
+            responseList.sort(Comparator.comparing(AssignmentResponse::getCompletionDatetime));
+            return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
 }
