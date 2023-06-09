@@ -73,6 +73,16 @@ public class Evaluation {
         this.solution = solution;
     }
 
+    public Evaluation(Double result, User user, Solution solution, Group group, OffsetDateTime creationDatetime, OffsetDateTime lastModifiedDatetime, Double grade) {
+        this.result = result;
+        this.user = user;
+        this.solution = solution;
+        this.group = group;
+        this.creationDatetime = creationDatetime;
+        this.lastModifiedDatetime = lastModifiedDatetime;
+        this.grade = grade;
+    }
+
     public int getId() {
         return id;
     }
