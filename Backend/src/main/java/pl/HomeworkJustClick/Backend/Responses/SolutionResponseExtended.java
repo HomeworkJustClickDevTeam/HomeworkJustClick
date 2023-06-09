@@ -13,22 +13,16 @@ import java.time.OffsetDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AssignmentResponseExtended {
+public class SolutionResponseExtended {
     @Schema(example = "0")
     private int id;
-    @Schema(example = "Example title")
-    private String title;
-    @Schema(example = "true")
-    private Boolean visible;
     private UserResponse user;
+    private AssignmentResponse assignment;
     private GroupResponse group;
-    @Schema(example = "Example desc")
-    private String taskDescription;
-    private OffsetDateTime creationDatetime;
+    private OffsetDateTime creationDateTime;
     private OffsetDateTime lastModifiedDatetime;
-    private OffsetDateTime completionDatetime;
+    @Schema(example = "Example comment")
+    private String comment;
     @JsonIgnore
     private boolean forbidden;
-    @Schema(example = "10")
-    private int max_points;
 }
