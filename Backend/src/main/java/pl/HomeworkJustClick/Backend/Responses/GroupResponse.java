@@ -19,6 +19,6 @@ public class GroupResponse {
     private String description;
     @Schema(example = "0")
     private int color;
-    @Schema(example = "true")
+    @Schema(example = "false")
     private boolean isArchived;
 }

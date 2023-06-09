@@ -11,18 +11,15 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import pl.HomeworkJustClick.Backend.Entities.Assignment;
-import pl.HomeworkJustClick.Backend.Entities.Group;
-import pl.HomeworkJustClick.Backend.Entities.User;
 import pl.HomeworkJustClick.Backend.Responses.AssignmentResponse;
+import pl.HomeworkJustClick.Backend.Responses.AssignmentResponseExtended;
 import pl.HomeworkJustClick.Backend.Services.AssignmentService;
 
 import java.time.OffsetDateTime;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -62,6 +59,26 @@ public class AssignmentController {
         return responseList;
     }
 
+    @GetMapping("/extended/assignments")
+    @Operation(
+            summary = "Returns list of all assignments with user and group in DB.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "List returned",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = AssignmentResponseExtended.class))
+                            )
+                    )
+            }
+    )
+    public List<AssignmentResponseExtended> getAllExtended(){
+        List<AssignmentResponseExtended> responseList = assignmentService.getAllExtended();
+        responseList.sort(Comparator.comparing(AssignmentResponseExtended::getCompletionDatetime));
+        return responseList;
+    }
+
     @GetMapping("/assignment/{assignment_id}")
     @Operation(
             summary = "Returns assignment by it's id.",
@@ -90,6 +107,33 @@ public class AssignmentController {
         }
     }
 
+    @GetMapping("/extended/assignment/{assignment_id}")
+    @Operation(
+            summary = "Returns assignment by it's id.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "No assignment with this id in the DB.",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = AssignmentResponse.class))
+
+                    )
+            }
+    )
+    public ResponseEntity<AssignmentResponseExtended> getByIdExtended(@PathVariable("assignment_id") int id){
+        AssignmentResponseExtended assignmentResponse = assignmentService.getByIdExtended(id);
+        if(assignmentResponse!=null) {
+            return new ResponseEntity<>(assignmentResponse, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 
     @GetMapping("/assignments/byGroupId/{group_id}")
     @Operation(
@@ -117,6 +161,36 @@ public class AssignmentController {
         }
         else {
             responseList.sort(Comparator.comparing(AssignmentResponse::getCompletionDatetime));
+            return new ResponseEntity<>(responseList, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/extended/assignments/byGroupId/{group_id}")
+    @Operation(
+            summary = "Returns list of all assignments in the given group.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "No assignment with this id in the DB.",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = AssignmentResponse.class))
+                            )
+                    )
+            }
+    )
+    public ResponseEntity<List<AssignmentResponseExtended>> getAssignmentsByGroupIdExtended(@PathVariable("group_id") int id) {
+        List<AssignmentResponseExtended> responseList = assignmentService.getAssignmentsByGroupIdExtended(id);
+        if(responseList.isEmpty()){
+            return new ResponseEntity<>(responseList,HttpStatus.NOT_FOUND);
+        }
+        else {
+            responseList.sort(Comparator.comparing(AssignmentResponseExtended::getCompletionDatetime));
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
@@ -646,6 +720,314 @@ public class AssignmentController {
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
         } else {
             responseList.sort(Comparator.comparing(AssignmentResponse::getCompletionDatetime));
+            return new ResponseEntity<>(responseList, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/extended/assignments/unchecked/{group_id}")
+    @Operation(
+            summary = "Returns list of unchecked assignments from group with given id.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "No unchecked assignments in the group.",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "200",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = AssignmentResponse.class))
+                            )
+                    )
+            }
+    )
+    public ResponseEntity<List<AssignmentResponseExtended>> getUncheckedAssignmentsInGroupExtended(@PathVariable("group_id") int group_id){
+        List<AssignmentResponseExtended> responseList = assignmentService.getUncheckedAssignmentsByGroupExtended(group_id);
+        if(responseList.isEmpty()){
+            return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
+        } else {
+            responseList.sort(Comparator.comparing(AssignmentResponseExtended::getCompletionDatetime));
+            return new ResponseEntity<>(responseList, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/extended/assignments/allByGroupAndStudent/{group_id}/{student_id}")
+    @Operation(
+            summary = "Returns list of assignments of a student for a given group.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "No assignments in the group for the student.",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "200",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = AssignmentResponse.class))
+                            )
+                    )
+            }
+    )
+    public ResponseEntity<List<AssignmentResponseExtended>> getAllAssignmentsByUserAndGroupExtended(@PathVariable("group_id") int group_id, @PathVariable("student_id") int user_id) {
+        List<AssignmentResponseExtended> responseList = assignmentService.getAllAssignmentsByGroupIdAndUserIdExtended(group_id, user_id);
+        if(responseList.isEmpty()){
+            return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
+        } else {
+            responseList.sort(Comparator.comparing(AssignmentResponseExtended::getCompletionDatetime));
+            return new ResponseEntity<>(responseList, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/extended/assignments/undoneByGroupAndStudent/{group_id}/{student_id}")
+    @Operation(
+            summary = "Returns list of undone assignments of a student for a given group.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "No undone assignments in the group for the student.",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "200",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = AssignmentResponse.class))
+                            )
+                    )
+            }
+    )
+    public ResponseEntity<List<AssignmentResponseExtended>> getUndoneAssignmentsByGroupAndStudentExtended(@PathVariable("group_id") int group_id, @PathVariable("student_id") int student_id) {
+        List<AssignmentResponseExtended> responseList = assignmentService.getUndoneAssignmentsByGroupIdAndUserIdExtended(group_id, student_id);
+        if(responseList.isEmpty()){
+            return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
+        } else {
+            responseList.sort(Comparator.comparing(AssignmentResponseExtended::getCompletionDatetime));
+            return new ResponseEntity<>(responseList, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/extended/assignments/undoneByStudent/{student_id}")
+    @Operation(
+            summary = "Returns list of undone assignments of a student.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "No undone assignments for the student.",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "200",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = AssignmentResponse.class))
+                            )
+                    )
+            }
+    )
+    public ResponseEntity<List<AssignmentResponseExtended>> getUndoneAssignmentsByStudentExtended(@PathVariable("student_id") int student_id) {
+        List<AssignmentResponseExtended> responseList = assignmentService.getUndoneAssignmentsByStudentExtended(student_id);
+        if(responseList.isEmpty()){
+            return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
+        } else {
+            responseList.sort(Comparator.comparing(AssignmentResponseExtended::getCompletionDatetime));
+            return new ResponseEntity<>(responseList, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/extended/assignments/doneByGroupAndStudent/{group_id}/{student_id}")
+    @Operation(
+            summary = "Returns list of done assignments of a student in the group.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "No done assignments for the student in the group.",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "200",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = AssignmentResponse.class))
+                            )
+                    )
+            }
+    )
+    public ResponseEntity<List<AssignmentResponseExtended>> getDoneAssignmentsByGroupAndStudentExtended(@PathVariable("group_id") int group_id, @PathVariable("student_id") int student_id) {
+        List<AssignmentResponseExtended> responseList = assignmentService.getDoneAssignmentsByGroupIdAndUserIdExtended(group_id, student_id);
+        if(responseList.isEmpty()){
+            return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
+        } else {
+            responseList.sort(Comparator.comparing(AssignmentResponseExtended::getCompletionDatetime));
+            return new ResponseEntity<>(responseList, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/extended/assignments/doneByStudent/{student_id}")
+    @Operation(
+            summary = "Returns list of done assignments of a student.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "No done assignments for the student.",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "200",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = AssignmentResponse.class))
+                            )
+                    )
+            }
+    )
+    public ResponseEntity<List<AssignmentResponseExtended>> getDoneAssignmentsByStudentExtended(@PathVariable("student_id") int student_id) {
+        List<AssignmentResponseExtended> responseList = assignmentService.getDoneAssignmentsByStudentExtended(student_id);
+        if(responseList.isEmpty()){
+            return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
+        } else {
+            responseList.sort(Comparator.comparing(AssignmentResponseExtended::getCompletionDatetime));
+            return new ResponseEntity<>(responseList, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/extended/assignments/expiredUndoneByGroupAndStudent/{group_id}/{student_id}")
+    @Operation(
+            summary = "Returns list of undone expired assignments of a student in the group.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "No undone expired assignments for the student and group.",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "200",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = AssignmentResponse.class))
+                            )
+                    )
+            }
+    )
+    public ResponseEntity<List<AssignmentResponseExtended>> getExpiredUndoneAssignmentsByGroupAndStudentExtended(@PathVariable("group_id") int group_id, @PathVariable("student_id") int student_id) {
+        List<AssignmentResponseExtended> responseList = assignmentService.getExpiredUndoneAssignmentsByGroupIdAndUserIdExtended(group_id, student_id);
+        if(responseList.isEmpty()){
+            return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
+        } else {
+            responseList.sort(Comparator.comparing(AssignmentResponseExtended::getCompletionDatetime));
+            return new ResponseEntity<>(responseList, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/extended/assignments/expiredUndoneByStudent/{student_id}")
+    @Operation(
+            summary = "Returns list of undone expired assignments of a student.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "No undone expired assignments for the student.",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "200",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = AssignmentResponse.class))
+                            )
+                    )
+            }
+    )
+    public ResponseEntity<List<AssignmentResponseExtended>> getExpiredUndoneAssignmentsByStudentExtended(@PathVariable("student_id") int student_id) {
+        List<AssignmentResponseExtended> responseList = assignmentService.getExpiredUndoneAssignmentsByStudentExtended(student_id);
+        if(responseList.isEmpty()){
+            return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
+        }else {
+            responseList.sort(Comparator.comparing(AssignmentResponseExtended::getCompletionDatetime));
+            return new ResponseEntity<>(responseList, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/extended/assignments/nonExpiredUndoneByGroupAndStudent/{group_id}/{student_id}")
+    @Operation(
+            summary = "Returns list of undone non expired assignments of a student and group.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "No undone non expired assignments for the student and group.",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "200",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = AssignmentResponse.class))
+                            )
+                    )
+            }
+    )
+    public ResponseEntity<List<AssignmentResponseExtended>> getNonExpiredUndoneAssignmentsByGroupAndStudentExtended(@PathVariable("group_id") int group_id, @PathVariable("student_id") int student_id) {
+        List<AssignmentResponseExtended> responseList = assignmentService.getNonExpiredUndoneAssignmentsByGroupIdAndUserIdExtended(group_id, student_id);
+        if(responseList.isEmpty()){
+            return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
+        }else {
+            responseList.sort(Comparator.comparing(AssignmentResponseExtended::getCompletionDatetime));
+            return new ResponseEntity<>(responseList, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/extended/assignments/nonExpiredUndoneByStudent/{student_id}")
+    @Operation(
+            summary = "Returns list of undone non expired assignments of a student.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "No undone non expired assignments for the student.",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "200",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = AssignmentResponse.class))
+                            )
+                    )
+            }
+    )
+    public ResponseEntity<List<AssignmentResponseExtended>> getNonExpiredUndoneAssignmentsByStudentExtended(@PathVariable("student_id") int student_id) {
+        List<AssignmentResponseExtended> responseList = assignmentService.getNonExpiredUndoneAssignmentsByStudentExtended(student_id);
+        if(responseList.isEmpty()){
+            return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
+        } else {
+            responseList.sort(Comparator.comparing(AssignmentResponseExtended::getCompletionDatetime));
+            return new ResponseEntity<>(responseList, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/extended/assignments/byStudent/{student_id}")
+    @Operation(
+            summary = "Returns list of all student's assignments.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "No assignments for the student.",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "200",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = AssignmentResponse.class))
+                            )
+                    )
+            }
+    )
+    public ResponseEntity<List<AssignmentResponseExtended>> getAllStudentAssignmentsExtended(@PathVariable("student_id") int id){
+        List<AssignmentResponseExtended> responseList = assignmentService.getAllAssignmentsByStudentExtended(id);
+        if(responseList.isEmpty()){
+            return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
+        } else {
+            responseList.sort(Comparator.comparing(AssignmentResponseExtended::getCompletionDatetime));
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
