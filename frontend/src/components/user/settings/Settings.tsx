@@ -10,13 +10,13 @@ export default function Settings(): JSX.Element{
                         Ogólne
                     </Link>
                 </li>
-                <li>Wygląd</li>
+                <li><Link to={"/settings/appearance"}>Wygląd</Link></li>
                 <li>
                     <Link to={"/settings/security"}>
                         Bezpieczeństwo
                     </Link>
                 </li>
-                <li>Moje tabele ocen</li>
+                <li><Link to={"/settings/markingTables"}>Moje tabele ocen</Link></li>
             </ul>
         </>
     )
