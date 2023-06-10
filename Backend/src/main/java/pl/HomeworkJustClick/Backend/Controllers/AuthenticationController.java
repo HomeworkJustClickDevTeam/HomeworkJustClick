@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.HomeworkJustClick.Backend.Auth.AuthenticationRequest;
+import pl.HomeworkJustClick.Backend.Auth.ChangePasswordRequest;
 import pl.HomeworkJustClick.Backend.Entities.Group;
 import pl.HomeworkJustClick.Backend.Responses.AuthenticationResponse;
 import pl.HomeworkJustClick.Backend.Services.AuthenticationService;
@@ -94,6 +95,14 @@ public class AuthenticationController {
                             )
                     ),
                     @ApiResponse(
+                            responseCode = "403",
+                            description = "Password incorrect.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = AuthenticationResponse.class)
+                            )
+                    ),
+                    @ApiResponse(
                             responseCode = "404",
                             description = "User with this email is missing in DB.",
                             content = @Content(
@@ -105,6 +114,49 @@ public class AuthenticationController {
     )
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
         AuthenticationResponse response = authenticationService.authenticate(request);
+        if(response.getMessage().equals("ok")) {
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } else if (response.getMessage().equals("User not found!")) {
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
+        else {
+            return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+        }
+
+    }
+
+    @PostMapping("/changePassword")
+    @Operation(
+            summary = "Allows user to change his password",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Email not verified.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = AuthenticationResponse.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Password incorrect.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = AuthenticationResponse.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "User with this email is missing in DB.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = AuthenticationResponse.class)
+                            )
+                    )
+            }
+    )
+    public ResponseEntity<AuthenticationResponse> changePassword(@RequestBody ChangePasswordRequest request) {
+        AuthenticationResponse response = authenticationService.changePassword(request);
         if(response.getMessage().equals("ok")) {
             return new ResponseEntity<>(response, HttpStatus.OK);
         } else if (response.getMessage().equals("User not found!")) {

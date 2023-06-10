@@ -2,10 +2,12 @@ package pl.HomeworkJustClick.Backend.Services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.HomeworkJustClick.Backend.Auth.AuthenticationRequest;
+import pl.HomeworkJustClick.Backend.Auth.ChangePasswordRequest;
 import pl.HomeworkJustClick.Backend.Responses.AuthenticationResponse;
 import pl.HomeworkJustClick.Backend.Auth.RegisterRequest;
 import pl.HomeworkJustClick.Backend.Config.JwtService;
@@ -85,10 +87,38 @@ public class AuthenticationServiceImplement implements AuthenticationService{
         if (!user.isVerified()) {
             return AuthenticationResponse.builder().token(null).id(0).role(Role.NONE).message("E-mail not verified!").build();
         }
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                request.getEmail(),
-                request.getPassword()
-        ));
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                    request.getEmail(),
+                    request.getPassword()
+            ));
+        } catch (BadCredentialsException e) {
+            return AuthenticationResponse.builder().token(null).id(0).role(Role.NONE).message("Password incorrect!").build();
+        }
+        var jwtToken = jwtService.generateToken(user);
+        var id = user.getId();
+        return AuthenticationResponse.builder().token(jwtToken).id(id).role(user.getRole()).message("ok").color(user.getColor()).name(user.getFirstname()).lastname(user.getLastname()).index(user.getIndex()).build();
+    }
+
+    @Override
+    public AuthenticationResponse changePassword(ChangePasswordRequest request) {
+        if(userRepository.findByEmail(request.getEmail()).isEmpty()){
+            return AuthenticationResponse.builder().token(null).id(0).role(Role.NONE).message("User not found!").build();
+        }
+        var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
+        if (!user.isVerified()) {
+            return AuthenticationResponse.builder().token(null).id(0).role(Role.NONE).message("E-mail not verified!").build();
+        }
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                    request.getEmail(),
+                    request.getPassword()
+            ));
+        } catch (BadCredentialsException e) {
+            return AuthenticationResponse.builder().token(null).id(0).role(Role.NONE).message("Password incorrect!").build();
+        }
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
         var id = user.getId();
         return AuthenticationResponse.builder().token(jwtToken).id(id).role(user.getRole()).message("ok").color(user.getColor()).name(user.getFirstname()).lastname(user.getLastname()).index(user.getIndex()).build();
