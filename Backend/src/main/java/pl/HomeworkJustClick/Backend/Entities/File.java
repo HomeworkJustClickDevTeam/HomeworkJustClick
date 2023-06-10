@@ -51,6 +51,14 @@ public class File {
         this.mongo_id = mongo_id;
     }
 
+    public File(String name, String format, String mongo_id, Assignment assignment, Solution solution) {
+        this.name = name;
+        this.format = format;
+        this.mongo_id = mongo_id;
+        this.assignment = assignment;
+        this.solution = solution;
+    }
+
     public int getId() {
         return id;
     }

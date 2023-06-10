@@ -1,14 +1,11 @@
 package pl.HomeworkJustClick.Backend.Services;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.HomeworkJustClick.Backend.Entities.GroupTeacher;
 import pl.HomeworkJustClick.Backend.Entities.User;
 import pl.HomeworkJustClick.Backend.Repositories.GroupTeacherRepository;
 import pl.HomeworkJustClick.Backend.Repositories.UserRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -99,11 +96,11 @@ public class UserServiceImplement implements UserService{
 
     @Override
     public List<User> getTeachersByGroup(int group_id) {
-        return userRepository.getGroupTeachersByGroup(group_id);
+        return userRepository.getTeachersByGroupId(group_id);
     }
 
     @Override
     public List<User> getStudentsByGroup(int group_id) {
-        return userRepository.getGroupStudentsByGroup(group_id);
+        return userRepository.getStudentsByGroupId(group_id);
     }
 }

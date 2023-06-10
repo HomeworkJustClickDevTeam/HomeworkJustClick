@@ -3,7 +3,6 @@ package pl.HomeworkJustClick.Backend.Services;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.HomeworkJustClick.Backend.Entities.Group;
 import pl.HomeworkJustClick.Backend.Entities.GroupTeacher;
@@ -132,12 +131,12 @@ public class GroupServiceImplement implements GroupService {
 
     @Override
     public List<Group> getGroupsByTeacher(int teacher_id) {
-        return groupRepository.getGroupTeachersByTeacher(teacher_id);
+        return groupRepository.getGroupsByTeacherId(teacher_id);
     }
 
     @Override
     public List<Group> getGroupsByStudent(int student_id) {
-        return groupRepository.getGroupStudentsByStudent(student_id);
+        return groupRepository.getGroupsByStudentId(student_id);
     }
 
 }

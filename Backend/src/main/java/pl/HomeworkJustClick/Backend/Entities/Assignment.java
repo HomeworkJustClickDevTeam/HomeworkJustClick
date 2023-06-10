@@ -71,6 +71,18 @@ public class Assignment {
     @Schema(example = "10")
     private int max_points;
 
+    public Assignment(User user, Group group, String taskDescription, OffsetDateTime creationDatetime, OffsetDateTime lastModifiedDatetime, OffsetDateTime completionDatetime, String title, Boolean visible, int max_points) {
+        this.user = user;
+        this.group = group;
+        this.taskDescription = taskDescription;
+        this.creationDatetime = creationDatetime;
+        this.lastModifiedDatetime = lastModifiedDatetime;
+        this.completionDatetime = completionDatetime;
+        this.title = title;
+        this.visible = visible;
+        this.max_points = max_points;
+    }
+
     public int getMax_points() {
         return max_points;
     }
