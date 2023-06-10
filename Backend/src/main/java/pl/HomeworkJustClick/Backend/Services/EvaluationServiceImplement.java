@@ -3,9 +3,7 @@ package pl.HomeworkJustClick.Backend.Services;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.HomeworkJustClick.Backend.Entities.Assignment;
 import pl.HomeworkJustClick.Backend.Entities.Evaluation;
 import pl.HomeworkJustClick.Backend.Entities.Solution;
 import pl.HomeworkJustClick.Backend.Entities.User;
@@ -13,7 +11,6 @@ import pl.HomeworkJustClick.Backend.Repositories.EvaluationRepository;
 import pl.HomeworkJustClick.Backend.Repositories.SolutionRepository;
 import pl.HomeworkJustClick.Backend.Repositories.UserRepository;
 import pl.HomeworkJustClick.Backend.Responses.EvaluationResponse;
-import pl.HomeworkJustClick.Backend.Responses.SolutionResponse;
 
 import java.util.List;
 import java.util.Optional;
@@ -62,7 +59,7 @@ public class EvaluationServiceImplement implements EvaluationService {
         Optional<User> user = userRepository.findById(user_id);
         Optional<Solution> solution = solutionRepository.findById(solution_id);
         if(user.isPresent() && solution.isPresent()) {
-            List<User> userList = userRepository.getGroupTeachersByGroup(solution.get().getGroup().getId());
+            List<User> userList = userRepository.getTeachersByGroupId(solution.get().getGroup().getId());
             AtomicBoolean ok = new AtomicBoolean(false);
             userList.forEach(user1 -> {
                 if (user1.getId() == user_id) {

@@ -1,17 +1,13 @@
 package pl.HomeworkJustClick.Backend.Services;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.HomeworkJustClick.Backend.Entities.Group;
 import pl.HomeworkJustClick.Backend.Entities.GroupTeacher;
-import pl.HomeworkJustClick.Backend.Entities.User;
 import pl.HomeworkJustClick.Backend.Repositories.GroupRepository;
 import pl.HomeworkJustClick.Backend.Repositories.GroupStudentRepository;
 import pl.HomeworkJustClick.Backend.Repositories.GroupTeacherRepository;
 import pl.HomeworkJustClick.Backend.Repositories.UserRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -67,8 +63,8 @@ public class GroupTeacherServiceImplement implements GroupTeacherService{
 
     @Override
     public Boolean addTeacherToGroup (int group_id, int teacher_id) {
-        int groupTeacherCheck = groupTeacherRepository.getGroupTeacherByTeacherAndGroup(teacher_id, group_id);
-        int groupStudentCheck = groupStudentRepository.getGroupStudentByStudentAndGroup(teacher_id, group_id);
+        int groupTeacherCheck = groupTeacherRepository.checkForTeacherInGroup(teacher_id, group_id);
+        int groupStudentCheck = groupStudentRepository.checkForStudentInGroup(teacher_id, group_id);
         if (groupTeacherCheck != 0 || groupStudentCheck != 0){
             return null;
         }
@@ -99,7 +95,7 @@ public class GroupTeacherServiceImplement implements GroupTeacherService{
 
     @Override
     public Boolean checkForTeacherInGroup(int teacher_id, int group_id) {
-        int groupTeacherCheck = groupTeacherRepository.getGroupTeacherByTeacherAndGroup(teacher_id, group_id);
+        int groupTeacherCheck = groupTeacherRepository.checkForTeacherInGroup(teacher_id, group_id);
         return groupTeacherCheck != 0;
     }
 

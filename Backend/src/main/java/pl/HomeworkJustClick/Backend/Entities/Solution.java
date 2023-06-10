@@ -64,6 +64,15 @@ public class Solution {
         this.user = user;
     }
 
+    public Solution(User user, Assignment assignment, Group group, OffsetDateTime creationDatetime, OffsetDateTime lastModifiedDatetime, String comment) {
+        this.user = user;
+        this.assignment = assignment;
+        this.group = group;
+        this.creationDatetime = creationDatetime;
+        this.lastModifiedDatetime = lastModifiedDatetime;
+        this.comment = comment;
+    }
+
     public int getId() {
         return id;
     }

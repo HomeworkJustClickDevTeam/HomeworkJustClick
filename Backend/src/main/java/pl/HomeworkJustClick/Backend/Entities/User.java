@@ -167,6 +167,18 @@ public class User implements UserDetails {
         this.color = color;
     }
 
+    public User(int id, String email, String password, boolean isVerified, Role role, int index, String firstname, String lastname, int color) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.isVerified = isVerified;
+        this.role = role;
+        this.index = index;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.color = color;
+    }
+
     public User(String email, String password, boolean isVerified, Role role, int index, String firstname, String lastname, List<GroupStudent> groupStudents, List<GroupTeacher> groupTeachers, int color) {
         this.email = email;
         this.password = password;

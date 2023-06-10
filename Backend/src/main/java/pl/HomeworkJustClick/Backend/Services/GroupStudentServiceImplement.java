@@ -1,10 +1,8 @@
 package pl.HomeworkJustClick.Backend.Services;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.HomeworkJustClick.Backend.Entities.GroupStudent;
-import pl.HomeworkJustClick.Backend.Entities.GroupTeacher;
 import pl.HomeworkJustClick.Backend.Repositories.GroupRepository;
 import pl.HomeworkJustClick.Backend.Repositories.GroupStudentRepository;
 import pl.HomeworkJustClick.Backend.Repositories.GroupTeacherRepository;
@@ -65,8 +63,8 @@ public class GroupStudentServiceImplement implements GroupStudentService{
 
     @Override
     public Boolean addStudentToGroup (int group_id, int student_id) {
-        int groupTeacherCheck = groupTeacherRepository.getGroupTeacherByTeacherAndGroup(student_id, group_id);
-        int groupStudentCheck = groupStudentRepository.getGroupStudentByStudentAndGroup(student_id, group_id);
+        int groupTeacherCheck = groupTeacherRepository.checkForTeacherInGroup(student_id, group_id);
+        int groupStudentCheck = groupStudentRepository.checkForStudentInGroup(student_id, group_id);
         if(groupTeacherCheck != 0 || groupStudentCheck != 0){
             return null;
         }
@@ -81,7 +79,7 @@ public class GroupStudentServiceImplement implements GroupStudentService{
 
     @Override
     public Boolean deleteStudentFromGroup (int group_id, int student_id) {
-        if (groupStudentRepository.getGroupStudentByStudentAndGroup(student_id, group_id) != 0){
+        if (groupStudentRepository.checkForStudentInGroup(student_id, group_id) != 0){
             GroupStudent groupStudent = groupStudentRepository.getGroupStudentObjectByStudentAndGroup(student_id, group_id);
             groupStudentRepository.deleteById(groupStudent.getId());
             return true;
@@ -92,7 +90,7 @@ public class GroupStudentServiceImplement implements GroupStudentService{
 
     @Override
     public Boolean checkForStudentInGroup(int student_id, int group_id) {
-        int groupStudentCheck = groupStudentRepository.getGroupStudentByStudentAndGroup(student_id, group_id);
+        int groupStudentCheck = groupStudentRepository.checkForStudentInGroup(student_id, group_id);
         return groupStudentCheck != 0;
     }
 }
