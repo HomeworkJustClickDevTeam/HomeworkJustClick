@@ -1,0 +1,86 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+
+.button-filled {
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    width: 288px;
+    height: 56px;
+    place-content: center;
+    align-items: center;
+    padding: 10px 48px;
+    border-radius: 10px;
+    border-style: none;
+    background-color: #6d8dff;
+  }
+
+ .button-filled:hover {
+    border-radius: 10px;
+    background-color: #7896ff;
+    box-shadow: 0px 1px 3px 1px #00000026, 0px 1px 2px 0px #0000004d;
+  }
+
+  .button-filled:active {
+    border-radius: 10px;
+    background-color: #7896ff;
+    box-shadow: none;
+  }
+
+  .button-outlined {
+    position: absolute;
+    left: 20px;
+    top: 96px;
+    width: 288px;
+    height: 56px;
+    place-content: center;
+    align-items: center;
+    padding: 10px 48px;
+    outline: solid 3px #6d8dff;
+    background-color: #fff;
+    outline-offset: -3px;
+    border-radius: 10px;
+  }
+
+  .button-outlined:hover {
+    outline: solid 3px #6d8dff;
+    outline-offset: -3px;
+    border-radius: 10px;
+    background-color: #eff0f4;
+    box-shadow: 0px 1px 3px 1px #00000026, 0px 1px 2px 0px #0000004d;
+  }
+
+  .button-outlined:active {
+    outline: solid 3px #6d8dff;
+    outline-offset: -3px;
+    border-radius: 10px;
+    background-color: #eef0fe80;
+  }
+
+  .button-outlined-text {
+    color: #6d8dff;
+    font-size: 28px;
+    line-height: 36px;
+    font-family: "Lato";
+    width: min-content;
+    height: min-content;
+    text-align: center;
+    align-items: center;
+    white-space: nowrap;
+    flex-direction: column;
+  }
+
+  .button-filled-text {
+    color: #fff;
+    font-size: 28px;
+    line-height: 36px;
+    font-family: "Lato";
+    width: min-content;
+    height: min-content;
+    text-align: center;
+    align-items: center;
+    white-space: nowrap;
+    flex-direction: column;
+  }
+
+
+  

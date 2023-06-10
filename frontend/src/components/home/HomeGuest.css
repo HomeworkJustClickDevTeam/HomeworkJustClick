@@ -1,0 +1,76 @@
+.button-login-pos {
+    left: 50%;
+    top: calc(50% - -27px);
+    transform: translate(-50%, -50%);
+  }
+.button-size {
+    width: 300px;
+    height: 56px;
+}
+.button-register-pos {
+    left: 50%;
+    top: calc(50% - -175px);
+    transform: translate(-50%, -50%);
+  }
+  .kolkoPoLewejStronie {
+    position: absolute;
+    left: 239px;
+    bottom: 164px;
+    width: 171px;
+    height: 170px;
+    overflow: visible;
+  }
+.kolkoPoPrawejStronie {
+    position: absolute;
+    right: -50px;
+    top: 130px;
+    width: 408px;
+    height: 371px;
+    overflow: visible;
+  }
+.homeworkJustClick {
+    color: #000;
+    font-size: 81px;
+    font-family: Lato;
+    position: absolute;
+    left: calc(50% - -0.5px);
+    top: calc(50% - 205.5px);
+    width: min-content;
+    height: min-content;
+    text-align: center;
+    align-items: center;
+    white-space: nowrap;
+    flex-direction: column;
+    transform: translate(-50%, -50%);
+  }
+  .prostoSzybkoWygodnie {
+    color: #000;
+    font-size: 36px;
+    line-height: 44px;
+    font-family: Lato;
+    position: absolute;
+    left: 50%;
+    top: calc(50% - 111px);
+    width: min-content;
+    height: min-content;
+    text-align: center;
+    align-items: center;
+    white-space: nowrap;
+    flex-direction: column;
+    transform: translate(-50%, -50%);
+  }
+  .nieMaszJeszczeKonta {
+    color: #000;
+    font-size: 16px;
+    line-height: 24px;
+    font-family: Lato;
+    position: absolute;
+    left: 50%;
+    top: calc(50% - -126.5px);
+    width: 288px;
+    height: 21px;
+    text-align: center;
+    align-items: center;
+    flex-direction: column;
+    transform: translate(-50%, -50%);
+  }
