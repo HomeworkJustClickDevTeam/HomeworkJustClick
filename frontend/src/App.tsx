@@ -25,6 +25,11 @@ import AssignmentsStudentDisplayed from "./components/assigments/assigmentDispla
 import SolutionsTypes from "./components/solution/SolutionsTypes"
 import Solution from "./components/solution/Solution"
 import './App.css'
+import Settings from "./components/user/settings/Settings";
+import General from "./components/user/settings/General";
+import Security from "./components/user/settings/Security";
+import Appearance from "./components/user/settings/Appearance";
+import MarkingTables from "./components/user/settings/MarkingTables";
 
 function App() {
   const initialState: ApplicationState = {
@@ -66,7 +71,7 @@ function App() {
       localStorage.removeItem("token")
       localStorage.removeItem("id")
     }
-  }, [state.loggedIn])
+  }, [state])
 
   return (
     <UserContext.Provider value={state}>
@@ -83,6 +88,26 @@ function App() {
                 <Route
                   path="/:id/assignments"
                   element={<AssignmentsStudentDisplayed />}
+                />
+                <Route
+                    path="/settings"
+                    element={<Settings />}
+                />
+                <Route
+                    path="/settings/general"
+                    element={<General />}
+                />
+                <Route
+                    path="/settings/security"
+                    element={<Security />}
+                />
+                <Route
+                    path="/settings/appearance"
+                    element={<Appearance />}
+                />
+                <Route
+                    path="/settings/markingTables"
+                    element={<MarkingTables />}
                 />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />

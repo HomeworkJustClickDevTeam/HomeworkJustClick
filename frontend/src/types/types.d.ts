@@ -6,6 +6,11 @@ interface RegisterUser {
   email: string
   password: string
 }
+interface newCredentials{
+  email: string | undefined
+  password: string | undefined
+  newPassword: string | undefined
+}
 
 interface LoginUser {
   email: string
