@@ -1,7 +1,12 @@
 package pl.HomeworkJustClick.Backend.Entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +19,7 @@ import pl.HomeworkJustClick.Backend.Enums.Role;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Builder
@@ -27,30 +33,76 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id", updatable = false, unique = true, nullable = false)
+    @Schema(example = "0")
     private int id;
 
     @Column(name = "email")
+    @Schema(example = "example@gmail.com")
     private String email;
 
     @JsonIgnore
     @Column(name = "password")
+    @Schema(example = "123123")
     private String password;
 
     @Column(name="isVerified")
+    @Schema(example = "true", allowableValues = {"true", "false"})
     private boolean isVerified;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
+    @Schema(description = "The values are listed in the same order as in backend, so you can use names or numbers 0-2.", implementation = Role.class, example = "USER")
     private Role role;
 
     @Column(name="index")
+    @Schema(example = "12345")
     private int index;
 
     @Column(name="firstname")
+    @Schema(example = "Example")
     private String firstname;
 
     @Column(name="lastname")
+    @Schema(example = "Exampler")
     private String lastname;
+
+    @Column(name="color")
+    @Schema(example = "0")
+    @Max(19)
+    @Min(0)
+    private int color;
+
+    @OneToMany(
+            mappedBy = "user",
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    @JsonIgnore
+    private List<Assignment> assignments = new ArrayList<>();
+
+    @OneToMany(
+            mappedBy = "user",
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    @JsonIgnore
+    private List<Solution> solutions = new ArrayList<>();
+
+    @OneToMany(
+            mappedBy = "user",
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    @JsonIgnore
+    private List<Evaluation> evaluations = new ArrayList<>();
+
+    @OneToMany(
+            mappedBy = "user",
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    @JsonIgnore
+    private List<Comment> comments = new ArrayList<>();
 
     @JsonIgnore
     @Override
@@ -75,6 +127,7 @@ public class User implements UserDetails {
     private List<GroupTeacher> groupTeachers = new ArrayList<>();
 
     @Override
+    @Schema(example = "exampleman1231")
     public String getUsername() {
         return email;
     }
@@ -103,7 +156,7 @@ public class User implements UserDetails {
         return true;
     }
 
-    public User(String email, String password, boolean isVerified, Role role, int index, String firstname, String surname) {
+    public User(String email, String password, boolean isVerified, Role role, int index, String firstname, String surname, int color) {
         this.email = email;
         this.password = password;
         this.isVerified = isVerified;
@@ -111,9 +164,22 @@ public class User implements UserDetails {
         this.index = index;
         this.firstname = firstname;
         this.lastname = surname;
+        this.color = color;
     }
 
-    public User(String email, String password, boolean isVerified, Role role, int index, String firstname, String lastname, List<GroupStudent> groupStudents, List<GroupTeacher> groupTeachers) {
+    public User(int id, String email, String password, boolean isVerified, Role role, int index, String firstname, String lastname, int color) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.isVerified = isVerified;
+        this.role = role;
+        this.index = index;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.color = color;
+    }
+
+    public User(String email, String password, boolean isVerified, Role role, int index, String firstname, String lastname, List<GroupStudent> groupStudents, List<GroupTeacher> groupTeachers, int color) {
         this.email = email;
         this.password = password;
         this.isVerified = isVerified;
@@ -123,10 +189,19 @@ public class User implements UserDetails {
         this.lastname = lastname;
         this.groupStudents = groupStudents;
         this.groupTeachers = groupTeachers;
+        this.color = color;
     }
 
     public int getId() {
         return id;
+    }
+
+    public List<Solution> getSolutions() {
+        return solutions;
+    }
+
+    public void setSolutions(List<Solution> solutions) {
+        this.solutions = solutions;
     }
 
     public void setId(int id) {
@@ -143,6 +218,14 @@ public class User implements UserDetails {
 
     public String getPassword() {
         return password;
+    }
+
+    public List<Evaluation> getEvaluations() {
+        return evaluations;
+    }
+
+    public void setEvaluations(List<Evaluation> evaluations) {
+        this.evaluations = evaluations;
     }
 
     public void setPassword(String password) {
@@ -189,6 +272,14 @@ public class User implements UserDetails {
         this.lastname = surname;
     }
 
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+    }
+
     public List<GroupStudent> getGroupStudents() {
         return groupStudents;
     }
@@ -203,5 +294,13 @@ public class User implements UserDetails {
 
     public void setGroupTeachers(List<GroupTeacher> groupTeachers) {
         this.groupTeachers = groupTeachers;
+    }
+
+    public List<Assignment> getAssignments() {
+        return assignments;
+    }
+
+    public void setAssignments(List<Assignment> assignments) {
+        this.assignments = assignments;
     }
 }

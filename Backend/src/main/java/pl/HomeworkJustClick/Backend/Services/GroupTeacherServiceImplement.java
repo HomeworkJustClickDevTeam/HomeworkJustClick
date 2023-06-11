@@ -1,32 +1,27 @@
 package pl.HomeworkJustClick.Backend.Services;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pl.HomeworkJustClick.Backend.Entities.Group;
 import pl.HomeworkJustClick.Backend.Entities.GroupTeacher;
-import pl.HomeworkJustClick.Backend.Entities.User;
 import pl.HomeworkJustClick.Backend.Repositories.GroupRepository;
 import pl.HomeworkJustClick.Backend.Repositories.GroupStudentRepository;
 import pl.HomeworkJustClick.Backend.Repositories.GroupTeacherRepository;
 import pl.HomeworkJustClick.Backend.Repositories.UserRepository;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class GroupTeacherServiceImplement implements GroupTeacherService{
 
-    @Autowired
-    GroupTeacherRepository groupTeacherRepository;
+    private final GroupTeacherRepository groupTeacherRepository;
 
-    @Autowired
-    GroupRepository groupRepository;
+    private final GroupRepository groupRepository;
 
-    @Autowired
-    UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    GroupStudentRepository groupStudentRepository;
+    private final GroupStudentRepository groupStudentRepository;
 
     @Override
     public List<GroupTeacher> getAll() {
@@ -34,12 +29,8 @@ public class GroupTeacherServiceImplement implements GroupTeacherService{
     }
 
     @Override
-    public GroupTeacher getById(int id) {
-        if (groupTeacherRepository.findById(id).isPresent()) {
-            return groupTeacherRepository.findById(id).get();
-        } else {
-            return null;
-        }
+    public Optional<GroupTeacher> getById(int id) {
+        return groupTeacherRepository.findById(id);
     }
 
     @Override
@@ -50,10 +41,10 @@ public class GroupTeacherServiceImplement implements GroupTeacherService{
 
     @Override
     public Boolean delete(int id) {
-        try {
+        if(groupTeacherRepository.existsById(id)) {
             groupTeacherRepository.deleteById(id);
             return true;
-        } catch (IllegalArgumentException e) {
+        } else  {
             return false;
         }
     }
@@ -66,15 +57,18 @@ public class GroupTeacherServiceImplement implements GroupTeacherService{
             groupTeacherRepository.save(groupTeacher);
             return true;
         } else {
-            return null;
+            return false;
         }
     }
 
     @Override
     public Boolean addTeacherToGroup (int group_id, int teacher_id) {
-        int groupTeacherCheck = groupTeacherRepository.getGroupTeacherByTeacherAndGroup(teacher_id, group_id);
-        int groupStudentCheck = groupStudentRepository.getGroupStudentByStudentAndGroup(teacher_id, group_id);
-        if (groupTeacherCheck == 0 && groupStudentCheck == 0 && groupRepository.findById(group_id).isPresent() && userRepository.findById(teacher_id).isPresent()) {
+        int groupTeacherCheck = groupTeacherRepository.checkForTeacherInGroup(teacher_id, group_id);
+        int groupStudentCheck = groupStudentRepository.checkForStudentInGroup(teacher_id, group_id);
+        if (groupTeacherCheck != 0 || groupStudentCheck != 0){
+            return null;
+        }
+        else if (groupRepository.findById(group_id).isPresent() && userRepository.findById(teacher_id).isPresent()) {
             GroupTeacher groupTeacher = new GroupTeacher(groupRepository.findById(group_id).get(), userRepository.findById(teacher_id).get(), "");
             groupTeacherRepository.save(groupTeacher);
             return true;
@@ -97,6 +91,12 @@ public class GroupTeacherServiceImplement implements GroupTeacherService{
     @Override
     public int countTeachersInGroup (int group_id) {
         return groupTeacherRepository.countTeachersInGroup(group_id);
+    }
+
+    @Override
+    public Boolean checkForTeacherInGroup(int teacher_id, int group_id) {
+        int groupTeacherCheck = groupTeacherRepository.checkForTeacherInGroup(teacher_id, group_id);
+        return groupTeacherCheck != 0;
     }
 
 }

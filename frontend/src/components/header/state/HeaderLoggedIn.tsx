@@ -15,6 +15,9 @@ function HeaderLoggedIn() {
       <Link to={`/${userState.userState.userId}/assignments`}>
         Moje zadanie domowe
       </Link>
+        <Link to={`/settings`}>
+            Ustawienia
+        </Link>
     </>
   )
 }
