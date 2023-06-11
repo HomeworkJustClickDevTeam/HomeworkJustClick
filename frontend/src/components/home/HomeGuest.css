@@ -12,7 +12,7 @@
     top: calc(50% - -175px);
     transform: translate(-50%, -50%);
   }
-  .kolkoPoLewejStronie {
+.kolkoPoLewejStronie {
     position: absolute;
     left: 239px;
     bottom: 164px;
@@ -26,7 +26,7 @@
     top: 130px;
     width: 408px;
     height: 371px;
-    overflow: visible;
+    overflow-x: hidden;
   }
 .homeworkJustClick {
     color: #000;
@@ -74,3 +74,7 @@
     flex-direction: column;
     transform: translate(-50%, -50%);
   }
+body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
