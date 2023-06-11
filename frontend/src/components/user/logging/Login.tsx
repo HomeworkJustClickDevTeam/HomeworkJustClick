@@ -42,7 +42,7 @@ const Login = () => {
 
   return (
     <>
-      <h1>Zaloguj</h1>
+      <h1 className='border-2 border-red-500 '>Zaloguj</h1>
       <form onSubmit={handleSubmit}>
         <input
           name="email"
@@ -53,7 +53,7 @@ const Login = () => {
         <input
           name="password"
           type="password"
-          placeholder="hasło"
+          placeholder="Hasło"
           onChange={handleChange}
         />
         <button type="submit">Zaloguj się</button>

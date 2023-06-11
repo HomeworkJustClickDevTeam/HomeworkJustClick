@@ -24,6 +24,7 @@ import AssignmentsTypes from "./components/assigments/AssignmentsTypes"
 import AssignmentsStudentDisplayed from "./components/assigments/assigmentDisplayer/AssignmentsStudentDisplayed"
 import SolutionsTypes from "./components/solution/SolutionsTypes"
 import Solution from "./components/solution/Solution"
+import './App.css'
 
 function App() {
   const initialState: ApplicationState = {

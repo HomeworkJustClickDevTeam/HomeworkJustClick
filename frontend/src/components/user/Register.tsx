@@ -37,7 +37,7 @@ const Register = () => {
   }
 
   return (
-    <>
+    <div>
       <h1>Dołącz do nas !</h1>
       <form onSubmit={handleSubmit}>
         <input
@@ -65,19 +65,19 @@ const Register = () => {
           type="password"
           name="password"
           value={user.password}
-          placeholder="Haslo"
+          placeholder="Hasło"
           onChange={handleChangeUser}
         />
         <input
           type="password"
           name="secondPassword"
           value={secondPassword}
-          placeholder="Powtorz haslo jeszcze raz"
+          placeholder="Powtórz hasło jeszcze raz"
           onChange={handleChangeSecondPassword}
         />
         <button type="submit">Zajerestruj się</button>
       </form>
-    </>
+    </div>
   )
 }
 export default Register
