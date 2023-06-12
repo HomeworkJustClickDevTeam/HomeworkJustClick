@@ -2535,4 +2535,82 @@ public class SolutionRepositoryTest {
         assertEquals(expectedList, actual);
 
     }
+
+    @Test
+    void itShouldReturn1() {
+        //given
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        Group group = new Group("Grupa", "opis", 5, false);
+        GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
+        GroupStudent groupStudent = new GroupStudent(group, user2, "");
+        Assignment assignment = new Assignment(user, group, "opis", OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 6, 15, 15, 0, 0, 0, ZoneOffset.UTC), "tytul", true, 100);
+        Assignment assignment2 = new Assignment(user, group, "opis", OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 30, 15, 0, 0, 0, ZoneOffset.UTC), "tytul", true, 100);
+        Solution solution = new Solution(user2, assignment2, group, OffsetDateTime.of(2023, 5, 16, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 16, 15, 0, 0, 0, ZoneOffset.UTC), "");
+        Solution solution2 = new Solution(user2, assignment, group, OffsetDateTime.of(2023, 5, 16, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 16, 15, 0, 0, 0, ZoneOffset.UTC), "");
+        Solution solution3 = new Solution(user3, assignment2, group, OffsetDateTime.of(2023, 5, 16, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 16, 15, 0, 0, 0, ZoneOffset.UTC), "");
+        Solution solution4 = new Solution(user3, assignment, group, OffsetDateTime.of(2023, 5, 16, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 16, 15, 0, 0, 0, ZoneOffset.UTC), "");
+        Evaluation evaluation = new Evaluation(10.0, user, solution, group, OffsetDateTime.now(), OffsetDateTime.now(), 10.0);
+        Evaluation evaluation2 = new Evaluation(10.0, user, solution2, group, OffsetDateTime.now(), OffsetDateTime.now(), 10.0);
+        userRepository.save(user);
+        userRepository.save(user2);
+        userRepository.save(user3);
+        groupRepository.save(group);
+        groupTeacherRepository.save(groupTeacher);
+        groupStudentRepository.save(groupStudent);
+        assignmentRepository.save(assignment);
+        assignmentRepository.save(assignment2);
+        solutionRepository.save(solution);
+        solutionRepository.save(solution2);
+        solutionRepository.save(solution3);
+        solutionRepository.save(solution4);
+        evaluationRepository.save(evaluation);
+        evaluationRepository.save(evaluation2);
+
+        //when
+        int actual = solutionRepository.checkForEvaluationToSolution(solution.getId());
+
+        //then
+        assertEquals(1, actual);
+    }
+
+    @Test
+    void itShouldReturn0() {
+        //given
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        Group group = new Group("Grupa", "opis", 5, false);
+        GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
+        GroupStudent groupStudent = new GroupStudent(group, user2, "");
+        Assignment assignment = new Assignment(user, group, "opis", OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 6, 15, 15, 0, 0, 0, ZoneOffset.UTC), "tytul", true, 100);
+        Assignment assignment2 = new Assignment(user, group, "opis", OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 30, 15, 0, 0, 0, ZoneOffset.UTC), "tytul", true, 100);
+        Solution solution = new Solution(user2, assignment2, group, OffsetDateTime.of(2023, 5, 16, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 16, 15, 0, 0, 0, ZoneOffset.UTC), "");
+        Solution solution2 = new Solution(user2, assignment, group, OffsetDateTime.of(2023, 5, 16, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 16, 15, 0, 0, 0, ZoneOffset.UTC), "");
+        Solution solution3 = new Solution(user3, assignment2, group, OffsetDateTime.of(2023, 5, 16, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 16, 15, 0, 0, 0, ZoneOffset.UTC), "");
+        Solution solution4 = new Solution(user3, assignment, group, OffsetDateTime.of(2023, 5, 16, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 16, 15, 0, 0, 0, ZoneOffset.UTC), "");
+        Evaluation evaluation = new Evaluation(10.0, user, solution, group, OffsetDateTime.now(), OffsetDateTime.now(), 10.0);
+        Evaluation evaluation2 = new Evaluation(10.0, user, solution2, group, OffsetDateTime.now(), OffsetDateTime.now(), 10.0);
+        userRepository.save(user);
+        userRepository.save(user2);
+        userRepository.save(user3);
+        groupRepository.save(group);
+        groupTeacherRepository.save(groupTeacher);
+        groupStudentRepository.save(groupStudent);
+        assignmentRepository.save(assignment);
+        assignmentRepository.save(assignment2);
+        solutionRepository.save(solution);
+        solutionRepository.save(solution2);
+        solutionRepository.save(solution3);
+        solutionRepository.save(solution4);
+        evaluationRepository.save(evaluation);
+        evaluationRepository.save(evaluation2);
+
+        //when
+        int actual = solutionRepository.checkForEvaluationToSolution(solution3.getId());
+
+        //then
+        assertEquals(0, actual);
+    }
 }

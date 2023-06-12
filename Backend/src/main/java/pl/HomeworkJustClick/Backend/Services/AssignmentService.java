@@ -86,4 +86,6 @@ public interface AssignmentService {
 
     public List<AssignmentResponseExtended> getDoneAssignmentsByStudentExtended(int student_id);
 
+    public boolean checkForSolutionToAssignment(int assignment_id);
+
 }

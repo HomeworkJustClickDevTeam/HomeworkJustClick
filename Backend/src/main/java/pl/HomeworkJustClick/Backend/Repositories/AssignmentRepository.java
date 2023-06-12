@@ -43,4 +43,6 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Integer>
     @Query(value = "select a.* from _assignment a join _group_student gs on a.group_id = gs.group_id where gs.user_id = :user_id", nativeQuery = true)
     List<Assignment> getAllAssignmentsByStudent(int user_id);
 
+    @Query(value = "select COUNT(*) from _assignment a join _solution s on a.id = s.assignment_id where a.id = :assignment_id", nativeQuery = true)
+    int checkForSolutionToAssignment(int assignment_id);
 }
