@@ -10,6 +10,8 @@ public interface UserService {
 
     public Optional<User> getById(int id);
 
+    Optional<User> getByEmail(String email);
+
     public Boolean add(User user);
 
     public Boolean update(int id, User updatedUser);
