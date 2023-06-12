@@ -80,6 +80,55 @@ public class EvaluationServiceImplement implements EvaluationService {
     }
 
     @Override
+    public List<EvaluationResponseExtended> getAllExtended() {
+        List<Evaluation> evaluationList = evaluationRepository.findAll();
+        List<EvaluationResponseExtended> responseList = new ArrayList<>();
+        evaluationList.forEach(evaluation -> {
+            responseList.add(buildEvaluationResponseExtended(evaluation));
+        });
+        return responseList;
+    }
+
+    @Override
+    public EvaluationResponseExtended getByIdExtended(int id) {
+        Optional<Evaluation> evaluationOptional = evaluationRepository.findById(id);
+        return evaluationOptional.map(this::buildEvaluationResponseExtended).orElse(null);
+    }
+
+    @Override
+    public EvaluationResponseExtended addExtended(Evaluation evaluation) {
+        entityManager.persist(evaluation);
+        return buildEvaluationResponseExtended(evaluation);
+    }
+
+    @Override
+    @Transactional
+    public EvaluationResponseExtended addWithUserAndSolutionExtended(Evaluation evaluation, int user_id, int solution_id) {
+        Optional<User> user = userRepository.findById(user_id);
+        Optional<Solution> solution = solutionRepository.findById(solution_id);
+        if(user.isPresent() && solution.isPresent()) {
+            List<User> userList = userRepository.getTeachersByGroupId(solution.get().getGroup().getId());
+            AtomicBoolean ok = new AtomicBoolean(false);
+            userList.forEach(user1 -> {
+                if (user1.getId() == user_id) {
+                    ok.set(true);
+                }
+            });
+            if(ok.get()) {
+                evaluation.setSolution(solution.get());
+                evaluation.setUser(user.get());
+                evaluation.setGroup(solution.get().getGroup());
+                entityManager.persist(evaluation);
+                return buildEvaluationResponseExtended(evaluation);
+            } else {
+                return EvaluationResponseExtended.builder().forbidden(true).build();
+            }
+        } else {
+            return EvaluationResponseExtended.builder().build();
+        }
+    }
+
+    @Override
     public Boolean delete(int id) {
         if(evaluationRepository.existsById(id)){
             evaluationRepository.deleteById(id);
@@ -178,6 +227,42 @@ public class EvaluationServiceImplement implements EvaluationService {
     public EvaluationResponse getEvaluationBySolution(int solution_id){
         Optional<Evaluation> evaluationOptional = evaluationRepository.getEvaluationBySolution(solution_id);
         return evaluationOptional.map(this::buildEvaluationResponse).orElse(null);
+    }
+
+    @Override
+    public List<EvaluationResponseExtended> getAllEvaluationsByStudentExtended(int student_id) {
+        List<Evaluation> evaluationList = evaluationRepository.getAllEvaluationsByStudent(student_id);
+        List<EvaluationResponseExtended> responseList = new ArrayList<>();
+        evaluationList.forEach(evaluation -> {
+            responseList.add(buildEvaluationResponseExtended(evaluation));
+        });
+        return responseList;
+    }
+
+    @Override
+    public List<EvaluationResponseExtended> getAllEvaluationsByStudentInGroupExtended(int student_id, int group_id){
+        List<Evaluation> evaluationList = evaluationRepository.getAllEvaluationsByStudentInGroup(student_id, group_id);
+        List<EvaluationResponseExtended> responseList = new ArrayList<>();
+        evaluationList.forEach(evaluation -> {
+            responseList.add(buildEvaluationResponseExtended(evaluation));
+        });
+        return responseList;
+    }
+
+    @Override
+    public List<EvaluationResponseExtended> getAllEvaluationsByAssignmentExtended(int assignment_id){
+        List<Evaluation> evaluationList = evaluationRepository.getEvaluationsByAssignment(assignment_id);
+        List<EvaluationResponseExtended> responseList = new ArrayList<>();
+        evaluationList.forEach(evaluation -> {
+            responseList.add(buildEvaluationResponseExtended(evaluation));
+        });
+        return responseList;
+    }
+
+    @Override
+    public EvaluationResponseExtended getEvaluationBySolutionExtended(int solution_id){
+        Optional<Evaluation> evaluationOptional = evaluationRepository.getEvaluationBySolution(solution_id);
+        return evaluationOptional.map(this::buildEvaluationResponseExtended).orElse(null);
     }
 
     private EvaluationResponse buildEvaluationResponse(Evaluation evaluation) {
