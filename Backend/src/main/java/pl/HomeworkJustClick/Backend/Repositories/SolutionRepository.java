@@ -58,4 +58,7 @@ public interface SolutionRepository extends JpaRepository<Solution, Integer> {
 
     @Query(value = "select s.* from _solution s left outer join _evaluation e on s.id = e.solution_id join _group_teacher gt on s.group_id = gt.group_id where e.id is not null and gt.user_id = :teacher_id", nativeQuery = true)
     List<Solution> getCheckedSolutionsByTeacher(int teacher_id);
+
+    @Query(value = "select COUNT(*) from _solution s join _evaluation e on s.id = e.solution_id where s.id = :solution_id", nativeQuery = true)
+    int checkForEvaluationToSolution(int solution_id);
 }

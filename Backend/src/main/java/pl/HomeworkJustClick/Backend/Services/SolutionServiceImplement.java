@@ -594,4 +594,9 @@ public class SolutionServiceImplement implements SolutionService{
                 .comment(solution.getComment())
                 .build();
     }
+
+    @Override
+    public boolean checkForEvaluationToSolution (int solution_id) {
+        return solutionRepository.checkForEvaluationToSolution(solution_id) != 0;
+    }
 }

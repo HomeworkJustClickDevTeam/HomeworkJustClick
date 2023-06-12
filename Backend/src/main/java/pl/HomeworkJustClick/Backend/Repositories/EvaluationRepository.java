@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import pl.HomeworkJustClick.Backend.Entities.Evaluation;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface EvaluationRepository extends JpaRepository<Evaluation, Integer> {
@@ -23,5 +24,5 @@ public interface EvaluationRepository extends JpaRepository<Evaluation, Integer>
     public List<Evaluation> getAllEvaluationsByStudentInGroup(int student_id, int group_id);
 
     @Query(value = "select e.* from _evaluation e join _solution s on e.solution_id = s.id where s.id = :solution_id", nativeQuery = true)
-    public Evaluation getEvaluationBySolution(int solution_id);
+    public Optional<Evaluation> getEvaluationBySolution(int solution_id);
 }

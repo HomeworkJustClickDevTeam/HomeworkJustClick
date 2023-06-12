@@ -585,4 +585,9 @@ public class AssignmentServiceImplement implements AssignmentService {
                 .build();
     }
 
+    @Override
+    public boolean checkForSolutionToAssignment(int assignment_id) {
+        return assignmentRepository.checkForSolutionToAssignment(assignment_id) != 0;
+    }
+
 }
