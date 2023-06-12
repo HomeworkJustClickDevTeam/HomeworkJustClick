@@ -112,7 +112,7 @@ public class GroupServiceImplement implements GroupService {
             if(!group.isArchived()) {
                 return 1;
             } else {
-                group.setArchived(true);
+                group.setArchived(false);
             }
             groupRepository.save(group);
             return 0;
