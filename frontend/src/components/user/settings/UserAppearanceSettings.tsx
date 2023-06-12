@@ -4,23 +4,17 @@ import userContext from "../../../UserContext";
 import Loading from "../../animations/Loading";
 import {AxiosError} from "axios";
 
-export default function Appearance() {
+export default function UserAppearanceSettings() {
     const [color, setColor] = useState<number | undefined>(undefined)
     const {loggedIn, userState} = useContext(userContext);
-    const [loading, setLoading] = useState<boolean>(true)
 
     const handleColorChange = async (event:React.ChangeEvent<HTMLInputElement>) => {
         setColor(+event.target.value)
         try{
             await postgresqlDatabase
                 .put(`/user/color/${userState.userId}`,
-                    +event.target.value,
-                    {
-                        headers:{
-                            Authorization: `Bearer ${userState.token}`,
-                        },
-                    }
-                ).catch((error:AxiosError) => {
+                    +event.target.value)
+                    .catch((error:AxiosError) => {
                     console.log("AXIOS ERROR: ", error)
                 })
         }
@@ -29,21 +23,11 @@ export default function Appearance() {
         }
     }
     useEffect(() => {
-        const getColor =  () => {
-            postgresqlDatabase
+        postgresqlDatabase
                 .get(`/user/${userState.userId}`)
                 .then(response => setColor(response.data.color))
                 .catch(() => setColor(undefined))
-        }
-        getColor()
-        setLoading(false)
     }, [userState.userId])
-    if(loading){
-        return <Loading></Loading>
-    }
-    if (!loggedIn) {
-        return <>Not log in</>
-    }
     return(
         <>
             <p>Wybierz swój kolor:</p>

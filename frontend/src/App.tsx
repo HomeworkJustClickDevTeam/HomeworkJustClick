@@ -24,11 +24,12 @@ import AssignmentsTypes from "./components/assigments/AssignmentsTypes"
 import AssignmentsStudentDisplayed from "./components/assigments/assigmentDisplayer/AssignmentsStudentDisplayed"
 import SolutionsTypes from "./components/solution/SolutionsTypes"
 import Solution from "./components/solution/Solution"
-import Settings from "./components/user/settings/Settings";
-import General from "./components/user/settings/General";
-import Security from "./components/user/settings/Security";
-import Appearance from "./components/user/settings/Appearance";
-import MarkingTables from "./components/user/settings/MarkingTables";
+import UserSettings from "./components/user/settings/UserSettings";
+import UserGeneralSettings from "./components/user/settings/UserGeneralSettings";
+import UserSecuritySettings from "./components/user/settings/UserSecuritySettings";
+import UserAppearanceSettings from "./components/user/settings/UserAppearanceSettings";
+import UserMarkingTablesSettings from "./components/user/settings/UserMarkingTablesSettings";
+import GroupSettings from "./components/group/settings/GroupSettings";
 
 function App() {
   const initialState: ApplicationState = {
@@ -90,28 +91,29 @@ function App() {
                 />
                 <Route
                     path="/settings"
-                    element={<Settings />}
+                    element={<UserSettings />}
                 />
                 <Route
                     path="/settings/general"
-                    element={<General />}
+                    element={<UserGeneralSettings />}
                 />
                 <Route
                     path="/settings/security"
-                    element={<Security />}
+                    element={<UserSecuritySettings />}
                 />
                 <Route
                     path="/settings/appearance"
-                    element={<Appearance />}
+                    element={<UserAppearanceSettings />}
                 />
                 <Route
                     path="/settings/markingTables"
-                    element={<MarkingTables />}
+                    element={<UserMarkingTablesSettings />}
                 />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/create/group" element={<CreateGroup />} />
                 <Route path="/group/:id" element={<Group />}>
+                  <Route path="settings" element = {<GroupSettings/>}/>
                   <Route path="users" element={<Users />} />
                   <Route
                     path="assignments"

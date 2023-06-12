@@ -5,32 +5,23 @@ import {newCredentials} from "../../../types/types"
 import postgresqlDatabase from "../../../services/postgresDatabase";
 import { AxiosError } from "axios";
 
-export default function Security(): JSX.Element{
-    const {loggedIn, userState} = useContext(userContext);
-    const [loading, setLoading] = useState<boolean>(false)
+export default function UserSecuritySettings(): JSX.Element{
     const [newCredentials, setNewCredentials] = useState<newCredentials>({
         "email": undefined,
         "password": undefined,
         "newPassword": undefined})
-    const [newPasswordAppr, setNewPasswordAppr] = useState("")
+    const [newPasswordApproval, setNewPasswordApproval] = useState("")
 
     const handleSubmit = async (event:React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         console.log(newCredentials)
-        if((newCredentials.newPassword === newPasswordAppr) && ((typeof newCredentials.password || typeof newCredentials.newPassword || typeof newPasswordAppr) !== undefined)){
+        if((newCredentials.newPassword === newPasswordApproval) && ((typeof newCredentials.password || typeof newCredentials.newPassword || typeof newPasswordApproval) !== undefined)){
             await postgresqlDatabase
-                .post("/auth/changePassword",
-                newCredentials)
+                .post("/auth/changePassword", newCredentials)
                 .catch((error:AxiosError) => {
                     console.log(error)
                 })
         }
-    }
-    if(loading){
-        return <Loading></Loading>
-    }
-    if (!loggedIn) {
-        return <>Not log in</>
     }
     return(
         <form onSubmit={handleSubmit}>
@@ -65,7 +56,7 @@ export default function Security(): JSX.Element{
                      }/>
             <br/>
             <label htmlFor="newPasswordApproval">Potwierdź nowe hasło: </label>
-            <input type="password" id="newPasswordApproval" name="passwordApproval" onChange={(event) => {setNewPasswordAppr(event.target.value)}}/><br/>
+            <input type="password" id="newPasswordApproval" name="passwordApproval" onChange={(event) => {setNewPasswordApproval(event.target.value)}}/><br/>
             <input type="submit" value="Potwierdź"/>
         </form>
     )

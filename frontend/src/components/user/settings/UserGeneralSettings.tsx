@@ -4,22 +4,15 @@ import React, {useContext, useEffect, useState} from "react";
 import postgresqlDatabase from "../../../services/postgresDatabase";
 import {AxiosError} from "axios";
 
-export default function General(){
+export default function UserGeneralSettings(){
     const {loggedIn, userState} = useContext(userContext);
-    const [loading, setLoading] = useState<boolean>(true)
     const [index, setIndex] = useState<number| undefined>(undefined)
 
 
     const handleIndexSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
             await postgresqlDatabase
-                .put(`/user/index/${userState.userId}`,
-                index,
-                {
-                    headers:{
-                        Authorization: `Bearer ${userState.token}`,
-                    },
-                })
+                .put(`/user/index/${userState.userId}`, index)
                 .catch((error:AxiosError) => {
                     console.log(error)
                 })
@@ -27,21 +20,11 @@ export default function General(){
     }
 
     useEffect(() => {
-        const getIndex =  () => {
-            postgresqlDatabase
+        postgresqlDatabase
                 .get(`/user/${userState.userId}`)
                 .then(response => setIndex(response.data.index))
                 .catch(() => setIndex(undefined))
-        }
-        getIndex()
-        setLoading(false)
     }, [userState.userId])
-    if(loading){
-        return <Loading></Loading>
-    }
-    if (!loggedIn) {
-        return <>Not log in</>
-    }
     return(
         <>
             <form onSubmit={handleIndexSubmit}>

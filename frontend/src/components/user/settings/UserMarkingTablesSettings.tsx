@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function MarkingTables(){
+export default function UserMarkingTablesSettings(){
     return(
         <>
 

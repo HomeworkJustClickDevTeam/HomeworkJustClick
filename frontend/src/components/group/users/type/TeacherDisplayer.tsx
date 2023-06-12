@@ -14,7 +14,7 @@ function TeacherDisplayer({ id }: GroupProp) {
         setTeachers(teacher)
       })
       .catch((e) => console.log(e))
-  }, [])
+  }, [id])
   return (
     <div>
       <h1>Teachers:</h1>

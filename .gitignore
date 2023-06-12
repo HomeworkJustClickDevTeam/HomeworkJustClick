@@ -6,3 +6,5 @@ frontend/.idea/
 frontend/node_modules/
 
 Backend/target/
+
+frontend/frontend.iml
