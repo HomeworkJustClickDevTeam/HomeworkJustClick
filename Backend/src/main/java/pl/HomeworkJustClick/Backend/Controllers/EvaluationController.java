@@ -49,7 +49,9 @@ public class EvaluationController {
                             array = @ArraySchema(schema = @Schema(implementation = Evaluation.class)))
             )
     )
-    public List<Evaluation> getAll(){return evaluationService.getAll();}
+    public List<EvaluationResponse> getAll(){
+        return evaluationService.getAll();
+    }
 
     @Operation(
             summary = "Returns evaluation by it's id.",
@@ -69,9 +71,13 @@ public class EvaluationController {
             }
     )
     @GetMapping("/evaluations/{evaluation_id}")
-    public ResponseEntity<Evaluation> getById(@PathVariable("evaluation_id") int id){
-        Optional<Evaluation> evaluation = evaluationService.getById(id);
-        return evaluation.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public ResponseEntity<EvaluationResponse> getById(@PathVariable("evaluation_id") int id){
+        EvaluationResponse evaluation = evaluationService.getById(id);
+        if(evaluation != null) {
+            return new ResponseEntity<>(evaluation, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @PostMapping("/evaluation")
@@ -232,8 +238,8 @@ public class EvaluationController {
                     )
             }
     )
-    public ResponseEntity<List<Evaluation>> getAllEvaluationsByStudent(@PathVariable("student_id") int student_id) {
-        List<Evaluation> response = evaluationService.getAllEvaluationsByStudent(student_id);
+    public ResponseEntity<List<EvaluationResponse>> getAllEvaluationsByStudent(@PathVariable("student_id") int student_id) {
+        List<EvaluationResponse> response = evaluationService.getAllEvaluationsByStudent(student_id);
         if(response.isEmpty()){
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         }
@@ -260,8 +266,8 @@ public class EvaluationController {
             }
     )
     @GetMapping("/evaluations/byStudentAndGroup/{student_id}/{group_id}")
-    public ResponseEntity<List<Evaluation>> getAllEvaluationsByStudentInGroup(@PathVariable("student_id") int student_id, @PathVariable("group_id") int group_id) {
-        List<Evaluation> response = evaluationService.getAllEvaluationsByStudentInGroup(student_id, group_id);
+    public ResponseEntity<List<EvaluationResponse>> getAllEvaluationsByStudentInGroup(@PathVariable("student_id") int student_id, @PathVariable("group_id") int group_id) {
+        List<EvaluationResponse> response = evaluationService.getAllEvaluationsByStudentInGroup(student_id, group_id);
         if(response.isEmpty()){
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         }
@@ -289,8 +295,8 @@ public class EvaluationController {
             }
     )
     @GetMapping("/evaluations/byAssignment/{assignment_id}")
-    public ResponseEntity<List<Evaluation>> getAllEvaluationsByAssignment(@PathVariable("assignment_id") int assignment_id) {
-        List<Evaluation> response = evaluationService.getAllEvaluationsByAssignment(assignment_id);
+    public ResponseEntity<List<EvaluationResponse>> getAllEvaluationsByAssignment(@PathVariable("assignment_id") int assignment_id) {
+        List<EvaluationResponse> response = evaluationService.getAllEvaluationsByAssignment(assignment_id);
         if(response.isEmpty()){
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         }
@@ -319,8 +325,8 @@ public class EvaluationController {
     )
 
     @GetMapping("/evaluation/bySolution/{solution_id}")
-    public ResponseEntity<Evaluation> getEvaluationBySolution(@PathVariable("solution_id") int solution_id) {
-        Evaluation response = evaluationService.getEvaluationBySolution(solution_id);
+    public ResponseEntity<EvaluationResponse> getEvaluationBySolution(@PathVariable("solution_id") int solution_id) {
+        EvaluationResponse response = evaluationService.getEvaluationBySolution(solution_id);
         if(response != null){
             return new ResponseEntity<>(response, HttpStatus.OK);
         }

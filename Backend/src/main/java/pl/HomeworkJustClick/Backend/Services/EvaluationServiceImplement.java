@@ -5,13 +5,15 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.HomeworkJustClick.Backend.Entities.Evaluation;
+import pl.HomeworkJustClick.Backend.Entities.Group;
 import pl.HomeworkJustClick.Backend.Entities.Solution;
 import pl.HomeworkJustClick.Backend.Entities.User;
 import pl.HomeworkJustClick.Backend.Repositories.EvaluationRepository;
 import pl.HomeworkJustClick.Backend.Repositories.SolutionRepository;
 import pl.HomeworkJustClick.Backend.Repositories.UserRepository;
-import pl.HomeworkJustClick.Backend.Responses.EvaluationResponse;
+import pl.HomeworkJustClick.Backend.Responses.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -29,28 +31,25 @@ public class EvaluationServiceImplement implements EvaluationService {
     private final SolutionRepository solutionRepository;
 
     @Override
-    public List<Evaluation> getAll() {
-        return evaluationRepository.findAll();
+    public List<EvaluationResponse> getAll() {
+        List<Evaluation> evaluationList = evaluationRepository.findAll();
+        List<EvaluationResponse> responseList = new ArrayList<>();
+        evaluationList.forEach(evaluation -> {
+            responseList.add(buildEvaluationResponse(evaluation));
+        });
+        return responseList;
     }
 
     @Override
-    public Optional<Evaluation> getById(int id) {
-        return evaluationRepository.findById(id);
+    public EvaluationResponse getById(int id) {
+        Optional<Evaluation> evaluationOptional = evaluationRepository.findById(id);
+        return evaluationOptional.map(this::buildEvaluationResponse).orElse(null);
     }
 
     @Override
     public EvaluationResponse add(Evaluation evaluation) {
         entityManager.persist(evaluation);
-        return EvaluationResponse.builder()
-                .id(evaluation.getId())
-                .result(evaluation.getResult())
-                .userId(evaluation.getUser().getId())
-                .solutionId(evaluation.getSolution().getId())
-                .groupId(evaluation.getGroup().getId())
-                .creationDatetime(evaluation.getCreationDatetime())
-                .lastModifiedDatetime(evaluation.getLastModifiedDatetime())
-                .grade(evaluation.getGrade())
-                .build();
+        return buildEvaluationResponse(evaluation);
     }
 
     @Override
@@ -71,16 +70,7 @@ public class EvaluationServiceImplement implements EvaluationService {
                 evaluation.setUser(user.get());
                 evaluation.setGroup(solution.get().getGroup());
                 entityManager.persist(evaluation);
-                return EvaluationResponse.builder()
-                        .id(evaluation.getId())
-                        .result(evaluation.getResult())
-                        .userId(evaluation.getUser().getId())
-                        .solutionId(evaluation.getSolution().getId())
-                        .groupId(evaluation.getGroup().getId())
-                        .creationDatetime(evaluation.getCreationDatetime())
-                        .lastModifiedDatetime(evaluation.getLastModifiedDatetime())
-                        .grade(evaluation.getGrade())
-                        .build();
+                return buildEvaluationResponse(evaluation);
             } else {
                 return EvaluationResponse.builder().forbidden(true).build();
             }
@@ -155,23 +145,94 @@ public class EvaluationServiceImplement implements EvaluationService {
     }
 
     @Override
-    public List<Evaluation> getAllEvaluationsByStudent(int student_id) {
-        return evaluationRepository.getAllEvaluationsByStudent(student_id);
+    public List<EvaluationResponse> getAllEvaluationsByStudent(int student_id) {
+        List<Evaluation> evaluationList = evaluationRepository.getAllEvaluationsByStudent(student_id);
+        List<EvaluationResponse> responseList = new ArrayList<>();
+        evaluationList.forEach(evaluation -> {
+            responseList.add(buildEvaluationResponse(evaluation));
+        });
+        return responseList;
     }
 
     @Override
-    public List<Evaluation> getAllEvaluationsByStudentInGroup(int student_id, int group_id){
-        return evaluationRepository.getAllEvaluationsByStudentInGroup(student_id, group_id);
+    public List<EvaluationResponse> getAllEvaluationsByStudentInGroup(int student_id, int group_id){
+        List<Evaluation> evaluationList = evaluationRepository.getAllEvaluationsByStudentInGroup(student_id, group_id);
+        List<EvaluationResponse> responseList = new ArrayList<>();
+        evaluationList.forEach(evaluation -> {
+            responseList.add(buildEvaluationResponse(evaluation));
+        });
+        return responseList;
     }
 
     @Override
-    public List<Evaluation> getAllEvaluationsByAssignment(int assignment_id){
-        return evaluationRepository.getEvaluationsByAssignment(assignment_id);
+    public List<EvaluationResponse> getAllEvaluationsByAssignment(int assignment_id){
+        List<Evaluation> evaluationList = evaluationRepository.getEvaluationsByAssignment(assignment_id);
+        List<EvaluationResponse> responseList = new ArrayList<>();
+        evaluationList.forEach(evaluation -> {
+            responseList.add(buildEvaluationResponse(evaluation));
+        });
+        return responseList;
     }
 
     @Override
-    public Evaluation getEvaluationBySolution(int solution_id){
-        return evaluationRepository.getEvaluationBySolution(solution_id);
+    public EvaluationResponse getEvaluationBySolution(int solution_id){
+        Optional<Evaluation> evaluationOptional = evaluationRepository.getEvaluationBySolution(solution_id);
+        return evaluationOptional.map(this::buildEvaluationResponse).orElse(null);
     }
 
+    private EvaluationResponse buildEvaluationResponse(Evaluation evaluation) {
+        return EvaluationResponse.builder()
+                .id(evaluation.getId())
+                .result(evaluation.getResult())
+                .userId(evaluation.getUser().getId())
+                .solutionId(evaluation.getSolution().getId())
+                .groupId(evaluation.getGroup().getId())
+                .creationDatetime(evaluation.getCreationDatetime())
+                .lastModifiedDatetime(evaluation.getLastModifiedDatetime())
+                .grade(evaluation.getGrade())
+                .build();
+    }
+
+    private EvaluationResponseExtended buildEvaluationResponseExtended(Evaluation evaluation) {
+        User user = evaluation.getUser();
+        UserResponse userResponse = UserResponse.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .role(user.getRole())
+                .index(user.getIndex())
+                .firstname(user.getFirstname())
+                .lastname(user.getLastname())
+                .color(user.getColor())
+                .username(user.getUsername())
+                .verified(user.isVerified())
+                .build();
+        Solution solution = evaluation.getSolution();
+        SolutionResponse solutionResponse = SolutionResponse.builder()
+                .id(solution.getId())
+                .userId(solution.getUser().getId())
+                .groupId(solution.getGroup().getId())
+                .assignmentId(solution.getAssignment().getId())
+                .creationDateTime(solution.getCreationDatetime())
+                .lastModifiedDatetime(solution.getLastModifiedDatetime())
+                .comment(solution.getComment())
+                .build();
+        Group group = evaluation.getGroup();
+        GroupResponse groupResponse = GroupResponse.builder()
+                .id(group.getId())
+                .name(group.getName())
+                .description(group.getDescription())
+                .color(group.getColor())
+                .isArchived(group.isArchived())
+                .build();
+        return EvaluationResponseExtended.builder()
+                .id(evaluation.getId())
+                .result(evaluation.getResult())
+                .user(userResponse)
+                .solution(solutionResponse)
+                .group(groupResponse)
+                .creationDatetime(evaluation.getCreationDatetime())
+                .lastModifiedDatetime(evaluation.getLastModifiedDatetime())
+                .grade(evaluation.getGrade())
+                .build();
+    }
 }

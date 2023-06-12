@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface EvaluationService {
-    List<Evaluation> getAll();
+    List<EvaluationResponse> getAll();
 
-    Optional<Evaluation> getById(int id);
+    EvaluationResponse getById(int id);
 
     EvaluationResponse add(Evaluation evaluation);
 
@@ -26,12 +26,12 @@ public interface EvaluationService {
 
     Boolean changeGradeById(int id, Double grade);
 
-    public List<Evaluation> getAllEvaluationsByStudent(int student_id);
+    public List<EvaluationResponse> getAllEvaluationsByStudent(int student_id);
 
-    public List<Evaluation> getAllEvaluationsByStudentInGroup(int student_id, int group_id);
+    public List<EvaluationResponse> getAllEvaluationsByStudentInGroup(int student_id, int group_id);
 
-    public List<Evaluation> getAllEvaluationsByAssignment(int assignment_id);
+    public List<EvaluationResponse> getAllEvaluationsByAssignment(int assignment_id);
 
-    public Evaluation getEvaluationBySolution(int solution_id);
+    public EvaluationResponse getEvaluationBySolution(int solution_id);
 
 }

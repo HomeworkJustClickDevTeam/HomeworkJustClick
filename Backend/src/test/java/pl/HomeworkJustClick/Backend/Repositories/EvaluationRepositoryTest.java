@@ -12,9 +12,9 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 public class EvaluationRepositoryTest {
@@ -632,10 +632,11 @@ public class EvaluationRepositoryTest {
 
 
         //when
-        Evaluation actual = evaluationRepository.getEvaluationBySolution(solution.getId());
+        Optional<Evaluation> actual = evaluationRepository.getEvaluationBySolution(solution.getId());
 
         //then
-        assertEquals(evaluation, actual);
+        assertTrue(actual.isPresent());
+        assertEquals(evaluation, actual.get());
 
     }
 
@@ -679,10 +680,10 @@ public class EvaluationRepositoryTest {
 
 
         //when
-        Evaluation actual = evaluationRepository.getEvaluationBySolution(solution.getId()+1337);
+        Optional<Evaluation> actual = evaluationRepository.getEvaluationBySolution(solution.getId()+1337);
 
         //then
-        assertNull(actual);
+        assertTrue(actual.isEmpty());
 
     }
 }
