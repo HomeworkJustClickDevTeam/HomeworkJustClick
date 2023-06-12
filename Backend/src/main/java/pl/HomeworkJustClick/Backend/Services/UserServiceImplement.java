@@ -28,6 +28,11 @@ public class UserServiceImplement implements UserService{
     }
 
     @Override
+    public Optional<User> getByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    @Override
     public Boolean add(User user) {
         userRepository.save(user);
         return true;

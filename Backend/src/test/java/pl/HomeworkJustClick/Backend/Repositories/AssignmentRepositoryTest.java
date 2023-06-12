@@ -1002,4 +1002,54 @@ public class AssignmentRepositoryTest {
         //then
         assertEquals(expectedList, actual);
     }
+
+    @Test
+    void itShouldReturn1() {
+        //given
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
+        Group group = new Group("Grupa", "opis",5,false);
+        GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
+        GroupStudent groupStudent = new GroupStudent(group, user2, "");
+        Assignment assignment = new Assignment(user,group,"opis", OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,6,15,15,0,0,0, ZoneOffset.UTC),"tytul",true,100);
+        Assignment assignment2 = new Assignment(user,group,"opis", OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,30,15,0,0,0, ZoneOffset.UTC),"tytul",true,100);
+        Solution solution = new Solution(user2, assignment, group, OffsetDateTime.of(2023,5,16,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,16,15,0,0,0, ZoneOffset.UTC), "");
+        userRepository.save(user);
+        userRepository.save(user2);
+        groupRepository.save(group);
+        groupTeacherRepository.save(groupTeacher);
+        groupStudentRepository.save(groupStudent);
+        assignmentRepository.save(assignment);
+        assignmentRepository.save(assignment2);
+        solutionRepository.save(solution);
+        //when
+        int actual = assignmentRepository.checkForSolutionToAssignment(assignment.getId());
+        //then
+        assertEquals(1, actual);
+    }
+
+    @Test
+    void itShouldReturn0() {
+        //given
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
+        Group group = new Group("Grupa", "opis",5,false);
+        GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
+        GroupStudent groupStudent = new GroupStudent(group, user2, "");
+        Assignment assignment = new Assignment(user,group,"opis", OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,6,15,15,0,0,0, ZoneOffset.UTC),"tytul",true,100);
+        Assignment assignment2 = new Assignment(user,group,"opis", OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,30,15,0,0,0, ZoneOffset.UTC),"tytul",true,100);
+        Solution solution = new Solution(user2, assignment, group, OffsetDateTime.of(2023,5,16,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,16,15,0,0,0, ZoneOffset.UTC), "");
+        userRepository.save(user);
+        userRepository.save(user2);
+        groupRepository.save(group);
+        groupTeacherRepository.save(groupTeacher);
+        groupStudentRepository.save(groupStudent);
+        assignmentRepository.save(assignment);
+        assignmentRepository.save(assignment2);
+        solutionRepository.save(solution);
+        //when
+        int actual = assignmentRepository.checkForSolutionToAssignment(assignment2.getId());
+        //then
+        assertEquals(0, actual);
+    }
 }

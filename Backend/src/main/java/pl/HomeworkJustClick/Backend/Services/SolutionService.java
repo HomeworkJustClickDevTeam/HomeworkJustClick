@@ -90,4 +90,6 @@ public interface SolutionService {
     List<SolutionResponseExtended> getUncheckedSolutionsByTeacherExtended(int teacher_id);
 
     List<SolutionResponseExtended> getCheckedSolutionsByTeacherExtended(int teacher_id);
+
+    public boolean checkForEvaluationToSolution (int solution_id);
 }

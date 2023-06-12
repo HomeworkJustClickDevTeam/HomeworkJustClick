@@ -1031,4 +1031,22 @@ public class AssignmentController {
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
+
+    @GetMapping("/assignment/checkForSolution/{assignment_id}")
+    @Operation(
+            summary = "Checks if assignment with given id has any solution attached to it. Returns true if so, false otherwise. False may also indicate that there is no assignment in the DB with given id.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK.",
+                            content = @Content(
+                                    mediaType = "string",
+                                    schema = @Schema(implementation = String.class)
+                            )
+                    )
+            }
+    )
+    public ResponseEntity<Boolean> checkForSolutionToAssignment(@PathVariable("assignment_id") int id) {
+        return new ResponseEntity<>(assignmentService.checkForSolutionToAssignment(id), HttpStatus.OK);
+    }
 }

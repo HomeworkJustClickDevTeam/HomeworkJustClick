@@ -16,8 +16,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
+import pl.HomeworkJustClick.Backend.Auth.ChangePasswordRequest;
 import pl.HomeworkJustClick.Backend.Entities.Group;
 import pl.HomeworkJustClick.Backend.Entities.User;
+import pl.HomeworkJustClick.Backend.Responses.AuthenticationResponse;
+import pl.HomeworkJustClick.Backend.Services.AuthenticationService;
 import pl.HomeworkJustClick.Backend.Services.GroupTeacherService;
 import pl.HomeworkJustClick.Backend.Services.UserService;
 
@@ -42,7 +45,7 @@ public class UserController {
 
     private final UserService userService;
 
-    private final GroupTeacherService groupTeacherService;
+    private final AuthenticationService authenticationService;
 
     @GetMapping("/users")
     @Operation(summary = "Returns list of all users in DB.",
@@ -256,5 +259,44 @@ public class UserController {
         }
     }
 
+    @PostMapping("/changePassword")
+    @Operation(
+            summary = "Allows user to change his password",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Email not verified.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = AuthenticationResponse.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Password incorrect.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = AuthenticationResponse.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "User with this email is missing in DB.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = AuthenticationResponse.class)
+                            )
+                    )
+            }
+    )
+    public ResponseEntity<AuthenticationResponse> changePassword(@RequestBody ChangePasswordRequest request) {
+        AuthenticationResponse response = authenticationService.changePassword(request);
+        return switch (response.getMessage()) {
+            case "ok" -> new ResponseEntity<>(response, HttpStatus.OK);
+            case "User not found!" -> new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            case "Password incorrect!" -> new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            default -> new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+        };
+    }
 
 }
