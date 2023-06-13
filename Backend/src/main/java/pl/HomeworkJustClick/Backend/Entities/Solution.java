@@ -47,6 +47,10 @@ public class Solution {
     @JsonIgnore
     private List<File> files = new ArrayList<>();
 
+    @OneToMany(mappedBy = "solution", orphanRemoval = true)
+    @JsonIgnore
+    private List<Evaluation> evaluations = new ArrayList<>();
+
     @Column(name = "creationDatetime", updatable = false, nullable = false)
     @CreationTimestamp
     private OffsetDateTime creationDatetime;
