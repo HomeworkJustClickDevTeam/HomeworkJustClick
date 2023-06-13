@@ -24,6 +24,12 @@ import AssignmentsTypes from "./components/assigments/AssignmentsTypes"
 import AssignmentsStudentDisplayed from "./components/assigments/assigmentDisplayer/AssignmentsStudentDisplayed"
 import SolutionsTypes from "./components/solution/SolutionsTypes"
 import Solution from "./components/solution/Solution"
+import UserSettings from "./components/user/settings/UserSettings";
+import UserGeneralSettings from "./components/user/settings/UserGeneralSettings";
+import UserSecuritySettings from "./components/user/settings/UserSecuritySettings";
+import UserAppearanceSettings from "./components/user/settings/UserAppearanceSettings";
+import UserMarkingTablesSettings from "./components/user/settings/UserMarkingTablesSettings";
+import GroupSettings from "./components/group/settings/GroupSettings";
 
 function App() {
   const initialState: ApplicationState = {
@@ -65,7 +71,7 @@ function App() {
       localStorage.removeItem("token")
       localStorage.removeItem("id")
     }
-  }, [state.loggedIn])
+  }, [state])
 
   return (
     <UserContext.Provider value={state}>
@@ -83,10 +89,31 @@ function App() {
                   path="/:id/assignments"
                   element={<AssignmentsStudentDisplayed />}
                 />
+                <Route
+                    path="/settings"
+                    element={<UserSettings />}
+                />
+                <Route
+                    path="/settings/general"
+                    element={<UserGeneralSettings />}
+                />
+                <Route
+                    path="/settings/security"
+                    element={<UserSecuritySettings />}
+                />
+                <Route
+                    path="/settings/appearance"
+                    element={<UserAppearanceSettings />}
+                />
+                <Route
+                    path="/settings/markingTables"
+                    element={<UserMarkingTablesSettings />}
+                />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/create/group" element={<CreateGroup />} />
                 <Route path="/group/:id" element={<Group />}>
+                  <Route path="settings" element = {<GroupSettings/>}/>
                   <Route path="users" element={<Users />} />
                   <Route
                     path="assignments"

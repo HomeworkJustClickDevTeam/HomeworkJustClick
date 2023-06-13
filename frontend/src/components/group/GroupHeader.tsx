@@ -9,6 +9,7 @@ function GroupHeader() {
       <header>
         <Link to="assignments"> Zadania</Link>
         <Link to="users"> Osoby </Link>
+
         {role === "Student" && <Link to="#">Oceny</Link>}
         {role === "Student" ? (
           <Link to="assignments/todo">Do wykonania</Link>
@@ -25,6 +26,7 @@ function GroupHeader() {
         ) : (
           <Link to="solutions/late">Spóznione</Link>
         )}
+        <Link to="settings">Ustawienia</Link>
       </header>
     </>
   )
