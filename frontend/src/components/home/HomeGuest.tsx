@@ -2,8 +2,8 @@ import { Link } from "react-router-dom"
 
 function HomeGuest() {
   return (
-    <div className='sm:flex w-screen flex-col items-center text-center font-lato font-normal text-sm'>
-        <div className='pt-[20vh] pb-8 md:pb-[8vh] max-w-sm'>
+    <div className='flex w-screen flex-col items-center text-center font-lato font-normal text-sm'>
+        <div className='pt-[20vh] pb-8 xl:pb-[8vh] max-w-sm'>
             <h1 className='text-3xl xl:text-[81px] font-medium pb-1 tracking-wide '>HomeworkJustClick</h1>
             <p className='text-s xl:text-[36px] font-medium '>Prosto, szybko, wygodnie!</p>
         </div>
