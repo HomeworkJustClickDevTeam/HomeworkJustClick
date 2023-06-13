@@ -41,7 +41,7 @@ const Login = () => {
   }
 
   return (
-    <div className='flex w-screen flex-col items-center text-center font-lato font-normal'>
+    <div className='flex w-screen flex-col items-center text-center font-lato text-sm xl:text-lg'>
       <h1 className='pt-[15vh] pb-6 xl:pb-[6vh] text-2xl xl:text-[64px]'>Zaloguj się</h1>
       <form onSubmit={handleSubmit} className='flex flex-col items-center'>
         <input
