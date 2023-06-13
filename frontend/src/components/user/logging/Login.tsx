@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useContext, useState } from "react"
 import postgresqlDatabase from "../../../services/postgresDatabase"
-import { useNavigate } from "react-router-dom"
+import {Link, useNavigate} from "react-router-dom"
 import { Action, LoginUser, userState } from "../../../types/types"
 import DispatchContext from "../../../DispatchContext"
 
@@ -41,24 +41,31 @@ const Login = () => {
   }
 
   return (
-    <>
-      <h1 className='border-2 border-red-500 '>Zaloguj</h1>
-      <form onSubmit={handleSubmit}>
+    <div className='flex w-screen flex-col items-center text-center font-lato font-normal text-sm'>
+      <h1 className='pt-24 pb-6 max-w-sm text-2xl font-medium pb-1'>Zaloguj się</h1>
+      <form onSubmit={handleSubmit} className='flex flex-col items-center'>
         <input
           name="email"
           type="email"
           placeholder="Login użytkownika (email)"
           onChange={handleChange}
+          className='border-b-2 border-b-light_gray mb-6 text-center placeholder:text-light_gray placeholder:text-[12px] w-60'
         />
         <input
           name="password"
           type="password"
           placeholder="Hasło"
           onChange={handleChange}
+          className='border-b-2 border-b-light_gray mb-6 text-center placeholder:text-light_gray placeholder:text-[12px] w-60'
         />
-        <button type="submit">Zaloguj się</button>
+        <button type="submit" className='border-2 rounded-md border-main_blue w-40 py-0.5 text-main_blue'>Zaloguj się</button>
+        <p className='text-[8px] text-main_blue'>Nie pamiętasz hasła?</p>
+        <p className='text-[8px] mt-4'>Nie masz jeszcze konta?</p>
+        <Link to="/register">
+          <button type="button" className='border-2 border-main_blue rounded-md bg-main_blue w-40 py-0.5 text-white'>Zarejestruj się</button>
+        </Link>
       </form>
-    </>
+    </div>
   )
 }
 export default Login

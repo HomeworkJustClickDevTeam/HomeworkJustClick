@@ -6,6 +6,7 @@ module.exports = {
     colors:{
       'main_blue': '#6D8DFF',
       white: colors.white,
+      'light_gray': '#9ca3af',
       current: 'currentColor',
     },
     extend: {

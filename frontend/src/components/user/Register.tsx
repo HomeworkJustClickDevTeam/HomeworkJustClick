@@ -37,15 +37,16 @@ const Register = () => {
   }
 
   return (
-    <div>
-      <h1>Dołącz do nas !</h1>
-      <form onSubmit={handleSubmit}>
+    <div className='flex w-screen flex-col items-center text-center font-lato font-normal text-sm'>
+      <h1 className='pt-24 pb-6 max-w-sm text-2xl font-medium pb-1'>Dołącz do nas !</h1>
+      <form onSubmit={handleSubmit} className='flex flex-col text-center items-center'>
         <input
           type="text"
           name="firstname"
           value={user.firstname}
           placeholder="Imię"
           onChange={handleChangeUser}
+          className='border-b-2 border-b-light_gray mb-6 text-center placeholder:text-light_gray placeholder:text-[12px] w-60'
         />
         <input
           type="text"
@@ -53,6 +54,7 @@ const Register = () => {
           value={user.lastname}
           placeholder="Nazwisko"
           onChange={handleChangeUser}
+          className='border-b-2 border-b-light_gray mb-6 text-center placeholder:text-light_gray placeholder:text-[12px] w-60'
         />
         <input
           type="email"
@@ -60,6 +62,7 @@ const Register = () => {
           value={user.email}
           placeholder="Adres e-mail"
           onChange={handleChangeUser}
+          className='border-b-2 border-b-light_gray mb-6 text-center placeholder:text-light_gray placeholder:text-[12px] w-60'
         />
         <input
           type="password"
@@ -67,6 +70,7 @@ const Register = () => {
           value={user.password}
           placeholder="Hasło"
           onChange={handleChangeUser}
+          className='border-b-2 border-b-light_gray mb-6 text-center placeholder:text-light_gray placeholder:text-[12px] w-60'
         />
         <input
           type="password"
@@ -74,8 +78,9 @@ const Register = () => {
           value={secondPassword}
           placeholder="Powtórz hasło jeszcze raz"
           onChange={handleChangeSecondPassword}
+          className='border-b-2 border-b-light_gray mb-6 text-center placeholder:text-light_gray placeholder:text-[12px] w-60'
         />
-        <button type="submit">Zajerestruj się</button>
+        <button type="submit" className='border-2 border-main_blue rounded-md bg-main_blue w-40 py-0.5 text-white'>Zajerestruj się</button>
       </form>
     </div>
   )

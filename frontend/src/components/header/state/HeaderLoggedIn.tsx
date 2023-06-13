@@ -5,7 +5,7 @@ import { Link } from "react-router-dom"
 function HeaderLoggedIn() {
   const userState = useContext(userContext)
   return (
-    <>
+    <div className='h-10 bg-main_blue'>
       {!userState.homePageIn && (
         <Link to="#" onClick={() => window.history.back()}>
           Powrót
@@ -18,7 +18,7 @@ function HeaderLoggedIn() {
         <Link to={`/settings`}>
             Ustawienia
         </Link>
-    </>
+    </div>
   )
 }
 export default HeaderLoggedIn
