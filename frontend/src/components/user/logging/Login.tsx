@@ -41,28 +41,28 @@ const Login = () => {
   }
 
   return (
-    <div className='flex w-screen flex-col items-center text-center font-lato font-normal text-sm'>
-      <h1 className='pt-24 pb-6 max-w-sm text-2xl font-medium pb-1'>Zaloguj się</h1>
+    <div className='flex w-screen flex-col items-center text-center font-lato font-normal'>
+      <h1 className='pt-[15vh] pb-6 xl:pb-[6vh] text-2xl xl:text-[64px]'>Zaloguj się</h1>
       <form onSubmit={handleSubmit} className='flex flex-col items-center'>
         <input
           name="email"
           type="email"
           placeholder="Login użytkownika (email)"
           onChange={handleChange}
-          className='border-b-2 border-b-light_gray mb-6 text-center placeholder:text-light_gray placeholder:text-[12px] w-60'
+          className='border-b-2 border-b-light_gray mb-[5vh] text-center placeholder:text-light_gray placeholder:text-[12px] xl:placeholder:text-[24px] w-[20vw]'
         />
         <input
           name="password"
           type="password"
           placeholder="Hasło"
           onChange={handleChange}
-          className='border-b-2 border-b-light_gray mb-6 text-center placeholder:text-light_gray placeholder:text-[12px] w-60'
+          className='border-b-2 border-b-light_gray mb-6 text-center placeholder:text-light_gray placeholder:text-[12px] w-60 xl:placeholder:text-[24px] w-[20vw]'
         />
-        <button type="submit" className='border-2 rounded-md border-main_blue w-40 py-0.5 text-main_blue'>Zaloguj się</button>
-        <p className='text-[8px] text-main_blue'>Nie pamiętasz hasła?</p>
-        <p className='text-[8px] mt-4'>Nie masz jeszcze konta?</p>
+        <button type="submit" className='border-2 rounded-md border-main_blue w-[20vw] py-0.5 text-main_blue'>Zaloguj się</button>
+        <p className='text-[8px] text-main_blue xl:text-base'>Nie pamiętasz hasła?</p>
+        <p className='text-[8px] mt-4 xl:text-base'>Nie masz jeszcze konta?</p>
         <Link to="/register">
-          <button type="button" className='border-2 border-main_blue rounded-md bg-main_blue w-40 py-0.5 text-white'>Zarejestruj się</button>
+          <button type="button" className='border-2 border-main_blue rounded-md bg-main_blue w-[20vw] py-0.5 text-white'>Zarejestruj się</button>
         </Link>
       </form>
     </div>
