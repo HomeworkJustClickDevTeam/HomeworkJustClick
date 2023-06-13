@@ -11,7 +11,7 @@ function HomeGuest() {
         <button type="button" className='border-2 rounded-md border-main_blue w-40 xl:w-[288px] xl:h-[56px] py-0.5 text-main_blue xl:text-[28px]'>Zaloguj się</button>
       </Link>
         <p className='text-[8px] xl:text-base text-main_blue'>Nie pamiętasz hasła?</p>
-        <p className='text-[8px] xl:text-base mt-4 md:mt-[5vh]'>Nie masz jeszcze konta?</p>
+        <p className='text-[8px] xl:text-base mt-4 xl:mt-[5vh]'>Nie masz jeszcze konta?</p>
       <Link to="/register">
         <button type="button" className='border-2 border-main_blue rounded-md bg-main_blue w-40 xl:w-[288px] xl:h-[56px] py-0.5 text-white xl:text-[28px]'>Zarejestruj się</button>
       </Link>
