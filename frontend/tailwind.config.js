@@ -5,6 +5,7 @@ module.exports = {
   theme: {
     colors:{
       'main_blue': '#6D8DFF',
+      'hover_blue' : '#8ba4fc',
       white: colors.white,
       'light_gray': '#9ca3af',
       current: 'currentColor',
