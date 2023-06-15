@@ -62,4 +62,11 @@ public interface SolutionRepository extends JpaRepository<Solution, Integer> {
 
     @Query(value = "select COUNT(*) from _solution s join _evaluation e on s.id = e.solution_id where s.id = :solution_id", nativeQuery = true)
     int checkForEvaluationToSolution(@Param("solution_id") int solution_id);
+
+    @Query(value = "SELECT s.* FROM _solution s LEFT JOIN _evaluation e on s.id = e.solution_id WHERE s.assignment_id = :assignment_id AND s.user_id = :user_id AND s.group_id = :group_id AND e.id IS NOT NULL", nativeQuery = true)
+    Optional<Solution> getCheckedSolutionByUserAssignmentGroup(@Param("assignment_id") int assignment_id, @Param("user_id") int user_id, @Param("group_id") int group_id);
+
+    @Query(value = "SELECT s.* FROM _solution s LEFT JOIN _evaluation e on s.id = e.solution_id WHERE s.assignment_id = :assignment_id AND s.user_id = :user_id AND s.group_id = :group_id AND e.id IS NULL", nativeQuery = true)
+    Optional<Solution> getUncheckedSolutionByUserAssignmentGroup(@Param("assignment_id") int assignment_id, @Param("user_id") int user_id, @Param("group_id") int group_id);
+
 }

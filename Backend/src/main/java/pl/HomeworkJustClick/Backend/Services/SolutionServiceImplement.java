@@ -9,6 +9,7 @@ import pl.HomeworkJustClick.Backend.Entities.Group;
 import pl.HomeworkJustClick.Backend.Entities.Solution;
 import pl.HomeworkJustClick.Backend.Entities.User;
 import pl.HomeworkJustClick.Backend.Repositories.AssignmentRepository;
+import pl.HomeworkJustClick.Backend.Repositories.GroupRepository;
 import pl.HomeworkJustClick.Backend.Repositories.SolutionRepository;
 import pl.HomeworkJustClick.Backend.Repositories.UserRepository;
 import pl.HomeworkJustClick.Backend.Responses.*;
@@ -29,6 +30,7 @@ public class SolutionServiceImplement implements SolutionService{
     private final UserRepository userRepository;
 
     private final AssignmentRepository assignmentRepository;
+    private final GroupRepository groupRepository;
 
     @Override
     public List<SolutionResponse> getAll() {
@@ -599,4 +601,28 @@ public class SolutionServiceImplement implements SolutionService{
     public boolean checkForEvaluationToSolution (int solution_id) {
         return solutionRepository.checkForEvaluationToSolution(solution_id) != 0;
     }
+
+    @Override
+    public SolutionResponse getCheckedSolutionByUserAssignmentGroup(int user_id, int group_id, int assignment_id) {
+        Optional<Solution> solution = solutionRepository.getCheckedSolutionByUserAssignmentGroup(assignment_id, user_id, group_id);
+        if(assignmentRepository.findById(assignment_id).isPresent() && groupRepository.findById(group_id).isPresent() && userRepository.findById(user_id).isPresent()){
+            return solution.map(this::buildSolutionResponse).orElse(null);
+        }
+        else{
+            return SolutionResponse.builder().build();
+        }
+
+    }
+    @Override
+    public SolutionResponse getUncheckedSolutionByUserAssignmentGroup(int user_id, int group_id, int assignment_id) {
+        Optional<Solution> solution = solutionRepository.getUncheckedSolutionByUserAssignmentGroup(assignment_id, user_id, group_id);
+        if(assignmentRepository.findById(assignment_id).isPresent() && groupRepository.findById(group_id).isPresent() && userRepository.findById(user_id).isPresent()){
+            return solution.map(this::buildSolutionResponse).orElse(null);
+        }
+        else{
+            return SolutionResponse.builder().build();
+        }
+
+    }
+
 }

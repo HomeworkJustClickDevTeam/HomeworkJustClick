@@ -19,6 +19,7 @@ import pl.HomeworkJustClick.Backend.Services.SolutionService;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -1322,6 +1323,18 @@ public class SolutionController {
     )
     public ResponseEntity<Boolean> checkForEvaluationToSolution(@PathVariable("solution_id") int id) {
         return new ResponseEntity<>(solutionService.checkForEvaluationToSolution(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/solution/getCheckedSolutionByUserAssignmentGroup/{user_id}/{assignment_id}/{group_id}")
+    @Operation()
+    public ResponseEntity<SolutionResponse> getCheckedSolutionByUserAssignmentGroup(@PathVariable("user_id") int userId, @PathVariable("assignment_id") int assignmentId, @PathVariable("group_id") int groupId){
+        SolutionResponse solutionResponse = solutionService.getCheckedSolutionByUserAssignmentGroup(userId, groupId, assignmentId);
+        if(solutionResponse == null){
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } else if (solutionResponse.getId()!=0) {
+
+
+        }
     }
 
 }
