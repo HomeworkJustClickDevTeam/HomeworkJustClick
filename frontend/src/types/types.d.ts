@@ -6,7 +6,7 @@ interface RegisterUser {
   email: string
   password: string
 }
-interface newCredentials{
+interface newCredentials {
   email: string | undefined
   password: string | undefined
   newPassword: string | undefined
@@ -76,7 +76,7 @@ interface AssigmentToSend {
   visible: boolean
   taskDescription: string
   completionDatetime: Date
-  points: number
+  max_points: number
 }
 interface AssigmentProps {
   assignment: Assigment
@@ -145,4 +145,12 @@ interface FileFromPost {
   id: number
   format: string
   name: string
+}
+
+interface RatingProps {
+  maxPoints: number
+  points: number | undefined
+  setPoints: (number) => void
+  solutionId: number
+  groupId: number
 }

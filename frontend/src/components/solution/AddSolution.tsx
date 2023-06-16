@@ -48,7 +48,9 @@ function AddSolution({ assignment }: AssigmentProps) {
           format: response.format,
           name: response.name,
         })
-        .then()
+        .then((r) => {
+          console.log(r)
+        })
         .catch((e) => console.log(e))
     }
   }, [solutionFromServer, response])
@@ -71,6 +73,7 @@ function AddSolution({ assignment }: AssigmentProps) {
         solution
       )
       .then((r) => {
+        console.log(r)
         setSolutionFromServer(r.data)
       })
       .catch()

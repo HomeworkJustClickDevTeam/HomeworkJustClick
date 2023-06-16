@@ -13,7 +13,7 @@ function AddAssigment() {
     completionDatetime: new Date(),
     taskDescription: "",
     visible: false,
-    points: 0,
+    max_points: 0,
   })
 
   const handleTextChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -80,10 +80,11 @@ function AddAssigment() {
           {" "}
           Punkty
           <input
-            name="points"
+            name="max_points"
             type="number"
             onChange={handleNumberChange}
             min="1"
+            max="10"
           />
         </label>
         <label>

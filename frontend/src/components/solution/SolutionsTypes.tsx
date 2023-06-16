@@ -41,6 +41,7 @@ function SolutionsTypes({ type }: PropsForType) {
   }
   console.log(type)
   useEffect(() => {
+    setUserWithAssignment([])
     typeOfSolutions()
   }, [type])
   if (role !== "Teacher") {
@@ -54,9 +55,15 @@ function SolutionsTypes({ type }: PropsForType) {
     <>
       <ul>
         {usersWithAssigment.map((userWithAssignment) => (
-          <li key={userWithAssignment.solution.id}>
+          <li
+            key={
+              userWithAssignment.solution.id +
+              userWithAssignment.assignment.id +
+              userWithAssignment.user.id
+            }
+          >
             <Link
-              to="/solution"
+              to={`/group/${userWithAssignment.assignment.groupId}/solution/${userWithAssignment.user.id}/${userWithAssignment.assignment.id}`}
               state={{ userWithAssignment: userWithAssignment }}
             >
               {userWithAssignment.user.firstname}

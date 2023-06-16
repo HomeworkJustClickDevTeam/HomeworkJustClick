@@ -4,22 +4,43 @@ import { FileFromPost, UserWithAssignment } from "../../types/types"
 import AssigmentItem from "../assigments/assigmentDisplayer/assigmentItem/AssigmentItem"
 import mongoDatabase from "../../services/mongoDatabase"
 import postgresqlDatabase from "../../services/postgresDatabase"
+import Loading from "../animations/Loading"
+import { Rating } from "../evaluation/Rating"
 
 function Solution() {
   let { state } = useLocation()
   const [file, setFile] = useState<Blob | null>(null)
   const [fileName, setFileName] = useState<string>("")
-  const [isLoading, setIsLoading] = useState<boolean>()
+  const [isLoading, setIsLoading] = useState<boolean>(true)
   const [databaseFile, setDatabaseFile] = useState<FileFromPost[]>([])
-  const [userWithAssignment, setUserWithAssignment] =
-    useState<UserWithAssignment>(state?.userWithAssignment)
+  const [userWithAssignment] = useState<UserWithAssignment>(
+    state?.userWithAssignment
+  )
+  const [points, setPoints] = useState<number>()
+  const [showRating, setShowRating] = useState<boolean>(false)
 
   useEffect(() => {
-    if (databaseFile) {
-      console.log(databaseFile)
-      mongoDatabase
-        .get(`file/${databaseFile[0]?.mongo_id}`, {})
-        .then((response) => {
+    const fetchData = async () => {
+      try {
+        const response = await postgresqlDatabase.get(
+          `/files/bySolution/${userWithAssignment.solution.id}`
+        )
+        console.log(response.data)
+        setDatabaseFile(response.data)
+      } catch (e) {
+        console.log("Error retrieving database file:", e)
+      }
+    }
+    fetchData()
+  }, [])
+  useEffect(() => {
+    const fetchFileData = async () => {
+      if (databaseFile) {
+        try {
+          const response = await mongoDatabase.get(
+            `file/${databaseFile[0]?.mongo_id}`,
+            {}
+          )
           const fileData = response.data
           const type = fileData.file.type
           const decodedData = atob(fileData.file.data)
@@ -27,21 +48,20 @@ function Solution() {
           for (let i = 0; i < decodedData.length; i++) {
             byteArray[i] = decodedData.charCodeAt(i)
           }
-          const blob = new Blob([byteArray], {
-            type,
-          })
+          const blob = new Blob([byteArray], { type })
           setFile(blob)
           setFileName(response.data.name)
-        })
-        .catch((e) => console.error("Error retrieving file:", e))
+          setIsLoading(false)
+          console.log("XD")
+        } catch (error) {
+          console.error("Error retrieving file:", error)
+        }
+      }
     }
+    fetchFileData()
+      .then()
+      .catch((e) => console.log(e))
   }, [databaseFile])
-  useEffect(() => {
-    postgresqlDatabase
-      .get(`/files/bySolution/${userWithAssignment.solution.id}`)
-      .then((r) => setDatabaseFile(r.data))
-  }, [])
-
   const handleDownload = () => {
     if (file && fileName) {
       const fileUrl = URL.createObjectURL(file)
@@ -51,15 +71,41 @@ function Solution() {
       link.click()
     }
   }
+  const handleDisableRating = () => {
+    setShowRating(false)
+  }
+  const handleShowRating = () => {
+    setShowRating(true)
+  }
+  if (isLoading) {
+    return <Loading />
+  }
   return (
     <>
       <AssigmentItem
         idGroup={`${userWithAssignment.assignment.groupId}`}
         assignment={userWithAssignment.assignment}
       />
+      <h1>
+        Points: {points} /{userWithAssignment.assignment.max_points}
+      </h1>
       <div>
         <button onClick={handleDownload}>{fileName}</button>
       </div>
+      {showRating ? (
+        <div>
+          <Rating
+            maxPoints={userWithAssignment.assignment.max_points}
+            points={points}
+            setPoints={setPoints}
+            solutionId={userWithAssignment.assignment.id}
+            groupId={userWithAssignment.assignment.groupId}
+          />
+          <button onClick={handleDisableRating}>Schowaj Punkty</button>
+        </div>
+      ) : (
+        <button onClick={handleShowRating}>Pokaz Punkty</button>
+      )}
     </>
   )
 }
