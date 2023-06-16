@@ -9,7 +9,7 @@ export const groupFilter = ({ setGroups }: PropsForFiltering) => {
         const groups: Group[] = response.data
         setGroups(groups)
       })
-      .catch((e) => console.log(e))
+      .catch(() => setGroups([]))
   }
 
   const studentsUserGroups = (): void => {
@@ -19,7 +19,7 @@ export const groupFilter = ({ setGroups }: PropsForFiltering) => {
         const groups: Group[] = response.data
         setGroups(groups)
       })
-      .catch((e) => console.log(e))
+      .catch(() => setGroups([]))
   }
   const allUserGroups = (): void => {
     postgresqlDatabase
@@ -28,7 +28,7 @@ export const groupFilter = ({ setGroups }: PropsForFiltering) => {
         const groups: Group[] = response.data
         setGroups(groups)
       })
-      .catch((e) => console.log(e))
+      .catch(() => setGroups([]))
   }
   return {
     teacherUserGroups,

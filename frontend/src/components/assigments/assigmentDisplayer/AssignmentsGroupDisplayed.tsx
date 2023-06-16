@@ -23,8 +23,8 @@ function AssignmentsGroupDisplayed() {
           assigmentFromServer.filter((assigment) => assigment.visible)
         )
       }
-      setIsLoading(false)
     })
+    setIsLoading(false)
   }, [])
 
   if (isLoading) {
@@ -32,9 +32,11 @@ function AssignmentsGroupDisplayed() {
   }
   return (
     <>
-      <Link to={`/group/${id}/assignments/add`}>
-        <button>Dodaj zadanie domowe</button>
-      </Link>
+      {role == "Teacher" && (
+        <Link to={`/group/${id}/assignments/add`}>
+          <button>Dodaj zadanie domowe</button>
+        </Link>
+      )}
       <ul>
         {assignments.map((assigment) => (
           <li key={assigment.id}>

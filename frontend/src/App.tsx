@@ -24,12 +24,12 @@ import AssignmentsTypes from "./components/assigments/AssignmentsTypes"
 import AssignmentsStudentDisplayed from "./components/assigments/assigmentDisplayer/AssignmentsStudentDisplayed"
 import SolutionsTypes from "./components/solution/SolutionsTypes"
 import Solution from "./components/solution/Solution"
-import UserSettings from "./components/user/settings/UserSettings";
-import UserGeneralSettings from "./components/user/settings/UserGeneralSettings";
-import UserSecuritySettings from "./components/user/settings/UserSecuritySettings";
-import UserAppearanceSettings from "./components/user/settings/UserAppearanceSettings";
-import UserMarkingTablesSettings from "./components/user/settings/UserMarkingTablesSettings";
-import GroupSettings from "./components/group/settings/GroupSettings";
+import UserSettings from "./components/user/settings/UserSettings"
+import UserGeneralSettings from "./components/user/settings/UserGeneralSettings"
+import UserSecuritySettings from "./components/user/settings/UserSecuritySettings"
+import UserAppearanceSettings from "./components/user/settings/UserAppearanceSettings"
+import UserMarkingTablesSettings from "./components/user/settings/UserMarkingTablesSettings"
+import GroupSettings from "./components/group/settings/GroupSettings"
 
 function App() {
   const initialState: ApplicationState = {
@@ -89,31 +89,28 @@ function App() {
                   path="/:id/assignments"
                   element={<AssignmentsStudentDisplayed />}
                 />
+                <Route path="/settings" element={<UserSettings />} />
                 <Route
-                    path="/settings"
-                    element={<UserSettings />}
+                  path="/settings/general"
+                  element={<UserGeneralSettings />}
                 />
                 <Route
-                    path="/settings/general"
-                    element={<UserGeneralSettings />}
+                  path="/settings/security"
+                  element={<UserSecuritySettings />}
                 />
                 <Route
-                    path="/settings/security"
-                    element={<UserSecuritySettings />}
+                  path="/settings/appearance"
+                  element={<UserAppearanceSettings />}
                 />
                 <Route
-                    path="/settings/appearance"
-                    element={<UserAppearanceSettings />}
-                />
-                <Route
-                    path="/settings/markingTables"
-                    element={<UserMarkingTablesSettings />}
+                  path="/settings/markingTables"
+                  element={<UserMarkingTablesSettings />}
                 />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/create/group" element={<CreateGroup />} />
                 <Route path="/group/:id" element={<Group />}>
-                  <Route path="settings" element = {<GroupSettings/>}/>
+                  <Route path="settings" element={<GroupSettings />} />
                   <Route path="users" element={<Users />} />
                   <Route
                     path="assignments"
@@ -137,6 +134,10 @@ function App() {
                     element={<AssigmentSpec />}
                   />
                   <Route
+                    path="solution/:idUser/:idAssigment"
+                    element={<Solution />}
+                  />
+                  <Route
                     path="solutions/uncheck"
                     element={<SolutionsTypes type={"uncheck"} />}
                   />
@@ -148,9 +149,10 @@ function App() {
                     path="solutions/check"
                     element={<SolutionsTypes type={"check"} />}
                   />
+
                   <Route path="*" element={<NotFound />} />
                 </Route>
-                <Route path="solution" element={<Solution />} />
+
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>
