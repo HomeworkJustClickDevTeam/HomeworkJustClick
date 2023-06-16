@@ -83,6 +83,7 @@ interface AssigmentProps {
 }
 interface AssigmentItemProps extends AssigmentProps {
   idGroup: string
+  optionalUserId?:string
 }
 
 interface UserItemToDisplay {
