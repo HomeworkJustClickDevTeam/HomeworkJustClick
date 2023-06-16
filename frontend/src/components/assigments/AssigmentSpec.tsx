@@ -32,11 +32,14 @@ function AssigmentSpec() {
     max_points: 0,
     groupId: 0,
   })
+  let userId:null|string = null
+  if(optionalUserId !== null){
+    userId = optionalUserId
+  }
+  else{
+    userId = userState.userId
+  }
   useEffect(() => {
-    let userId = userState.userId
-    if(optionalUserId !== null){
-      userId = optionalUserId
-    }
     postgresqlDatabase
       .get(
         `/solution/getUncheckedSolutionByUserAssignmentGroup/${userId}/${idAssigment}/${id}`
@@ -57,7 +60,6 @@ function AssigmentSpec() {
               if (response.data.id !== null) {
                 setIsSolutionChecked(true)
                 setSolution(response.data)
-                return void 0
               }
             })
             .catch((error: AxiosError) => console.log(error))
@@ -80,15 +82,15 @@ function AssigmentSpec() {
           })
       })
     }, [])
-  if (assignment.id === 0) {
-    return <Loading />
+  if(typeof assignment === undefined){
+    return(<Loading/>)
   }
   console.log(solution)
   return (
     <>
       {role === "Teacher" ? (
         <ModifyAssigment assignment={assignment} />
-      ) : typeof solution === undefined ? (
+      ) : (typeof solution === undefined) ? (
         <AddSolution assignment={assignment} />
       ) : isSolutionChecked ? (
         <CheckedSolution assignment={assignment} solution={solution} />

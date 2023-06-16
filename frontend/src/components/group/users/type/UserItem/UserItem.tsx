@@ -1,9 +1,12 @@
 import {UserItemToDisplay} from "../../../../../types/types";
+import {useContext} from "react";
+import GroupRoleContext from "../../../../../GroupRoleContext";
 
 
 function UserItem({userToShow, isTeacher}:UserItemToDisplay) {
+  const {role} = useContext(GroupRoleContext)
 
-  if(!isTeacher && true) {//TO CHANGE
+  if(!isTeacher && role==="teacher") {//TO CHANGE
     return (
       <li>
         <a href={"userProfileInGroup/" + userToShow.id}>

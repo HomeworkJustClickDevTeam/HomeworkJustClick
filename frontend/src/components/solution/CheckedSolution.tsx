@@ -15,12 +15,9 @@ export default function CheckedSolution(props:{solution:Solution | undefined, as
       .get(`/evaluation/bySolution/${props.solution?.id}`)
       .then((response) => setEvaluation(response.data))
       .catch((error:AxiosError) => console.log(error))
-
-    if(evaluation){
-      setIsLoading(false)
-    }
   },[])
-  if (isLoading) {
+
+  if (typeof evaluation === undefined) {
     return <Loading />
   }
   return(

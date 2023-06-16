@@ -39,20 +39,20 @@ export default function UserProfileInGroup(){
   }, [])
 
 
-  if(!userProfile || !doneAssignments || !expiredUndoneAssignments || !undoneAssignments){
+  if((typeof userProfile || typeof doneAssignments || typeof expiredUndoneAssignments || typeof undoneAssignments) === undefined){
     return <Loading/>
   }
   return(
     <ul>
-      <li>Imię i nazwisko: {userProfile.firstname} {userProfile.lastname}</li>
-      <li>Indeks: {userProfile.index}</li>
+      <li>Imię i nazwisko: {userProfile?.firstname} {userProfile?.lastname}</li>
+      <li>Indeks: {userProfile?.index}</li>
       <li>
         <dl>
           <dt>Zrobione zadania:
             <dd>
               <ul>
-                {doneAssignments.map((assignment) =>{
-                  return(<li key={assignment.id}><AssigmentItem optionalUserId={userProfile.id.toString()} assignment={assignment} idGroup={id as string} /></li>)
+                {doneAssignments?.map((assignment) =>{
+                  return(<li key={assignment.id}><AssigmentItem optionalUserId={userProfile?.id.toString()} assignment={assignment} idGroup={id as string} /></li>)
                 })}
               </ul>
             </dd>
@@ -60,7 +60,7 @@ export default function UserProfileInGroup(){
           <dt>Niezrobione zadania:
             <dd>
               <ul>
-                {undoneAssignments.map((assignment) =>{
+                {undoneAssignments?.map((assignment) =>{
                   return(<li>Zadanie: {assignment.title}</li>)
                 })}
               </ul>
@@ -69,7 +69,7 @@ export default function UserProfileInGroup(){
           <dt>Spoźnione nieoddane zadania:
             <dd>
               <ul>
-                {expiredUndoneAssignments.map((assignment) =>{
+                {expiredUndoneAssignments?.map((assignment) =>{
                   return(<li>Zadanie: {assignment.title}</li>)
                 })}
               </ul>
