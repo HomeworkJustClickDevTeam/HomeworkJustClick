@@ -105,7 +105,7 @@ public class IndexController {
         assignmentRepository.save(assignment6);
         Solution solution = new Solution(user2, assignment, group, OffsetDateTime.of(2023,5,16,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,16,15,0,0,0, ZoneOffset.UTC), "");
         Solution solution2 = new Solution(user2, assignment2, group, OffsetDateTime.of(2023,5,16,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,16,15,0,0,0, ZoneOffset.UTC), "");
-        Solution solution3 = new Solution(user2, assignment3, group, OffsetDateTime.of(2023,5,16,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,16,15,0,0,0, ZoneOffset.UTC), "");
+//        Solution solution3 = new Solution(user2, assignment3, group, OffsetDateTime.of(2023,5,16,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,16,15,0,0,0, ZoneOffset.UTC), "");
         Solution solution4 = new Solution(user4, assignment, group, OffsetDateTime.of(2023,5,16,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,16,15,0,0,0, ZoneOffset.UTC), "");
         Solution solution5 = new Solution(user4, assignment2, group, OffsetDateTime.of(2023,5,16,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,16,15,0,0,0, ZoneOffset.UTC), "");
         Solution solution6 = new Solution(user4, assignment3, group, OffsetDateTime.of(2023,5,16,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,16,15,0,0,0, ZoneOffset.UTC), "");
@@ -115,7 +115,7 @@ public class IndexController {
         Solution solution11 = new Solution(user4, assignment5, group1, OffsetDateTime.of(2023,5,16,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,16,15,0,0,0, ZoneOffset.UTC), "");
         solutionRepository.save(solution);
         solutionRepository.save(solution2);
-        solutionRepository.save(solution3);
+//        solutionRepository.save(solution3);
         solutionRepository.save(solution4);
         solutionRepository.save(solution5);
         solutionRepository.save(solution6);
@@ -125,7 +125,7 @@ public class IndexController {
         solutionRepository.save(solution10);
         Evaluation evaluation = new Evaluation(3.0, user, solution, group, OffsetDateTime.now(), OffsetDateTime.now(), 3.0);
         Evaluation evaluation2 = new Evaluation(4.0, user, solution2, group, OffsetDateTime.now(), OffsetDateTime.now(), 4.0);
-        Evaluation evaluation3 = new Evaluation(5.0, user, solution3, group, OffsetDateTime.now(), OffsetDateTime.now(), 5.0);
+//        Evaluation evaluation3 = new Evaluation(5.0, user, solution3, group, OffsetDateTime.now(), OffsetDateTime.now(), 5.0);
         Evaluation evaluation4 = new Evaluation(3.5, user, solution4, group, OffsetDateTime.now(), OffsetDateTime.now(), 3.5);
         Evaluation evaluation5 = new Evaluation(4.0, user, solution5, group, OffsetDateTime.now(), OffsetDateTime.now(), 4.0);
         Evaluation evaluation6 = new Evaluation(4.5, user, solution6, group, OffsetDateTime.now(), OffsetDateTime.now(), 4.5);
@@ -133,7 +133,7 @@ public class IndexController {
         Evaluation evaluation8 = new Evaluation(3.0, user, solution8, group, OffsetDateTime.now(), OffsetDateTime.now(), 3.0);
         evaluationRepository.save(evaluation);
         evaluationRepository.save(evaluation2);
-        evaluationRepository.save(evaluation3);
+//        evaluationRepository.save(evaluation3);
         evaluationRepository.save(evaluation4);
         evaluationRepository.save(evaluation5);
         evaluationRepository.save(evaluation6);
@@ -150,7 +150,7 @@ public class IndexController {
         File file9 = new File("plik.txt", "txt", "123333", null, solution);
         File file10 = new File("plik2.txt", "txt", "222333", null, solution2);
         File file11 = new File("plik3.txt", "txt", "32133", null, solution2);
-        File file12 = new File("plik4.txt", "txt", "4443", null, solution3);
+//        File file12 = new File("plik4.txt", "txt", "4443", null, solution3);
         File file13 = new File("plik5.txt", "txt", "55533", null, solution4);
         File file14 = new File("plik6.txt", "txt", "6663", null, solution5);
         File file15 = new File("plik7.txt", "txt", "7773", null, solution6);
@@ -170,7 +170,7 @@ public class IndexController {
         fileRepository.save(file9);
         fileRepository.save(file10);
         fileRepository.save(file11);
-        fileRepository.save(file12);
+//        fileRepository.save(file12);
         fileRepository.save(file13);
         fileRepository.save(file14);
         fileRepository.save(file15);
