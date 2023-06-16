@@ -1,124 +1,29 @@
-import { useState } from "react"
-import {
-  Assigment,
-  Solution,
-  SolutionTypesProp,
-  UserToShow,
-  UserWithAssignment,
-} from "../../../types/types"
+import { SolutionTypesProp } from "../../../types/types"
 import postgresqlDatabase from "../../../services/postgresDatabase"
-import { AxiosResponse } from "axios"
 
-export const SolutionFilter = ({
+export const solutionFilter = ({
   id,
-  setUsersWithAssignment,
+  setSolutionsExtended,
 }: SolutionTypesProp) => {
-  const [solutions, setSolutions] = useState<Solution[]>([])
-  const fetchUserAndAssignment = (
-    solution: Solution
-  ): Promise<[AxiosResponse<UserToShow>, AxiosResponse<Assigment>]> => {
-    return Promise.all([
-      postgresqlDatabase.get<UserToShow>(`/user/${solution.userId}`),
-      postgresqlDatabase.get<Assigment>(`/assignment/${solution.assignmentId}`),
-    ])
+  const lateSolutions = (): void => {
+    postgresqlDatabase
+      .get(`/extended/solutions/lateByGroup/${id}`)
+      .then((r) => setSolutionsExtended(r.data))
+      .catch(() => setSolutionsExtended([]))
   }
 
-  const handlePromiseResults = (
-    fetchedSolutions: Solution[],
-    results: [AxiosResponse<UserToShow>, AxiosResponse<Assigment>][]
-  ): UserWithAssignment[] => {
-    return results.map(([userResult, assignmentResult], index) => ({
-      user: userResult.data,
-      assignment: assignmentResult.data,
-      solution: fetchedSolutions[index],
-    }))
-  }
-  const lateSolutions = (): Promise<void> => {
-    return postgresqlDatabase
-      .get(`/solutions/lateByGroup/${id}`)
-      .then((r) => {
-        const fetchedSolutions: Solution[] = r.data
-        setSolutions(fetchedSolutions)
-
-        const promises: Promise<
-          [AxiosResponse<UserToShow>, AxiosResponse<Assigment>]
-        >[] = fetchedSolutions.map((solution) =>
-          Promise.all([
-            postgresqlDatabase.get<UserToShow>(`/user/${solution.userId}`),
-            postgresqlDatabase.get<Assigment>(
-              `/assignment/${solution.assignmentId}`
-            ),
-          ])
-        )
-
-        Promise.all(promises)
-          .then((results) => {
-            const usersWithAssignment: UserWithAssignment[] = results.map(
-              ([userResult, assignmentResult], index) => ({
-                user: userResult.data,
-                assignment: assignmentResult.data,
-                solution: fetchedSolutions[index],
-              })
-            )
-
-            setUsersWithAssignment(usersWithAssignment)
-          })
-          .catch()
-      })
-      .catch(() => {
-        setUsersWithAssignment([])
-      })
-  }
-  const uncheckedSolutions = (): Promise<void> => {
-    return postgresqlDatabase
-      .get(`/solutions/uncheckedByGroup/${id}`)
-      .then((response) => {
-        const fetchedSolutions: Solution[] = response.data
-        setSolutions(fetchedSolutions)
-
-        const promises: Promise<
-          [AxiosResponse<UserToShow>, AxiosResponse<Assigment>]
-        >[] = fetchedSolutions.map((solution) =>
-          fetchUserAndAssignment(solution)
-        )
-
-        Promise.all(promises)
-          .then((results) => {
-            const usersWithAssignment: UserWithAssignment[] =
-              handlePromiseResults(fetchedSolutions, results)
-            setUsersWithAssignment(usersWithAssignment)
-          })
-          .catch()
-      })
-      .catch(() => {
-        setUsersWithAssignment([])
-      })
+  const uncheckedSolutions = (): void => {
+    postgresqlDatabase
+      .get(`extended/solutions/uncheckedByGroup/${id}`)
+      .then((r) => setSolutionsExtended(r.data))
+      .catch(() => setSolutionsExtended([]))
   }
 
-  const checkSolutions = (): Promise<void> => {
-    return postgresqlDatabase
-      .get(`/solutions/checkedByGroup/${id}`)
-      .then((response) => {
-        const fetchedSolutions: Solution[] = response.data
-        setSolutions(fetchedSolutions)
-
-        const promises: Promise<
-          [AxiosResponse<UserToShow>, AxiosResponse<Assigment>]
-        >[] = fetchedSolutions.map((solution) =>
-          fetchUserAndAssignment(solution)
-        )
-
-        Promise.all(promises)
-          .then((results) => {
-            const usersWithAssignment: UserWithAssignment[] =
-              handlePromiseResults(fetchedSolutions, results)
-            setUsersWithAssignment(usersWithAssignment)
-          })
-          .catch()
-      })
-      .catch(() => {
-        setUsersWithAssignment([])
-      })
+  const checkSolutions = (): void => {
+    postgresqlDatabase
+      .get(`/extended/solutions/checkedByGroup/${id}`)
+      .then((r) => setSolutionsExtended(r.data))
+      .catch(() => setSolutionsExtended([]))
   }
   return {
     checkSolutions,

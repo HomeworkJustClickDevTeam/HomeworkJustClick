@@ -6,7 +6,7 @@ import {
   Solution,
   SolutionToSend,
 } from "../../types/types"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import postgresqlDatabase from "../../services/postgresDatabase"
 import AssigmentItem from "../assigments/assigmentDisplayer/assigmentItem/AssigmentItem"
 import userContext from "../../UserContext"
@@ -34,6 +34,7 @@ function AddSolution({ assignment }: AssigmentProps) {
     lastModifiedDateTime: "",
     userId: 0,
   })
+  const navigate = useNavigate()
 
   function handleChangeFile(e: ChangeEvent<HTMLInputElement>) {
     if (e.target.files) {
@@ -49,6 +50,7 @@ function AddSolution({ assignment }: AssigmentProps) {
           name: response.name,
         })
         .then((r) => {
+          navigate(-1)
           console.log(r)
         })
         .catch((e) => console.log(e))

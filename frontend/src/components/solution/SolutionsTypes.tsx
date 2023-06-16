@@ -1,39 +1,36 @@
 import { useContext, useEffect, useState } from "react"
-import { PropsForType, UserWithAssignment } from "../../types/types"
+import { PropsForType, SolutionExtended } from "../../types/types"
 import { Link, useParams } from "react-router-dom"
 
 import groupRoleContext from "../../GroupRoleContext"
-import { SolutionFilter } from "./filter/SolutionFilter"
 import NotFound from "../errors/NotFound"
 import Loading from "../animations/Loading"
+import { solutionFilter } from "./filter/SolutionFilter"
 
 function SolutionsTypes({ type }: PropsForType) {
   const [isLoading, setIsLoading] = useState<boolean>(true)
-  const [usersWithAssigment, setUserWithAssignment] = useState<
-    UserWithAssignment[]
+  const [solutionsExtended, setSolutionsExtended] = useState<
+    SolutionExtended[]
   >([])
   const { id = "" } = useParams()
   const { role } = useContext(groupRoleContext)
-  const { checkSolutions, uncheckedSolutions, lateSolutions } = SolutionFilter({
-    setUsersWithAssignment: setUserWithAssignment,
+  const { checkSolutions, uncheckedSolutions, lateSolutions } = solutionFilter({
+    setSolutionsExtended,
     id: id,
   })
   function typeOfSolutions() {
     switch (type) {
       case "check":
         checkSolutions()
-          .then(() => setIsLoading(false))
-          .catch()
+        setIsLoading(false)
         break
       case "late":
         lateSolutions()
-          .then(() => setIsLoading(false))
-          .catch()
+        setIsLoading(false)
         break
       case "uncheck":
         uncheckedSolutions()
-          .then(() => setIsLoading(false))
-          .then()
+        setIsLoading(false)
         break
       default:
         break
@@ -41,7 +38,8 @@ function SolutionsTypes({ type }: PropsForType) {
   }
   console.log(type)
   useEffect(() => {
-    setUserWithAssignment([])
+    setIsLoading(true)
+    setSolutionsExtended([])
     typeOfSolutions()
   }, [type])
   if (role !== "Teacher") {
@@ -54,21 +52,21 @@ function SolutionsTypes({ type }: PropsForType) {
   return (
     <>
       <ul>
-        {usersWithAssigment.map((userWithAssignment) => (
+        {solutionsExtended.map((solutionExtended) => (
           <li
             key={
-              userWithAssignment.solution.id +
-              userWithAssignment.assignment.id +
-              userWithAssignment.user.id
+              solutionExtended.id +
+              solutionExtended.assignment.id +
+              solutionExtended.user.id
             }
           >
             <Link
-              to={`/group/${userWithAssignment.assignment.groupId}/solution/${userWithAssignment.user.id}/${userWithAssignment.assignment.id}`}
-              state={{ userWithAssignment: userWithAssignment }}
+              to={`/group/${solutionExtended.assignment.groupId}/solution/${solutionExtended.user.id}/${solutionExtended.assignment.id}`}
+              state={{ solution: solutionExtended }}
             >
-              {userWithAssignment.user.firstname}
-              {userWithAssignment.assignment.title}
-              {userWithAssignment.assignment.max_points}
+              {solutionExtended.user.firstname}
+              {solutionExtended.assignment.title}
+              {solutionExtended.assignment.max_points}
             </Link>
           </li>
         ))}

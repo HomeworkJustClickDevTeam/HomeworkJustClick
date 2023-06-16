@@ -133,12 +133,12 @@ interface Solution {
 }
 interface SolutionTypesProp {
   id: string
-  setUsersWithAssignment: (userWithAssignment: UserWithAssignment[]) => void
+  setSolutionsExtended: (solutionExtended: SolutionExtended[]) => void
 }
-interface UserWithAssignment {
+interface SolutionExtended {
+  id: number
   user: UserToShow
   assignment: Assigment
-  solution: Solution
 }
 interface FileFromPost {
   mongo_id: string
