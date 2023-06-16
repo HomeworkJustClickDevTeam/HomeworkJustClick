@@ -87,6 +87,7 @@ interface AssigmentItemProps extends AssigmentProps {
 
 interface UserItemToDisplay {
   userToShow: UserToShow
+  isTeacher?: boolean
 }
 type FileRespondMongo = {
   id: string
