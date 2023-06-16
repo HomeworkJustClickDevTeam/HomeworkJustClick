@@ -26,4 +26,7 @@ public interface EvaluationRepository extends JpaRepository<Evaluation, Integer>
 
     @Query(value = "select e.* from _evaluation e join _solution s on e.solution_id = s.id where s.id = :solution_id", nativeQuery = true)
     public Optional<Evaluation> getEvaluationBySolution(@Param("solution_id") int solution_id);
+
+    @Query(value = "select count(e.*) from _evaluation e join _solution s on e.solution_id = s.id where s.id = :solution_id", nativeQuery = true)
+    public int checkForEvaluationToSolution(@Param("solution_id") int solution_id);
 }

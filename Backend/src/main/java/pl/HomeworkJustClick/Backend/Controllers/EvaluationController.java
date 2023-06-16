@@ -535,4 +535,22 @@ public class EvaluationController {
         }
     }
 
+    @Operation(
+            summary = "Checks if solution with given id has already been evaluated. Returns true if so, false otherwise. False may also indicates that there is no solution in the DB with given id.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK.",
+                            content = @Content(
+                                    mediaType = "string",
+                                    schema = @Schema(implementation = String.class)
+                            )
+                    )
+            }
+    )
+    @GetMapping("/evaluation/checkForEvaluationToSolution/{solution_id}")
+    public ResponseEntity<Boolean> checkForEvaluationToSolution(@PathVariable("solution_id") int solution_id) {
+        return new ResponseEntity<>(evaluationService.checkForEvaluationToSolution(solution_id), HttpStatus.OK);
+    }
+
 }
