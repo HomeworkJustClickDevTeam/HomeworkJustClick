@@ -15,6 +15,7 @@ import pl.HomeworkJustClick.Backend.Responses.UserResponse;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -322,7 +323,9 @@ public class AssignmentServiceImplement implements AssignmentService {
 
     @Override
     public List<AssignmentResponse> getUndoneAssignmentsByGroupIdAndUserId(int group_id, int user_id){
-        List<Assignment> assignmentList = assignmentRepository.getUndoneAssignmentsByGroupIdAndUserId(group_id, user_id);
+        List<Assignment> assignmentList = assignmentRepository.getAllAssignmentsByGroupIdAndUserId(group_id, user_id);
+        List<Assignment> doneAssignmentList = assignmentRepository.getDoneAssignmentsByGroupIdAndUserId(group_id, user_id);
+        assignmentList.removeAll(doneAssignmentList);
         List<AssignmentResponse> assignmentResponseList = new ArrayList<>();
         assignmentList.forEach(assignment -> {
             assignmentResponseList.add(buildAssignmentResponse(assignment));
@@ -332,7 +335,9 @@ public class AssignmentServiceImplement implements AssignmentService {
 
     @Override
     public List<AssignmentResponse> getUndoneAssignmentsByStudent(int student_id) {
-        List<Assignment> assignmentList = assignmentRepository.getUndoneAssignmentsByStudent(student_id);
+        List<Assignment> assignmentList = assignmentRepository.getAllAssignmentsByStudent(student_id);
+        List<Assignment> doneAssignmentList = assignmentRepository.getDoneAssignmentsByStudent(student_id);
+        assignmentList.removeAll(doneAssignmentList);
         List<AssignmentResponse> assignmentResponseList = new ArrayList<>();
         assignmentList.forEach(assignment -> {
             assignmentResponseList.add(buildAssignmentResponse(assignment));
@@ -362,40 +367,56 @@ public class AssignmentServiceImplement implements AssignmentService {
 
     @Override
     public List<AssignmentResponse> getExpiredUndoneAssignmentsByGroupIdAndUserId(int group_id, int user_id) {
-        List<Assignment> assignmentList = assignmentRepository.getExpiredUndoneAssignmentsByGroupIdAndUserId(group_id, user_id);
+        List<Assignment> assignmentList = assignmentRepository.getAllAssignmentsByGroupIdAndUserId(group_id, user_id);
+        List<Assignment> doneAssignmentList = assignmentRepository.getDoneAssignmentsByGroupIdAndUserId(group_id, user_id);
+        assignmentList.removeAll(doneAssignmentList);
         List<AssignmentResponse> assignmentResponseList = new ArrayList<>();
         assignmentList.forEach(assignment -> {
-            assignmentResponseList.add(buildAssignmentResponse(assignment));
+            if(assignment.getCompletionDatetime().isBefore(OffsetDateTime.now())) {
+                assignmentResponseList.add(buildAssignmentResponse(assignment));
+            }
         });
         return assignmentResponseList;
     }
 
     @Override
     public List<AssignmentResponse> getExpiredUndoneAssignmentsByStudent(int student_id){
-        List<Assignment> assignmentList = assignmentRepository.getExpiredUndoneAssignmentsByStudent(student_id);
+        List<Assignment> assignmentList = assignmentRepository.getAllAssignmentsByStudent(student_id);
+        List<Assignment> doneAssignmentList = assignmentRepository.getDoneAssignmentsByStudent(student_id);
+        assignmentList.removeAll(doneAssignmentList);
         List<AssignmentResponse> assignmentResponseList = new ArrayList<>();
         assignmentList.forEach(assignment -> {
-            assignmentResponseList.add(buildAssignmentResponse(assignment));
+            if(assignment.getCompletionDatetime().isBefore(OffsetDateTime.now())) {
+                assignmentResponseList.add(buildAssignmentResponse(assignment));
+            }
         });
         return assignmentResponseList;
     }
 
     @Override
     public List<AssignmentResponse> getNonExpiredUndoneAssignmentsByGroupIdAndUserId(int group_id, int user_id) {
-        List<Assignment> assignmentList = assignmentRepository.getNonExpiredUndoneAssignmentsByGroupIdAndUserId(group_id, user_id);
+        List<Assignment> assignmentList = assignmentRepository.getAllAssignmentsByGroupIdAndUserId(group_id, user_id);
+        List<Assignment> doneAssignmentList = assignmentRepository.getDoneAssignmentsByGroupIdAndUserId(group_id, user_id);
+        assignmentList.removeAll(doneAssignmentList);
         List<AssignmentResponse> assignmentResponseList = new ArrayList<>();
         assignmentList.forEach(assignment -> {
-            assignmentResponseList.add(buildAssignmentResponse(assignment));
+            if(assignment.getCompletionDatetime().isAfter(OffsetDateTime.now())) {
+                assignmentResponseList.add(buildAssignmentResponse(assignment));
+            }
         });
         return assignmentResponseList;
     }
 
     @Override
     public List<AssignmentResponse> getNonExpiredUndoneAssignmentsByStudent(int student_id) {
-        List<Assignment> assignmentList = assignmentRepository.getNonExpiredUndoneAssignmentsByStudent(student_id);
+        List<Assignment> assignmentList = assignmentRepository.getAllAssignmentsByStudent(student_id);
+        List<Assignment> doneAssignmentList = assignmentRepository.getDoneAssignmentsByStudent(student_id);
+        assignmentList.removeAll(doneAssignmentList);
         List<AssignmentResponse> assignmentResponseList = new ArrayList<>();
         assignmentList.forEach(assignment -> {
-            assignmentResponseList.add(buildAssignmentResponse(assignment));
+            if(assignment.getCompletionDatetime().isAfter(OffsetDateTime.now())) {
+                assignmentResponseList.add(buildAssignmentResponse(assignment));
+            }
         });
         return assignmentResponseList;
     }
@@ -447,7 +468,9 @@ public class AssignmentServiceImplement implements AssignmentService {
 
     @Override
     public List<AssignmentResponseExtended> getUndoneAssignmentsByGroupIdAndUserIdExtended(int group_id, int user_id){
-        List<Assignment> assignmentList = assignmentRepository.getUndoneAssignmentsByGroupIdAndUserId(group_id, user_id);
+        List<Assignment> assignmentList = assignmentRepository.getAllAssignmentsByGroupIdAndUserId(group_id, user_id);
+        List<Assignment> doneAssignmentList = assignmentRepository.getDoneAssignmentsByGroupIdAndUserId(group_id, user_id);
+        assignmentList.removeAll(doneAssignmentList);
         List<AssignmentResponseExtended> assignmentResponseList = new ArrayList<>();
         assignmentList.forEach(assignment -> {
             assignmentResponseList.add(buildAssignmentResponseExtended(assignment));
@@ -457,7 +480,9 @@ public class AssignmentServiceImplement implements AssignmentService {
 
     @Override
     public List<AssignmentResponseExtended> getUndoneAssignmentsByStudentExtended(int student_id) {
-        List<Assignment> assignmentList = assignmentRepository.getUndoneAssignmentsByStudent(student_id);
+        List<Assignment> assignmentList = assignmentRepository.getAllAssignmentsByStudent(student_id);
+        List<Assignment> doneAssignmentList = assignmentRepository.getDoneAssignmentsByStudent(student_id);
+        assignmentList.removeAll(doneAssignmentList);
         List<AssignmentResponseExtended> assignmentResponseList = new ArrayList<>();
         assignmentList.forEach(assignment -> {
             assignmentResponseList.add(buildAssignmentResponseExtended(assignment));
@@ -487,43 +512,60 @@ public class AssignmentServiceImplement implements AssignmentService {
 
     @Override
     public List<AssignmentResponseExtended> getExpiredUndoneAssignmentsByGroupIdAndUserIdExtended(int group_id, int user_id) {
-        List<Assignment> assignmentList = assignmentRepository.getExpiredUndoneAssignmentsByGroupIdAndUserId(group_id, user_id);
+        List<Assignment> assignmentList = assignmentRepository.getAllAssignmentsByGroupIdAndUserId(group_id, user_id);
+        List<Assignment> doneAssignmentList = assignmentRepository.getDoneAssignmentsByGroupIdAndUserId(group_id, user_id);
+        assignmentList.removeAll(doneAssignmentList);
         List<AssignmentResponseExtended> assignmentResponseList = new ArrayList<>();
         assignmentList.forEach(assignment -> {
-            assignmentResponseList.add(buildAssignmentResponseExtended(assignment));
+            if(assignment.getCompletionDatetime().isBefore(OffsetDateTime.now())) {
+                assignmentResponseList.add(buildAssignmentResponseExtended(assignment));
+            }
         });
         return assignmentResponseList;
     }
 
     @Override
     public List<AssignmentResponseExtended> getExpiredUndoneAssignmentsByStudentExtended(int student_id){
-        List<Assignment> assignmentList = assignmentRepository.getExpiredUndoneAssignmentsByStudent(student_id);
+        List<Assignment> assignmentList = assignmentRepository.getAllAssignmentsByStudent(student_id);
+        List<Assignment> doneAssignmentList = assignmentRepository.getDoneAssignmentsByStudent(student_id);
+        assignmentList.removeAll(doneAssignmentList);
         List<AssignmentResponseExtended> assignmentResponseList = new ArrayList<>();
         assignmentList.forEach(assignment -> {
-            assignmentResponseList.add(buildAssignmentResponseExtended(assignment));
+            if(assignment.getCompletionDatetime().isBefore(OffsetDateTime.now())) {
+                assignmentResponseList.add(buildAssignmentResponseExtended(assignment));
+            }
         });
         return assignmentResponseList;
     }
 
     @Override
     public List<AssignmentResponseExtended> getNonExpiredUndoneAssignmentsByGroupIdAndUserIdExtended(int group_id, int user_id) {
-        List<Assignment> assignmentList = assignmentRepository.getNonExpiredUndoneAssignmentsByGroupIdAndUserId(group_id, user_id);
+        List<Assignment> assignmentList = assignmentRepository.getAllAssignmentsByGroupIdAndUserId(group_id, user_id);
+        List<Assignment> doneAssignmentList = assignmentRepository.getDoneAssignmentsByGroupIdAndUserId(group_id, user_id);
+        assignmentList.removeAll(doneAssignmentList);
         List<AssignmentResponseExtended> assignmentResponseList = new ArrayList<>();
         assignmentList.forEach(assignment -> {
-            assignmentResponseList.add(buildAssignmentResponseExtended(assignment));
+            if(assignment.getCompletionDatetime().isAfter(OffsetDateTime.now())) {
+                assignmentResponseList.add(buildAssignmentResponseExtended(assignment));
+            }
         });
         return assignmentResponseList;
     }
 
     @Override
     public List<AssignmentResponseExtended> getNonExpiredUndoneAssignmentsByStudentExtended(int student_id) {
-        List<Assignment> assignmentList = assignmentRepository.getNonExpiredUndoneAssignmentsByStudent(student_id);
+        List<Assignment> assignmentList = assignmentRepository.getAllAssignmentsByStudent(student_id);
+        List<Assignment> doneAssignmentList = assignmentRepository.getDoneAssignmentsByStudent(student_id);
+        assignmentList.removeAll(doneAssignmentList);
         List<AssignmentResponseExtended> assignmentResponseList = new ArrayList<>();
         assignmentList.forEach(assignment -> {
-            assignmentResponseList.add(buildAssignmentResponseExtended(assignment));
+            if(assignment.getCompletionDatetime().isAfter(OffsetDateTime.now())) {
+                assignmentResponseList.add(buildAssignmentResponseExtended(assignment));
+            }
         });
         return assignmentResponseList;
     }
+
 
     @Override
     public List<AssignmentResponseExtended> getAllAssignmentsByStudentExtended(int user_id){
