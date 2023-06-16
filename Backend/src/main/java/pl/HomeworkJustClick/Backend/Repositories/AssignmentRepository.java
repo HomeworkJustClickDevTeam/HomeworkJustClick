@@ -17,29 +17,11 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Integer>
     @Query(value = "select a.* from _assignment a join _group_student gs on a.group_id = gs.group_id where a.group_id = :group_id and gs.user_id = :user_id", nativeQuery = true)
     List<Assignment> getAllAssignmentsByGroupIdAndUserId(@Param("group_id") int group_id, @Param("user_id") int user_id);
 
-    @Query(value = "select a.* from _assignment a join _group_student gs on a.group_id = gs.group_id left outer join _solution s on a.id = s.assignment_id where a.group_id = :group_id and gs.user_id = :user_id and s.id is null", nativeQuery = true)
-    List<Assignment> getUndoneAssignmentsByGroupIdAndUserId(@Param("group_id") int group_id, @Param("user_id") int user_id);
-
-    @Query(value = "select a.* from _assignment a join _group_student gs on a.group_id = gs.group_id left outer join _solution s on a.id = s.assignment_id where gs.user_id = :user_id and s.id is null", nativeQuery = true)
-    List<Assignment> getUndoneAssignmentsByStudent(@Param("user_id") int user_id);
-
-    @Query(value = "select a.* from _assignment a join _group_student gs on a.group_id = gs.group_id left outer join _solution s on a.id = s.assignment_id where a.group_id = :group_id and gs.user_id = :user_id and s.id is not null", nativeQuery = true)
+    @Query(value = "select a.* from _assignment a join _solution s on a.id = s.assignment_id where s.user_id=:user_id and s.group_id=:group_id", nativeQuery = true)
     List<Assignment> getDoneAssignmentsByGroupIdAndUserId(@Param("group_id") int group_id, @Param("user_id") int user_id);
 
-    @Query(value = "select a.* from _assignment a join _group_student gs on a.group_id = gs.group_id left outer join _solution s on a.id = s.assignment_id where gs.user_id = :user_id and s.id is not null", nativeQuery = true)
+    @Query(value = "select a.* from _assignment a join _solution s on a.id = s.assignment_id where s.user_id=:user_id", nativeQuery = true)
     List<Assignment> getDoneAssignmentsByStudent(@Param("user_id") int user_id);
-
-    @Query(value = "select a.* from _assignment a join _group_student gs on a.group_id = gs.group_id left outer join _solution s on a.id = s.assignment_id where a.group_id = :group_id and gs.user_id = :user_id and s.id is null and a.completion_datetime < now();", nativeQuery = true)
-    List<Assignment> getExpiredUndoneAssignmentsByGroupIdAndUserId(@Param("group_id") int group_id, @Param("user_id") int user_id);
-
-    @Query(value = "select a.* from _assignment a join _group_student gs on a.group_id = gs.group_id left outer join _solution s on a.id = s.assignment_id where gs.user_id = :student_id and s.id is null and a.completion_datetime < now();", nativeQuery = true)
-    List<Assignment> getExpiredUndoneAssignmentsByStudent(@Param("student_id") int student_id);
-
-    @Query(value = "select a.* from _assignment a join _group_student gs on a.group_id = gs.group_id left outer join _solution s on a.id = s.assignment_id where a.group_id = :group_id and gs.user_id = :user_id and s.id is null and a.completion_datetime > now();", nativeQuery = true)
-    List<Assignment> getNonExpiredUndoneAssignmentsByGroupIdAndUserId(@Param("group_id") int group_id, @Param("user_id") int user_id);
-
-    @Query(value = "select a.* from _assignment a join _group_student gs on a.group_id = gs.group_id left outer join _solution s on a.id = s.assignment_id where gs.user_id = :student_id and s.id is null and a.completion_datetime > now();", nativeQuery = true)
-    List<Assignment> getNonExpiredUndoneAssignmentsByStudent(@Param("student_id") int student_id);
 
     @Query(value = "select a.* from _assignment a join _group_student gs on a.group_id = gs.group_id where gs.user_id = :user_id", nativeQuery = true)
     List<Assignment> getAllAssignmentsByStudent(@Param("user_id") int user_id);
