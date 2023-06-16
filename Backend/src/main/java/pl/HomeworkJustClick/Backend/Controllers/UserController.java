@@ -255,7 +255,7 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
-            return new ResponseEntity<>(userService.getTeachersByGroup(group_id), HttpStatus.OK);
+            return new ResponseEntity<>(userService.getStudentsByGroup(group_id), HttpStatus.OK);
         }
     }
 

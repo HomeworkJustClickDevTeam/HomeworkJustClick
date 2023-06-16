@@ -1,6 +1,4 @@
-import { useContext, useState } from "react";
-import userContext from '../../../UserContext'
-import Loading from "../../animations/Loading";
+import { useState } from "react";
 import {newCredentials} from "../../../types/types"
 import postgresqlDatabase from "../../../services/postgresDatabase";
 import { AxiosError } from "axios";
@@ -17,7 +15,7 @@ export default function UserSecuritySettings(): JSX.Element{
         console.log(newCredentials)
         if((newCredentials.newPassword === newPasswordApproval) && ((typeof newCredentials.password || typeof newCredentials.newPassword || typeof newPasswordApproval) !== undefined)){
             await postgresqlDatabase
-                .post("/auth/changePassword", newCredentials)
+                .post("/user/changePassword", newCredentials)
                 .catch((error:AxiosError) => {
                     console.log(error)
                 })

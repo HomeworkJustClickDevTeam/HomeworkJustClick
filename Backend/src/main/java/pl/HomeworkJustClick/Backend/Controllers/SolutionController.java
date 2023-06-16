@@ -19,6 +19,7 @@ import pl.HomeworkJustClick.Backend.Services.SolutionService;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -1322,6 +1323,90 @@ public class SolutionController {
     )
     public ResponseEntity<Boolean> checkForEvaluationToSolution(@PathVariable("solution_id") int id) {
         return new ResponseEntity<>(solutionService.checkForEvaluationToSolution(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/solution/getCheckedSolutionByUserAssignmentGroup/{user_id}/{assignment_id}/{group_id}")
+    @Operation(
+            summary = "Returns checked solution for a given user, assignment and group.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = SolutionResponse.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Could not find assignment/user/group.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = SolutionResponse.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Could not find solution for given ids.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = SolutionResponse.class)
+                            )
+                    )
+            }
+    )
+    public ResponseEntity<SolutionResponse> getCheckedSolutionByUserAssignmentGroup(@PathVariable("user_id") int userId, @PathVariable("assignment_id") int assignmentId, @PathVariable("group_id") int groupId){
+        SolutionResponse solutionResponse = solutionService.getCheckedSolutionByUserAssignmentGroup(userId, groupId, assignmentId);
+        if(solutionResponse.isForbidden()){
+            return new ResponseEntity<>(solutionResponse, HttpStatus.BAD_REQUEST);
+        } else if (solutionResponse.getId()!=0) {
+            return new ResponseEntity<>(solutionResponse, HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>(solutionResponse, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/solution/getUncheckedSolutionByUserAssignmentGroup/{user_id}/{assignment_id}/{group_id}")
+    @Operation(
+            summary = "Returns unchecked solution for a given user, assignment and group.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = SolutionResponse.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Could not find assignment/user/group.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = SolutionResponse.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Could not find solution for given ids.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = SolutionResponse.class)
+                            )
+                    )
+            }
+    )
+    public ResponseEntity<SolutionResponse> getUncheckedSolutionByUserAssignmentGroup(@PathVariable("user_id") int userId, @PathVariable("assignment_id") int assignmentId, @PathVariable("group_id") int groupId){
+        SolutionResponse solutionResponse = solutionService.getUncheckedSolutionByUserAssignmentGroup(userId, groupId, assignmentId);
+        if(solutionResponse.isForbidden()){
+            return new ResponseEntity<>(solutionResponse, HttpStatus.BAD_REQUEST);
+        } else if (solutionResponse.getId()!=0) {
+            return new ResponseEntity<>(solutionResponse, HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>(solutionResponse, HttpStatus.NOT_FOUND);
+        }
     }
 
 }
