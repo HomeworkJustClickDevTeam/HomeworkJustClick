@@ -18,29 +18,29 @@ function SolutionsTypes({ type }: PropsForType) {
     setUsersWithAssignment: setUserWithAssignment,
     id: id,
   })
-  function typeOfSolutions() {
-    switch (type) {
-      case "check":
-        checkSolutions()
-          .then(() => setIsLoading(false))
-          .catch()
-        break
-      case "late":
-        lateSolutions()
-          .then(() => setIsLoading(false))
-          .catch()
-        break
-      case "uncheck":
-        uncheckedSolutions()
-          .then(() => setIsLoading(false))
-          .then()
-        break
-      default:
-        break
-    }
-  }
   console.log(type)
   useEffect(() => {
+    function typeOfSolutions() {
+      switch (type) {
+        case "check":
+          checkSolutions()
+            .then(() => setIsLoading(false))
+            .catch()
+          break
+        case "late":
+          lateSolutions()
+            .then(() => setIsLoading(false))
+            .catch()
+          break
+        case "uncheck":
+          uncheckedSolutions()
+            .then(() => setIsLoading(false))
+            .then()
+          break
+        default:
+          break
+      }
+    }
     setUserWithAssignment([])
     typeOfSolutions()
   }, [type])

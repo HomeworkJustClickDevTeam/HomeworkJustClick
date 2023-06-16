@@ -20,9 +20,7 @@ function TeacherDisplayer({ id }: GroupProp) {
       <h1>Teachers:</h1>
       <ul>
         {teachers?.map((teacher) => (
-          <li key={teacher.id}>
-            <UserItem userToShow={teacher} />
-          </li>
+            <UserItem userToShow={teacher} key={teacher.id}/>
         ))}
       </ul>
     </div>

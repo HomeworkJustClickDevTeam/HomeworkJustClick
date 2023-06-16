@@ -16,10 +16,10 @@ export default function CheckedSolution(props:{solution:Solution | undefined, as
       .then((response) => setEvaluation(response.data))
       .catch((error:AxiosError) => console.log(error))
 
-    if(typeof evaluation !== undefined){
+    if(evaluation){
       setIsLoading(false)
     }
-  })
+  },[])
   if (isLoading) {
     return <Loading />
   }

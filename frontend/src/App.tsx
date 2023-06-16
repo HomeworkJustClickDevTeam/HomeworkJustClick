@@ -30,6 +30,7 @@ import UserSecuritySettings from "./components/user/settings/UserSecuritySetting
 import UserAppearanceSettings from "./components/user/settings/UserAppearanceSettings"
 import UserMarkingTablesSettings from "./components/user/settings/UserMarkingTablesSettings"
 import GroupSettings from "./components/group/settings/GroupSettings"
+import UserProfileInGroup from "./components/group/users/UserProfileInGroup";
 
 function App() {
   const initialState: ApplicationState = {
@@ -112,6 +113,7 @@ function App() {
                 <Route path="/group/:id" element={<Group />}>
                   <Route path="settings" element={<GroupSettings />} />
                   <Route path="users" element={<Users />} />
+                  <Route path="userProfileInGroup/:idUser" element={<UserProfileInGroup/>}/>
                   <Route
                     path="assignments"
                     element={<AssignmentsGroupDisplayed />}
