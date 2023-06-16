@@ -51,4 +51,6 @@ public interface EvaluationService {
 
     public EvaluationResponseExtended getEvaluationBySolutionExtended(int solution_id);
 
+    public Boolean checkForEvaluationToSolution(int solution_id);
+
 }
