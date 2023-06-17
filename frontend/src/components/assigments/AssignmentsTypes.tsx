@@ -20,25 +20,26 @@ function AssignmentsTypes({ type }: PropsForType) {
       userId: userState.userId,
       setAssignments: setAssignments,
     })
-  function typeOfAssigment() {
-    switch (type) {
-      case "expired":
-        expiredAssignments()
-        setIsLoading(false)
-        break
-      case "done":
-        doneAssignments()
-        setIsLoading(false)
-        break
-      case "todo":
-        noneExpiredAssignments()
-        setIsLoading(false)
-        break
-      default:
-        break
-    }
-  }
+
   useEffect(() => {
+    function typeOfAssigment() {
+      switch (type) {
+        case "expired":
+          expiredAssignments()
+          setIsLoading(false)
+          break
+        case "done":
+          doneAssignments()
+          setIsLoading(false)
+          break
+        case "todo":
+          noneExpiredAssignments()
+          setIsLoading(false)
+          break
+        default:
+          break
+      }
+    }
     if (role === "Student") {
       typeOfAssigment()
     } else {
@@ -55,9 +56,9 @@ function AssignmentsTypes({ type }: PropsForType) {
   return (
     <>
       <ul>
-        {assignments.map((assigment) => (
-          <li key={assigment.id}>
-            <AssigmentItem assignment={assigment} idGroup={id} />{" "}
+        {assignments.map((assignment) => (
+          <li key={assignment.id}>
+            <AssigmentItem assignment={assignment} idGroup={id} />{" "}
           </li>
         ))}
       </ul>

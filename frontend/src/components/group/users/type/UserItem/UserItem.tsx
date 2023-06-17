@@ -1,12 +1,26 @@
 import {UserItemToDisplay} from "../../../../../types/types";
+import {useContext} from "react";
+import GroupRoleContext from "../../../../../GroupRoleContext";
 
-function UserItem({userToShow}:UserItemToDisplay) {
 
-    return(
-        <>
-            <p>{userToShow.firstname} {userToShow.lastname}</p>
-        </>
+function UserItem({userToShow, isTeacher}:UserItemToDisplay) {
+  const {role} = useContext(GroupRoleContext)
+
+  if(!isTeacher && role==="Teacher") {
+    return (
+      <li>
+        <a href={"userProfileInGroup/" + userToShow.id}>
+          {userToShow.firstname} {userToShow.lastname}
+        </a>
+      </li>
     )
-
+  }
+  else {
+    return (
+      <li>
+        {userToShow.firstname} {userToShow.lastname}
+      </li>
+    )
+  }
 }
 export default UserItem

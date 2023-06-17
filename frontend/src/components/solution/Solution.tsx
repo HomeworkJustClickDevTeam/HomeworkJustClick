@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom"
 import { useEffect, useState } from "react"
-import { FileFromPost, UserWithAssignment } from "../../types/types"
+import { FileFromPost, SolutionExtended } from "../../types/types"
 import AssigmentItem from "../assigments/assigmentDisplayer/assigmentItem/AssigmentItem"
 import mongoDatabase from "../../services/mongoDatabase"
 import postgresqlDatabase from "../../services/postgresDatabase"
@@ -13,9 +13,7 @@ function Solution() {
   const [fileName, setFileName] = useState<string>("")
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [databaseFile, setDatabaseFile] = useState<FileFromPost[]>([])
-  const [userWithAssignment] = useState<UserWithAssignment>(
-    state?.userWithAssignment
-  )
+  const [solutionExtended] = useState<SolutionExtended>(state?.solution)
   const [points, setPoints] = useState<number>()
   const [showRating, setShowRating] = useState<boolean>(false)
 
@@ -23,7 +21,7 @@ function Solution() {
     const fetchData = async () => {
       try {
         const response = await postgresqlDatabase.get(
-          `/files/bySolution/${userWithAssignment.solution.id}`
+          `/files/bySolution/${solutionExtended.id}`
         )
         console.log(response.data)
         setDatabaseFile(response.data)
@@ -83,11 +81,11 @@ function Solution() {
   return (
     <>
       <AssigmentItem
-        idGroup={`${userWithAssignment.assignment.groupId}`}
-        assignment={userWithAssignment.assignment}
+        idGroup={`${solutionExtended.assignment.groupId}`}
+        assignment={solutionExtended.assignment}
       />
       <h1>
-        Points: {points} /{userWithAssignment.assignment.max_points}
+        Points: {points} /{solutionExtended.assignment.max_points}
       </h1>
       <div>
         <button onClick={handleDownload}>{fileName}</button>
@@ -95,11 +93,11 @@ function Solution() {
       {showRating ? (
         <div>
           <Rating
-            maxPoints={userWithAssignment.assignment.max_points}
+            maxPoints={solutionExtended.assignment.max_points}
             points={points}
             setPoints={setPoints}
-            solutionId={userWithAssignment.assignment.id}
-            groupId={userWithAssignment.assignment.groupId}
+            solutionId={solutionExtended.assignment.id}
+            groupId={solutionExtended.assignment.groupId}
           />
           <button onClick={handleDisableRating}>Schowaj Punkty</button>
         </div>

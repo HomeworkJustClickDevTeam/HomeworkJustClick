@@ -83,10 +83,12 @@ interface AssigmentProps {
 }
 interface AssigmentItemProps extends AssigmentProps {
   idGroup: string
+  optionalUserId?:string
 }
 
 interface UserItemToDisplay {
   userToShow: UserToShow
+  isTeacher?: boolean
 }
 type FileRespondMongo = {
   id: string
@@ -133,12 +135,12 @@ interface Solution {
 }
 interface SolutionTypesProp {
   id: string
-  setUsersWithAssignment: (userWithAssignment: UserWithAssignment[]) => void
+  setSolutionsExtended: (solutionExtended: SolutionExtended[]) => void
 }
-interface UserWithAssignment {
+interface SolutionExtended {
+  id: number
   user: UserToShow
   assignment: Assigment
-  solution: Solution
 }
 interface FileFromPost {
   mongo_id: string
