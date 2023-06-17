@@ -7,8 +7,8 @@ function AssigmentItem({ assignment, idGroup, optionalUserId }: AssigmentItemPro
   return (
     <>
       <Link to={`/group/${idGroup}/assigment/${assignment.id}`} state={optionalUserId}>
-        {assignment.title}
-        {format(completionDatetime, "dd MM yyyy, HH:mm")}
+        Tytuł zadania: {assignment.title}
+        Data: {format(completionDatetime, "dd MM yyyy, HH:mm")}
       </Link>
     </>
   )

@@ -61,7 +61,7 @@ export default function UserProfileInGroup(){
             <dd>
               <ul>
                 {undoneAssignments?.map((assignment) =>{
-                  return(<li>Zadanie: {assignment.title}</li>)
+                  return(<li><AssigmentItem optionalUserId={userProfile?.id.toString()} assignment={assignment} idGroup={id as string} /></li>)
                 })}
               </ul>
             </dd>
@@ -70,7 +70,7 @@ export default function UserProfileInGroup(){
             <dd>
               <ul>
                 {expiredUndoneAssignments?.map((assignment) =>{
-                  return(<li>Zadanie: {assignment.title}</li>)
+                  return(<li><AssigmentItem optionalUserId={userProfile?.id.toString()} assignment={assignment} idGroup={id as string} /></li>)
                 })}
               </ul>
             </dd>

@@ -6,7 +6,7 @@ import GroupRoleContext from "../../../../../GroupRoleContext";
 function UserItem({userToShow, isTeacher}:UserItemToDisplay) {
   const {role} = useContext(GroupRoleContext)
 
-  if(!isTeacher && role==="teacher") {//TO CHANGE
+  if(!isTeacher && role==="Teacher") {
     return (
       <li>
         <a href={"userProfileInGroup/" + userToShow.id}>

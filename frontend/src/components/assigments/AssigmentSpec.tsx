@@ -88,9 +88,9 @@ function AssigmentSpec() {
   console.log(solution)
   return (
     <>
-      {role === "Teacher" ? (
+      {((role === "Teacher") && (typeof optionalUserId === null)) ? (
         <ModifyAssigment assignment={assignment} />
-      ) : (typeof solution === undefined) ? (
+      ) : ((typeof solution === undefined) && (typeof optionalUserId === null)) ? (
         <AddSolution assignment={assignment} />
       ) : isSolutionChecked ? (
         <CheckedSolution assignment={assignment} solution={solution} />
