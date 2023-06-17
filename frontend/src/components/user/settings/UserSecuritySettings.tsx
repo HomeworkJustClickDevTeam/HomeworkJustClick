@@ -15,7 +15,7 @@ export default function UserSecuritySettings(): JSX.Element{
         console.log(newCredentials)
         if((newCredentials.newPassword === newPasswordApproval) && ((typeof newCredentials.password || typeof newCredentials.newPassword || typeof newPasswordApproval) !== undefined)){
             await postgresqlDatabase
-                .post("/user/changePassword", newCredentials)
+                .post("/changePassword", newCredentials)
                 .catch((error:AxiosError) => {
                     console.log(error)
                 })
