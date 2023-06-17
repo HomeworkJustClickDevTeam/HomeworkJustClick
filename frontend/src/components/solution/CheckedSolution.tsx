@@ -5,7 +5,7 @@ import postgresqlDatabase from "../../services/postgresDatabase";
 import {AxiosError} from "axios";
 import Loading from "../animations/Loading";
 
-export default function CheckedSolution(props:{solution:Solution | undefined, assignment:Assigment}){
+export default function CheckedSolution(props:{solution:Solution, assignment:Assigment}){
   const [evaluation, setEvaluation] = useState<Evaluation | undefined>(undefined)
   const [isLoading, setIsLoading] = useState<boolean>(true)
 
@@ -17,7 +17,7 @@ export default function CheckedSolution(props:{solution:Solution | undefined, as
       .catch((error:AxiosError) => console.log(error))
   },[])
 
-  if (typeof evaluation === undefined) {
+  if (evaluation === undefined) {
     return <Loading />
   }
   return(

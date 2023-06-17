@@ -82,20 +82,20 @@ function AssigmentSpec() {
           })
       })
     }, [])
-  if(typeof assignment === undefined){
+  if(assignment === undefined){
     return(<Loading/>)
   }
-  console.log(solution)
+  console.log("Optional", optionalUserId)
   return (
     <>
-      {((role === "Teacher") && (typeof optionalUserId === null)) ? (
+      {((role === "Teacher") && (optionalUserId === null)) ? (
         <ModifyAssigment assignment={assignment} />
-      ) : ((typeof solution === undefined) && (typeof optionalUserId === null)) ? (
+      ) : ((solution === undefined) && (optionalUserId === null)) ? (
         <AddSolution assignment={assignment} />
       ) : isSolutionChecked ? (
-        <CheckedSolution assignment={assignment} solution={solution} />
+        <CheckedSolution assignment={assignment} solution={solution as Solution} />
       ) : (
-        <UncheckedSolution assignment={assignment} solution={solution} />
+        <UncheckedSolution assignment={assignment} solution={solution as Solution} />
       )}
     </>
   )

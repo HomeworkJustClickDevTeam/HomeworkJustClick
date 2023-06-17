@@ -39,7 +39,7 @@ export default function UserProfileInGroup(){
   }, [])
 
 
-  if((typeof userProfile || typeof doneAssignments || typeof expiredUndoneAssignments || typeof undoneAssignments) === undefined){
+  if((userProfile || doneAssignments || expiredUndoneAssignments || undoneAssignments) === undefined){
     return <Loading/>
   }
   return(
