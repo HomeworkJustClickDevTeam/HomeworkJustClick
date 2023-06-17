@@ -2,6 +2,7 @@ import {useNavigate, useParams} from "react-router-dom";
 import postgresqlDatabase from "../../../services/postgresDatabase";
 import {AxiosError} from "axios/index";
 import React, {useEffect, useState} from "react";
+import Loading from "../../animations/Loading";
 
 export default function GroupGeneralSettings(){
   const {id} = useParams<{id: string}>()
@@ -9,7 +10,7 @@ export default function GroupGeneralSettings(){
   const [group, setGroup] = useState<{name:string, description: string, isArchived: boolean|undefined}>({
     name:"",
     description:"",
-    isArchived: false
+    isArchived: undefined
   })
 
   const groupDeletionHandler = async()=>{
@@ -54,6 +55,11 @@ export default function GroupGeneralSettings(){
       .catch((error:AxiosError) => console.log(error))
   }, [])
 
+  if(group.isArchived === undefined)
+  {
+    return (<Loading/>)
+  }
+
   return(
     <>
       <ul>
@@ -84,7 +90,7 @@ export default function GroupGeneralSettings(){
         <li>
           <label htmlFor="archived" className="switch">
               Zarchiwizowana:
-              <input name="archived" type="checkbox" checked={group.isArchived} onClick={archivizationHandler}/>
+              <input name="archived" type="checkbox" defaultChecked={group.isArchived} onClick={archivizationHandler}/>
               <span className="slider"></span>
           </label>
         </li>
