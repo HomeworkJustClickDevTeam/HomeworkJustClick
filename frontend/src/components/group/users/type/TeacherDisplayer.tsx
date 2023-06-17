@@ -14,15 +14,13 @@ function TeacherDisplayer({ id }: GroupProp) {
         setTeachers(teacher)
       })
       .catch((e) => console.log(e))
-  }, [id])
+  }, [])
   return (
     <div>
       <h1>Teachers:</h1>
       <ul>
         {teachers?.map((teacher) => (
-          <li key={teacher.id}>
-            <UserItem userToShow={teacher} />
-          </li>
+            <UserItem isTeacher={true} userToShow={teacher} key={teacher.id}/>
         ))}
       </ul>
     </div>

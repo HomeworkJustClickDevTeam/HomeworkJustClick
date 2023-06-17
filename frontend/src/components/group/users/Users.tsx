@@ -1,5 +1,5 @@
 import UsersDisplayer from "./UsersDisplayer"
-import { useParams } from "react-router-dom"
+import {Outlet, useParams} from "react-router-dom"
 
 function Users() {
   const { id } = useParams()

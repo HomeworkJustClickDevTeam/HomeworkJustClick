@@ -604,23 +604,33 @@ public class SolutionServiceImplement implements SolutionService{
 
     @Override
     public SolutionResponse getCheckedSolutionByUserAssignmentGroup(int user_id, int group_id, int assignment_id) {
-        Optional<Solution> solution = solutionRepository.getCheckedSolutionByUserAssignmentGroup(assignment_id, user_id, group_id);
         if(assignmentRepository.findById(assignment_id).isPresent() && groupRepository.findById(group_id).isPresent() && userRepository.findById(user_id).isPresent()){
-            return solution.map(this::buildSolutionResponse).orElse(null);
+            Optional<Solution> solution = solutionRepository.getCheckedSolutionByUserAssignmentGroup(assignment_id, user_id, group_id);
+            if (solution.isPresent()){
+                return buildSolutionResponse(solution.get());
+            }
+            else{
+                return SolutionResponse.builder().build();
+            }
         }
         else{
-            return SolutionResponse.builder().build();
+            return SolutionResponse.builder().forbidden(true).build();
         }
 
     }
     @Override
     public SolutionResponse getUncheckedSolutionByUserAssignmentGroup(int user_id, int group_id, int assignment_id) {
-        Optional<Solution> solution = solutionRepository.getUncheckedSolutionByUserAssignmentGroup(assignment_id, user_id, group_id);
         if(assignmentRepository.findById(assignment_id).isPresent() && groupRepository.findById(group_id).isPresent() && userRepository.findById(user_id).isPresent()){
-            return solution.map(this::buildSolutionResponse).orElse(SolutionResponse.builder().forbidden(true).build());
+            Optional<Solution> solution = solutionRepository.getUncheckedSolutionByUserAssignmentGroup(assignment_id, user_id, group_id);
+            if (solution.isPresent()){
+                return buildSolutionResponse(solution.get());
+            }
+            else{
+                return SolutionResponse.builder().build();
+            }
         }
         else{
-            return SolutionResponse.builder().build();
+            return SolutionResponse.builder().forbidden(true).build();
         }
 
     }
