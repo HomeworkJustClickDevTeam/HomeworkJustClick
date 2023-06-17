@@ -1,12 +1,14 @@
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import {UserToShow} from "../../../types/types";
 import {tr} from "date-fns/locale";
 import postgresqlDatabase from "../../../services/postgresDatabase";
 import {current} from "immer";
 import {Axios, AxiosError} from "axios";
+import GroupRoleContext from "../../../GroupRoleContext";
 
 export default function GroupUsersSettingsListElement(props:{userToShow:UserToShow, isStudent:boolean, groupId: string | undefined}){
   const [open, setOpen] = useState(false);
+  const {role} = useContext(GroupRoleContext)
 
   const handleUserDeletion = async () =>{
     props.isStudent ?
@@ -35,7 +37,7 @@ export default function GroupUsersSettingsListElement(props:{userToShow:UserToSh
   }
   return(
     <li>{props.userToShow.firstname} {props.userToShow.lastname}
-      {!props.isStudent ? (<><button onClick={()=>setOpen(!open)}>trzy kropki</button>{open && threeDotsSettingsButtons}</>) : ("")}
+      {role === "Teacher" ? (<><button onClick={()=>setOpen(!open)}>trzy kropki</button>{open && threeDotsSettingsButtons}</>) : ("")}
     </li>
   )
 }
