@@ -7,9 +7,8 @@ import {Axios, AxiosError} from "axios";
 import GroupRoleContext from "../../../GroupRoleContext";
 
 export default function GroupUsersSettingsListElement(props:{userToShow:UserToShow, isStudent:boolean, groupId: string | undefined}){
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
   const {role} = useContext(GroupRoleContext)
-
   const handleUserDeletion = async () =>{
     props.isStudent ?
       (await postgresqlDatabase
@@ -27,7 +26,7 @@ export default function GroupUsersSettingsListElement(props:{userToShow:UserToSh
         .catch((error:AxiosError) => console.log(error)))
       : (Promise<void>)
   }
-  const threeDotsSettingsButtons = () =>{
+  const ThreeDotsSettingsButtons = () =>{
     return(
       <ul>
         <li><button onClick={handleUserDeletion}>usuń z grupy</button></li>
@@ -36,8 +35,8 @@ export default function GroupUsersSettingsListElement(props:{userToShow:UserToSh
     )
   }
   return(
-    <li>{props.userToShow.firstname} {props.userToShow.lastname}
-      {role === "Teacher" ? (<><button onClick={()=>setOpen(!open)}>trzy kropki</button>{open && threeDotsSettingsButtons}</>) : ("")}
-    </li>
+    <li><>{props.userToShow.firstname} {props.userToShow.lastname}
+      {role === "Teacher" ? (<button onClick={()=>setOpen(!open)}>trzy kropki</button>) : ("")}{open && <ThreeDotsSettingsButtons/>}
+    </></li>
   )
 }
