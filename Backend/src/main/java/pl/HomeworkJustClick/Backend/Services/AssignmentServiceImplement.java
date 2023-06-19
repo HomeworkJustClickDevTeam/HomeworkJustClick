@@ -137,12 +137,6 @@ public class AssignmentServiceImplement implements AssignmentService {
         if (!updatedAssignment.getVisible().equals(assignment.getVisible())) {
             assignment.setVisible(updatedAssignment.getVisible());
         }
-        if (!updatedAssignment.getUser().equals(assignment.getUser())) {
-            assignment.setUser(updatedAssignment.getUser());
-        }
-        if (!updatedAssignment.getGroup().equals(assignment.getGroup())) {
-            assignment.setGroup(updatedAssignment.getGroup());
-        }
         if (!updatedAssignment.getTaskDescription().isEmpty() && !updatedAssignment.getTaskDescription().equals(assignment.getTaskDescription())) {
             assignment.setTaskDescription(updatedAssignment.getTaskDescription());
         }
@@ -158,6 +152,9 @@ public class AssignmentServiceImplement implements AssignmentService {
         if (updatedAssignment.getMax_points() >= 0 && updatedAssignment.getMax_points() != assignment.getMax_points()) {
             assignment.setMax_points(updatedAssignment.getMax_points());
         }
+        updatedAssignment.setUser(assignment.getUser());
+        updatedAssignment.setGroup(assignment.getGroup());
+        assignmentRepository.save(updatedAssignment);
         return true;
     }
 
