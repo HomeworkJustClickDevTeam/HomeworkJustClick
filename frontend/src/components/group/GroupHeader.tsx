@@ -26,7 +26,7 @@ function GroupHeader() {
         ) : (
           <Link to="solutions/late">Spóznione</Link>
         )}
-        <Link to="settings">Ustawienia</Link>
+        {role === "Teacher" && <Link to="settings">Ustawienia</Link>}
       </header>
     </>
   )

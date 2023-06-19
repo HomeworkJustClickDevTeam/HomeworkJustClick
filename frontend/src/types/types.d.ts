@@ -86,10 +86,12 @@ interface AssigmentModifyProps extends AssigmentProps {
 }
 interface AssigmentItemProps extends AssigmentProps {
   idGroup: string
+  optionalUserId?:string
 }
 
 interface UserItemToDisplay {
   userToShow: UserToShow
+  isTeacher?: boolean
 }
 type FileRespondMongo = {
   id: string

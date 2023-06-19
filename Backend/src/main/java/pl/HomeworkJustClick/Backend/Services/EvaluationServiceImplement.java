@@ -57,7 +57,7 @@ public class EvaluationServiceImplement implements EvaluationService {
     public EvaluationResponse addWithUserAndSolution(Evaluation evaluation, int user_id, int solution_id) {
         Optional<User> user = userRepository.findById(user_id);
         Optional<Solution> solution = solutionRepository.findById(solution_id);
-        if(user.isPresent() && solution.isPresent()) {
+        if(user.isPresent() && solution.isPresent() ) {
             List<User> userList = userRepository.getTeachersByGroupId(solution.get().getGroup().getId());
             AtomicBoolean ok = new AtomicBoolean(false);
             userList.forEach(user1 -> {
@@ -65,7 +65,7 @@ public class EvaluationServiceImplement implements EvaluationService {
                     ok.set(true);
                 }
             });
-            if(ok.get()) {
+            if(ok.get() && !checkForEvaluationToSolution(solution_id)) {
                 evaluation.setSolution(solution.get());
                 evaluation.setUser(user.get());
                 evaluation.setGroup(solution.get().getGroup());
@@ -114,7 +114,7 @@ public class EvaluationServiceImplement implements EvaluationService {
                     ok.set(true);
                 }
             });
-            if(ok.get()) {
+            if(ok.get() && !checkForEvaluationToSolution(solution_id)) {
                 evaluation.setSolution(solution.get());
                 evaluation.setUser(user.get());
                 evaluation.setGroup(solution.get().getGroup());
@@ -263,6 +263,11 @@ public class EvaluationServiceImplement implements EvaluationService {
     public EvaluationResponseExtended getEvaluationBySolutionExtended(int solution_id){
         Optional<Evaluation> evaluationOptional = evaluationRepository.getEvaluationBySolution(solution_id);
         return evaluationOptional.map(this::buildEvaluationResponseExtended).orElse(null);
+    }
+
+    @Override
+    public Boolean checkForEvaluationToSolution(int solution_id) {
+        return evaluationRepository.checkForEvaluationToSolution(solution_id) != 0;
     }
 
     private EvaluationResponse buildEvaluationResponse(Evaluation evaluation) {

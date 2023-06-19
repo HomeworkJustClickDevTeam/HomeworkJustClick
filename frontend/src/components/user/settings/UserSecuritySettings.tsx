@@ -13,9 +13,9 @@ export default function UserSecuritySettings(): JSX.Element{
     const handleSubmit = async (event:React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         console.log(newCredentials)
-        if((newCredentials.newPassword === newPasswordApproval) && ((typeof newCredentials.password || typeof newCredentials.newPassword || typeof newPasswordApproval) !== undefined)){
+        if((newCredentials.newPassword === newPasswordApproval) && ((newCredentials.password || newCredentials.newPassword || newPasswordApproval) !== undefined)){
             await postgresqlDatabase
-                .post("/user/changePassword", newCredentials)
+                .post("/changePassword", newCredentials)
                 .catch((error:AxiosError) => {
                     console.log(error)
                 })
