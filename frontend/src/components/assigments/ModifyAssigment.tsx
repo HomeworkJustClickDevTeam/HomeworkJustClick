@@ -1,60 +1,56 @@
 import { useNavigate, useParams } from "react-router-dom"
-import React, { ChangeEvent, useEffect, useState } from "react"
-import { Assigment, AssigmentProps } from "../../types/types"
+import React, { ChangeEvent } from "react"
+import { AssigmentModifyProps } from "../../types/types"
 import postgresqlDatabase from "../../services/postgresDatabase"
 import ReactDatePicker from "react-datepicker"
-import Loading from "../animations/Loading"
 
-function ModifyAssigment({ assignment }: AssigmentProps) {
+function ModifyAssigment({ assignment, setAssigment }: AssigmentModifyProps) {
   const navigate = useNavigate()
   const { id } = useParams()
-  const [isLoading, setIsLoading] = useState<boolean>()
-  const [modifyAssignment, setModifyAssignment] = useState<Assigment>({
-    completionDatetime: new Date(),
-    id: 0,
-    taskDescription: "",
-    title: "",
-    visible: false,
-    max_points: 0,
-    groupId: 0,
-  })
-  useEffect(() => {
-    setModifyAssignment(assignment)
-    setIsLoading(false)
-  })
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement> | Date) => {
-    if (event instanceof Date) {
-      setModifyAssignment((prevState) => ({
-        ...prevState,
-        completionDatetime: event,
-      }))
-    } else {
-      const { name, value, type, checked } = event.target
-      setModifyAssignment((prevState) => ({
-        ...prevState,
-        [name]: type === "checkbox" ? checked : value,
-      }))
-      console.log(modifyAssignment.visible)
-    }
+  const handleTextChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target
+    setAssigment((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }))
   }
 
+  const handleNumberChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target
+    setAssigment((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }))
+  }
+
+  const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = event.target
+    setAssigment((prevState) => ({
+      ...prevState,
+      [name]: checked,
+    }))
+  }
+
+  const handleDateChange = (date: Date) => {
+    setAssigment((prevState) => ({
+      ...prevState,
+      completionDatetime: date,
+    }))
+  }
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
-    try {
-      console.log(assignment)
-      postgresqlDatabase.put(
-        `/assignment/withUserAndGroup/${localStorage.getItem("id")}/${id}`,
-        assignment
-      )
-      navigate(`/group/${id}/assignments/`)
-    } catch (e) {
-      console.log(e)
-    }
+    postgresqlDatabase
+      .put(`/assignment/${assignment.id}`, assignment)
+      .then(() => navigate(`/group/${id}/assignments/`))
+      .catch((e) => console.log(e))
   }
 
-  if (isLoading) {
-    return <Loading />
+  function handleDelete() {
+    postgresqlDatabase
+      .delete(`/assignment/${assignment.id}`)
+      .then(() => navigate(`/group/${id}/assignments/`))
+      .catch((e) => console.log(e))
   }
   return (
     <>
@@ -64,18 +60,19 @@ function ModifyAssigment({ assignment }: AssigmentProps) {
           <input
             name="title"
             type="text"
-            onChange={handleChange}
-            value={modifyAssignment.title}
+            onChange={handleTextChange}
+            value={assignment.title}
           />
         </label>
         <label>
           Punkty
           <input
-            name="points"
+            name="max_points"
             type="number"
-            onChange={handleChange}
+            onChange={handleNumberChange}
             min="1"
-            value={modifyAssignment.max_points}
+            max="10"
+            value={assignment.max_points}
           />
         </label>
         <label>
@@ -83,14 +80,14 @@ function ModifyAssigment({ assignment }: AssigmentProps) {
           <input
             name="taskDescription"
             type="text"
-            onChange={handleChange}
-            value={modifyAssignment.taskDescription}
+            onChange={handleTextChange}
+            value={assignment.taskDescription}
           />
         </label>
         <ReactDatePicker
           name="completionDatetime"
-          selected={modifyAssignment.completionDatetime}
-          onChange={(date) => handleChange(date as Date)}
+          selected={assignment.completionDatetime}
+          onChange={handleDateChange}
           showTimeSelect
           timeFormat="HH:mm"
           timeIntervals={15}
@@ -101,12 +98,13 @@ function ModifyAssigment({ assignment }: AssigmentProps) {
           <input
             name="visible"
             type="checkbox"
-            checked={modifyAssignment.visible}
-            onChange={handleChange}
+            checked={assignment.visible}
+            onChange={handleCheckboxChange}
           />
         </label>
         <button type="submit">Zmodyfikuj zadanie domowe</button>
       </form>
+      <button onClick={handleDelete}>Usuń Zadanie (USUŃ TOOOOOOOOO)</button>
     </>
   )
 }

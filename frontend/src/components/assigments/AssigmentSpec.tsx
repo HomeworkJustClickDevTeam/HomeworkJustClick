@@ -81,11 +81,10 @@ function AssigmentSpec() {
   if (isLoading) {
     return <Loading />
   }
-  console.log(solution)
   return (
     <>
       {role === "Teacher" ? (
-        <ModifyAssigment assignment={assignment} />
+        <ModifyAssigment assignment={assignment} setAssigment={setAssignment} />
       ) : typeof solution === undefined ? (
         <AddSolution assignment={assignment} />
       ) : isSolutionChecked ? (

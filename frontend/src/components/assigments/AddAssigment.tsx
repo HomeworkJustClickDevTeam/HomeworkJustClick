@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom"
-import { ChangeEvent, useState } from "react"
+import React, { ChangeEvent, useState } from "react"
 import { AssigmentToSend } from "../../types/types"
 import postgresqlDatabase from "../../services/postgresDatabase"
 import ReactDatePicker from "react-datepicker"
@@ -13,7 +13,7 @@ function AddAssigment() {
     completionDatetime: new Date(),
     taskDescription: "",
     visible: false,
-    max_points: 0,
+    max_points: 1,
   })
 
   const handleTextChange = (event: ChangeEvent<HTMLInputElement>) => {

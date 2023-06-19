@@ -81,6 +81,9 @@ interface AssigmentToSend {
 interface AssigmentProps {
   assignment: Assigment
 }
+interface AssigmentModifyProps extends AssigmentProps {
+  setAssigment: (assignment: (prevState) => any) => void
+}
 interface AssigmentItemProps extends AssigmentProps {
   idGroup: string
 }
