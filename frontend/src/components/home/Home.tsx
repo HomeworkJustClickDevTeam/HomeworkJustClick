@@ -8,15 +8,15 @@ import Loading from "../animations/Loading"
 
 function Home() {
   const [groups, setGroups] = useState<Group[]>()
-  const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [isLoading, setIsLoading] = useState<boolean>()
 
   const { teacherUserGroups, studentsUserGroups, allUserGroups } = groupFilter({
     setGroups,
+    setIsLoading,
   })
 
   useEffect(() => {
     allUserGroups()
-    setIsLoading(false)
   }, [])
 
   return (

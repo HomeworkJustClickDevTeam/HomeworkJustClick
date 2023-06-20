@@ -15,7 +15,8 @@ export function Rating({
   const navigate = useNavigate()
   const handleMark = () => {
     const body = { result: points, grade: 0 }
-    console.log(body)
+    console.log(userState.userId)
+    console.log(solutionId)
     postgresqlDatabase
       .post(
         `/evaluation/withUserAndSolution/${userState.userId}/${solutionId}`,
