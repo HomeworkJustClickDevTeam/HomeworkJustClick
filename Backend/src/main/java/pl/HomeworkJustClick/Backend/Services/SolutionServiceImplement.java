@@ -603,6 +603,15 @@ public class SolutionServiceImplement implements SolutionService{
     }
 
     @Override
+    public boolean checkForFileToSolution(int solution_id) {
+        Optional<Solution> solutionOptional = solutionRepository.findById(solution_id);
+        if (solutionOptional.isPresent()) {
+            Solution solution = solutionOptional.get();
+            return !solution.getFiles().isEmpty();
+        } else return false;
+    }
+
+    @Override
     public SolutionResponse getCheckedSolutionByUserAssignmentGroup(int user_id, int group_id, int assignment_id) {
         Optional<Solution> solution = solutionRepository.getCheckedSolutionByUserAssignmentGroup(assignment_id, user_id, group_id);
         if(assignmentRepository.findById(assignment_id).isPresent() && groupRepository.findById(group_id).isPresent() && userRepository.findById(user_id).isPresent()){
