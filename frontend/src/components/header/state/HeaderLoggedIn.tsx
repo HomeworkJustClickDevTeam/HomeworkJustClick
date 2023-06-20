@@ -1,6 +1,7 @@
 import { useContext } from "react"
 import userContext from "../../../UserContext"
 import { Link } from "react-router-dom"
+import LogOut from "../../user/logging/LogOut"
 
 function HeaderLoggedIn() {
   const userState = useContext(userContext)
@@ -15,9 +16,8 @@ function HeaderLoggedIn() {
       <Link to={`/${userState.userState.userId}/assignments`}>
         Moje zadanie domowe
       </Link>
-        <Link to={`/settings`}>
-            Ustawienia
-        </Link>
+      <Link to={`/settings`}>Ustawienia</Link>
+      <LogOut />
     </>
   )
 }
