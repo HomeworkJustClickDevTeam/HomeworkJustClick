@@ -89,7 +89,7 @@ function AssigmentSpec() {
   return (
     <>
       {((role === "Teacher") && (optionalUserId === null)) ? (
-        <ModifyAssigment assignment={assignment} />
+        <ModifyAssigment assignment={assignment} setAssigment={setAssignment} />
       ) : ((solution === undefined) && (optionalUserId === null)) ? (
         <AddSolution assignment={assignment} />
       ) : isSolutionChecked ? (
