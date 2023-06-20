@@ -10,6 +10,7 @@ import { useNavigate, useParams } from "react-router-dom"
 import postgresqlDatabase from "../../services/postgresDatabase"
 import AssigmentItem from "../assigments/assigmentDisplayer/assigmentItem/AssigmentItem"
 import userContext from "../../UserContext"
+import { AssigmentFile } from "../assigments/file/AssigmentFile"
 
 function AddSolution({ assignment }: AssigmentProps) {
   const { idAssigment, id = "" } = useParams()
@@ -35,12 +36,15 @@ function AddSolution({ assignment }: AssigmentProps) {
     userId: 0,
   })
   const navigate = useNavigate()
+  const [isFile, setIsFile] = useState<boolean>()
 
-  function handleChangeFile(e: ChangeEvent<HTMLInputElement>) {
-    if (e.target.files) {
-      setFile(e.target.files[0])
-    }
-  }
+  useEffect(() => {
+    postgresqlDatabase
+      .get(`/files/byAssignment/${idAssigment}`)
+      .then(() => setIsFile(true))
+      .catch(() => setIsFile(false))
+  }, [])
+
   useEffect(() => {
     if (solutionFromServer.id && response.id) {
       postgresqlDatabase
@@ -56,6 +60,11 @@ function AddSolution({ assignment }: AssigmentProps) {
         .catch((e) => console.log(e))
     }
   }, [solutionFromServer, response])
+  function handleChangeFile(e: ChangeEvent<HTMLInputElement>) {
+    if (e.target.files) {
+      setFile(e.target.files[0])
+    }
+  }
   function handleUploadClick() {
     if (!file) {
       return
@@ -84,6 +93,7 @@ function AddSolution({ assignment }: AssigmentProps) {
   return (
     <div>
       <AssigmentItem idGroup={id} assignment={assignment} />
+      {isFile && <AssigmentFile assigmentId={assignment.id} />}
       <input type="file" onChange={handleChangeFile} />
       <div> {file && `${file.name} - ${file.type}`}</div>
       <button onClick={handleUploadClick}>Wyslij zadanie</button>

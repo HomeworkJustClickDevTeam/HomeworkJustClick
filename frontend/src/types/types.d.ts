@@ -52,6 +52,7 @@ interface PropsForGroupItem {
 }
 type PropsForFiltering = {
   setGroups: (groups: Group[]) => void
+  setIsLoading: (loading: boolean) => void
 }
 interface AssigmentFilterProp {
   setAssignments: (assignments: Assigment[]) => void
@@ -86,7 +87,7 @@ interface AssigmentModifyProps extends AssigmentProps {
 }
 interface AssigmentItemProps extends AssigmentProps {
   idGroup: string
-  optionalUserId?:string
+  optionalUserId?: string
 }
 
 interface UserItemToDisplay {

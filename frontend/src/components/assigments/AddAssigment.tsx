@@ -1,9 +1,10 @@
 import { useNavigate, useParams } from "react-router-dom"
-import React, { ChangeEvent, useState } from "react"
+import React, { ChangeEvent, useEffect, useState } from "react"
 import { AssigmentToSend } from "../../types/types"
 import postgresqlDatabase from "../../services/postgresDatabase"
 import ReactDatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
+import { AddAssigmentFile } from "./file/AddAssigmentFile"
 
 function AddAssigment() {
   const navigate = useNavigate()
@@ -15,7 +16,15 @@ function AddAssigment() {
     visible: false,
     max_points: 1,
   })
+  const [toSend, setToSend] = useState<boolean>(false)
+  const [idAssigment, setIdAssigment] = useState<number>()
+  const [toNavigate, setToNavigate] = useState<boolean>(false)
 
+  useEffect(() => {
+    if (toNavigate) {
+      navigate(`/group/${id}/assignments/`)
+    }
+  }, [toNavigate])
   const handleTextChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target
     setAssigment((prevState) => ({
@@ -51,11 +60,15 @@ function AddAssigment() {
     event.preventDefault()
     try {
       console.log(assigment)
-      postgresqlDatabase.post(
-        `/assignment/withUserAndGroup/${localStorage.getItem("id")}/${id}`,
-        assigment
-      )
-      navigate(`/group/${id}/assignments/`)
+      postgresqlDatabase
+        .post(
+          `/assignment/withUserAndGroup/${localStorage.getItem("id")}/${id}`,
+          assigment
+        )
+        .then((r) => {
+          setIdAssigment(r.data.id)
+          setToSend(true)
+        })
     } catch (e) {
       console.log(e)
     }
@@ -110,6 +123,11 @@ function AddAssigment() {
         </label>
         <button type="submit">Dodaj zadanie domowe</button>
       </form>
+      <AddAssigmentFile
+        toSend={toSend}
+        idAssigment={idAssigment}
+        setToNavigate={setToNavigate}
+      />
     </>
   )
 }
