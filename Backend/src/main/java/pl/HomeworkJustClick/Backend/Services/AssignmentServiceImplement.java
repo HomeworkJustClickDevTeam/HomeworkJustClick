@@ -629,4 +629,13 @@ public class AssignmentServiceImplement implements AssignmentService {
         return assignmentRepository.checkForSolutionToAssignment(assignment_id) != 0;
     }
 
+    @Override
+    public boolean checkForFileToAssignment(int assignment_id) {
+        Optional<Assignment> assignmentOptional = assignmentRepository.findById(assignment_id);
+        if (assignmentOptional.isPresent()) {
+            Assignment assignment = assignmentOptional.get();
+            return !assignment.getFiles().isEmpty();
+        } else return false;
+    }
+
 }

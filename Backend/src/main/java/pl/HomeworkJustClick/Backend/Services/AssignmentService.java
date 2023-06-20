@@ -88,4 +88,6 @@ public interface AssignmentService {
 
     public boolean checkForSolutionToAssignment(int assignment_id);
 
+    public boolean checkForFileToAssignment(int assignment_id);
+
 }

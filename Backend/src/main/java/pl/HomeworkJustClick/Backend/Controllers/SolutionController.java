@@ -1409,4 +1409,22 @@ public class SolutionController {
         }
     }
 
+    @GetMapping("/solution/checkForFile/{solution_id}")
+    @Operation(
+            summary = "Checks if solution with given id has any file attached to it. Returns true if so, false otherwise. False may also indicate that there is no solution in the DB with given id.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK.",
+                            content = @Content(
+                                    mediaType = "string",
+                                    schema = @Schema(implementation = String.class)
+                            )
+                    )
+            }
+    )
+    public ResponseEntity<Boolean> checkForFileToSolution(@PathVariable("solution_id") int solution_id) {
+        return new ResponseEntity<>(solutionService.checkForFileToSolution(solution_id), HttpStatus.OK);
+    }
+
 }
