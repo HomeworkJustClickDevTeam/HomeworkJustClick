@@ -28,7 +28,7 @@ export function Rating({
 
   const renderButtons = () => {
     const buttons = []
-    for (let i = 1; i <= maxPoints; i++) {
+    for (let i = 0; i <= maxPoints; i++) {
       buttons.push(
         <button key={i} onClick={() => setPoints(i)}>
           {i}
