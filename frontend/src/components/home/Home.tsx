@@ -7,7 +7,7 @@ import Loading from "../animations/Loading"
 import userContext from "../../UserContext"
 
 function Home() {
-  const [groups, setGroups] = useState<Group[]>()
+  const [groups, setGroups] = useState<Group[] | undefined>(undefined)
   const [isLoading, setIsLoading] = useState<boolean>()
   const { userState } = useContext(userContext)
 
@@ -21,6 +21,10 @@ function Home() {
       allUserGroups()
     }
   }, [userState.userId])
+
+  if(groups === undefined){
+    return (<Loading/>)
+  }
 
   return (
     <>
