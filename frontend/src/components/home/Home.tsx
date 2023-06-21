@@ -2,13 +2,13 @@ import { useContext, useEffect, useState } from "react"
 import GroupItem from "../group/groupItems/GroupItem"
 import { Link } from "react-router-dom"
 import { groupFilter } from "../group/filter/GroupFilter"
-import { Action, Group } from "../../types/types"
+import { Action, GroupType } from "../../types/types"
 import Loading from "../animations/Loading"
 import userContext from "../../UserContext"
 import DispatchContext from "../../DispatchContext"
 
 function Home() {
-  const [groups, setGroups] = useState<Group[] | undefined>(undefined)
+  const [groups, setGroups] = useState<GroupType[] | undefined>(undefined)
   const [isLoading, setIsLoading] = useState<boolean>()
   const { userState } = useContext(userContext)
   const globalDispatch = useContext(DispatchContext)
@@ -24,10 +24,10 @@ function Home() {
   })
 
   useEffect(() => {
-    if (userState.userId) {
+    if (userState.userId && localStorage.getItem("token")) {
       allUserGroups()
     }
-  }, [userState])
+  }, [userState.userId, localStorage.getItem("token")])
 
   if (groups === undefined) {
     return <Loading />

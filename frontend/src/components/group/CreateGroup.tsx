@@ -47,7 +47,7 @@ function CreateGroup() {
     <form onSubmit={handleSubmit}>
       <input
         name="name"
-        placeholder="Group name"
+        placeholder="GroupType name"
         onChange={handleChange}
         type="text"
         value={group.name}

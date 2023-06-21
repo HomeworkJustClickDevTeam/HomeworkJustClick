@@ -1,8 +1,8 @@
-import { Outlet, useParams } from "react-router-dom"
+import { Outlet, useLocation, useParams } from "react-router-dom"
 import React, { useContext, useEffect, useState } from "react"
 import userContext from "../../UserContext"
 import postgresqlDatabase from "../../services/postgresDatabase"
-import { Action } from "../../types/types"
+import { Action, GroupType } from "../../types/types"
 
 import DispatchContext from "../../DispatchContext"
 import GroupHeader from "./GroupHeader"
@@ -18,7 +18,8 @@ function Group() {
   const { setRole } = useContext(GroupSetRoleContext)
   const { role } = useContext(GroupRoleContext)
   const [loading, setLoading] = useState<boolean>(true)
-
+  const { state } = useLocation()
+  const [group] = useState<GroupType>(state)
   useEffect(() => {
     const action: Action = {
       type: "homePageOut",
@@ -59,7 +60,7 @@ function Group() {
   }
   return (
     <div>
-      <GroupHeader />
+      <GroupHeader group={group} />
       <Outlet />
     </div>
   )

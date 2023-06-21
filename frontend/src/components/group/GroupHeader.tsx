@@ -1,12 +1,15 @@
 import { Link } from "react-router-dom"
 import { useContext } from "react"
 import GroupContext from "../../GroupRoleContext"
+import { GroupType } from "../../types/types"
 
-function GroupHeader() {
+function GroupHeader(props: { group: GroupType }) {
   const { role } = useContext(GroupContext)
+
   return (
     <>
       <header>
+        <a>{props.group.name}</a>
         <Link to="assignments"> Zadania</Link>
         <Link to="users"> Osoby </Link>
 

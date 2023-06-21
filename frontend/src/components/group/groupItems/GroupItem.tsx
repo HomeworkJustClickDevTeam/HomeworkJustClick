@@ -1,11 +1,12 @@
 import { PropsForGroupItem } from "../../../types/types"
+import { Link } from "react-router-dom"
 
 function GroupItem({ group }: PropsForGroupItem) {
   return (
     <>
-      <a href={"/group/" + group.id}>
+      <Link to={`/group/${group.id}/assignments`} state={{ group: group }}>
         <h1>{group.name}</h1>{" "}
-      </a>
+      </Link>
       <p>{group.description}</p>
     </>
   )

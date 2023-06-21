@@ -17,7 +17,7 @@ interface LoginUser {
   password: string
 }
 
-type Group = {
+type GroupType = {
   id: number
   name: string
   description: string
@@ -37,21 +37,12 @@ interface UserToShow {
   id: number
 }
 
-interface InGroup {
-  student: boolean
-  teacher: boolean
-}
-
-interface PropsForLogin {
-  state: ApplicationState
-}
-
 interface PropsForGroupItem {
-  group: Group
+  group: GroupType
   key: number
 }
 type PropsForFiltering = {
-  setGroups: (groups: Group[]) => void
+  setGroups: (groups: GroupType[]) => void
   setIsLoading: (loading: boolean) => void
 }
 interface AssigmentFilterProp {
