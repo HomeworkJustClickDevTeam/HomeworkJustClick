@@ -29,7 +29,7 @@ function Home() {
     }
   }, [userState])
 
-  if (groups === undefined) {
+  if (groups === undefined || groups === null) {
     return <Loading />
   }
 
