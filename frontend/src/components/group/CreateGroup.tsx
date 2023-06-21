@@ -1,7 +1,8 @@
-import React, { useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import postgresqlDatabase from "../../services/postgresDatabase"
-import { GroupCreate } from "../../types/types"
+import { Action, GroupCreate } from "../../types/types"
+import DispatchContext from "../../DispatchContext"
 
 function CreateGroup() {
   const [group, setGroup] = useState<GroupCreate>({
@@ -9,7 +10,13 @@ function CreateGroup() {
     description: "",
   })
   const navigate = useNavigate()
-
+  const globalDispatch = useContext(DispatchContext)
+  useEffect(() => {
+    const action: Action = {
+      type: "homePageOut",
+    }
+    globalDispatch?.(action)
+  }, [])
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     try {

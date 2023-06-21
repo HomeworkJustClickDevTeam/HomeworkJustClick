@@ -1,14 +1,15 @@
 import { useContext } from "react"
 import userContext from "../../../UserContext"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import LogOut from "../../user/logging/LogOut"
 
 function HeaderLoggedIn() {
   const userState = useContext(userContext)
+  const navigate = useNavigate()
   return (
     <>
       {!userState.homePageIn && (
-        <Link to="#" onClick={() => window.history.back()}>
+        <Link to="#" onClick={() => navigate(-1)}>
           Powrót
         </Link>
       )}
