@@ -17,8 +17,8 @@ export default function GroupSettings(){
     return <>Not log in</>
   }
   return(
-    <>
-      Ustawienia
+    <div>
+      <p className=''>Ustawienia</p>
       <dl>
         <dt>Ogólne</dt>
           <dd><GroupGeneralSettings/></dd>
@@ -27,6 +27,6 @@ export default function GroupSettings(){
         <dt>Kolor</dt>
           <dd><GroupAppearanceSettings/></dd>
       </dl>
-    </>
+    </div>
   )
 }

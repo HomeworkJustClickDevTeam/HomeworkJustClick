@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useContext, useState } from "react"
 import postgresqlDatabase from "../../../services/postgresDatabase"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { Action, LoginUser, userState } from "../../../types/types"
 import DispatchContext from "../../../DispatchContext"
 
@@ -41,24 +41,31 @@ const Login = () => {
   }
 
   return (
-    <>
-      <h1>Zaloguj</h1>
-      <form onSubmit={handleSubmit}>
-        <input
-          name="email"
-          type="email"
-          placeholder="Login użytkownika (email)"
-          onChange={handleChange}
-        />
-        <input
-          name="password"
-          type="password"
-          placeholder="hasło"
-          onChange={handleChange}
-        />
-        <button type="submit">Zaloguj się</button>
-      </form>
-    </>
+      <div className='flex w-screen flex-col items-center text-center font-lato text-sm'>
+        <h1 className='mt-[10vh] mb-8 text-4xl'>Zaloguj się</h1>
+        <form onSubmit={handleSubmit} className='flex flex-col items-center'>
+          <input
+              name="email"
+              type="email"
+              placeholder="Login użytkownika (email)"
+              onChange={handleChange}
+              className='border-b-2 border-b-light_gray mb-8 text-center placeholder:text-light_gray placeholder:text-[12px] w-60'
+          />
+          <input
+              name="password"
+              type="password"
+              placeholder="Hasło"
+              onChange={handleChange}
+              className='border-b-2 border-b-light_gray mb-12 text-center placeholder:text-light_gray placeholder:text-[12px] w-60'
+          />
+          <button type="submit" className='border-2 rounded-md border-main_blue w-52 py-0.5 text-main_blue'>Zaloguj się</button>
+          <p className='text-[8px] text-main_blue'>Nie pamiętasz hasła?</p>
+          <p className='text-[8px] mt-4'>Nie masz jeszcze konta?</p>
+          <Link to="/register">
+            <button type="button" className='border-2 border-main_blue rounded-md bg-main_blue w-52 py-0.5 text-white'>Zarejestruj się</button>
+          </Link>
+        </form>
+      </div>
   )
 }
 export default Login

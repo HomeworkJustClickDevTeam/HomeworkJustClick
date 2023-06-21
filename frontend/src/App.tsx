@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"
 
-import "./assets/App.css"
+import './App.css'
+// import "./assets/App.css"
 import Register from "./components/user/Register"
 import Login from "./components/user/logging/Login"
 import Home from "./components/home/Home"
