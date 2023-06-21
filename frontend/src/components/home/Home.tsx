@@ -1,23 +1,37 @@
-import { useEffect, useState } from "react"
-import LogOut from "../user/logging/LogOut"
+import { useContext, useEffect, useState } from "react"
 import GroupItem from "../group/groupItems/GroupItem"
 import { Link } from "react-router-dom"
 import { groupFilter } from "../group/filter/GroupFilter"
-import { Group } from "../../types/types"
+import { Action, Group } from "../../types/types"
 import Loading from "../animations/Loading"
+import userContext from "../../UserContext"
+import DispatchContext from "../../DispatchContext"
 
 function Home() {
-  const [groups, setGroups] = useState<Group[]>()
+  const [groups, setGroups] = useState<Group[] | undefined>(undefined)
   const [isLoading, setIsLoading] = useState<boolean>()
-
+  const { userState } = useContext(userContext)
+  const globalDispatch = useContext(DispatchContext)
+  useEffect(() => {
+    const action: Action = {
+      type: "homePageIn",
+    }
+    globalDispatch?.(action)
+  }, [])
   const { teacherUserGroups, studentsUserGroups, allUserGroups } = groupFilter({
     setGroups,
     setIsLoading,
   })
 
   useEffect(() => {
-    allUserGroups()
-  }, [])
+    if (userState.userId) {
+      allUserGroups()
+    }
+  }, [userState])
+
+  if (groups === undefined || groups === null) {
+    return <Loading />
+  }
 
   return (
     <div className='pl-[2vw] pr-[3vw]'>
@@ -44,7 +58,6 @@ function Home() {
         Grupy nauczycielskie użytkownika
       </button>
       <button onClick={allUserGroups}>Wszystkie grupy użytkownika</button>
-      <LogOut />
     </div>
   )
 }

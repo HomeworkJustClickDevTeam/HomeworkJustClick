@@ -11,12 +11,16 @@ function Solution() {
   const [solutionExtended] = useState<SolutionExtended>(state?.solution)
   const [points, setPoints] = useState<number>()
   const [showRating, setShowRating] = useState<boolean>(false)
-
+  const [isCheck, setIsCheck] = useState<boolean>(false)
   useEffect(() => {
     postgresqlDatabase
       .get(`/evaluation/bySolution/${solutionExtended.id}`)
-      .then((r) => setPoints(r.data.result))
+      .then((r) => {
+        setPoints(r.data.result)
+        setIsCheck(true)
+      })
   }, [])
+
   const handleDisableRating = () => {
     setShowRating(false)
   }
@@ -34,7 +38,7 @@ function Solution() {
         Points: {points} /{solutionExtended.assignment.max_points}
       </h1>
       <SolutionFile solutionId={solutionExtended.id} />
-      {!points ? (
+      {!isCheck ? (
         showRating ? (
           <div>
             <Rating

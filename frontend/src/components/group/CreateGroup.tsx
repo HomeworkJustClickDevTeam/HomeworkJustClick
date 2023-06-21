@@ -1,27 +1,29 @@
-import React, { useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import postgresqlDatabase from "../../services/postgresDatabase"
-import { GroupCreate } from "../../types/types"
+import {Action, Group, GroupCreate} from "../../types/types"
+import DispatchContext from "../../DispatchContext"
+import UserContext from "../../UserContext";
+
 
 function CreateGroup() {
+  const {userState} = useContext(UserContext)
   const [group, setGroup] = useState<GroupCreate>({
     name: "",
     description: "",
   })
   const navigate = useNavigate()
-
+  const globalDispatch = useContext(DispatchContext)
+  useEffect(() => {
+    const action: Action = {
+      type: "homePageOut",
+    }
+    globalDispatch?.(action)
+  }, [])
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     try {
-      await postgresqlDatabase.post(
-        "/group/withTeacher/" + localStorage.getItem("id"),
-        group,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      )
+      await postgresqlDatabase.post("/group/withTeacher/" + userState.userId ,group)
       navigate("/")
     } catch (e) {
       console.log(e)

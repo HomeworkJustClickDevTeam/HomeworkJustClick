@@ -34,6 +34,12 @@ import GroupSettings from "./components/group/settings/GroupSettings"
 import UserProfileInGroup from "./components/group/users/UserProfileInGroup"
 
 function App() {
+  useEffect(() => {
+    if (localStorage.getItem("token") && localStorage.getItem("id")) {
+      localStorage.removeItem("token")
+      localStorage.removeItem("id")
+    }
+  }, [])
   const initialState: ApplicationState = {
     loggedIn: Boolean(localStorage.getItem("token")),
     homePageIn: true,
@@ -114,7 +120,10 @@ function App() {
                 <Route path="/group/:id" element={<Group />}>
                   <Route path="settings" element={<GroupSettings />} />
                   <Route path="users" element={<Users />} />
-                  <Route path="userProfileInGroup/:userProfileId" element={<UserProfileInGroup/>}/>
+                  <Route
+                    path="userProfileInGroup/:userProfileId"
+                    element={<UserProfileInGroup />}
+                  />
                   <Route
                     path="assignments"
                     element={<AssignmentsGroupDisplayed />}
