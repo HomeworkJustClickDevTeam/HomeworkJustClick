@@ -3,6 +3,8 @@ import postgresqlDatabase from "../../../services/postgresDatabase"
 import { Link, useNavigate } from "react-router-dom"
 import { Action, LoginUser, userState } from "../../../types/types"
 import DispatchContext from "../../../DispatchContext"
+import KolkoLewe from './zaloguj_kolko_lewe.svg';
+import KolkoPrawe from './zaloguj_kolko_prawe.svg';
 
 const Login = () => {
   const [user, setUser] = useState<LoginUser>({
@@ -42,27 +44,29 @@ const Login = () => {
 
   return (
       <div className='flex w-screen flex-col items-center text-center font-lato text-sm'>
-        <h1 className='mt-[10vh] mb-8 text-4xl'>Zaloguj się</h1>
+        <img className="fixed left-[7%]  bottom-[3%] scale-50 xl:scale-100 -z-50" src = {KolkoLewe} alt="Kółko po lewej stronie"></img>
+        <img className="fixed right-[9%] top-[18%] scale-50 translate-x-[25%] xl:transform-none -z-50" src= {KolkoPrawe} alt="Kółko po prawej stronie"></img>
+        <h1 className='mt-[20vh] mb-16 text-4xl xl:text-[64px]'>Zaloguj się</h1>
         <form onSubmit={handleSubmit} className='flex flex-col items-center'>
           <input
               name="email"
               type="email"
               placeholder="Login użytkownika (email)"
               onChange={handleChange}
-              className='border-b-2 border-b-light_gray mb-8 text-center placeholder:text-light_gray placeholder:text-[12px] w-60'
+              className='border-b-2 border-b-light_gray mb-8 text-center placeholder:text-light_gray placeholder:text-[12px] w-60 xl:text-[20px] xl:placeholder:text-[20px] xl:w-[320px]'
           />
           <input
               name="password"
               type="password"
               placeholder="Hasło"
               onChange={handleChange}
-              className='border-b-2 border-b-light_gray mb-12 text-center placeholder:text-light_gray placeholder:text-[12px] w-60'
+              className='border-b-2 border-b-light_gray mb-12 text-center placeholder:text-light_gray placeholder:text-[12px] w-60 xl:text-[20px] xl:placeholder:text-[20px] xl:w-[320px]'
           />
-          <button type="submit" className='border-2 rounded-md border-main_blue w-52 py-0.5 text-main_blue'>Zaloguj się</button>
-          <p className='text-[8px] text-main_blue'>Nie pamiętasz hasła?</p>
-          <p className='text-[8px] mt-4'>Nie masz jeszcze konta?</p>
+          <button type="submit" className=' border-main_blue w-40 h-8 rounded-[5px] border-2 xl:w-[288px] xl:h-[56px] xl:border-[3px] xl:rounded-[10px] text-main_blue xl:text-[28px] hover:bg-hover_gray hover:shadow-md active:bg-opacity-60'>Zaloguj się</button>
+          <p className='text-[8px] xl:text-base text-main_blue'>Nie pamiętasz hasła?</p>
+          <p className='text-[8px] xl:text-base mt-4'>Nie masz jeszcze konta?</p>
           <Link to="/register">
-            <button type="button" className='border-2 border-main_blue rounded-md bg-main_blue w-52 py-0.5 text-white'>Zarejestruj się</button>
+            <button type="button" className=' bg-main_blue w-40 h-8 rounded-[5px] xl:rounded-[10px] xl:w-[288px] xl:h-[56px] text-white xl:text-[28px] hover:bg-hover_blue hover:shadow-md active:shadow-none'>Zarejestruj się</button>
           </Link>
         </form>
       </div>
