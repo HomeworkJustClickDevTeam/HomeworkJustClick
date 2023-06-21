@@ -8,7 +8,7 @@ import userContext from "../../UserContext"
 import DispatchContext from "../../DispatchContext"
 
 function Home() {
-  const [groups, setGroups] = useState<Group[]>()
+  const [groups, setGroups] = useState<Group[] | undefined>(undefined)
   const [isLoading, setIsLoading] = useState<boolean>()
   const { userState } = useContext(userContext)
   const globalDispatch = useContext(DispatchContext)
@@ -28,6 +28,10 @@ function Home() {
       allUserGroups()
     }
   }, [userState.userId])
+
+  if(groups === undefined){
+    return (<Loading/>)
+  }
 
   return (
     <>
