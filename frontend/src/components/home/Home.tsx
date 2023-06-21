@@ -27,10 +27,10 @@ function Home() {
     if (userState.userId) {
       allUserGroups()
     }
-  }, [userState.userId])
+  }, [userState])
 
-  if(groups === undefined){
-    return (<Loading/>)
+  if (groups === undefined) {
+    return <Loading />
   }
 
   return (
