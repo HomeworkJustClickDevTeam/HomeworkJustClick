@@ -42,7 +42,7 @@ const Register = () => {
       <div className='flex w-screen flex-col items-center text-center font-lato font-normal text-sm'>
         <img className="fixed left-[4%]  bottom-[6%] scale-50 xl:scale-100 -z-50" src = {KolkoLewe} alt="Kółko po lewej stronie"></img>
         {/* <img className="relative right-0  scale-50 translate-x-[25%] xl:transform-none -z-50" src= {Smile} alt="Kółko smile"></img> */}
-        <h1 className='mt-[20vh] mb-16 text-4xl xl:text-[64px] inline-block'>Dołącz do nas!</h1>
+        <h1 className='mt-[10vh] mb-16 text-4xl xl:text-[64px] inline-block'>Dołącz do nas!</h1>
         <form onSubmit={handleSubmit} className='flex flex-col text-center items-center'>
           <input
               type="text"

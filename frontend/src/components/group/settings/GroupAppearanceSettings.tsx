@@ -36,8 +36,7 @@ export default function GroupAppearanceSettings(){
             <div className='flex inline-block flex-wrap w-fit'>
               <label key={i} className='flex inline-block pr-1'>
                 <input  type="radio" value={i.toString()} name="index" checked={color === i} onChange={handleColorChange} className='w-fit'/>
-                <p className='px-1'>{i}</p>
-                <div className='h-5 w-5 bg-lilly-bg border border-solid border-black items-center mt-0.5'></div>
+                <div className='h-5 w-5 bg-lilly-bg border border-solid border-black items-center mt-0.5 ml-1'></div>
               </label>
             </div>
         )

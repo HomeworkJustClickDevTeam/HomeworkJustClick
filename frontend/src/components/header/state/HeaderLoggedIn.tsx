@@ -6,7 +6,7 @@ import { FaChevronLeft } from 'react-icons/fa';
 function HeaderLoggedIn() {
   const userState = useContext(userContext)
   return (
-      <div className='relative flex h-11 text-white font-lato font-normal text-[11px] bg-main_blue items-center'>
+      <div className='relative flex h-16 text-white font-lato font-normal bg-main_blue items-center'>
           {!userState.homePageIn && (
               <Link className='absolute flex pl-[3vw] w-[9vw] hover:bg-hover_blue h-full items-center' to="#" onClick={() => window.history.back()}>
                   <FaChevronLeft className='pr-[calc(0.5vw)]'/>

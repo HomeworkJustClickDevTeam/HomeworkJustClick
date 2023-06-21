@@ -1,5 +1,5 @@
 import { Outlet, useParams } from "react-router-dom"
-import React, { useContext, useEffect, useState } from "react"
+import React, {useContext, useEffect, useRef, useState} from "react"
 import userContext from "../../UserContext"
 import postgresqlDatabase from "../../services/postgresDatabase"
 import { Action } from "../../types/types"
@@ -10,6 +10,7 @@ import GroupHeader from "./GroupHeader"
 import GroupSetRoleContext from "../../GroupSetRoleContext"
 import GroupRoleContext from "../../GroupRoleContext"
 import Loading from "../animations/Loading"
+import { Group as GroupType} from "../../types/types"
 
 function Group() {
   const { id = "" } = useParams<{ id: string }>()
@@ -17,14 +18,21 @@ function Group() {
   const globalDispatch = useContext(DispatchContext)
   const { setRole } = useContext(GroupSetRoleContext)
   const { role } = useContext(GroupRoleContext)
-  const [loading, setLoading] = useState<boolean>(true)
+  const [group, setGroup] = useState<GroupType | undefined>(undefined);
+
 
   useEffect(() => {
     const action: Action = {
       type: "homePageOut",
     }
     globalDispatch?.(action)
+    checkRole()
+    getNameAndDesc();
   }, [])
+
+  if(group === undefined || group === null){
+    return <Loading/>
+  }
 
   function checkRole() {
     postgresqlDatabase
@@ -32,19 +40,20 @@ function Group() {
       .then((r) => setRole(r.data))
       .catch(() => setRole("User not in group"))
   }
-  useEffect(() => {
-    checkRole()
-    setLoading(false)
-  }, [])
+
+
+  function getNameAndDesc() {
+    postgresqlDatabase
+        .get(`/group/${id}`)
+        .then((r) => setGroup(r.data))
+  }
+
 
   async function addToGroup() {
     await postgresqlDatabase.post(`/group/addStudent/${userState.userId}/${id}`)
     checkRole()
   }
 
-  if (loading) {
-    return <Loading />
-  }
 
   if (!loggedIn) {
     return <>Not log in</>
@@ -57,9 +66,11 @@ function Group() {
       </>
     )
   }
+
+
   return (
     <div>
-      <GroupHeader />
+      <GroupHeader group = {group} key={group.id}/>
       <Outlet />
     </div>
   )

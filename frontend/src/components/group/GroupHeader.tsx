@@ -1,11 +1,16 @@
 import { Link } from "react-router-dom"
 import { useContext } from "react"
 import GroupContext from "../../GroupRoleContext"
+import {PropsForGroupItem} from "../../types/types";
 
-function GroupHeader() {
+
+
+function GroupHeader({ group }: PropsForGroupItem) {
   const { role } = useContext(GroupContext)
   return (
-    <>
+    <div>
+        <p>{group.name}</p>
+        <p>{group.description}</p>
       <header>
         <Link to="assignments"> Zadania</Link>
         <Link to="users"> Osoby </Link>
@@ -28,7 +33,7 @@ function GroupHeader() {
         )}
         {role === "Teacher" && <Link to="settings">Ustawienia</Link>}
       </header>
-    </>
+    </div>
   )
 }
 export default GroupHeader

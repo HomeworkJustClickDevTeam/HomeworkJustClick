@@ -32,7 +32,7 @@ function Home() {
       ) : (
         <div className='relative flex flex-wrap gap-x-3 gap-y-2 bg-light_gray px-8 py-6 bg-lilly-bg rounded-md'>
           {groups?.map((group) =>
-              groups?.length > 0 ? <GroupItem group={group} key={group.id} /> : <div>Dodaj nową grupę już teraz!</div>
+              groups?.length > 0 ? <GroupItem group={group} key={group.id} /> : <div>Dodaj nową grupę!</div>
           )}
         </div>
       )}
