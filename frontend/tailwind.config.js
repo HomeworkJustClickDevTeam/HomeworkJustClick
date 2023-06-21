@@ -5,7 +5,8 @@ module.exports = {
   theme: {
     colors:{
       'main_blue': '#6D8DFF',
-      'hover_blue' : '#8ba4fc',
+      'hover_blue' : '#7896FF',
+      'hover_gray' : '#eff0f4',
       white: colors.white,
       'light_gray': '#9ca3af',
       'lilly-bg' : 'rgba(109, 141, 255, 0.12)',
