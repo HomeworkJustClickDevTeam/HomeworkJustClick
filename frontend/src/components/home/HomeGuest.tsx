@@ -17,7 +17,7 @@ function HomeGuest() {
         <p className='text-[8px] xl:text-base text-main_blue'>Nie pamiętasz hasła?</p>
         <p className='text-[8px] xl:text-base mt-4 md:mt-[5vh]'>Nie masz jeszcze konta?</p>
       <Link to="/register">
-        <button type="button" className=" bg-main_blue w-40 h-8 rounded-[5px] xl:rounded-[10px] xl:w-[288px] xl:h-[56px] text-white xl:text-[28px] hover:bg-hover_blue hover:shadow-md active:shadow-none">Zarejestruj się</button>
+        <button type="button" className=" bg-main_blue w-40 h-8 rounded-[5px]  xl:w-[288px] xl:h-[56px] text-white xl:text-[28px] hover:bg-hover_blue hover:shadow-md active:shadow-none">Zarejestruj się</button>
       </Link>
     </div>
   )

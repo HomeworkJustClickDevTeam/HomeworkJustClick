@@ -6,10 +6,14 @@ import { Action, Group } from "../../types/types"
 import Loading from "../animations/Loading"
 import userContext from "../../UserContext"
 import DispatchContext from "../../DispatchContext"
+import {render} from "@testing-library/react";
+import {FaCaretDown} from 'react-icons/fa';
 
 function Home() {
   const [groups, setGroups] = useState<Group[] | undefined>(undefined)
   const [isLoading, setIsLoading] = useState<boolean>()
+  const [isOpen, setIsOpen] = useState(false)
+  const [btnName, setBtnName] = useState('Wszystkie grupy')
   const { userState } = useContext(userContext)
   const globalDispatch = useContext(DispatchContext)
   useEffect(() => {
@@ -33,13 +37,35 @@ function Home() {
     return <Loading />
   }
 
+
   return (
-    <div className='pl-[2vw] pr-[3vw]'>
-        <div className=' flex inline-block mb-4 mt-4 pl-[1vw]'>
+    <div className='pl-5 pr-6'>
+        <div className='flex inline-block mb-4 mt-4 pl-3'>
             <p className='pr-8 text-lg'>Moje grupy</p>
           <Link to="/create/group" className=''>
-            <button type="button" className='text-light_gray text-xs underline items-center pt-2'>Stwórz grupę +</button>
+            <button type="button" className='text-black text-xs underline items-center pt-2'>Stwórz grupę +</button>
           </Link>
+          <div className='absolute inline-block text-right right-0 mr-16'>
+            <div className='flex inline'>
+              <span className='mr-2'>Wyświetlane grupy: </span>
+              <button className='group flex inline underline' onClick={() => setIsOpen(el => !el)}>{btnName}<FaCaretDown className=' ml-1 h-full w-[9px] items-center'/>
+              </button>
+            </div>
+
+            {isOpen && (
+                <div className=' absolute left-20 z-10 w-56 mt-4 origin-top-right bg-white border border-hover_gray rounded-md shadow-lg'>
+                  <div onClick={() => {studentsUserGroups(); setBtnName('Grupy uczniowskie')}} className="block px-4 py-2 text-sm text-black rounded-lg hover:bg-lilly-bg hover:text-black">
+                    Grupy uczniowskie użytkownika
+                  </div>
+                  <div onClick={() => {teacherUserGroups(); setBtnName('Grupy uczniowskie')}} className="block px-4 py-2 text-sm text-black rounded-lg hover:bg-lilly-bg hover:text-black">
+                    {" "}
+                    Grupy nauczycielskie użytkownika
+                  </div>
+                  <div onClick={() => {allUserGroups(); setBtnName('Grupy uczniowskie')}} className="block px-4 py-2 text-sm text-black rounded-lg hover:bg-lilly-bg hover:text-black">Wszystkie grupy użytkownika</div>
+                </div>
+            )}
+
+          </div>
         </div>
       {isLoading ? (
         <Loading />
@@ -50,14 +76,7 @@ function Home() {
           )}
         </div>
       )}
-      <button onClick={studentsUserGroups}>
-        Grupy uczniowskie użytkownika
-      </button>
-      <button onClick={teacherUserGroups}>
-        {" "}
-        Grupy nauczycielskie użytkownika
-      </button>
-      <button onClick={allUserGroups}>Wszystkie grupy użytkownika</button>
+
     </div>
   )
 }
