@@ -149,7 +149,6 @@ function App() {
                   <Route
                     path="solution/:idUser/:idAssigment"
                     element={<Solution />}/>
-                  <Route path="solution/:idUser/:idAssigment/example" element={<HardCodedExample/>}/>
                   <Route
                     path="solutions/uncheck"
                     element={<SolutionsTypes type={"uncheck"} />}
@@ -163,9 +162,10 @@ function App() {
                     element={<SolutionsTypes type={"check"} />}
                   />
 
+
                   <Route path="*" element={<NotFound />} />
                 </Route>
-
+                <Route path="/group/:id/solution/:idUser/:idAssigment/example" element={<HardCodedExample/>}/>
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>
