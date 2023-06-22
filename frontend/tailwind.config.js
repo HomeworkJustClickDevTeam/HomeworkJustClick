@@ -11,6 +11,7 @@ module.exports = {
       white: colors.white,
       'light_gray': '#9ca3af',
       'lilly-bg' : 'rgba(109, 141, 255, 0.12)',
+      'berry_red': '#990000',
       black: colors.black,
       current: 'currentColor',
       'colorsArray':['#59007f', '#006400']

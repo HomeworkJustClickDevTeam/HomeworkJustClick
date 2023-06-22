@@ -62,28 +62,19 @@ function ModifyAssigment({ assignment, setAssigment }: AssigmentModifyProps) {
       .catch((e) => console.log(e))
   }
   return (
-    <>
-      <form onSubmit={handleSubmit}>
-        <label>
+    <div className='relative flex flex-col mx-24 mt-6 border border-light_gray border-1 rounded-md pt-4 px-4 h-80'>
+      <form onSubmit={handleSubmit} className='flex flex-col gap-3'>
+        <label className='pr-3'>
           Tytuł
           <input
             name="title"
             type="text"
             onChange={handleTextChange}
             value={assignment.title}
+            placeholder='Nazwa grupy' className='pl-1 ml-2 border-b-2 border-b-light_gray w-64'
           />
         </label>
-        <label>
-          Punkty
-          <input
-            name="max_points"
-            type="number"
-            onChange={handleNumberChange}
-            min="1"
-            max="10"
-            value={assignment.max_points}
-          />
-        </label>
+
         <label>
           Opis zadania
           <input
@@ -91,19 +82,36 @@ function ModifyAssigment({ assignment, setAssigment }: AssigmentModifyProps) {
             type="text"
             onChange={handleTextChange}
             value={assignment.taskDescription}
+            placeholder='Opis zadania' className='pl-1 ml-2 border-b-2 border-b-light_gray w-80'
           />
         </label>
-        <ReactDatePicker
-          name="completionDatetime"
-          selected={assignment.completionDatetime}
-          onChange={handleDateChange}
-          showTimeSelect
-          timeFormat="HH:mm"
-          timeIntervals={15}
-          dateFormat="yyyy-MM-dd HH:mm"
-        />
         <label>
-          Visible:
+          Maksymalne punkty
+          <input
+              name="max_points"
+              type="number"
+              onChange={handleNumberChange}
+              min="1"
+              max="10"
+              value={assignment.max_points}
+              className='pl-1 ml-2 border-b-2 border-b-light_gray cursor-pointer w-12'
+          />
+        </label>
+        <label className='flex'>
+          <p className='w-36'>Data wykonania: </p>
+          <ReactDatePicker
+            name="completionDatetime"
+            selected={assignment.completionDatetime}
+            onChange={handleDateChange}
+            showTimeSelect
+            timeFormat="HH:mm"
+            timeIntervals={15}
+            dateFormat="yyyy-MM-dd HH:mm"
+            className='pl-1 ml-2 border-b-2 border-b-light_gray w-36 cursor-pointer'
+          />
+        </label>
+        <label>
+          Widoczne:
           <input
             name="visible"
             type="checkbox"
@@ -111,15 +119,17 @@ function ModifyAssigment({ assignment, setAssigment }: AssigmentModifyProps) {
             onChange={handleCheckboxChange}
           />
         </label>
-        <button type="submit">Zmodyfikuj zadanie domowe</button>
+        <button type="submit" className='absolute top-0 right-0 mr-6 mt-4 px-6 py-1 rounded-lg bg-main_blue text-white'>Edytuj zadanie</button>
       </form>
+      <p className='mt-4 mb-2'>Dodaj pliki: </p>
       <ModifyAssigmentFile
         toSend={toSend}
         assignmentId={assignment.id}
         setToNavigate={setToNavigate}
       />
-      <button onClick={handleDelete}>Usuń Zadanie (USUŃ TOOOOOOOOO)</button>
-    </>
+
+      <button onClick={handleDelete} className='absolute bottom-0 right-0 mr-6 mb-4 px-6 py-1 rounded-lg bg-berry_red text-white'>Usuń Zadanie</button>
+    </div>
   )
 }
 export default ModifyAssigment

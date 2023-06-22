@@ -99,7 +99,7 @@ function AddAssigment() {
             onChange={handleNumberChange}
             min="1"
             max="10"
-            className='pl-1 ml-2 border-b-2 border-b-light_gray cursor-pointer'
+            className='pl-1 ml-2 border-b-2 border-b-light_gray cursor-pointer w-12'
           />
         </label>
         <label className='flex'>
