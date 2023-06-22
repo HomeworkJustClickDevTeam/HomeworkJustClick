@@ -32,6 +32,7 @@ import UserAppearanceSettings from "./components/user/settings/UserAppearanceSet
 import UserMarkingTablesSettings from "./components/user/settings/UserMarkingTablesSettings"
 import GroupSettings from "./components/group/settings/GroupSettings"
 import UserProfileInGroup from "./components/group/users/UserProfileInGroup"
+import HardCodedExample from "./components/solution/HardCodedExample";
 
 function App() {
   useEffect(() => {
@@ -147,8 +148,8 @@ function App() {
                   />
                   <Route
                     path="solution/:idUser/:idAssigment"
-                    element={<Solution />}
-                  />
+                    element={<Solution />}/>
+                  <Route path="solution/:idUser/:idAssigment/example" element={<HardCodedExample/>}/>
                   <Route
                     path="solutions/uncheck"
                     element={<SolutionsTypes type={"uncheck"} />}
