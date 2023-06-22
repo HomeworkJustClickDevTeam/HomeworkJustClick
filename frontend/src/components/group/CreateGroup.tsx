@@ -39,23 +39,31 @@ function CreateGroup() {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        name="name"
-        placeholder="Group name"
-        onChange={handleChange}
-        type="text"
-        value={group.name}
-      />
-      <input
-        name="description"
-        placeholder="Descritpion of group"
-        onChange={handleChange}
-        type="text"
-        value={group.description}
-      />
-      <button>Stworz grupe</button>
-    </form>
+      <div className='pl-12 pt-16  '>
+          <div className='text-3xl border-b-main_blue border-b-solid border-b-2 w-fit mb-8'>Utwórz nową grupę!</div>
+            <form onSubmit={handleSubmit}>
+              <input
+                name="name"
+                placeholder="Nazwa grupy"
+                onChange={handleChange}
+                type="text"
+                value={group.name}
+                className='mb-12 border-b-2 border-b-light_gray text-center placeholder:text-light_gray placeholder:text-base  mr-4 w-52'
+
+              />
+              <input
+                name="description"
+                placeholder="Krótki opis grupy"
+                onChange={handleChange}
+                type="text"
+                value={group.description}
+                className='mb-12 border-b-2 border-b-light_gray text-center placeholder:text-light_gray placeholder:text-base w-64'
+
+              />
+              <br/>
+              <button className='px-6 py border-solid border-main_blue border-2 rounded bg-main_blue text-white text-base'>Stwórz grupę</button>
+            </form>
+      </div>
   )
 }
 export default CreateGroup

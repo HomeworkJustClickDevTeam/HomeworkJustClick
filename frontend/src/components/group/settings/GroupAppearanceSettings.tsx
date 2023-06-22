@@ -20,6 +20,7 @@ export default function GroupAppearanceSettings(){
     catch (e){
       console.log(e);
     }
+    console.log(color)
   }
   useEffect(() => {
     postgresqlDatabase
@@ -29,13 +30,15 @@ export default function GroupAppearanceSettings(){
   }, [id])
   return(
 
-    <form>
+    <form className='flex inline-block flex-wrap gap-2'>
       {Array.apply(0, Array(20)).map((x, i) => {
         return (
-          <label key={i}>
-            <input  type="radio" value={i.toString()} name="index" checked={color === i} onChange={handleColorChange}/>
-            {i}
-          </label>
+            <div className='flex inline-block flex-wrap w-fit'>
+              <label key={i} className='flex inline-block pr-1'>
+                <input  type="radio" value={i.toString()} name="index" checked={color === i} onChange={handleColorChange} className='w-fit'/>
+                <div className='h-5 w-5 bg-lilly-bg border border-solid border-black items-center mt-0.5 ml-1'></div>
+              </label>
+            </div>
         )
       })}
     </form>

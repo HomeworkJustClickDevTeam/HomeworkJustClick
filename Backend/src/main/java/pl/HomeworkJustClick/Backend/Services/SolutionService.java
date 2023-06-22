@@ -96,4 +96,6 @@ public interface SolutionService {
     SolutionResponse getCheckedSolutionByUserAssignmentGroup(int user_id, int group_id, int assignment_id);
 
     SolutionResponse getUncheckedSolutionByUserAssignmentGroup(int user_id, int group_id, int assignment_id);
+
+    boolean checkForFileToSolution(int solution_id);
 }

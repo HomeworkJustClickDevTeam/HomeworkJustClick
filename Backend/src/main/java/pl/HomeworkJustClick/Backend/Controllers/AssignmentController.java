@@ -1049,4 +1049,22 @@ public class AssignmentController {
     public ResponseEntity<Boolean> checkForSolutionToAssignment(@PathVariable("assignment_id") int id) {
         return new ResponseEntity<>(assignmentService.checkForSolutionToAssignment(id), HttpStatus.OK);
     }
+
+    @GetMapping("/assignment/checkForFile/{assignment_id}")
+    @Operation(
+            summary = "Checks if assignment with given id has any file attached to it. Returns true if so, false otherwise. False may also indicate that there is no assignment in the DB with given id.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK.",
+                            content = @Content(
+                                    mediaType = "string",
+                                    schema = @Schema(implementation = String.class)
+                            )
+                    )
+            }
+    )
+    public ResponseEntity<Boolean> checkForFileToAssignment(@PathVariable("assignment_id") int assignment_id) {
+        return new ResponseEntity<>(assignmentService.checkForFileToAssignment(assignment_id), HttpStatus.OK);
+    }
 }
