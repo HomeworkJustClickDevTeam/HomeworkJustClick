@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom"
+import {Link, Outlet, useLocation} from "react-router-dom"
 import { useEffect, useState } from "react"
 import { SolutionExtended } from "../../types/types"
 import AssigmentItem from "../assigments/assigmentDisplayer/assigmentItem/AssigmentItem"
@@ -28,6 +28,7 @@ function Solution() {
     setShowRating(true)
   }
 
+
   return (
     <>
       <AssigmentItem
@@ -54,6 +55,8 @@ function Solution() {
           <button onClick={handleShowRating}>Pokaz Punkty</button>
         )
       ) : null}
+      <br/>
+      <Link to={`/group/${solutionExtended.assignment.groupId}/solution/${solutionExtended.user.id}/${solutionExtended.assignment.id}/example`} >Zaawansowane Sprawdzanie</Link>
     </>
   )
 }
