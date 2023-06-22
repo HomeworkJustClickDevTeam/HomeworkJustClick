@@ -23,7 +23,7 @@ function HeaderLoggedIn() {
               <Link className='flex items-center px-[2.5vw] hover:bg-hover_blue h-full' to={`/settings`}>
                   Ustawienia
               </Link>
-          <div className='absolute flex right-0 hover:bg-hover_blue h-full items-center pr-3 pl-4'>
+          <div className='absolute flex right-0 hover:bg-hover_blue h-full items-center pr-5 pl-4'>
             <LogOut/>
           </div>
 

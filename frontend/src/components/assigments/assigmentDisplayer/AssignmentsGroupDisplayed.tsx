@@ -36,10 +36,10 @@ function AssignmentsGroupDisplayed() {
     return <Loading />
   }
   return (
-    <>
+    <div className='relative h-[420px]'>
       {role == "Teacher" && (
         <Link to={`/group/${id}/assignments/add`}>
-          <button>Dodaj zadanie domowe</button>
+          <button className='absolute right-0 bottom-0 bg-main_blue text-white mr-14 px-8 py-2 rounded-md text-lg'>Nowe zadanie +</button>
         </Link>
       )}
       <ul>
@@ -49,7 +49,7 @@ function AssignmentsGroupDisplayed() {
           </li>
         ))}
       </ul>
-    </>
+    </div>
   )
 }
 export default AssignmentsGroupDisplayed

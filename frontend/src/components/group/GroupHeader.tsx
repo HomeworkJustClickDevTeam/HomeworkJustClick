@@ -20,8 +20,8 @@ function GroupHeader({ group }: PropsForGroupItem) {
   return (
     <div>
         <div className='relative flex text-white justify-center'>
-            <div className={`w-[85%] mt-8 h-36 rounded-xl bg-[${colorsArray[0]}]`}>
-            {/*<div className='w-[85%] mt-8 h-36 rounded-xl bg-main_blue'>*/}
+            {/*<div className={`w-[85%] mt-8 h-36 rounded-xl bg-[${colorsArray[0]}]`}>*/}
+            <div className='w-full mx-24 mt-8 h-36 rounded-xl bg-main_blue'>
                 <article className='absolute bottom-0 mb-6 ml-4'>
                     <p className='text-3xl'>{group.name}</p>
                     <p className='text-xl mt-1'>{group.description}</p>
