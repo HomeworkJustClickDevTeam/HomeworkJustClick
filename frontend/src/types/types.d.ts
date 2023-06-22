@@ -51,7 +51,7 @@ interface PropsForGroupItem {
   key: number
 }
 type PropsForFiltering = {
-  setGroups: (groups: Group[]) => void
+  setGroups: (groups: Group[] | undefined) => void
   setIsLoading: (loading: boolean) => void
 }
 interface AssigmentFilterProp {
