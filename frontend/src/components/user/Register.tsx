@@ -1,7 +1,8 @@
-import React, { ChangeEvent, useState } from "react"
+import React, { ChangeEvent, useContext, useEffect, useState } from "react"
 import postgresqlDatabase from "../../services/postgresDatabase"
 import { useNavigate } from "react-router-dom"
-import { RegisterUser } from "../../types/types"
+import { Action, RegisterUser } from "../../types/types"
+import DispatchContext from "../../DispatchContext"
 
 const Register = () => {
   const [secondPassword, setSecondPassword] = useState<string>("")
@@ -12,6 +13,13 @@ const Register = () => {
     password: "",
   })
   const navigate = useNavigate()
+  const globalDispatch = useContext(DispatchContext)
+  useEffect(() => {
+    const action: Action = {
+      type: "homePageOut",
+    }
+    globalDispatch?.(action)
+  }, [])
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()

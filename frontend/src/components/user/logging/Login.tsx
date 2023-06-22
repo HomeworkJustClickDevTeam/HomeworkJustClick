@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useContext, useState } from "react"
+import React, { ChangeEvent, useContext, useEffect, useState } from "react"
 import postgresqlDatabase from "../../../services/postgresDatabase"
 import { useNavigate } from "react-router-dom"
 import { Action, LoginUser, userState } from "../../../types/types"
@@ -9,8 +9,14 @@ const Login = () => {
     email: "",
     password: "",
   })
-  const globalDispatch = useContext(DispatchContext)
   const navigate = useNavigate()
+  const globalDispatch = useContext(DispatchContext)
+  useEffect(() => {
+    const action: Action = {
+      type: "homePageOut",
+    }
+    globalDispatch?.(action)
+  }, [])
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
@@ -31,8 +37,6 @@ const Login = () => {
       console.log(e)
     }
   }
-
-
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target
