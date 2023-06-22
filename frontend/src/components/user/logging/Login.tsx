@@ -45,10 +45,10 @@ const Login = () => {
   }
 
   return (
-      <div className='flex w-screen flex-col items-center text-center font-lato text-sm'>
+      <div className='flex w-screen flex-col items-center text-center font-lato text-sm select-none'>
         <img className="fixed left-[7%]  bottom-[3%] scale-50 xl:scale-100 -z-50" src = {KolkoLewe} alt="Kółko po lewej stronie"></img>
         <img className="fixed right-[9%] top-[18%] scale-50 translate-x-[25%] xl:transform-none -z-50" src= {KolkoPrawe} alt="Kółko po prawej stronie"></img>
-        <h1 className='mt-[20vh] mb-16 text-4xl xl:text-[64px]'>Zaloguj się</h1>
+        <h1 className='mt-32 mb-16 text-6xl'>Zaloguj się</h1>
         <form onSubmit={handleSubmit} className='flex flex-col items-center'>
           <input
               name="email"

@@ -17,7 +17,7 @@ function UserItem({userToShow, isTeacher}:UserItemToDisplay) {
   }
   else {
     return (
-      <li>
+      <li className='align-text-bottom mt-1'>
         {userToShow.firstname} {userToShow.lastname}
       </li>
     )

@@ -16,9 +16,9 @@ function TeacherDisplayer({ id }: GroupProp) {
       .catch((e) => console.log(e))
   }, [])
   return (
-    <div>
-      <h1>Teachers:</h1>
-      <ul>
+    <div className='flex inline-block mt-3'>
+      <h1 className='font-bold text-2xl align-text-bottom mr-3'>Teachers: </h1>
+      <ul className='flex inline-block gap-2 font-semibold text-lg'>
         {teachers?.map((teacher) => (
             <UserItem isTeacher={true} userToShow={teacher} key={teacher.id}/>
         ))}
