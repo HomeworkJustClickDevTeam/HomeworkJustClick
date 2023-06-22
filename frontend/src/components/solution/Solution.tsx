@@ -5,6 +5,7 @@ import AssigmentItem from "../assigments/assigmentDisplayer/assigmentItem/Assigm
 import postgresqlDatabase from "../../services/postgresDatabase"
 import { Rating } from "../evaluation/Rating"
 import { SolutionFile } from "./file/SolutionFile"
+import {format} from "date-fns";
 
 function Solution() {
   let { state } = useLocation()
@@ -19,6 +20,7 @@ function Solution() {
         setPoints(r.data.result)
         setIsCheck(true)
       })
+
   }, [])
 
   const handleDisableRating = () => {
@@ -29,18 +31,17 @@ function Solution() {
   }
 
 
+
   return (
-    <>
-      <AssigmentItem
-        idGroup={`${solutionExtended.assignment.groupId}`}
-        assignment={solutionExtended.assignment}
-      />
-      <h1>
+    <div>
+        <div>{solutionExtended.assignment.title}</div>
+        <div className="text-border_gray">{solutionExtended.assignment.taskDescription}</div>
+      <h1 >
         Points: {points} /{solutionExtended.assignment.max_points}
       </h1>
       <SolutionFile solutionId={solutionExtended.id} />
       {!isCheck ? (
-          <>
+          <div>
               <Link to={`/group/${solutionExtended.assignment.groupId}/solution/${solutionExtended.user.id}/${solutionExtended.assignment.id}/example`} >Zaawansowane Sprawdzanie</Link>
               <br/>
               {showRating ? (
@@ -58,11 +59,11 @@ function Solution() {
 
         ) : (
           <button onClick={handleShowRating}>Pokaz Punkty</button>
-        )}</>
+        )}</div>
       ) : null}
       <br/>
 
-    </>
+    </div>
   )
 }
 export default Solution

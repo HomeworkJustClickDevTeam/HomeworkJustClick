@@ -42,7 +42,7 @@ function AssignmentsGroupDisplayed() {
           <button className='absolute right-0 bottom-0 bg-main_blue text-white mr-14 px-8 py-2 rounded-md text-lg'>Nowe zadanie +</button>
         </Link>
       )}
-      <ul className="flex flex-col">
+      <ul className="flex flex-col ">
         {assignments.map((assigment) => (
           <li key={assigment.id} className='flex inline-block '>
             <AssigmentItem assignment={assigment} idGroup={id} />{" "}

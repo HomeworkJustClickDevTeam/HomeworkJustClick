@@ -87,17 +87,18 @@ function AssigmentSpec() {
   }
   console.log("Optional", optionalUserId)
   return (
-    <>
+    <div >
       {((role === "Teacher") && (optionalUserId === null)) ? (
         <ModifyAssigment assignment={assignment} setAssigment={setAssignment} />
       ) : ((solution === undefined) && (optionalUserId === null)) ? (
         <AddSolution assignment={assignment} />
       ) : isSolutionChecked ? (
+
         <CheckedSolution assignment={assignment} solution={solution as Solution} />
       ) : (
         <UncheckedSolution assignment={assignment} solution={solution as Solution} />
       )}
-    </>
+    </div>
   )
 }
 export default AssigmentSpec
