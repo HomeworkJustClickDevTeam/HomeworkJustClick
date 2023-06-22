@@ -1,0 +1,1 @@
+export const colorsArray: string[] = ['#59007f', '#006400']

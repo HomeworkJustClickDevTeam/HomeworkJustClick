@@ -4,6 +4,7 @@ import postgresqlDatabase from "../../../services/postgresDatabase";
 import {AxiosError} from "axios/index";
 import Loading from "../../animations/Loading";
 import {useParams} from "react-router-dom";
+import {colorsArray} from "../../../assets/colors";
 
 export default function GroupAppearanceSettings(){
   const [color, setColor] = useState<number | undefined>(undefined)
@@ -36,7 +37,7 @@ export default function GroupAppearanceSettings(){
             <div className='flex inline-block flex-wrap w-fit'>
               <label key={i} className='flex inline-block pr-1'>
                 <input  type="radio" value={i.toString()} name="index" checked={color === i} onChange={handleColorChange} className='w-fit'/>
-                <div className='h-5 w-5 bg-lilly-bg border border-solid border-black items-center mt-0.5 ml-1'></div>
+                <div className={`h-5 w-5 bg-[${colorsArray[i]}] border border-solid border-black items-center mt-0.5 ml-1`}></div>
               </label>
             </div>
         )

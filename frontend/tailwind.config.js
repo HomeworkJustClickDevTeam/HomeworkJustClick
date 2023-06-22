@@ -8,12 +8,12 @@ module.exports = {
       'hover_blue' : '#7896FF',
       'hover_gray' : '#eff0f4',
       'font_gray' : '#49454F',
-      
       white: colors.white,
       'light_gray': '#9ca3af',
       'lilly-bg' : 'rgba(109, 141, 255, 0.12)',
       black: colors.black,
       current: 'currentColor',
+      'colorsArray':['#59007f', '#006400']
     },
     extend: {
       fontFamily: {
