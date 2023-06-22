@@ -65,7 +65,7 @@ export function AssigmentFile(props: { assigmentId: number }) {
     }
   }
   if (isLoading) {
-    return <Loading />
+    // return <Loading />
   }
   return (
     <>
