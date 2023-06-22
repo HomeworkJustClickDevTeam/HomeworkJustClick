@@ -25,7 +25,7 @@ export function AddAssigmentFile(props: {
               })
               .then(() => props.setToNavigate(true))
           })
-          .catch()
+          .catch((e) => console.log(e))
       } else {
         props.setToNavigate(true)
       }
