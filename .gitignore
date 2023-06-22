@@ -10,3 +10,5 @@ Backend/target/
 frontend/frontend.iml
 
 Backend(MongoDB)/target/
+
+.idea/
