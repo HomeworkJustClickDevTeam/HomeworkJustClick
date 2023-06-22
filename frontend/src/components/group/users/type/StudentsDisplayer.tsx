@@ -15,8 +15,8 @@ function StudentsDisplayer({ id }: GroupProp) {
   }, [])
   return (
     <div className='flex flex-col'>
-      <h1 className='text-lg font-semibold'>Students:</h1>
-      <ul>
+      <h1 className='text-lg font-semibold mb-2'>Students:</h1>
+      <ul className='flex flex-col gap-1'>
         {students?.map((student) => (
             <UserItem isTeacher={false} userToShow={student} key={student.id}/>
         ))}
