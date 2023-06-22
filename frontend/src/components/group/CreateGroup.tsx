@@ -1,27 +1,29 @@
-import React, { useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import postgresqlDatabase from "../../services/postgresDatabase"
-import { GroupCreate } from "../../types/types"
+import {Action, Group, GroupCreate} from "../../types/types"
+import DispatchContext from "../../DispatchContext"
+import UserContext from "../../UserContext";
+
 
 function CreateGroup() {
+  const {userState} = useContext(UserContext)
   const [group, setGroup] = useState<GroupCreate>({
     name: "",
     description: "",
   })
   const navigate = useNavigate()
-
+  const globalDispatch = useContext(DispatchContext)
+  useEffect(() => {
+    const action: Action = {
+      type: "homePageOut",
+    }
+    globalDispatch?.(action)
+  }, [])
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     try {
-      await postgresqlDatabase.post(
-        "/group/withTeacher/" + localStorage.getItem("id"),
-        group,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      )
+      await postgresqlDatabase.post("/group/withTeacher/" + userState.userId ,group)
       navigate("/")
     } catch (e) {
       console.log(e)
@@ -37,23 +39,31 @@ function CreateGroup() {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        name="name"
-        placeholder="Group name"
-        onChange={handleChange}
-        type="text"
-        value={group.name}
-      />
-      <input
-        name="description"
-        placeholder="Descritpion of group"
-        onChange={handleChange}
-        type="text"
-        value={group.description}
-      />
-      <button>Stworz grupe</button>
-    </form>
+      <div className='pl-12 pt-16  '>
+          <div className='text-3xl border-b-main_blue border-b-solid border-b-2 w-fit mb-8'>Utwórz nową grupę!</div>
+            <form onSubmit={handleSubmit}>
+              <input
+                name="name"
+                placeholder="Nazwa grupy"
+                onChange={handleChange}
+                type="text"
+                value={group.name}
+                className='mb-12 border-b-2 border-b-light_gray text-center placeholder:text-light_gray placeholder:text-base  mr-4 w-52'
+
+              />
+              <input
+                name="description"
+                placeholder="Krótki opis grupy"
+                onChange={handleChange}
+                type="text"
+                value={group.description}
+                className='mb-12 border-b-2 border-b-light_gray text-center placeholder:text-light_gray placeholder:text-base w-64'
+
+              />
+              <br/>
+              <button className='px-6 py border-solid border-main_blue border-2 rounded bg-main_blue text-white text-base'>Stwórz grupę</button>
+            </form>
+      </div>
   )
 }
 export default CreateGroup

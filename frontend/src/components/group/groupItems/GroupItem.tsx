@@ -2,12 +2,12 @@ import { PropsForGroupItem } from "../../../types/types"
 
 function GroupItem({ group }: PropsForGroupItem) {
   return (
-    <>
-      <a href={"/group/" + group.id}>
-        <h1>{group.name}</h1>{" "}
+    <div className='relative w-64 bg-hover_blue  min-h-fit h-40 overflow-hidden rounded-md'>
+      <a className='w-full' href={"/group/" + group.id}>
+        <h1 className='flex items-center justify-center text-center pb-2 h-[50%] pt-3 text-white font-semibold'>{group.name}</h1>{" "}
       </a>
-      <p>{group.description}</p>
-    </>
+      <p className='px-2 pl-2 flex items-center text-base h-[50%] text-ellipsis bg-white bottom-0 text-black'>{group.description}</p>
+    </div>
   )
 }
 export default GroupItem

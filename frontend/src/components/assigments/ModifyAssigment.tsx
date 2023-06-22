@@ -1,12 +1,21 @@
 import { useNavigate, useParams } from "react-router-dom"
-import React, { ChangeEvent } from "react"
+import React, { ChangeEvent, useEffect, useState } from "react"
 import { AssigmentModifyProps } from "../../types/types"
 import postgresqlDatabase from "../../services/postgresDatabase"
 import ReactDatePicker from "react-datepicker"
 
+import { ModifyAssigmentFile } from "./file/ModifyAssigmentFile"
+
 function ModifyAssigment({ assignment, setAssigment }: AssigmentModifyProps) {
   const navigate = useNavigate()
   const { id } = useParams()
+  const [toSend, setToSend] = useState<boolean>(false)
+  const [toNavigate, setToNavigate] = useState<boolean>(false)
+  useEffect(() => {
+    if (toNavigate) {
+      navigate(`/group/${id}/assignments/`)
+    }
+  }, [toNavigate])
 
   const handleTextChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target
@@ -42,7 +51,7 @@ function ModifyAssigment({ assignment, setAssigment }: AssigmentModifyProps) {
     event.preventDefault()
     postgresqlDatabase
       .put(`/assignment/${assignment.id}`, assignment)
-      .then(() => navigate(`/group/${id}/assignments/`))
+      .then(() => setToSend(true))
       .catch((e) => console.log(e))
   }
 
@@ -104,6 +113,11 @@ function ModifyAssigment({ assignment, setAssigment }: AssigmentModifyProps) {
         </label>
         <button type="submit">Zmodyfikuj zadanie domowe</button>
       </form>
+      <ModifyAssigmentFile
+        toSend={toSend}
+        assignmentId={assignment.id}
+        setToNavigate={setToNavigate}
+      />
       <button onClick={handleDelete}>Usuń Zadanie (USUŃ TOOOOOOOOO)</button>
     </>
   )

@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom"
+import {Link, Outlet, useLocation} from "react-router-dom"
 import { useEffect, useState } from "react"
 import { SolutionExtended } from "../../types/types"
 import AssigmentItem from "../assigments/assigmentDisplayer/assigmentItem/AssigmentItem"
@@ -11,18 +11,23 @@ function Solution() {
   const [solutionExtended] = useState<SolutionExtended>(state?.solution)
   const [points, setPoints] = useState<number>()
   const [showRating, setShowRating] = useState<boolean>(false)
-
+  const [isCheck, setIsCheck] = useState<boolean>(false)
   useEffect(() => {
     postgresqlDatabase
       .get(`/evaluation/bySolution/${solutionExtended.id}`)
-      .then((r) => setPoints(r.data.result))
+      .then((r) => {
+        setPoints(r.data.result)
+        setIsCheck(true)
+      })
   }, [])
+
   const handleDisableRating = () => {
     setShowRating(false)
   }
   const handleShowRating = () => {
     setShowRating(true)
   }
+
 
   return (
     <>
@@ -34,7 +39,7 @@ function Solution() {
         Points: {points} /{solutionExtended.assignment.max_points}
       </h1>
       <SolutionFile solutionId={solutionExtended.id} />
-      {!points ? (
+      {!isCheck ? (
         showRating ? (
           <div>
             <Rating
@@ -50,6 +55,8 @@ function Solution() {
           <button onClick={handleShowRating}>Pokaz Punkty</button>
         )
       ) : null}
+      <br/>
+      <Link to={`/group/${solutionExtended.assignment.groupId}/solution/${solutionExtended.user.id}/${solutionExtended.assignment.id}/example`} >Zaawansowane Sprawdzanie</Link>
     </>
   )
 }

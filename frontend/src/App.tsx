@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"
 
-import "./assets/App.css"
+import './App.css'
+// import "./assets/App.css"
 import Register from "./components/user/Register"
 import Login from "./components/user/logging/Login"
 import Home from "./components/home/Home"
@@ -31,8 +32,15 @@ import UserAppearanceSettings from "./components/user/settings/UserAppearanceSet
 import UserMarkingTablesSettings from "./components/user/settings/UserMarkingTablesSettings"
 import GroupSettings from "./components/group/settings/GroupSettings"
 import UserProfileInGroup from "./components/group/users/UserProfileInGroup"
+import HardCodedExample from "./components/solution/HardCodedExample";
 
 function App() {
+  useEffect(() => {
+    if (localStorage.getItem("token") && localStorage.getItem("id")) {
+      localStorage.removeItem("token")
+      localStorage.removeItem("id")
+    }
+  }, [])
   const initialState: ApplicationState = {
     loggedIn: Boolean(localStorage.getItem("token")),
     homePageIn: true,
@@ -113,7 +121,10 @@ function App() {
                 <Route path="/group/:id" element={<Group />}>
                   <Route path="settings" element={<GroupSettings />} />
                   <Route path="users" element={<Users />} />
-                  <Route path="userProfileInGroup/:userProfileId" element={<UserProfileInGroup/>}/>
+                  <Route
+                    path="userProfileInGroup/:userProfileId"
+                    element={<UserProfileInGroup />}
+                  />
                   <Route
                     path="assignments"
                     element={<AssignmentsGroupDisplayed />}
@@ -137,8 +148,7 @@ function App() {
                   />
                   <Route
                     path="solution/:idUser/:idAssigment"
-                    element={<Solution />}
-                  />
+                    element={<Solution />}/>
                   <Route
                     path="solutions/uncheck"
                     element={<SolutionsTypes type={"uncheck"} />}
@@ -152,9 +162,10 @@ function App() {
                     element={<SolutionsTypes type={"check"} />}
                   />
 
+
                   <Route path="*" element={<NotFound />} />
                 </Route>
-
+                <Route path="/group/:id/solution/:idUser/:idAssigment/example" element={<HardCodedExample/>}/>
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>
