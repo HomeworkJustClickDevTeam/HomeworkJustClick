@@ -19,6 +19,10 @@ module.exports = {
     extend: {
       fontFamily: {
         'lato': ['Inter', 'sans-serif']
+      },
+      backgroundImage: {
+        'notes_img' : "url('./images/zadanie.png')",
+        'notes_img2' : "url('./images/zad2.png')"
       }
     },
   },

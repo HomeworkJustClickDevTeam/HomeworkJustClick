@@ -40,8 +40,12 @@ function Solution() {
       </h1>
       <SolutionFile solutionId={solutionExtended.id} />
       {!isCheck ? (
-        showRating ? (
+          <>
+              <Link to={`/group/${solutionExtended.assignment.groupId}/solution/${solutionExtended.user.id}/${solutionExtended.assignment.id}/example`} >Zaawansowane Sprawdzanie</Link>
+              <br/>
+              {showRating ? (
           <div>
+
             <Rating
               maxPoints={solutionExtended.assignment.max_points}
               points={points}
@@ -51,12 +55,13 @@ function Solution() {
             />
             <button onClick={handleDisableRating}>Schowaj Punkty</button>
           </div>
+
         ) : (
           <button onClick={handleShowRating}>Pokaz Punkty</button>
-        )
+        )}</>
       ) : null}
       <br/>
-      <Link to={`/group/${solutionExtended.assignment.groupId}/solution/${solutionExtended.user.id}/${solutionExtended.assignment.id}/example`} >Zaawansowane Sprawdzanie</Link>
+
     </>
   )
 }

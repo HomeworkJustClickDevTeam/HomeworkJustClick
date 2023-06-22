@@ -8,7 +8,7 @@ function HeaderLoggedIn() {
   const userState = useContext(userContext)
   const navigate = useNavigate()
   return (
-      <section className='relative flex h-16 text-white font-lato font-normal bg-main_blue items-center'>
+      <section className='relative flex h-16 text-white font-lato font-normal bg-main_blue items-center select-none'>
           {!userState.homePageIn && (
               <Link className='absolute flex pl-[3vw] w-[9vw] hover:bg-hover_blue h-full items-center' to="#" onClick={() => navigate(-1)}>
                   <FaChevronLeft className='pr-[calc(0.5vw)]'/>
