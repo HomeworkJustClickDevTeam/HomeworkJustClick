@@ -20,45 +20,45 @@ export default function GroupGeneralSettings() {
 
   const groupDeletionHandler = async () => {
     await postgresqlDatabase
-      .delete(`/group/${id}`)
-      .catch((error: AxiosError) => console.log(error))
+        .delete(`/group/${id}`)
+        .catch((error: AxiosError) => console.log(error))
     navigate("/")
   }
   const archivizationHandler = async () => {
     group.isArchived
-      ? await postgresqlDatabase
-          .put(`/group/unarchive/${id}`)
-          .catch((error: AxiosError) => console.log(error))
-          .then(() =>
-            setGroup((prevState) => ({
-              ...prevState,
-              isArchived: !prevState.isArchived,
-            }))
-          )
-      : await postgresqlDatabase
-          .put(`/group/archive/${id}`)
-          .catch((error: AxiosError) => console.log(error))
-          .then(() =>
-            setGroup((prevState) => ({
-              ...prevState,
-              isArchived: !prevState.isArchived,
-            }))
-          )
+        ? await postgresqlDatabase
+            .put(`/group/unarchive/${id}`)
+            .catch((error: AxiosError) => console.log(error))
+            .then(() =>
+                setGroup((prevState) => ({
+                  ...prevState,
+                  isArchived: !prevState.isArchived,
+                }))
+            )
+        : await postgresqlDatabase
+            .put(`/group/archive/${id}`)
+            .catch((error: AxiosError) => console.log(error))
+            .then(() =>
+                setGroup((prevState) => ({
+                  ...prevState,
+                  isArchived: !prevState.isArchived,
+                }))
+            )
   }
 
   const setGroupName = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     await postgresqlDatabase
-      .put(`/group/name/${id}`, group.name)
-      .catch((error: AxiosError) => console.log(error))
+        .put(`/group/name/${id}`, group.name)
+        .catch((error: AxiosError) => console.log(error))
   }
   const setGroupDescription = async (
-    event: React.FormEvent<HTMLFormElement>
+      event: React.FormEvent<HTMLFormElement>
   ) => {
     event.preventDefault()
     await postgresqlDatabase
-      .put(`/group/description/${id}`, group.description)
-      .catch((error: AxiosError) => console.log(error))
+        .put(`/group/description/${id}`, group.description)
+        .catch((error: AxiosError) => console.log(error))
   }
   const handelCopyUrl = async () => {
     try {
@@ -69,16 +69,16 @@ export default function GroupGeneralSettings() {
   }
   useEffect(() => {
     postgresqlDatabase
-      .get(`/group/${id}`)
-      .then((response) => {
-        setGroup((prevState) => ({
-          ...prevState,
-          name: response.data.name,
-          description: response.data.description,
-          isArchived: response.data.archived,
-        }))
-      })
-      .catch((error: AxiosError) => console.log(error))
+        .get(`/group/${id}`)
+        .then((response) => {
+          setGroup((prevState) => ({
+            ...prevState,
+            name: response.data.name,
+            description: response.data.description,
+            isArchived: response.data.archived,
+          }))
+        })
+        .catch((error: AxiosError) => console.log(error))
   }, [])
 
   if (group.isArchived === undefined) {
@@ -86,65 +86,68 @@ export default function GroupGeneralSettings() {
   }
 
   return (
-    <>
-      <ul>
-        <li>
-          <form onSubmit={setGroupName}>
-            <label htmlFor="groupName">
-              Nazwa Grupy:
+      <>
+        <ul>
+          <li>
+            <form onSubmit={setGroupName}>
+              <label htmlFor="groupName">
+                Nazwa Grupy:
+                <input
+                    type="text"
+                    name="groupName"
+                    defaultValue={group.name}
+                    onChange={(event) =>
+                        setGroup((prevState) => ({
+                          ...prevState,
+                          name: event.target.value,
+                        }))
+                    }
+                    className='border-b-2 border-b-light_gray mx-2 mr-8'
+                />
+                <button type="submit" className='bg-main_blue px-4 text-white rounded-md'>Potwierdź</button>
+              </label>
+            </form>
+          </li>
+          <li>
+            <form onSubmit={setGroupDescription}>
+              <label htmlFor="groupDescription">
+                Opis Grupy:
+                <input
+                    type="text"
+                    name="groupDescription"
+                    defaultValue={group.description}
+                    onChange={(event) =>
+                        setGroup((prevState) => ({
+                          ...prevState,
+                          description: event.target.value,
+                        }))
+                    }
+                    className='border-b-2 border-b-light_gray mx-2 mr-8'
+                />
+                <button className='bg-main_blue px-4 text-white rounded-md'>Potwierdź</button>
+              </label>
+            </form>
+          </li>
+          <li>
+            <label htmlFor="archived" className="switch">
+              Zarchiwizowana:
               <input
-                type="text"
-                name="groupName"
-                defaultValue={group.name}
-                onChange={(event) =>
-                  setGroup((prevState) => ({
-                    ...prevState,
-                    name: event.target.value,
-                  }))
-                }
+                  className='ml-2 cursor-pointer'
+                  name="archived"
+                  type="checkbox"
+                  defaultChecked={group.isArchived}
+                  onClick={archivizationHandler}
               />
-              <button type="submit">Potwierdź</button>
+              <span className="slider"></span>
             </label>
-          </form>
-        </li>
-        <li>
-          <form onSubmit={setGroupDescription}>
-            <label htmlFor="groupDescription">
-              Opis Grupy:
-              <input
-                type="text"
-                name="groupDescription"
-                defaultValue={group.description}
-                onChange={(event) =>
-                  setGroup((prevState) => ({
-                    ...prevState,
-                    description: event.target.value,
-                  }))
-                }
-              />
-              <button>Potwierdź</button>
-            </label>
-          </form>
-        </li>
-        <li>
-          <label htmlFor="archived" className="switch">
-            Zarchiwizowana:
-            <input
-              name="archived"
-              type="checkbox"
-              defaultChecked={group.isArchived}
-              onClick={archivizationHandler}
-            />
-            <span className="slider"></span>
-          </label>
-        </li>
-        <li>
-          <button onClick={groupDeletionHandler}>Usuń grupę</button>
-        </li>
-        <li>
-          <button onClick={handelCopyUrl}>Udostepnij Link grupy</button>
-        </li>
-      </ul>
-    </>
+          </li>
+          <li>
+            <button onClick={groupDeletionHandler} className='text-scarlet '>Usuń grupę</button>
+          </li>
+          <li>
+            <button onClick={handelCopyUrl} className='underline'>Udostepnij Link grupy</button>
+          </li>
+        </ul>
+      </>
   )
 }

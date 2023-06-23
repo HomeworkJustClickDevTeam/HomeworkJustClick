@@ -54,15 +54,15 @@ function AssignmentsTypes({ type }: PropsForType) {
     )
   }
   return (
-    <>
-      <ul>
+    <div >
+      <ul >
         {assignments.map((assignment) => (
           <li key={assignment.id}>
             <AssigmentItem assignment={assignment} idGroup={id} />{" "}
           </li>
         ))}
       </ul>
-    </>
+    </div>
   )
 }
 export default AssignmentsTypes
