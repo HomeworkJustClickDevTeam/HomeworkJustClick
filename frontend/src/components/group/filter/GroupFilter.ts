@@ -33,7 +33,7 @@ export const groupFilter = ({ setGroups, setIsLoading }: PropsForFiltering) => {
         const groups: Group[] = response.data
         setGroups(groups)
       })
-      .catch(() => setGroups([]))
+      .catch(() => setGroups(undefined))
     setIsLoading(false)
   }
   return {

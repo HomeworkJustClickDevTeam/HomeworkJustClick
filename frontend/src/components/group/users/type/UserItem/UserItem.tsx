@@ -8,7 +8,7 @@ function UserItem({userToShow, isTeacher}:UserItemToDisplay) {
 
   if(!isTeacher && role==="Teacher") {
     return (
-      <li>
+      <li className="px-1 after:content-[','] last:after:content-['']">
         <a href={"userProfileInGroup/" + userToShow.id}>
           {userToShow.firstname} {userToShow.lastname}
         </a>
@@ -17,7 +17,7 @@ function UserItem({userToShow, isTeacher}:UserItemToDisplay) {
   }
   else {
     return (
-      <li>
+      <li className="align-text-bottom mt-1 px-1 after:content-[','] last:after:content-['']">
         {userToShow.firstname} {userToShow.lastname}
       </li>
     )

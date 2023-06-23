@@ -38,15 +38,15 @@ export default function GroupUsersSettingsListElement(props:{
   }
   const ThreeDotsSettingsButtons = () =>{
     return(
-      <ul>
-        <li><button onClick={handleUserDeletion}>usuń z grupy</button></li>
-        {props.isStudent ? <li><button onClick={handlePermissionsChange}>zmien na nauczyciela</button></li> : ""}
+      <ul className='ml-2 text-left'>
+        <li><button onClick={handleUserDeletion} className='text-scarlet'>Usuń z grupy</button></li>
+        {props.isStudent ? <li><button onClick={handlePermissionsChange}>Zmień na nauczyciela</button></li> : ""}
       </ul>
     )
   }
   return(
-    <li><>{props.userToShow.firstname} {props.userToShow.lastname}
-      {role === "Teacher" ? (<button onClick={()=>setOpen(!open)}>trzy kropki</button>) : ("")}{open && <ThreeDotsSettingsButtons/>}
+    <li className='flex inline-block text-center items-center'><>{props.userToShow.firstname} {props.userToShow.lastname}
+      {role === "Teacher" ? (<button onClick={()=>setOpen(!open)} className='pb-1 pl-1 font-bold'> ... </button>) : ("")}{open && <ThreeDotsSettingsButtons/>}
     </></li>
   )
 }

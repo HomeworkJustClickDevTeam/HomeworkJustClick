@@ -16,6 +16,7 @@ function Home() {
   const [btnName, setBtnName] = useState('Wszystkie grupy')
   const { userState } = useContext(userContext)
   const globalDispatch = useContext(DispatchContext)
+  console.log(userState)
   useEffect(() => {
     const action: Action = {
       type: "homePageIn",
@@ -28,10 +29,10 @@ function Home() {
   })
 
   useEffect(() => {
-    if (userState.userId) {
+    if (userState.userId !== undefined || userState.userId !== null) {
       allUserGroups()
     }
-  }, [userState])
+  }, [userState.userId])
 
   if (groups === undefined || groups === null) {
     return <Loading />

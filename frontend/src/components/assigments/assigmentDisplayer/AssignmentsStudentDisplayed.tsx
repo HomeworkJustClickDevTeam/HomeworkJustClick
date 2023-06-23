@@ -17,7 +17,7 @@ export default function AssignmentsStudentDisplayed() {
       })
   }, [])
   return (
-    <>
+    <div>
       <ul>
         {assignments.map((assigment) => (
           <li key={assigment.id}>
@@ -28,6 +28,6 @@ export default function AssignmentsStudentDisplayed() {
           </li>
         ))}
       </ul>
-    </>
+    </div>
   )
 }

@@ -52,12 +52,12 @@ export default function GroupUsersSettings(){
   }
 
   return(
-    <dl>
-      <dt>Nauczyciele</dt>
+    <dl >
+      <dt className='font-semibold'>Nauczyciele</dt>
         <dd>
           <ul>{teachers?.map((teacher) =>((teacher.id !== +userState.userId) ? <GroupUsersSettingsListElement makeTeacher={makeTeacher} deleteUser={deleteTeacherFromList} groupId={id as string} isStudent={false} userToShow={teacher} key={teacher.id}/> : ""))}</ul>
         </dd>
-      <dt>Studenci</dt>
+      <dt className='font-semibold'>Studenci</dt>
         <dd>
           <ul>{students?.map((student) =>((student.id !== +userState.userId) ? <GroupUsersSettingsListElement makeTeacher={makeTeacher} deleteUser={deleteStudentFromList} groupId={id as string} isStudent={true} userToShow={student} key={student.id}/> : ""))}</ul>
         </dd>

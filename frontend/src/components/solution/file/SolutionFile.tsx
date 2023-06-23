@@ -61,7 +61,7 @@ export function SolutionFile(props: { solutionId: number }) {
     }
   }
   if (isLoading) {
-    return <Loading />
+    // return <Loading />
   }
   return (
     <>

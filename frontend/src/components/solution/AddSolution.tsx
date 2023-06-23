@@ -11,6 +11,7 @@ import postgresqlDatabase from "../../services/postgresDatabase"
 import AssigmentItem from "../assigments/assigmentDisplayer/assigmentItem/AssigmentItem"
 import userContext from "../../UserContext"
 import { AssigmentFile } from "../assigments/file/AssigmentFile"
+import {format} from "date-fns";
 
 function AddSolution({ assignment }: AssigmentProps) {
   const { idAssigment, id = "" } = useParams()
@@ -91,12 +92,13 @@ function AddSolution({ assignment }: AssigmentProps) {
   }
 
   return (
-    <div>
-      <AssigmentItem idGroup={id} assignment={assignment} />
+    <div className='relative flex flex-col mx-[7.5%] mt-4 border border-border_gray border-1 rounded-md pt-4 px-4 h-80 gap-2'>
+      <div><span className='font-semibold'>Tytuł zadania: </span>{assignment.title}</div>
+      <div><span className='font-semibold'>Data ukończenia: </span>{format(assignment.completionDatetime, "dd.MM.yyyy, HH:mm")}</div>
       {isFile && <AssigmentFile assigmentId={assignment.id} />}
       <input type="file" onChange={handleChangeFile} />
       <div> {file && `${file.name} - ${file.type}`}</div>
-      <button onClick={handleUploadClick}>Wyslij zadanie</button>
+      <button onClick={handleUploadClick} className='absolute bg-main_blue text-white px-6 py-1 rounded w-40 bottom-0 left-0 ml-4 mb-6 hover:bg-hover_blue hover:shadow-md active:shadow-none'>Wyslij zadanie</button>
     </div>
   )
 }
