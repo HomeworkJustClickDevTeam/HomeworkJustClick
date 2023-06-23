@@ -75,11 +75,11 @@ function AddAssigment() {
   }
 
   return (
-    <div className='relative flex flex-col mx-24 mt-6 border border-light_gray border-1 rounded-md pt-4 px-4 h-80'>
+    <div className='relative flex flex-col mx-[7.5%] mt-4 border border-border_gray border-1 rounded-md pt-4 px-4 h-80'>
       <form onSubmit={handleSubmit} className='flex flex-col gap-3'>
         <label className='pr-3'>
           Tytuł:
-          <input name="title" type="text" onChange={handleTextChange} placeholder='Nazwa grupy' className='pl-1 ml-2 border-b-2 border-b-light_gray w-64'/>
+          <input name="title" type="text" onChange={handleTextChange} placeholder='Nazwa zadania' className='pl-1 ml-2 border-b-2 border-b-light_gray w-64'/>
         </label>
         <label>
           Opis zadania:
@@ -126,7 +126,7 @@ function AddAssigment() {
 
           />
         </label>
-        <button type="submit" className='absolute top-0 right-0 mr-6 mt-4 px-6 py-1 rounded-lg bg-main_blue text-white'>Utwórz zadanie</button>
+        <button type="submit" className='absolute top-0 right-0 mr-6 mt-4 px-6 py-1 rounded-lg bg-main_blue text-white hover:bg-hover_blue hover:shadow-md active:shadow-none'>Utwórz zadanie</button>
       </form>
       <p className='mt-4 mb-2'>Dodaj pliki: </p>
       <AddAssigmentFile

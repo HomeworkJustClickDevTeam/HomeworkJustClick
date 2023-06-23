@@ -7,7 +7,7 @@ export default function UncheckedSolution(props: {
   assignment: Assigment
 }) {
   return (
-      <div className='relative flex flex-col mx-24 mt-6 border border-light_gray border-1 rounded-md pt-4 px-4 h-80 gap-2'>
+      <div className='relative flex flex-col mx-[7.5%] mt-4 border border-border_gray border-1 rounded-md pt-4 px-4 h-80 gap-2'>
           <p><span className='font-semibold'>Zadanie: </span>{props.assignment.title} </p>
           <p><span className='font-semibold'>Opis zadania: </span>{props.assignment.taskDescription}</p>
           <div>

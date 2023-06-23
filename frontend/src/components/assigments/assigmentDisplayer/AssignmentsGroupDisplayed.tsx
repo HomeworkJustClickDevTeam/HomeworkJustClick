@@ -39,7 +39,7 @@ function AssignmentsGroupDisplayed() {
     <div className='relative h-[420px]'>
       {role == "Teacher" && (
         <Link to={`/group/${id}/assignments/add`}>
-          <button className='absolute right-0 bottom-0 bg-main_blue text-white mr-14 px-8 py-2 rounded-md text-lg'>Nowe zadanie +</button>
+          <button className='absolute right-[7.5%] bottom-0 bg-main_blue text-white px-8 py-2 rounded-md text-lg hover:bg-hover_blue hover:shadow-md active:shadow-none'>Nowe zadanie +</button>
         </Link>
       )}
       <ul className="flex flex-col ">

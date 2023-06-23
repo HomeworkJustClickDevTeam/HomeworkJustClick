@@ -14,10 +14,7 @@ function GroupHeader({ group }: PropsForGroupItem) {
   const { role } = useContext(GroupContext)
   const location = useLocation();
   const locationSplit = location.pathname.split("/");
-
-    console.log(colorsArray[0])
-    console.log(colorsArray[1])
-    console.log(group.color)
+  
   return (
     <div>
         <div className='relative flex text-white justify-center'>
@@ -29,8 +26,8 @@ function GroupHeader({ group }: PropsForGroupItem) {
                 </article>
             </div>
         </div>
-      <header className='flex inline-block'>
-          <div className="text-[22px] font-lato font-medium text-center text-font_gray ml-28">
+      <header className='flex inline-block mt-4 mx-[7.5%] justify-between'>
+          <div className="text-[22px] font-lato font-medium text-center text-font_gray">
               <ul className="flex flex-wrap -mb-px">
                   <li className={ locationSplit[3] === "assignments" || locationSplit[3] === "solutions" ?  "border-main_blue border-b-[3px] rounded bg-main_blue bg-opacity-5 text-black" : "hover:bg-hover_gray"}>
                       <Link to="assignments" className="inline-block w-[170px] p-4  rounded-t-lg "> Zadania</Link>
@@ -43,7 +40,7 @@ function GroupHeader({ group }: PropsForGroupItem) {
                   </li>
               </ul>
           </div>
-        <div className='absolute flex right-0 h-16 items-center mr-32 gap-5'>
+        <div className='relative float-right flex h-16 items-center gap-5'>
             {role === "Student" ? (
               <Link to="assignments/todo" className=''>Do wykonania</Link>
             ) : (

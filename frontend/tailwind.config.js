@@ -8,6 +8,7 @@ module.exports = {
       'hover_blue' : '#7896FF',
       'hover_gray' : '#eff0f4',
       'font_gray' : '#49454F',
+      'border_gray':'#787878',
       white: colors.white,
       'light_gray': '#9ca3af',
       'lilly-bg' : 'rgba(109, 141, 255, 0.12)',
