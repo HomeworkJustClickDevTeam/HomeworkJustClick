@@ -51,7 +51,7 @@ function SolutionsTypes({ type }: PropsForType) {
 
   return (
     <div >
-      <ul className='flex flex-col gap-3 mt-4 ml-28'>
+      <ul className='flex flex-col gap-3 mt-4 mx-[7.5%]'>
         {solutionsExtended.map((solutionExtended) => (
           <li
             key={
@@ -66,11 +66,11 @@ function SolutionsTypes({ type }: PropsForType) {
               to={`/group/${solutionExtended.assignment.groupId}/solution/${solutionExtended.user.id}/${solutionExtended.assignment.id}`}
               state={{ solution: solutionExtended }} className="flex relative border-border_gray border w-[42.5%] h-16 rounded-lg font-lato text-xl items-center text-center gap-2"
             >
-              <div className="flex-col pl-10 w-48 text-left">
+              <div className="flex-col pl-10 w-40 text-left">
                 <div>{solutionExtended.user.index}</div>
                 <div>{solutionExtended.user.firstname}</div>
               </div>
-              <div className='font-semibold underline text-left'>{solutionExtended.assignment.title}</div>
+              <div className='font-semibold underline text-left w-[40%]'>{solutionExtended.assignment.title}</div>
               <p className="absolute right-0 mr-10 font-semibold text-[28px]">/{solutionExtended.assignment.max_points}</p>
             </Link>
           </li>

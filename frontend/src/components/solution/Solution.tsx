@@ -33,7 +33,7 @@ function Solution() {
 
 
   return (
-    <div className='relative flex flex-col mx-24 mt-6 border border-light_gray border-1 rounded-md pt-4 px-4 h-96 gap-2'>
+    <div className='relative flex flex-col mt-6 border border-light_gray border-1 rounded-md pt-4 px-4 h-96 gap-2 mx-[7.5%]'>
         <div><span className="font-semibold">Nazwa zadania: </span>{solutionExtended.assignment.title}</div>
         <div className="text-border_gray"><span className="font-semibold">Opis zadania: </span>{solutionExtended.assignment.taskDescription}</div>
       <div className="absolute right-0 top-0 mr-8 mt-2 flex flex-col">
