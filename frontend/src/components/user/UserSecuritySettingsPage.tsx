@@ -1,10 +1,14 @@
 import { useState } from "react";
-import {newCredentials} from "../../types/types"
 import postgresqlDatabase from "../../services/postgresDatabase";
 import { AxiosError } from "axios";
 
+interface CredentialsInterface {
+  email: string | undefined
+  password: string | undefined
+  newPassword: string | undefined
+}
 export default function UserSecuritySettingsPage(): JSX.Element{
-    const [newCredentials, setNewCredentials] = useState<newCredentials>({
+    const [newCredentials, setNewCredentials] = useState<CredentialsInterface>({
         "email": undefined,
         "password": undefined,
         "newPassword": undefined})

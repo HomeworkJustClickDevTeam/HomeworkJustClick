@@ -1,9 +1,10 @@
-import {UserItemToDisplay} from "../../types/types";
 import {useContext} from "react";
 import GroupRoleContext from "../../GroupRoleContext";
-
-
-function GroupUserListElement({userToShow, isTeacher}:UserItemToDisplay) {
+interface GroupUserListElementProps {
+  userToShow: {firstname: string, lastname: string, id: number}
+  isTeacher?: boolean
+}
+function GroupUserListElement({userToShow, isTeacher}:GroupUserListElementProps) {
   const {role} = useContext(GroupRoleContext)
 
   if(!isTeacher && role==="Teacher") {

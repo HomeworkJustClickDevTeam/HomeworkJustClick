@@ -2,15 +2,16 @@ import { useContext, useEffect, useState } from "react"
 import GroupListElement from "../group/GroupListElement"
 import { Link } from "react-router-dom"
 import { groupFilter } from "../group/filter/GroupFilter"
-import { Action, Group } from "../../types/types"
+import { Action } from "../../types/types"
 import Loading from "../animations/Loading"
 import userContext from "../../UserContext"
 import DispatchContext from "../../DispatchContext"
 import {render} from "@testing-library/react";
 import {FaCaretDown} from 'react-icons/fa';
+import {GroupInterface} from "../../types/GroupInterface";
 
 function HomePage() {
-  const [groups, setGroups] = useState<Group[] | undefined>(undefined)
+  const [groups, setGroups] = useState<GroupInterface[] | undefined>(undefined)
   const [isLoading, setIsLoading] = useState<boolean>()
   const [isOpen, setIsOpen] = useState(false)
   const [btnName, setBtnName] = useState('Wszystkie grupy')

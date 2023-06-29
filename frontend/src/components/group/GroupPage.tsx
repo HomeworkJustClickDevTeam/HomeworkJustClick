@@ -10,7 +10,7 @@ import GroupHeader from "./GroupHeader"
 import GroupSetRoleContext from "../../GroupSetRoleContext"
 import GroupRoleContext from "../../GroupRoleContext"
 import Loading from "../animations/Loading"
-import { Group as GroupType} from "../../types/types"
+import {GroupInterface} from "../../types/GroupInterface";
 
 function GroupPage() {
   const { id = "" } = useParams<{ id: string }>()
@@ -18,7 +18,7 @@ function GroupPage() {
   const globalDispatch = useContext(DispatchContext)
   const { setRole } = useContext(GroupSetRoleContext)
   const { role } = useContext(GroupRoleContext)
-  const [group, setGroup] = useState<GroupType | undefined>(undefined);
+  const [group, setGroup] = useState<GroupInterface | undefined>(undefined);
 
 
   useEffect(() => {

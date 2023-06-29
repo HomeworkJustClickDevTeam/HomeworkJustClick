@@ -1,12 +1,17 @@
-import {Assigment, AssigmentFilterProp} from "../../../types/types"
+import {Assigment} from "../../../types/types"
 import postgresqlDatabase from "../../../services/postgresDatabase"
 import {Axios, AxiosError} from "axios";
+interface AssignmentFilterStudentProps {
+  setAssignments: (assignments: Assigment[]) => void
+  userId: string
+  id: string
+}
 
 export const assigmentFilterStudent = ({
   setAssignments,
   id,
   userId,
-}: AssigmentFilterProp) => {
+}: AssignmentFilterStudentProps) => {
   const doneAssignments = (): void => {
     postgresqlDatabase
       .get(`/assignments/doneByGroupAndStudent/${id}/${userId}`)

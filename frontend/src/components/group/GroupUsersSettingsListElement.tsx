@@ -1,15 +1,15 @@
 import React, {useContext, useState} from "react";
-import {UserToShow} from "../../types/types";
 import postgresqlDatabase from "../../services/postgresDatabase";
 import {AxiosError} from "axios";
 import GroupRoleContext from "../../GroupRoleContext";
-
-export default function GroupUsersSettingsListElement(props:{
-  makeTeacher(arg:UserToShow): void,
-  deleteUser(arg: UserToShow): void,
-  userToShow:UserToShow,
+import {UserInterface} from "../../types/UserInterface";
+interface GroupUsersSettingsListElementProps{
+  makeTeacher(arg:UserInterface): void,
+  deleteUser(arg: UserInterface): void,
+  userToShow:UserInterface,
   isStudent:boolean,
-  groupId: string}){
+  groupId: string}
+export default function GroupUsersSettingsListElement(props:GroupUsersSettingsListElementProps){
   const [open, setOpen] = useState(false)
   const {role} = useContext(GroupRoleContext)
   const handleUserDeletion = async () =>{

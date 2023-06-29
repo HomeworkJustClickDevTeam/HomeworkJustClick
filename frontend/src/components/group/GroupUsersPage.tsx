@@ -5,7 +5,7 @@ function GroupUsersPage() {
   const { id } = useParams()
   return (
     <>
-      <GroupUsersDisplayer id={id} />
+      <GroupUsersDisplayer id={id as string} />
     </>
   )
 }

@@ -1,14 +1,17 @@
 import React, { useContext, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import postgresqlDatabase from "../../services/postgresDatabase"
-import {Action, Group, GroupCreate} from "../../types/types"
+import {Action} from "../../types/types"
 import DispatchContext from "../../DispatchContext"
 import UserContext from "../../UserContext";
 
-
+interface GroupCreateInterface {
+  name: string
+  description: string
+}
 function GroupCreatePage() {
   const {userState} = useContext(UserContext)
-  const [group, setGroup] = useState<GroupCreate>({
+  const [group, setGroup] = useState<GroupCreateInterface>({
     name: "",
     description: "",
   })

@@ -1,16 +1,17 @@
 import { useEffect, useState } from "react"
-import { GroupProp, UserToShow } from "../../types/types"
+import { GroupProp} from "../../types/types"
 import postgresqlDatabase from "../../services/postgresDatabase"
 import GroupUserListElement from "./GroupUserListElement"
+import {UserInterface} from "../../types/UserInterface";
 
 function GroupTeacherDisplayer({ id }: GroupProp) {
-  const [teachers, setTeachers] = useState<UserToShow[]>()
+  const [teachers, setTeachers] = useState<UserInterface[]>()
 
   useEffect(() => {
     postgresqlDatabase
       .get("/user/getTeachersByGroup/" + id)
       .then((response) => {
-        const teacher: UserToShow[] = response.data
+        const teacher: UserInterface[] = response.data
         setTeachers(teacher)
       })
       .catch((e) => console.log(e))
@@ -20,7 +21,7 @@ function GroupTeacherDisplayer({ id }: GroupProp) {
       <h1 className='font-bold text-2xl align-text-bottom mr-3'>Prowadzący: </h1>
       <ul className='flex inline-block font-semibold text-lg'>
         {teachers?.map((teacher) => (
-            <GroupUserListElement isTeacher={true} userToShow={teacher} key={teacher.id}/>
+            <GroupUserListElement isTeacher={true} userToShow={{firstname: teacher.firstname as string, lastname: teacher.lastname as string, id: teacher.id as number}} key={teacher.id}/>
         ))}
       </ul>
     </div>

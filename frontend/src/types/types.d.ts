@@ -1,64 +1,6 @@
 import { Dispatch, SetStateAction } from "react"
-
-interface RegisterUser {
-  firstname: string
-  lastname: string
-  email: string
-  password: string
-}
-interface newCredentials {
-  email: string | undefined
-  password: string | undefined
-  newPassword: string | undefined
-}
-
-interface LoginUser {
-  email: string
-  password: string
-}
-
-type Group = {
-  id: number
-  name: string
-  description: string
-  color: number
-}
-
-interface GroupCreate {
-  name: string
-  description: string
-}
-
-interface UserToShow {
-  firstname: string
-  lastname: string
-  email: string
-  index: number
-  id: number
-}
-
-interface InGroup {
-  student: boolean
-  teacher: boolean
-}
-
-interface PropsForLogin {
-  state: ApplicationState
-}
-
-interface PropsForGroupItem {
-  group: Group
-  key: number
-}
-type PropsForFiltering = {
-  setGroups: (groups: Group[] | undefined) => void
-  setIsLoading: (loading: boolean) => void
-}
-interface AssigmentFilterProp {
-  setAssignments: (assignments: Assigment[]) => void
-  userId: string
-  id: string
-}
+import {GroupInterface} from "./GroupInterface";
+import {UserInterface} from "./UserInterface";
 
 interface GroupProp {
   id: string | undefined
@@ -90,10 +32,7 @@ interface AssigmentItemProps extends AssigmentProps {
   optionalUserId?: string
 }
 
-interface UserItemToDisplay {
-  userToShow: UserToShow
-  isTeacher?: boolean
-}
+
 type FileRespondMongo = {
   id: string
   name: string
@@ -143,7 +82,7 @@ interface SolutionTypesProp {
 }
 interface SolutionExtended {
   id: number
-  user: UserToShow
+  user: UserInterface
   assignment: Assigment
 }
 interface FileFromPost {

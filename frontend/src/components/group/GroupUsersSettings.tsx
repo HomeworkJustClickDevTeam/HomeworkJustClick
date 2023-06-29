@@ -4,13 +4,13 @@ import React, {useContext, useEffect, useState} from "react";
 import userContext from "../../UserContext";
 import postgresqlDatabase from "../../services/postgresDatabase";
 import {useParams} from "react-router-dom";
-import {UserToShow} from "../../types/types";
 import {tr} from "date-fns/locale";
+import {UserInterface} from "../../types/UserInterface";
 
 export default function GroupUsersSettings(){
   const {loggedIn, userState} = useContext(userContext);
-  const [teachers, setTeachers] = useState<UserToShow[]>()
-  const [students, setStudents] = useState<UserToShow[]>([])
+  const [teachers, setTeachers] = useState<UserInterface[]>()
+  const [students, setStudents] = useState<UserInterface[]>([])
   const {id} = useParams<{id: string}>()
 
 
@@ -18,7 +18,7 @@ export default function GroupUsersSettings(){
     postgresqlDatabase
       .get(`/user/getTeachersByGroup/${id}`)
       .then((response) => {
-        const teachers: UserToShow[] = response.data
+        const teachers: UserInterface[] = response.data
         setTeachers(teachers)
       })
       .catch((e) => console.log(e))
@@ -26,25 +26,25 @@ export default function GroupUsersSettings(){
     postgresqlDatabase
       .get(`/user/getStudentsByGroup/${id}`)
       .then((response) => {
-        const students: UserToShow[] = response.data
+        const students: UserInterface[] = response.data
         setStudents(students)
       })
       .catch((e) => console.log(e))
   }, [])
 
-  const deleteTeacherFromList = (teacher:UserToShow) =>{
+  const deleteTeacherFromList = (teacher:UserInterface) =>{
     setTeachers((prevState) => (
       prevState?.filter(teacherFromList => {return teacherFromList.id !== teacher.id})
     ))
   }
 
-  const deleteStudentFromList = (student:UserToShow) =>{
+  const deleteStudentFromList = (student:UserInterface) =>{
     setStudents((prevState) => (
       prevState?.filter(studentFromList => {return studentFromList.id !== student.id})
     ))
   }
 
-  const makeTeacher = (student: UserToShow) => {
+  const makeTeacher = (student: UserInterface) => {
     deleteStudentFromList(student)
     setTeachers((prevState) => {
       return ([...(prevState || []), student]);

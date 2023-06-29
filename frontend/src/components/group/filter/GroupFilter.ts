@@ -1,13 +1,17 @@
 import postgresqlDatabase from "../../../services/postgresDatabase"
-import { Group, PropsForFiltering } from "../../../types/types"
+import {GroupInterface} from "../../../types/GroupInterface";
 
-export const groupFilter = ({ setGroups, setIsLoading }: PropsForFiltering) => {
+interface GroupFilterProps {
+  setGroups: (groups: GroupInterface[] | undefined) => void
+  setIsLoading: (loading: boolean) => void
+}
+export const groupFilter = ({ setGroups, setIsLoading }: GroupFilterProps) => {
   const teacherUserGroups = (): void => {
     setIsLoading(true)
     postgresqlDatabase
       .get("/groups/byTeacher/" + localStorage.getItem("id"))
       .then((response) => {
-        const groups: Group[] = response.data
+        const groups: GroupInterface[] = response.data
         setGroups(groups)
       })
       .catch(() => setGroups([]))
@@ -19,7 +23,7 @@ export const groupFilter = ({ setGroups, setIsLoading }: PropsForFiltering) => {
     postgresqlDatabase
       .get("/groups/byStudent/" + localStorage.getItem("id"))
       .then((response) => {
-        const groups: Group[] = response.data
+        const groups: GroupInterface[] = response.data
         setGroups(groups)
       })
       .catch(() => setGroups([]))
@@ -30,7 +34,7 @@ export const groupFilter = ({ setGroups, setIsLoading }: PropsForFiltering) => {
     postgresqlDatabase
       .get("/groups/byUser/" + localStorage.getItem("id"))
       .then((response) => {
-        const groups: Group[] = response.data
+        const groups: GroupInterface[] = response.data
         setGroups(groups)
       })
       .catch(() => setGroups(undefined))

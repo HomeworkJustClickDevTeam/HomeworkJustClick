@@ -1,4 +1,4 @@
-export interface Evaluation{
+export interface EvaluationInterface {
   id: number
   result: number
   creationDatetime: Date

@@ -1,16 +1,13 @@
 import { Link, useLocation } from "react-router-dom"
 import { useContext } from "react"
 import GroupContext from "../../GroupRoleContext"
-import {PropsForGroupItem} from "../../types/types";
 import {inspect} from "util";
 import {colorsArray} from "../../assets/colors";
+import {GroupInterface} from "../../types/GroupInterface";
+import {GroupListElementProps} from "../../types/GroupListElementProps";
 //import {theme.colors.colorsArray: string[]} = require("../../../tailwind.config")
 
-
-
-
-
-function GroupHeader({ group }: PropsForGroupItem) {
+function GroupHeader({ group }: GroupListElementProps) {
   const { role } = useContext(GroupContext)
   const location = useLocation();
   const locationSplit = location.pathname.split("/");

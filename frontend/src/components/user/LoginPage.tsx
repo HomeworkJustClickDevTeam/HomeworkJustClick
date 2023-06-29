@@ -1,13 +1,17 @@
 import React, { ChangeEvent, useContext, useState } from "react"
 import postgresqlDatabase from "../../services/postgresDatabase"
 import { Link, useNavigate } from "react-router-dom"
-import { Action, LoginUser, userState } from "../../types/types"
+import { Action, userState } from "../../types/types"
 import DispatchContext from "../../DispatchContext"
 import KolkoLewe from './zaloguj_kolko_lewe.svg';
 import KolkoPrawe from './zaloguj_kolko_prawe.svg';
 
+interface LoginUserInterface {
+  email: string
+  password: string
+}
 const LoginPage = () => {
-  const [user, setUser] = useState<LoginUser>({
+  const [user, setUser] = useState<LoginUserInterface>({
     email: "",
     password: "",
   })
