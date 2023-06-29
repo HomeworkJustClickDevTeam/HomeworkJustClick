@@ -1,7 +1,7 @@
 import UsersDisplayer from "./UsersDisplayer"
 import {Outlet, useParams} from "react-router-dom"
 
-function Users() {
+function GroupUsersPage() {
   const { id } = useParams()
   return (
     <>
@@ -9,4 +9,4 @@ function Users() {
     </>
   )
 }
-export default Users
+export default GroupUsersPage

@@ -1,10 +1,10 @@
 import GroupUsersSettingsListElement from "./GroupUsersSettingsListElement";
-import Loading from "../../animations/Loading";
+import Loading from "../animations/Loading";
 import React, {useContext, useEffect, useState} from "react";
-import userContext from "../../../UserContext";
-import postgresqlDatabase from "../../../services/postgresDatabase";
+import userContext from "../../UserContext";
+import postgresqlDatabase from "../../services/postgresDatabase";
 import {useParams} from "react-router-dom";
-import {UserToShow} from "../../../types/types";
+import {UserToShow} from "../../types/types";
 import {tr} from "date-fns/locale";
 
 export default function GroupUsersSettings(){

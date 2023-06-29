@@ -1,12 +1,12 @@
 import React, { ChangeEvent, useContext, useState } from "react"
-import postgresqlDatabase from "../../../services/postgresDatabase"
+import postgresqlDatabase from "../../services/postgresDatabase"
 import { Link, useNavigate } from "react-router-dom"
-import { Action, LoginUser, userState } from "../../../types/types"
-import DispatchContext from "../../../DispatchContext"
+import { Action, LoginUser, userState } from "../../types/types"
+import DispatchContext from "../../DispatchContext"
 import KolkoLewe from './zaloguj_kolko_lewe.svg';
 import KolkoPrawe from './zaloguj_kolko_prawe.svg';
 
-const Login = () => {
+const LoginPage = () => {
   const [user, setUser] = useState<LoginUser>({
     email: "",
     password: "",
@@ -53,7 +53,7 @@ const Login = () => {
           <input
               name="email"
               type="email"
-              placeholder="Login użytkownika (email)"
+              placeholder="LoginPage użytkownika (email)"
               onChange={handleChange}
               className='border-b-2 border-b-light_gray mb-8 text-center placeholder:text-light_gray placeholder:text-[12px] w-60 xl:text-[20px] xl:placeholder:text-[20px] xl:w-[320px]'
           />
@@ -74,4 +74,4 @@ const Login = () => {
       </div>
   )
 }
-export default Login
+export default LoginPage

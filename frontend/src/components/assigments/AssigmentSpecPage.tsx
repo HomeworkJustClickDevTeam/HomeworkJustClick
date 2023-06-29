@@ -15,7 +15,7 @@ import { AxiosError } from "axios"
 import CheckedSolution from "../solution/CheckedSolution"
 import UncheckedSolution from "../solution/UncheckedSolution"
 
-function AssigmentSpec() {
+function AssigmentSpecPage() {
   const { idAssigment, id } = useParams()
   const location = useLocation()
   const optionalUserId:string|null = location.state
@@ -101,4 +101,4 @@ function AssigmentSpec() {
     </div>
   )
 }
-export default AssigmentSpec
+export default AssigmentSpecPage

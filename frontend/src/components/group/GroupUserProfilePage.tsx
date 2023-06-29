@@ -1,14 +1,14 @@
 import {useParams} from "react-router-dom";
 import {useContext, useEffect, useState} from "react";
-import {Assigment, UserToShow} from "../../../types/types";
-import postgresqlDatabase from "../../../services/postgresDatabase";
+import {Assigment, UserToShow} from "../../types/types";
+import postgresqlDatabase from "../../services/postgresDatabase";
 import {AxiosError} from "axios";
-import Loading from "../../animations/Loading";
-import userContext from "../../../UserContext";
-import {assigmentFilterStudent} from "../../assigments/filter/AssigmentFilterStudent";
-import AssigmentItem from "../../assigments/assigmentDisplayer/assigmentItem/AssigmentItem";
+import Loading from "../animations/Loading";
+import userContext from "../../UserContext";
+import {assigmentFilterStudent} from "../assigments/filter/AssigmentFilterStudent";
+import AssigmentItem from "../assigments/assigmentDisplayer/assigmentItem/AssigmentItem";
 
-export default function UserProfileInGroup(){
+export default function GroupUserProfilePage(){
   const {userProfileId,id} = useParams()
   const [userProfile, setUserProfile] = useState<UserToShow | undefined>(undefined)
   const [doneAssignments, setDoneAssignments] = useState<Assigment[] | undefined>(undefined)

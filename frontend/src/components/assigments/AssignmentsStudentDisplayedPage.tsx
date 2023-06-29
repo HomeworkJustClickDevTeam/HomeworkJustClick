@@ -1,10 +1,10 @@
 import { useContext, useEffect, useState } from "react"
-import { Assigment } from "../../../types/types"
-import postgresqlDatabase from "../../../services/postgresDatabase"
-import UserContext from "../../../UserContext"
-import AssigmentItem from "./assigmentItem/AssigmentItem"
+import { Assigment } from "../../types/types"
+import postgresqlDatabase from "../../services/postgresDatabase"
+import UserContext from "../../UserContext"
+import AssigmentItem from "./assigmentDisplayer/assigmentItem/AssigmentItem"
 
-export default function AssignmentsStudentDisplayed() {
+export default function AssignmentsStudentDisplayedPage() {
   const [assignments, setAssignments] = useState<Assigment[]>([])
   const { userState } = useContext(UserContext)
   useEffect(() => {

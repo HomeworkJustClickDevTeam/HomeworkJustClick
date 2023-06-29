@@ -1,6 +1,6 @@
-import { GroupProp } from "../../../types/types"
-import TeacherDisplayer from "./type/TeacherDisplayer"
-import StudentsDisplayer from "./type/StudentsDisplayer"
+import { GroupProp } from "../../types/types"
+import TeacherDisplayer from "./users/type/TeacherDisplayer"
+import StudentsDisplayer from "./users/type/StudentsDisplayer"
 
 function UsersDisplayer({ id }: GroupProp) {
   return (

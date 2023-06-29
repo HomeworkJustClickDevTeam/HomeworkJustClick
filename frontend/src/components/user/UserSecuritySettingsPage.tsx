@@ -1,9 +1,9 @@
 import { useState } from "react";
-import {newCredentials} from "../../../types/types"
-import postgresqlDatabase from "../../../services/postgresDatabase";
+import {newCredentials} from "../../types/types"
+import postgresqlDatabase from "../../services/postgresDatabase";
 import { AxiosError } from "axios";
 
-export default function UserSecuritySettings(): JSX.Element{
+export default function UserSecuritySettingsPage(): JSX.Element{
     const [newCredentials, setNewCredentials] = useState<newCredentials>({
         "email": undefined,
         "password": undefined,

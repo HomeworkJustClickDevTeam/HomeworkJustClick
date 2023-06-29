@@ -2,37 +2,37 @@ import React, { useEffect, useState } from "react"
 
 import './App.css'
 // import "./assets/App.css"
-import Register from "./components/user/Register"
-import Login from "./components/user/logging/Login"
-import Home from "./components/home/Home"
+import RegisterPage from "./components/user/RegisterPage"
+import LoginPage from "./components/user/LoginPage"
+import HomePage from "./components/home/HomePage"
 import { BrowserRouter, Route, Routes } from "react-router-dom"
-import HomeGuest from "./components/home/HomeGuest"
-import CreateGroup from "./components/group/CreateGroup"
-import Group from "./components/group/Group"
+import HomeGuestPage from "./components/home/HomeGuestPage"
+import GroupCreatePage from "./components/group/GroupCreatePage"
+import GroupPage from "./components/group/GroupPage"
 import UserContext from "./UserContext"
-import AssignmentsGroupDisplayed from "./components/assigments/assigmentDisplayer/AssignmentsGroupDisplayed"
-import AddAssigment from "./components/assigments/AddAssigment"
-import AssigmentSpec from "./components/assigments/AssigmentSpec"
+import AssignmentsGroupDisplayedPage from "./components/assigments/AssignmentsGroupDisplayedPage"
+import AddAssigmentPage from "./components/assigments/AddAssigmentPage"
+import AssigmentSpecPage from "./components/assigments/AssigmentSpecPage"
 import { Action, ApplicationState } from "./types/types"
 import { useImmerReducer } from "use-immer"
 import DispatchContext from "./DispatchContext"
 import Header from "./components/header/Header"
-import Users from "./components/group/users/Users"
-import NotFound from "./components/errors/NotFound"
+import GroupUsersPage from "./components/group/GroupUsersPage"
+import NotFoundPage from "./components/errors/NotFoundPage"
 import GroupRoleContext from "./GroupRoleContext"
 import GroupSetRoleContext from "./GroupSetRoleContext"
-import AssignmentsTypes from "./components/assigments/AssignmentsTypes"
-import AssignmentsStudentDisplayed from "./components/assigments/assigmentDisplayer/AssignmentsStudentDisplayed"
-import SolutionsTypes from "./components/solution/SolutionsTypes"
-import Solution from "./components/solution/Solution"
-import UserSettings from "./components/user/settings/UserSettings"
-import UserGeneralSettings from "./components/user/settings/UserGeneralSettings"
-import UserSecuritySettings from "./components/user/settings/UserSecuritySettings"
-import UserAppearanceSettings from "./components/user/settings/UserAppearanceSettings"
-import UserMarkingTablesSettings from "./components/user/settings/UserMarkingTablesSettings"
-import GroupSettings from "./components/group/settings/GroupSettings"
-import UserProfileInGroup from "./components/group/users/UserProfileInGroup"
-import HardCodedExample from "./components/solution/HardCodedExample";
+import AssignmentsTypesPage from "./components/assigments/AssignmentsTypesPage"
+import AssignmentsStudentDisplayedPage from "./components/assigments/AssignmentsStudentDisplayedPage"
+import SolutionsTypesPage from "./components/solution/SolutionsTypesPage"
+import SolutionPage from "./components/solution/SolutionPage"
+import UserSettingsPage from "./components/user/UserSettingsPage"
+import UserGeneralSettingsPage from "./components/user/UserGeneralSettingsPage"
+import UserSecuritySettingsPage from "./components/user/UserSecuritySettingsPage"
+import UserAppearanceSettingsPage from "./components/user/UserAppearanceSettingsPage"
+import UserMarkingTablesSettingsPage from "./components/user/UserMarkingTablesSettingsPage"
+import GroupSettingsPage from "./components/group/GroupSettingsPage"
+import GroupUserProfilePage from "./components/group/GroupUserProfilePage"
+import HardCodedExamplePage from "./components/solution/HardCodedExamplePage";
 
 function App() {
   useEffect(() => {
@@ -92,81 +92,81 @@ function App() {
               <Routes>
                 <Route
                   path="/"
-                  element={state.loggedIn ? <Home /> : <HomeGuest />}
+                  element={state.loggedIn ? <HomePage /> : <HomeGuestPage />}
                 />
                 <Route
                   path="/:id/assignments"
-                  element={<AssignmentsStudentDisplayed />}
+                  element={<AssignmentsStudentDisplayedPage />}
                 />
-                <Route path="/settings" element={<UserSettings />} />
+                <Route path="/settings" element={<UserSettingsPage />} />
                 <Route
                   path="/settings/general"
-                  element={<UserGeneralSettings />}
+                  element={<UserGeneralSettingsPage />}
                 />
                 <Route
                   path="/settings/security"
-                  element={<UserSecuritySettings />}
+                  element={<UserSecuritySettingsPage />}
                 />
                 <Route
                   path="/settings/appearance"
-                  element={<UserAppearanceSettings />}
+                  element={<UserAppearanceSettingsPage />}
                 />
                 <Route
                   path="/settings/markingTables"
-                  element={<UserMarkingTablesSettings />}
+                  element={<UserMarkingTablesSettingsPage />}
                 />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/create/group" element={<CreateGroup />} />
-                <Route path="/group/:id" element={<Group />}>
-                  <Route path="settings" element={<GroupSettings />} />
-                  <Route path="users" element={<Users />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/register" element={<RegisterPage />} />
+                <Route path="/create/group" element={<GroupCreatePage />} />
+                <Route path="/group/:id" element={<GroupPage />}>
+                  <Route path="settings" element={<GroupSettingsPage />} />
+                  <Route path="users" element={<GroupUsersPage />} />
                   <Route
                     path="userProfileInGroup/:userProfileId"
-                    element={<UserProfileInGroup />}
+                    element={<GroupUserProfilePage />}
                   />
                   <Route
                     path="assignments"
-                    element={<AssignmentsGroupDisplayed />}
+                    element={<AssignmentsGroupDisplayedPage />}
                   />
                   <Route
                     path="assignments/done"
-                    element={<AssignmentsTypes type={"done"} />}
+                    element={<AssignmentsTypesPage type={"done"} />}
                   />
                   <Route
                     path="assignments/expired"
-                    element={<AssignmentsTypes type={"expired"} />}
+                    element={<AssignmentsTypesPage type={"expired"} />}
                   />
                   <Route
                     path="assignments/todo"
-                    element={<AssignmentsTypes type={"todo"} />}
+                    element={<AssignmentsTypesPage type={"todo"} />}
                   />
-                  <Route path="assignments/add" element={<AddAssigment />} />
+                  <Route path="assignments/add" element={<AddAssigmentPage />} />
                   <Route
                     path="assigment/:idAssigment"
-                    element={<AssigmentSpec />}
+                    element={<AssigmentSpecPage />}
                   />
                   <Route
                     path="solution/:idUser/:idAssigment"
-                    element={<Solution />}/>
+                    element={<SolutionPage />}/>
                   <Route
                     path="solutions/uncheck"
-                    element={<SolutionsTypes type={"uncheck"} />}
+                    element={<SolutionsTypesPage type={"uncheck"} />}
                   />
                   <Route
                     path="solutions/late"
-                    element={<SolutionsTypes type={"late"} />}
+                    element={<SolutionsTypesPage type={"late"} />}
                   />
                   <Route
                     path="solutions/check"
-                    element={<SolutionsTypes type={"check"} />}
+                    element={<SolutionsTypesPage type={"check"} />}
                   />
 
 
-                  <Route path="*" element={<NotFound />} />
+                  <Route path="*" element={<NotFoundPage />} />
                 </Route>
-                <Route path="/group/:id/solution/:idUser/:idAssigment/example" element={<HardCodedExample/>}/>
-                <Route path="*" element={<NotFound />} />
+                <Route path="/group/:id/solution/:idUser/:idAssigment/example" element={<HardCodedExamplePage/>}/>
+                <Route path="*" element={<NotFoundPage />} />
               </Routes>
             </BrowserRouter>
           </GroupSetRoleContext.Provider>

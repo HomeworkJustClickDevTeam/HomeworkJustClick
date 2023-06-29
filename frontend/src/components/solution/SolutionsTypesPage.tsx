@@ -3,11 +3,11 @@ import { PropsForType, SolutionExtended } from "../../types/types"
 import { Link, useParams } from "react-router-dom"
 
 import groupRoleContext from "../../GroupRoleContext"
-import NotFound from "../errors/NotFound"
+import NotFoundPage from "../errors/NotFoundPage"
 import Loading from "../animations/Loading"
 import { solutionFilter } from "./filter/SolutionFilter"
 
-function SolutionsTypes({ type }: PropsForType) {
+function SolutionsTypesPage({ type }: PropsForType) {
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [solutionsExtended, setSolutionsExtended] = useState<
     SolutionExtended[]
@@ -43,7 +43,7 @@ function SolutionsTypes({ type }: PropsForType) {
     typeOfSolutions()
   }, [type])
   if (role !== "Teacher") {
-    return <NotFound />
+    return <NotFoundPage />
   }
   if (isLoading) {
     return <Loading />
@@ -79,4 +79,4 @@ function SolutionsTypes({ type }: PropsForType) {
     </div>
   )
 }
-export default SolutionsTypes
+export default SolutionsTypesPage

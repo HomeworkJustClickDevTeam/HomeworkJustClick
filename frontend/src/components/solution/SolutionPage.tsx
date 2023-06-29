@@ -7,7 +7,7 @@ import { Rating } from "../evaluation/Rating"
 import { SolutionFile } from "./file/SolutionFile"
 import {format} from "date-fns";
 
-function Solution() {
+function SolutionPage() {
   let { state } = useLocation()
   const [solutionExtended] = useState<SolutionExtended>(state?.solution)
   const [points, setPoints] = useState<number>()
@@ -69,4 +69,4 @@ function Solution() {
     </div>
   )
 }
-export default Solution
+export default SolutionPage

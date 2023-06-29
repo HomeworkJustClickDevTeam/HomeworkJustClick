@@ -1,10 +1,10 @@
 import React, {useContext, useEffect, useState} from "react";
-import userContext from "../../../UserContext";
-import postgresqlDatabase from "../../../services/postgresDatabase";
+import userContext from "../../UserContext";
+import postgresqlDatabase from "../../services/postgresDatabase";
 import {AxiosError} from "axios/index";
-import Loading from "../../animations/Loading";
+import Loading from "../animations/Loading";
 import {useParams} from "react-router-dom";
-import {colorsArray} from "../../../assets/colors";
+import {colorsArray} from "../../assets/colors";
 
 export default function GroupAppearanceSettings(){
   const [color, setColor] = useState<number | undefined>(undefined)

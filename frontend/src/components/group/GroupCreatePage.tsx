@@ -6,7 +6,7 @@ import DispatchContext from "../../DispatchContext"
 import UserContext from "../../UserContext";
 
 
-function CreateGroup() {
+function GroupCreatePage() {
   const {userState} = useContext(UserContext)
   const [group, setGroup] = useState<GroupCreate>({
     name: "",
@@ -66,4 +66,4 @@ function CreateGroup() {
       </div>
   )
 }
-export default CreateGroup
+export default GroupCreatePage

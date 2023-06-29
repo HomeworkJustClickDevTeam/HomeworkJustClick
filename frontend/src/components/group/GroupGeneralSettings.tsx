@@ -1,8 +1,8 @@
 import { useNavigate, useParams } from "react-router-dom"
-import postgresqlDatabase from "../../../services/postgresDatabase"
+import postgresqlDatabase from "../../services/postgresDatabase"
 import { AxiosError } from "axios"
 import React, { useEffect, useState } from "react"
-import Loading from "../../animations/Loading"
+import Loading from "../animations/Loading"
 
 export default function GroupGeneralSettings() {
   const { id } = useParams<{ id: string }>()

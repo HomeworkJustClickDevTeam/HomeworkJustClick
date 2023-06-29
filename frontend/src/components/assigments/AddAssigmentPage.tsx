@@ -6,7 +6,7 @@ import ReactDatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import { AddAssigmentFile } from "./file/AddAssigmentFile"
 
-function AddAssigment() {
+function AddAssigmentPage() {
   const navigate = useNavigate()
   const { id } = useParams()
   const [assigment, setAssigment] = useState<AssigmentToSend>({
@@ -137,4 +137,4 @@ function AddAssigment() {
     </div>
   )
 }
-export default AddAssigment
+export default AddAssigmentPage

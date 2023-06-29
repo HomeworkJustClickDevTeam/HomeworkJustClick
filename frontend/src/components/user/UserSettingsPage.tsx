@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom"
 import React, { useContext, useEffect, useState } from "react"
-import userContext from "../../../UserContext"
-import Loading from "../../animations/Loading"
-import DispatchContext from "../../../DispatchContext"
-import { Action } from "../../../types/types"
+import userContext from "../../UserContext"
+import Loading from "../animations/Loading"
+import DispatchContext from "../../DispatchContext"
+import { Action } from "../../types/types"
 
-export default function UserSettings(): JSX.Element {
+export default function UserSettingsPage(): JSX.Element {
   const { loggedIn, userState } = useContext(userContext)
   const [loading, setLoading] = useState<boolean>(false)
   const globalDispatch = useContext(DispatchContext)

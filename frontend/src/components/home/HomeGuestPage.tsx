@@ -2,7 +2,7 @@ import { Link } from "react-router-dom"
 import KolkoPoLewejStronie from './kolko_po_lewej_stronie.svg';
 import KolkoPoPrawejStronie from './kolko_po_prawej_stronie.svg';
 
-function HomeGuest() {
+function HomeGuestPage() {
   return (
     <div className='flex w-screen flex-col items-center text-center font-lato font-normal select-none'>
        <img className="fixed left-[12%]  bottom-[15%] scale-50 xl:scale-100 -z-50 " src = {KolkoPoLewejStronie} alt="Kółko po lewej stronie"></img>
@@ -22,4 +22,4 @@ function HomeGuest() {
     </div>
   )
 }
-export default HomeGuest
+export default HomeGuestPage

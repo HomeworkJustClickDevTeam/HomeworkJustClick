@@ -5,7 +5,7 @@ import { RegisterUser } from "../../types/types"
 import KolkoLewe from './kolko_lewe.svg';
 import Smile from './Smile.svg';
 
-const Register = () => {
+const RegisterPage = () => {
   const [secondPassword, setSecondPassword] = useState<string>("")
   const [user, setUser] = useState<RegisterUser>({
     firstname: "",
@@ -93,4 +93,4 @@ const Register = () => {
       </div>
   )
 }
-export default Register
+export default RegisterPage

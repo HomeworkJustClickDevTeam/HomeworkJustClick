@@ -1,8 +1,8 @@
 import React, {useContext, useState} from "react";
-import {UserToShow} from "../../../types/types";
-import postgresqlDatabase from "../../../services/postgresDatabase";
+import {UserToShow} from "../../types/types";
+import postgresqlDatabase from "../../services/postgresDatabase";
 import {AxiosError} from "axios";
-import GroupRoleContext from "../../../GroupRoleContext";
+import GroupRoleContext from "../../GroupRoleContext";
 
 export default function GroupUsersSettingsListElement(props:{
   makeTeacher(arg:UserToShow): void,

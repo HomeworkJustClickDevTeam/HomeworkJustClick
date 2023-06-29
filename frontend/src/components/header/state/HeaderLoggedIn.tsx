@@ -2,7 +2,7 @@ import { useContext } from "react"
 import userContext from "../../../UserContext"
 import { FaChevronLeft } from 'react-icons/fa';
 import { Link, useNavigate } from "react-router-dom"
-import LogOut from "../../user/logging/LogOut"
+import LogOut from "../../user/LogOut"
 
 function HeaderLoggedIn() {
   const userState = useContext(userContext)

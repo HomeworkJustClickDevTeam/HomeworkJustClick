@@ -9,7 +9,7 @@ import DispatchContext from "../../DispatchContext"
 import {render} from "@testing-library/react";
 import {FaCaretDown} from 'react-icons/fa';
 
-function Home() {
+function HomePage() {
   const [groups, setGroups] = useState<Group[] | undefined>(undefined)
   const [isLoading, setIsLoading] = useState<boolean>()
   const [isOpen, setIsOpen] = useState(false)
@@ -81,4 +81,4 @@ function Home() {
     </div>
   )
 }
-export default Home
+export default HomePage

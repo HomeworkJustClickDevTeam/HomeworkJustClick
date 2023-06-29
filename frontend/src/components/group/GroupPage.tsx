@@ -12,7 +12,7 @@ import GroupRoleContext from "../../GroupRoleContext"
 import Loading from "../animations/Loading"
 import { Group as GroupType} from "../../types/types"
 
-function Group() {
+function GroupPage() {
   const { id = "" } = useParams<{ id: string }>()
   const { loggedIn, userState } = useContext(userContext)
   const globalDispatch = useContext(DispatchContext)
@@ -76,4 +76,4 @@ function Group() {
   )
 }
 
-export default Group
+export default GroupPage

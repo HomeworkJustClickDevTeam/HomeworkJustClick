@@ -1,4 +1,4 @@
-export default function HardCodedExample(){
+export default function HardCodedExamplePage(){
   return(
     <div className='h-[calc(100vh-112px)] select-none'>
       <div className='flex border-b-2 border-b-light_gray w-full  h-12 items-center'>

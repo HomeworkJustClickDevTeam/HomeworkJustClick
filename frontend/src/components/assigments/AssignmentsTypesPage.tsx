@@ -7,7 +7,7 @@ import AssigmentItem from "./assigmentDisplayer/assigmentItem/AssigmentItem"
 import Loading from "../animations/Loading"
 import groupRoleContext from "../../GroupRoleContext"
 
-function AssignmentsTypes({ type }: PropsForType) {
+function AssignmentsTypesPage({ type }: PropsForType) {
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [assignments, setAssignments] = useState<Assigment[]>([])
   const { id = "" } = useParams()
@@ -65,4 +65,4 @@ function AssignmentsTypes({ type }: PropsForType) {
     </div>
   )
 }
-export default AssignmentsTypes
+export default AssignmentsTypesPage

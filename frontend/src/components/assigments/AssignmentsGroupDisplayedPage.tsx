@@ -1,15 +1,15 @@
 import { Link, useParams } from "react-router-dom"
 import { useContext, useEffect, useState } from "react"
-import { Assigment } from "../../../types/types"
-import postgresqlDatabase from "../../../services/postgresDatabase"
-import AssigmentItem from "./assigmentItem/AssigmentItem"
-import Loading from "../../animations/Loading"
-import GroupRoleContext from "../../../GroupRoleContext"
+import { Assigment } from "../../types/types"
+import postgresqlDatabase from "../../services/postgresDatabase"
+import AssigmentItem from "./assigmentDisplayer/assigmentItem/AssigmentItem"
+import Loading from "../animations/Loading"
+import GroupRoleContext from "../../GroupRoleContext"
 import {Simulate} from "react-dom/test-utils";
 import error = Simulate.error;
 import {AxiosError} from "axios";
 
-function AssignmentsGroupDisplayed() {
+function AssignmentsGroupDisplayedPage() {
   const [assignments, setAssignments] = useState<Assigment[]>([])
   const { id = "" } = useParams<string>()
   const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -52,4 +52,4 @@ function AssignmentsGroupDisplayed() {
     </div>
   )
 }
-export default AssignmentsGroupDisplayed
+export default AssignmentsGroupDisplayedPage

@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from "react"
-import postgresqlDatabase from "../../../services/postgresDatabase"
-import userContext from "../../../UserContext"
+import postgresqlDatabase from "../../services/postgresDatabase"
+import userContext from "../../UserContext"
 import { AxiosError } from "axios"
 
-export default function UserAppearanceSettings() {
+export default function UserAppearanceSettingsPage() {
   const [color, setColor] = useState<number | undefined>(undefined)
   const { loggedIn, userState } = useContext(userContext)
 

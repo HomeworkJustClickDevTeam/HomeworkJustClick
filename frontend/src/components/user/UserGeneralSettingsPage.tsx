@@ -1,10 +1,10 @@
-import userContext from "../../../UserContext"
+import userContext from "../../UserContext"
 
 import React, { useContext, useEffect, useState } from "react"
-import postgresqlDatabase from "../../../services/postgresDatabase"
+import postgresqlDatabase from "../../services/postgresDatabase"
 import { AxiosError } from "axios"
 
-export default function UserGeneralSettings() {
+export default function UserGeneralSettingsPage() {
   const { loggedIn, userState } = useContext(userContext)
   const [index, setIndex] = useState<number | undefined>(undefined)
 
