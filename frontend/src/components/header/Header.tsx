@@ -1,13 +1,13 @@
 import { useContext } from "react"
 import UserContext from "../../UserContext"
-import HeaderLogout from "./state/HeaderLogout"
-import HeaderLoggedIn from "./state/HeaderLoggedIn"
+import HeaderLogoutState from "./HeaderLogoutState"
+import HeaderLoggedInState from "./HeaderLoggedInState"
 
 function Header() {
   const userState = useContext(UserContext)
   return (
     <header>
-      {userState.loggedIn ? <HeaderLoggedIn /> : <HeaderLogout />}
+      {userState.loggedIn ? <HeaderLoggedInState /> : <HeaderLogoutState />}
     </header>
   )
 }

@@ -8,9 +8,9 @@ import {
 } from "../../types/types"
 import { useNavigate, useParams } from "react-router-dom"
 import postgresqlDatabase from "../../services/postgresDatabase"
-import AssigmentItem from "../assigments/assigmentDisplayer/assigmentItem/AssigmentItem"
+import AssigmentListElement from "../assigments/AssigmentListElement"
 import userContext from "../../UserContext"
-import { AssigmentFile } from "../assigments/file/AssigmentFile"
+import { AssigmentFile } from "../assigments/AssigmentFile"
 import {format} from "date-fns";
 
 function AddSolution({ assignment }: AssigmentProps) {

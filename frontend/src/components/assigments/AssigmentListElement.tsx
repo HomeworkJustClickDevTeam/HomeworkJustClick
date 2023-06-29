@@ -1,8 +1,8 @@
-import { AssigmentItemProps } from "../../../../types/types"
+import { AssigmentItemProps } from "../../types/types"
 import { Link } from "react-router-dom"
 import { format } from "date-fns"
 
-function AssigmentItem({ assignment, idGroup, optionalUserId }: AssigmentItemProps) {
+function AssigmentListElement({ assignment, idGroup, optionalUserId }: AssigmentItemProps) {
   const completionDatetime = new Date(assignment.completionDatetime)
   return (
     <>
@@ -17,4 +17,4 @@ function AssigmentItem({ assignment, idGroup, optionalUserId }: AssigmentItemPro
   )
 }
 
-export default AssigmentItem
+export default AssigmentListElement

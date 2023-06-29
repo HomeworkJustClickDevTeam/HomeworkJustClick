@@ -1,8 +1,8 @@
 import { ChangeEvent, useEffect, useState } from "react"
-import mongoDatabase from "../../../services/mongoDatabase"
-import postgresqlDatabase from "../../../services/postgresDatabase"
+import mongoDatabase from "../../services/mongoDatabase"
+import postgresqlDatabase from "../../services/postgresDatabase"
 
-export function AddAssigmentFile(props: {
+export function AssigmentAddFile(props: {
   toSend: boolean
   idAssigment: number | undefined
   setToNavigate: (navigate: boolean) => void

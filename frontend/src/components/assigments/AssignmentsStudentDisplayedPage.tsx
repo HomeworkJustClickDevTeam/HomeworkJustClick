@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react"
 import { Assigment } from "../../types/types"
 import postgresqlDatabase from "../../services/postgresDatabase"
 import UserContext from "../../UserContext"
-import AssigmentItem from "./assigmentDisplayer/assigmentItem/AssigmentItem"
+import AssigmentListElement from "./AssigmentListElement"
 
 export default function AssignmentsStudentDisplayedPage() {
   const [assignments, setAssignments] = useState<Assigment[]>([])
@@ -21,7 +21,7 @@ export default function AssignmentsStudentDisplayedPage() {
       <ul>
         {assignments.map((assigment) => (
           <li key={assigment.id}>
-            <AssigmentItem
+            <AssigmentListElement
               assignment={assigment}
               idGroup={`${assigment.groupId}`}
             />

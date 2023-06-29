@@ -1,9 +1,9 @@
-import {UserItemToDisplay} from "../../../../../types/types";
+import {UserItemToDisplay} from "../../types/types";
 import {useContext} from "react";
-import GroupRoleContext from "../../../../../GroupRoleContext";
+import GroupRoleContext from "../../GroupRoleContext";
 
 
-function UserItem({userToShow, isTeacher}:UserItemToDisplay) {
+function GroupUserListElement({userToShow, isTeacher}:UserItemToDisplay) {
   const {role} = useContext(GroupRoleContext)
 
   if(!isTeacher && role==="Teacher") {
@@ -23,4 +23,4 @@ function UserItem({userToShow, isTeacher}:UserItemToDisplay) {
     )
   }
 }
-export default UserItem
+export default GroupUserListElement

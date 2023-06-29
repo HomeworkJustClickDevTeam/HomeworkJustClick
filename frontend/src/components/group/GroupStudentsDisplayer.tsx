@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react"
-import { GroupProp, UserToShow } from "../../../../types/types"
-import postgresqlDatabase from "../../../../services/postgresDatabase"
-import UserItem from "./UserItem/UserItem"
+import { GroupProp, UserToShow } from "../../types/types"
+import postgresqlDatabase from "../../services/postgresDatabase"
+import GroupUserListElement from "./GroupUserListElement"
 
-function StudentsDisplayer({ id }: GroupProp) {
+function GroupStudentsDisplayer({ id }: GroupProp) {
   const [students, setStudents] = useState<UserToShow[]>()
   useEffect(() => {
     postgresqlDatabase
@@ -18,10 +18,10 @@ function StudentsDisplayer({ id }: GroupProp) {
       <h1 className='text-lg font-semibold mb-2'>Studenci:</h1>
       <ul className='flex flex-col gap-1'>
         {students?.map((student) => (
-            <UserItem isTeacher={false} userToShow={student} key={student.id}/>
+            <GroupUserListElement isTeacher={false} userToShow={student} key={student.id}/>
         ))}
       </ul>
     </div>
   )
 }
-export default StudentsDisplayer
+export default GroupStudentsDisplayer

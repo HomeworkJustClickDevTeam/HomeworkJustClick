@@ -6,7 +6,7 @@ import {AxiosError} from "axios";
 import Loading from "../animations/Loading";
 import userContext from "../../UserContext";
 import {assigmentFilterStudent} from "../assigments/filter/AssigmentFilterStudent";
-import AssigmentItem from "../assigments/assigmentDisplayer/assigmentItem/AssigmentItem";
+import AssigmentListElement from "../assigments/AssigmentListElement";
 
 export default function GroupUserProfilePage(){
   const {userProfileId,id} = useParams()
@@ -52,7 +52,7 @@ export default function GroupUserProfilePage(){
             <dd>
               <ul>
                 {doneAssignments?.map((assignment) =>{
-                  return(<li key={assignment.id}><AssigmentItem optionalUserId={userProfile?.id.toString()} assignment={assignment} idGroup={id as string} /></li>)
+                  return(<li key={assignment.id}><AssigmentListElement optionalUserId={userProfile?.id.toString()} assignment={assignment} idGroup={id as string} /></li>)
                 })}
               </ul>
             </dd>
@@ -61,7 +61,7 @@ export default function GroupUserProfilePage(){
             <dd>
               <ul>
                 {undoneAssignments?.map((assignment) =>{
-                  return(<li><AssigmentItem optionalUserId={userProfile?.id.toString()} assignment={assignment} idGroup={id as string} /></li>)
+                  return(<li><AssigmentListElement optionalUserId={userProfile?.id.toString()} assignment={assignment} idGroup={id as string} /></li>)
                 })}
               </ul>
             </dd>
@@ -70,7 +70,7 @@ export default function GroupUserProfilePage(){
             <dd>
               <ul>
                 {expiredUndoneAssignments?.map((assignment) =>{
-                  return(<li><AssigmentItem optionalUserId={userProfile?.id.toString()} assignment={assignment} idGroup={id as string} /></li>)
+                  return(<li><AssigmentListElement optionalUserId={userProfile?.id.toString()} assignment={assignment} idGroup={id as string} /></li>)
                 })}
               </ul>
             </dd>

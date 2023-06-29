@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react"
-import { GroupProp, UserToShow } from "../../../../types/types"
-import postgresqlDatabase from "../../../../services/postgresDatabase"
-import UserItem from "./UserItem/UserItem"
+import { GroupProp, UserToShow } from "../../types/types"
+import postgresqlDatabase from "../../services/postgresDatabase"
+import GroupUserListElement from "./GroupUserListElement"
 
-function TeacherDisplayer({ id }: GroupProp) {
+function GroupTeacherDisplayer({ id }: GroupProp) {
   const [teachers, setTeachers] = useState<UserToShow[]>()
 
   useEffect(() => {
@@ -20,10 +20,10 @@ function TeacherDisplayer({ id }: GroupProp) {
       <h1 className='font-bold text-2xl align-text-bottom mr-3'>Prowadzący: </h1>
       <ul className='flex inline-block font-semibold text-lg'>
         {teachers?.map((teacher) => (
-            <UserItem isTeacher={true} userToShow={teacher} key={teacher.id}/>
+            <GroupUserListElement isTeacher={true} userToShow={teacher} key={teacher.id}/>
         ))}
       </ul>
     </div>
   )
 }
-export default TeacherDisplayer
+export default GroupTeacherDisplayer

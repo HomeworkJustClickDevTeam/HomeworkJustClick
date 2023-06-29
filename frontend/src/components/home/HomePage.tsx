@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react"
-import GroupItem from "../group/groupItems/GroupItem"
+import GroupListElement from "../group/GroupListElement"
 import { Link } from "react-router-dom"
 import { groupFilter } from "../group/filter/GroupFilter"
 import { Action, Group } from "../../types/types"
@@ -73,7 +73,7 @@ function HomePage() {
       ) : (
         <div className='relative flex flex-wrap gap-x-5 gap-y-2 bg-light_gray px-8 py-6 bg-lilly-bg rounded-md'>
           {groups?.map((group) =>
-              groups?.length > 0 ? <GroupItem group={group} key={group.id} /> : <div>Dodaj nową grupę!</div>
+              groups?.length > 0 ? <GroupListElement group={group} key={group.id} /> : <div>Dodaj nową grupę!</div>
           )}
         </div>
       )}

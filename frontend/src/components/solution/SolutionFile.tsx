@@ -1,31 +1,27 @@
 import { useEffect, useState } from "react"
-import { FileFromPost } from "../../../types/types"
-import postgresqlDatabase from "../../../services/postgresDatabase"
-import mongoDatabase from "../../../services/mongoDatabase"
-import Loading from "../../animations/Loading"
+import { FileFromPost } from "../../types/types"
+import postgresqlDatabase from "../../services/postgresDatabase"
+import mongoDatabase from "../../services/mongoDatabase"
+import Loading from "../animations/Loading"
 
-export function AssigmentFile(props: { assigmentId: number }) {
+export function SolutionFile(props: { solutionId: number }) {
   const [databaseFile, setDatabaseFile] = useState<FileFromPost[]>([])
   const [file, setFile] = useState<Blob | null>(null)
   const [fileName, setFileName] = useState<string>("")
   const [isLoading, setIsLoading] = useState<boolean>(true)
   useEffect(() => {
     const fetchData = async () => {
-      if (props.assigmentId) {
-        try {
-          const response = await postgresqlDatabase.get(
-            `/files/byAssignment/${props.assigmentId}`
-          )
-          console.log(response.data)
-          setDatabaseFile(response.data)
-        } catch (e) {
-          console.log("Error retrieving database file:", e)
-        }
+      try {
+        const response = await postgresqlDatabase.get(
+          `/files/bySolution/${props.solutionId}`
+        )
+        setDatabaseFile(response.data)
+      } catch (e) {
+        console.log("Error retrieving database file:", e)
       }
     }
     fetchData()
-  }, [props.assigmentId])
-  console.log(databaseFile)
+  }, [])
   useEffect(() => {
     const fetchFileData = async () => {
       if (databaseFile) {

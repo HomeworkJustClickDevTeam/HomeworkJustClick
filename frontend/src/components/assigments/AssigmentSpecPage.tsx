@@ -5,7 +5,7 @@ import { Assigment, Solution } from "../../types/types"
 import { parseISO } from "date-fns"
 
 import GroupRoleContext from "../../GroupRoleContext"
-import ModifyAssigment from "./ModifyAssigment"
+import AssigmentModify from "./AssigmentModify"
 
 import AddSolution from "../solution/AddSolution"
 import Loading from "../animations/Loading"
@@ -89,7 +89,7 @@ function AssigmentSpecPage() {
   return (
     <div >
       {((role === "Teacher") && (optionalUserId === null)) ? (
-        <ModifyAssigment assignment={assignment} setAssigment={setAssignment} />
+        <AssigmentModify assignment={assignment} setAssigment={setAssignment} />
       ) : ((solution === undefined) && (optionalUserId === null)) ? (
         <AddSolution assignment={assignment} />
       ) : isSolutionChecked ? (

@@ -1,10 +1,10 @@
 import {Link, Outlet, useLocation} from "react-router-dom"
 import { useEffect, useState } from "react"
 import { SolutionExtended } from "../../types/types"
-import AssigmentItem from "../assigments/assigmentDisplayer/assigmentItem/AssigmentItem"
+import AssigmentListElement from "../assigments/AssigmentListElement"
 import postgresqlDatabase from "../../services/postgresDatabase"
 import { Rating } from "../evaluation/Rating"
-import { SolutionFile } from "./file/SolutionFile"
+import { SolutionFile } from "./SolutionFile"
 import {format} from "date-fns";
 
 function SolutionPage() {

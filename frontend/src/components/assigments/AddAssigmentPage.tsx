@@ -4,7 +4,7 @@ import { AssigmentToSend } from "../../types/types"
 import postgresqlDatabase from "../../services/postgresDatabase"
 import ReactDatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
-import { AddAssigmentFile } from "./file/AddAssigmentFile"
+import { AssigmentAddFile } from "./AssigmentAddFile"
 
 function AddAssigmentPage() {
   const navigate = useNavigate()
@@ -129,7 +129,7 @@ function AddAssigmentPage() {
         <button type="submit" className='absolute top-0 right-0 mr-6 mt-4 px-6 py-1 rounded-lg bg-main_blue text-white hover:bg-hover_blue hover:shadow-md active:shadow-none'>Utwórz zadanie</button>
       </form>
       <p className='mt-4 mb-2'>Dodaj pliki: </p>
-      <AddAssigmentFile
+      <AssigmentAddFile
         toSend={toSend}
         idAssigment={idAssigment}
         setToNavigate={setToNavigate}

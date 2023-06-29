@@ -1,11 +1,11 @@
-import UsersDisplayer from "./UsersDisplayer"
+import GroupUsersDisplayer from "./GroupUsersDisplayer"
 import {Outlet, useParams} from "react-router-dom"
 
 function GroupUsersPage() {
   const { id } = useParams()
   return (
     <>
-      <UsersDisplayer id={id} />
+      <GroupUsersDisplayer id={id} />
     </>
   )
 }

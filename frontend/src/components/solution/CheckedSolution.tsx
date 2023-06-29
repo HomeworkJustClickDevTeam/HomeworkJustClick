@@ -4,7 +4,7 @@ import { Evaluation } from "../../types/Evaluation"
 import postgresqlDatabase from "../../services/postgresDatabase"
 import { AxiosError } from "axios"
 import Loading from "../animations/Loading"
-import { SolutionFile } from "./file/SolutionFile"
+import { SolutionFile } from "./SolutionFile"
 
 export default function CheckedSolution(props: {
   solution: Solution

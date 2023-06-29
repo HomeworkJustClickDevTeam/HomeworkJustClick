@@ -2,7 +2,7 @@ import { Link, useParams } from "react-router-dom"
 import { useContext, useEffect, useState } from "react"
 import { Assigment } from "../../types/types"
 import postgresqlDatabase from "../../services/postgresDatabase"
-import AssigmentItem from "./assigmentDisplayer/assigmentItem/AssigmentItem"
+import AssigmentListElement from "./AssigmentListElement"
 import Loading from "../animations/Loading"
 import GroupRoleContext from "../../GroupRoleContext"
 import {Simulate} from "react-dom/test-utils";
@@ -45,7 +45,7 @@ function AssignmentsGroupDisplayedPage() {
       <ul className="flex flex-col ">
         {assignments.map((assigment) => (
           <li key={assigment.id} className='flex inline-block '>
-            <AssigmentItem assignment={assigment} idGroup={id} />{" "}
+            <AssigmentListElement assignment={assigment} idGroup={id} />{" "}
           </li>
         ))}
       </ul>

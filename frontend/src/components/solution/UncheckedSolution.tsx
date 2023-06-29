@@ -1,6 +1,6 @@
 import { Assigment, Solution } from "../../types/types"
 
-import { SolutionFile } from "./file/SolutionFile"
+import { SolutionFile } from "./SolutionFile"
 
 export default function UncheckedSolution(props: {
   solution: Solution

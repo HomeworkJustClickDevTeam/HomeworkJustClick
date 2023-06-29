@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from "react"
 import { assigmentFilterStudent } from "./filter/AssigmentFilterStudent"
 import { useNavigate, useParams } from "react-router-dom"
 import userContext from "../../UserContext"
-import AssigmentItem from "./assigmentDisplayer/assigmentItem/AssigmentItem"
+import AssigmentListElement from "./AssigmentListElement"
 import Loading from "../animations/Loading"
 import groupRoleContext from "../../GroupRoleContext"
 
@@ -58,7 +58,7 @@ function AssignmentsTypesPage({ type }: PropsForType) {
       <ul >
         {assignments.map((assignment) => (
           <li key={assignment.id}>
-            <AssigmentItem assignment={assignment} idGroup={id} />{" "}
+            <AssigmentListElement assignment={assignment} idGroup={id} />{" "}
           </li>
         ))}
       </ul>

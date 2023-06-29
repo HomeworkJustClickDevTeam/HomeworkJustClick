@@ -4,9 +4,9 @@ import { AssigmentModifyProps } from "../../types/types"
 import postgresqlDatabase from "../../services/postgresDatabase"
 import ReactDatePicker from "react-datepicker"
 
-import { ModifyAssigmentFile } from "./file/ModifyAssigmentFile"
+import { AssigmentModifyFile } from "./AssigmentModifyFile"
 
-function ModifyAssigment({ assignment, setAssigment }: AssigmentModifyProps) {
+function AssigmentModify({ assignment, setAssigment }: AssigmentModifyProps) {
   const navigate = useNavigate()
   const { id } = useParams()
   const [toSend, setToSend] = useState<boolean>(false)
@@ -122,7 +122,7 @@ function ModifyAssigment({ assignment, setAssigment }: AssigmentModifyProps) {
         <button type="submit" className='absolute top-0 right-0 mr-6 mt-4 px-10 py-1 rounded-lg bg-main_blue text-white hover:bg-hover_blue hover:shadow-md active:shadow-none'>Zapisz</button>
       </form>
       <p className='mt-4 mb-2'>Dodaj pliki: </p>
-      <ModifyAssigmentFile
+      <AssigmentModifyFile
         toSend={toSend}
         assignmentId={assignment.id}
         setToNavigate={setToNavigate}
@@ -132,4 +132,4 @@ function ModifyAssigment({ assignment, setAssigment }: AssigmentModifyProps) {
     </div>
   )
 }
-export default ModifyAssigment
+export default AssigmentModify
