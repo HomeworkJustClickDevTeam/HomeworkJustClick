@@ -8,13 +8,14 @@ import userContext from "../../UserContext";
 import {assigmentFilterStudent} from "../assigments/filter/AssigmentFilterStudent";
 import AssigmentListElement from "../assigments/AssigmentListElement";
 import {UserInterface} from "../../types/UserInterface";
+import {AssignmentInterface} from "../../types/AssignmentInterface";
 
 export default function GroupUserProfilePage(){
   const {userProfileId,id} = useParams()
   const [userProfile, setUserProfile] = useState<UserInterface | undefined>(undefined)
-  const [doneAssignments, setDoneAssignments] = useState<Assigment[] | undefined>(undefined)
-  const [expiredUndoneAssignments, setExpiredUndoneAssignments] = useState<Assigment[] | undefined>(undefined)
-  const [undoneAssignments, setUndoneAssignments] = useState<Assigment[] | undefined>(undefined)
+  const [doneAssignments, setDoneAssignments] = useState<AssignmentInterface[] | undefined>(undefined)
+  const [expiredUndoneAssignments, setExpiredUndoneAssignments] = useState<AssignmentInterface[] | undefined>(undefined)
+  const [undoneAssignments, setUndoneAssignments] = useState<AssignmentInterface[] | undefined>(undefined)
   const {userState} = useContext(userContext)
 
   useEffect(()=>{

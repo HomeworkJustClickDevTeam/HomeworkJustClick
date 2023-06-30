@@ -1,8 +1,8 @@
 
 import {colorsArray} from "../../assets/colors";
-import {GroupListElementProps} from "../../types/GroupListElementProps";
+import {GroupListElementPropsInterface} from "../../types/GroupListElementPropsInterface";
 
-function GroupListElement({ group }: GroupListElementProps) {
+function GroupListElement({ group }: GroupListElementPropsInterface) {
   return (
     <div className={`relative w-64 ${colorsArray[group.color]}  min-h-fit h-40 overflow-hidden rounded-md`}>
       <a className='w-full' href={"/group/" + group.id}>

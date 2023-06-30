@@ -1,4 +1,3 @@
-import { GroupProp } from "../../types/types"
 import GroupTeacherDisplayer from "./GroupTeacherDisplayer"
 import GroupStudentsDisplayer from "./GroupStudentsDisplayer"
 

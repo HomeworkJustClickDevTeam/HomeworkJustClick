@@ -5,10 +5,11 @@ import postgresqlDatabase from "../../services/postgresDatabase"
 import { AxiosError } from "axios"
 import Loading from "../animations/Loading"
 import { SolutionFile } from "./SolutionFile"
+import {AssignmentInterface} from "../../types/AssignmentInterface";
 
 export default function CheckedSolution(props: {
   solution: Solution
-  assignment: Assigment
+  assignment: AssignmentInterface
 }) {
   const [evaluation, setEvaluation] = useState<EvaluationInterface | undefined>(
     undefined

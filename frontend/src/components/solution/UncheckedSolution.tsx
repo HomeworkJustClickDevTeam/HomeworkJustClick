@@ -1,10 +1,11 @@
 import { Assigment, Solution } from "../../types/types"
 
 import { SolutionFile } from "./SolutionFile"
+import {AssignmentInterface} from "../../types/AssignmentInterface";
 
 export default function UncheckedSolution(props: {
   solution: Solution
-  assignment: Assigment
+  assignment: AssignmentInterface
 }) {
   return (
       <div className='relative flex flex-col mx-[7.5%] mt-4 border border-border_gray border-1 rounded-md pt-4 px-4 h-80 gap-2'>

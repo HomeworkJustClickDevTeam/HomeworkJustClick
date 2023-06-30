@@ -1,7 +1,7 @@
 import {useLocation, useParams} from "react-router-dom"
 import { useContext, useEffect, useState } from "react"
 import postgresqlDatabase from "../../services/postgresDatabase"
-import { Assigment, Solution } from "../../types/types"
+import { Solution } from "../../types/types"
 import { parseISO } from "date-fns"
 
 import GroupRoleContext from "../../GroupRoleContext"
@@ -14,6 +14,7 @@ import { AxiosError } from "axios"
 
 import CheckedSolution from "../solution/CheckedSolution"
 import UncheckedSolution from "../solution/UncheckedSolution"
+import {AssignmentInterface} from "../../types/AssignmentInterface";
 
 function AssigmentSpecPage() {
   const { idAssigment, id } = useParams()
@@ -23,16 +24,8 @@ function AssigmentSpecPage() {
   const { role } = useContext(GroupRoleContext)
   const [isSolutionChecked, setIsSolutionChecked] = useState<boolean | undefined>(undefined)
   const [solution, setSolution] = useState<Solution | undefined>(undefined)
-  const [assignment, setAssignment] = useState<Assigment>({
-    completionDatetime: new Date(),
-    id: 0,
-    taskDescription: "",
-    title: "",
-    visible: false,
-    max_points: 0,
-    groupId: 0,
-  })
-  let userId:null|string = null
+  const [assignment, setAssignment] = useState<AssignmentInterface | undefined>(undefined)
+  let userId: null|string = null
   if(optionalUserId !== null){
     userId = optionalUserId
   }
@@ -85,7 +78,6 @@ function AssigmentSpecPage() {
   if(assignment === undefined){
     return(<Loading/>)
   }
-  console.log("Optional", optionalUserId)
   return (
     <div >
       {((role === "Teacher") && (optionalUserId === null)) ? (

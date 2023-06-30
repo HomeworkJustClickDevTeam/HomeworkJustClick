@@ -6,10 +6,11 @@ import userContext from "../../UserContext"
 import AssigmentListElement from "./AssigmentListElement"
 import Loading from "../animations/Loading"
 import groupRoleContext from "../../GroupRoleContext"
+import {AssignmentInterface} from "../../types/AssignmentInterface";
 
 function AssignmentsTypesPage({ type }: PropsForType) {
   const [isLoading, setIsLoading] = useState<boolean>(true)
-  const [assignments, setAssignments] = useState<Assigment[]>([])
+  const [assignments, setAssignments] = useState<AssignmentInterface[]>([])
   const { id = "" } = useParams()
   const { userState } = useContext(userContext)
   const { role } = useContext(groupRoleContext)

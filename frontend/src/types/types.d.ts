@@ -2,9 +2,6 @@ import { Dispatch, SetStateAction } from "react"
 import {GroupInterface} from "./GroupInterface";
 import {UserInterface} from "./UserInterface";
 
-interface GroupProp {
-  id: string | undefined
-}
 interface Assigment {
   title: string
   visible: boolean

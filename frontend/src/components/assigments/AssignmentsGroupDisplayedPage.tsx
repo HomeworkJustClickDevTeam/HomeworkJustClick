@@ -8,9 +8,10 @@ import GroupRoleContext from "../../GroupRoleContext"
 import {Simulate} from "react-dom/test-utils";
 import error = Simulate.error;
 import {AxiosError} from "axios";
+import {AssignmentInterface} from "../../types/AssignmentInterface";
 
 function AssignmentsGroupDisplayedPage() {
-  const [assignments, setAssignments] = useState<Assigment[]>([])
+  const [assignments, setAssignments] = useState<AssignmentInterface[]>([])
   const { id = "" } = useParams<string>()
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const { role } = useContext(GroupRoleContext)
@@ -18,8 +19,7 @@ function AssignmentsGroupDisplayedPage() {
   useEffect(() => {
     postgresqlDatabase
       .get("/assignments/byGroupId/" + id).then((response) => {
-        const assigmentFromServer = response.data as Assigment[]
-        console.log(response.data)
+        const assigmentFromServer = response.data as AssignmentInterface[]
         if (role === "Teacher") {
           setAssignments(assigmentFromServer)
         } else {
@@ -37,7 +37,7 @@ function AssignmentsGroupDisplayedPage() {
   }
   return (
     <div className='relative h-[420px]'>
-      {role == "Teacher" && (
+      {role === "Teacher" && (
         <Link to={`/group/${id}/assignments/add`}>
           <button className='absolute right-[7.5%] bottom-0 bg-main_blue text-white px-8 py-2 rounded-md text-lg hover:bg-hover_blue hover:shadow-md active:shadow-none'>Nowe zadanie +</button>
         </Link>

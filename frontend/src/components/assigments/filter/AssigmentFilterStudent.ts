@@ -1,12 +1,11 @@
-import {Assigment} from "../../../types/types"
 import postgresqlDatabase from "../../../services/postgresDatabase"
-import {Axios, AxiosError} from "axios";
+import {AxiosError} from "axios";
+import {AssignmentInterface} from "../../../types/AssignmentInterface";
 interface AssignmentFilterStudentProps {
-  setAssignments: (assignments: Assigment[]) => void
+  setAssignments: (assignments: AssignmentInterface[]) => void
   userId: string
   id: string
 }
-
 export const assigmentFilterStudent = ({
   setAssignments,
   id,
@@ -15,7 +14,7 @@ export const assigmentFilterStudent = ({
   const doneAssignments = (): void => {
     postgresqlDatabase
       .get(`/assignments/doneByGroupAndStudent/${id}/${userId}`)
-      .then((r) => setAssignments(r.data))
+      .then((r) => setAssignments(r.data as AssignmentInterface[]))
       .catch((e:AxiosError) =>(e.response?.status === 404) ? setAssignments([]) : console.log(e))
   }
 
@@ -30,8 +29,8 @@ export const assigmentFilterStudent = ({
     postgresqlDatabase
       .get(`/assignments/undoneByGroupAndStudent/${id}/${userId}`)
       .then((r) => {
-        const assignments:Assigment[] = []
-        r.data.map((assignment:Assigment) => {
+        const assignments:AssignmentInterface[] = []
+        r.data.map((assignment:AssignmentInterface) => {
           if(assignment.visible){
             assignments.push(assignment)
           }

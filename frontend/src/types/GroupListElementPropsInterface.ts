@@ -1,6 +1,6 @@
 import {GroupInterface} from "./GroupInterface";
 
-export interface GroupListElementProps {
+export interface GroupListElementPropsInterface {
   group: GroupInterface
   key: number
 }
