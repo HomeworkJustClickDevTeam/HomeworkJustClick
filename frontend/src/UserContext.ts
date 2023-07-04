@@ -1,6 +1,6 @@
 import { createContext } from "react"
-import { ApplicationState } from "./types/types"
-const UserContext = createContext<ApplicationState>(<ApplicationState>{
+import {ApplicationStateInterface} from "./types/ApplicationStateInterface";
+const UserContext = createContext<ApplicationStateInterface>(<ApplicationStateInterface>{
   loggedIn: false,
   userState: {
     token: "",

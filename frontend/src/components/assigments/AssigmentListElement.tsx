@@ -1,8 +1,12 @@
-import { AssigmentItemProps } from "../../types/types"
 import { Link } from "react-router-dom"
 import { format } from "date-fns"
+import {AssigmentPropsInterface} from "../../types/AssigmentPropsInterface";
 
-function AssigmentListElement({ assignment, idGroup, optionalUserId }: AssigmentItemProps) {
+interface AssigmentItemPropsInterface extends AssigmentPropsInterface {
+  idGroup: string
+  optionalUserId?: string
+}
+function AssigmentListElement({ assignment, idGroup, optionalUserId }: AssigmentItemPropsInterface) {
   const completionDatetime = new Date(assignment.completionDatetime)
   return (
     <>

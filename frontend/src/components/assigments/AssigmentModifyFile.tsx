@@ -1,7 +1,7 @@
 import { ChangeEvent, useEffect, useState } from "react"
-import { FileFromPost } from "../../types/types"
 import postgresqlDatabase from "../../services/postgresDatabase"
 import mongoDatabase from "../../services/mongoDatabase"
+import {FileFromPostInterface} from "../../types/FileFromPostInterface";
 
 export function AssigmentModifyFile(props: {
   assignmentId: number
@@ -9,7 +9,7 @@ export function AssigmentModifyFile(props: {
   toSend: boolean
 }) {
   const [file, setFile] = useState<File | null>(null)
-  const [databaseFile, setDatabaseFile] = useState<FileFromPost[]>([])
+  const [databaseFile, setDatabaseFile] = useState<FileFromPostInterface[]>([])
   const [isChange, setIsChange] = useState<boolean>(false)
 
   useEffect(() => {

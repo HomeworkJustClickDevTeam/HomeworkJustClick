@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import postgresqlDatabase from "../../services/postgresDatabase"
-import {Action} from "../../types/types"
 import DispatchContext from "../../DispatchContext"
 import UserContext from "../../UserContext";
+import {ActionType} from "../../types/ActionType";
 
 interface GroupCreateInterface {
   name: string
@@ -18,7 +18,7 @@ function GroupCreatePage() {
   const navigate = useNavigate()
   const globalDispatch = useContext(DispatchContext)
   useEffect(() => {
-    const action: Action = {
+    const action: ActionType = {
       type: "homePageOut",
     }
     globalDispatch?.(action)

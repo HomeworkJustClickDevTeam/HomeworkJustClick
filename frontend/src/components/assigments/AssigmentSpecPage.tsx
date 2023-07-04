@@ -1,7 +1,6 @@
 import {useLocation, useParams} from "react-router-dom"
 import { useContext, useEffect, useState } from "react"
 import postgresqlDatabase from "../../services/postgresDatabase"
-import { Solution } from "../../types/types"
 import { parseISO } from "date-fns"
 
 import GroupRoleContext from "../../GroupRoleContext"
@@ -15,6 +14,7 @@ import { AxiosError } from "axios"
 import CheckedSolution from "../solution/CheckedSolution"
 import UncheckedSolution from "../solution/UncheckedSolution"
 import {AssignmentInterface} from "../../types/AssignmentInterface";
+import {SolutionInterface} from "../../types/SolutionInterface";
 
 function AssigmentSpecPage() {
   const { idAssigment, id } = useParams()
@@ -23,7 +23,7 @@ function AssigmentSpecPage() {
   const { userState } = useContext(userContext)
   const { role } = useContext(GroupRoleContext)
   const [isSolutionChecked, setIsSolutionChecked] = useState<boolean | undefined>(undefined)
-  const [solution, setSolution] = useState<Solution | undefined>(undefined)
+  const [solution, setSolution] = useState<SolutionInterface | undefined>(undefined)
   const [assignment, setAssignment] = useState<AssignmentInterface | undefined>(undefined)
   let userId: null|string = null
   if(optionalUserId !== null){
@@ -86,9 +86,9 @@ function AssigmentSpecPage() {
         <AddSolution assignment={assignment} />
       ) : isSolutionChecked ? (
 
-        <CheckedSolution assignment={assignment} solution={solution as Solution} />
+        <CheckedSolution assignment={assignment} solution={solution as SolutionInterface} />
       ) : (
-        <UncheckedSolution assignment={assignment} solution={solution as Solution} />
+        <UncheckedSolution assignment={assignment} solution={solution as SolutionInterface} />
       )}
     </div>
   )

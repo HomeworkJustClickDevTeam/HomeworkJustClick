@@ -1,4 +1,4 @@
-import { Assigment, Solution } from "../../types/types"
+
 import { useEffect, useState } from "react"
 import { EvaluationInterface } from "../../types/EvaluationInterface"
 import postgresqlDatabase from "../../services/postgresDatabase"
@@ -6,9 +6,10 @@ import { AxiosError } from "axios"
 import Loading from "../animations/Loading"
 import { SolutionFile } from "./SolutionFile"
 import {AssignmentInterface} from "../../types/AssignmentInterface";
+import {SolutionInterface} from "../../types/SolutionInterface";
 
 export default function CheckedSolution(props: {
-  solution: Solution
+  solution: SolutionInterface
   assignment: AssignmentInterface
 }) {
   const [evaluation, setEvaluation] = useState<EvaluationInterface | undefined>(

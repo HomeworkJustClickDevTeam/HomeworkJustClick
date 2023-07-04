@@ -1,10 +1,11 @@
 import React, { ChangeEvent, useContext, useState } from "react"
 import postgresqlDatabase from "../../services/postgresDatabase"
 import { Link, useNavigate } from "react-router-dom"
-import { Action, userState } from "../../types/types"
 import DispatchContext from "../../DispatchContext"
 import KolkoLewe from './zaloguj_kolko_lewe.svg';
 import KolkoPrawe from './zaloguj_kolko_prawe.svg';
+import {UserStateInterface} from "../../types/UserStateInterface";
+import {ActionType} from "../../types/ActionType";
 
 interface LoginUserInterface {
   email: string
@@ -23,11 +24,11 @@ const LoginPage = () => {
     try {
       const response = await postgresqlDatabase.post("/auth/authenticate", user)
       if (response.data) {
-        const userState: userState = {
+        const userState: UserStateInterface = {
           token: response.data.token,
           userId: response.data.id,
         }
-        const action: Action = { type: "login", data: userState }
+        const action: ActionType = { type: "login", data: userState }
         globalDispatch?.(action)
         navigate("/")
       } else {

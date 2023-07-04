@@ -1,12 +1,15 @@
 import { useNavigate, useParams } from "react-router-dom"
 import React, { ChangeEvent, useEffect, useState } from "react"
-import { AssigmentModifyProps } from "../../types/types"
 import postgresqlDatabase from "../../services/postgresDatabase"
 import ReactDatePicker from "react-datepicker"
 
 import { AssigmentModifyFile } from "./AssigmentModifyFile"
+import {AssigmentPropsInterface} from "../../types/AssigmentPropsInterface";
 
-function AssigmentModify({ assignment, setAssigment }: AssigmentModifyProps) {
+interface AssigmentModifyPropsInterface extends AssigmentPropsInterface {
+  setAssigment: (assignment: (prevState:any) => any) => void
+}
+function AssigmentModify({ assignment, setAssigment }: AssigmentModifyPropsInterface) {
   const navigate = useNavigate()
   const { id } = useParams()
   const [toSend, setToSend] = useState<boolean>(false)

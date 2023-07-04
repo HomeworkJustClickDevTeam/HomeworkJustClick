@@ -3,14 +3,14 @@ import React, { useContext, useEffect, useState } from "react"
 import userContext from "../../UserContext"
 import Loading from "../animations/Loading"
 import DispatchContext from "../../DispatchContext"
-import { Action } from "../../types/types"
+import {ActionType} from "../../types/ActionType";
 
 export default function UserSettingsPage(): JSX.Element {
   const { loggedIn, userState } = useContext(userContext)
   const [loading, setLoading] = useState<boolean>(false)
   const globalDispatch = useContext(DispatchContext)
   useEffect(() => {
-    const action: Action = {
+    const action: ActionType = {
       type: "homePageOut",
     }
     globalDispatch?.(action)

@@ -1,15 +1,15 @@
 import {Link, Outlet, useLocation} from "react-router-dom"
 import { useEffect, useState } from "react"
-import { SolutionExtended } from "../../types/types"
 import AssigmentListElement from "../assigments/AssigmentListElement"
 import postgresqlDatabase from "../../services/postgresDatabase"
 import { Rating } from "../evaluation/Rating"
 import { SolutionFile } from "./SolutionFile"
 import {format} from "date-fns";
+import {SolutionExtendedInterface} from "../../types/SolutionExtendedInterface";
 
 function SolutionPage() {
   let { state } = useLocation()
-  const [solutionExtended] = useState<SolutionExtended>(state?.solution)
+  const [solutionExtended] = useState<SolutionExtendedInterface>(state?.solution)
   const [points, setPoints] = useState<number>()
   const [showRating, setShowRating] = useState<boolean>(false)
   const [isCheck, setIsCheck] = useState<boolean>(false)

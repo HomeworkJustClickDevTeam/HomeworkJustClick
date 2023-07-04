@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState } from "react"
-import { Assigment } from "../../types/types"
 import postgresqlDatabase from "../../services/postgresDatabase"
 import UserContext from "../../UserContext"
 import AssigmentListElement from "./AssigmentListElement"

@@ -1,7 +1,9 @@
-import { createContext } from "react"
-import { GroupSetRole } from "./types/types"
+import {createContext, Dispatch, SetStateAction} from "react"
 
-const GroupSetRoleContext = createContext<GroupSetRole>({
+interface GroupSetRoleInterface {
+  setRole: Dispatch<SetStateAction<string>>
+}
+const GroupSetRoleContext = createContext<GroupSetRoleInterface>({
   setRole: () => {},
 })
 export default GroupSetRoleContext

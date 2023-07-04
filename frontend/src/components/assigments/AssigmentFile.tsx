@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react"
-import { FileFromPost } from "../../types/types"
 import postgresqlDatabase from "../../services/postgresDatabase"
 import mongoDatabase from "../../services/mongoDatabase"
 import Loading from "../animations/Loading"
+import {FileFromPostInterface} from "../../types/FileFromPostInterface";
 
 export function AssigmentFile(props: { assigmentId: number }) {
-  const [databaseFile, setDatabaseFile] = useState<FileFromPost[]>([])
+  const [databaseFile, setDatabaseFile] = useState<FileFromPostInterface[]>([])
   const [file, setFile] = useState<Blob | null>(null)
   const [fileName, setFileName] = useState<string>("")
   const [isLoading, setIsLoading] = useState<boolean>(true)

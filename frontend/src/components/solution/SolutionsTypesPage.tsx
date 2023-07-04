@@ -1,16 +1,16 @@
 import { useContext, useEffect, useState } from "react"
-import { PropsForType, SolutionExtended } from "../../types/types"
 import { Link, useParams } from "react-router-dom"
 
 import groupRoleContext from "../../GroupRoleContext"
 import NotFoundPage from "../errors/NotFoundPage"
 import Loading from "../animations/Loading"
 import { solutionFilter } from "./filter/SolutionFilter"
+import {SolutionExtendedInterface} from "../../types/SolutionExtendedInterface";
 
-function SolutionsTypesPage({ type }: PropsForType) {
+function SolutionsTypesPage({ type }: {type: string}) {
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [solutionsExtended, setSolutionsExtended] = useState<
-    SolutionExtended[]
+    SolutionExtendedInterface[]
   >([])
   const { id = "" } = useParams()
   const { role } = useContext(groupRoleContext)

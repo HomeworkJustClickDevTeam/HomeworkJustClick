@@ -1,10 +1,14 @@
-import { SolutionTypesProp } from "../../../types/types"
 import postgresqlDatabase from "../../../services/postgresDatabase"
+import {SolutionExtendedInterface} from "../../../types/SolutionExtendedInterface";
 
+interface SolutionTypesPropInterface {
+  id: string
+  setSolutionsExtended: (solutionExtended: SolutionExtendedInterface[]) => void
+}
 export const solutionFilter = ({
   id,
   setSolutionsExtended,
-}: SolutionTypesProp) => {
+}: SolutionTypesPropInterface) => {
   const lateSolutions = (): void => {
     postgresqlDatabase
       .get(`/extended/solutions/lateByGroup/${id}`)

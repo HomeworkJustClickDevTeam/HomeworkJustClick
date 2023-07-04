@@ -1,7 +1,9 @@
 import { createContext } from "react"
-import { GroupRole } from "./types/types"
 
-const GroupRoleContext = createContext<GroupRole>(<GroupRole>{
+interface GroupRoleInterface {
+  role: string
+}
+const GroupRoleContext = createContext<GroupRoleInterface>(<GroupRoleInterface>{
   role: "",
 })
 

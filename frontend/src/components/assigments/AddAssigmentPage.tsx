@@ -1,15 +1,22 @@
 import { useNavigate, useParams } from "react-router-dom"
 import React, { ChangeEvent, useEffect, useState } from "react"
-import { AssigmentToSend } from "../../types/types"
 import postgresqlDatabase from "../../services/postgresDatabase"
 import ReactDatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import { AssigmentAddFile } from "./AssigmentAddFile"
 
+
+interface AssigmentToSendInterface {
+  title: string
+  visible: boolean
+  taskDescription: string
+  completionDatetime: Date
+  max_points: number
+}
 function AddAssigmentPage() {
   const navigate = useNavigate()
   const { id } = useParams()
-  const [assigment, setAssigment] = useState<AssigmentToSend>({
+  const [assigment, setAssigment] = useState<AssigmentToSendInterface>({
     title: "",
     completionDatetime: new Date(),
     taskDescription: "",

@@ -1,10 +1,9 @@
-import { Assigment, Solution } from "../../types/types"
-
 import { SolutionFile } from "./SolutionFile"
 import {AssignmentInterface} from "../../types/AssignmentInterface";
+import {SolutionInterface} from "../../types/SolutionInterface";
 
 export default function UncheckedSolution(props: {
-  solution: Solution
+  solution: SolutionInterface
   assignment: AssignmentInterface
 }) {
   return (

@@ -1,41 +1,41 @@
 import { ChangeEvent, useContext, useEffect, useState } from "react"
 import mongoDatabase from "../../services/mongoDatabase"
-import {
-  AssigmentProps,
-  FileRespondMongo,
-  Solution,
-  SolutionToSend,
-} from "../../types/types"
 import { useNavigate, useParams } from "react-router-dom"
 import postgresqlDatabase from "../../services/postgresDatabase"
 import AssigmentListElement from "../assigments/AssigmentListElement"
 import userContext from "../../UserContext"
 import { AssigmentFile } from "../assigments/AssigmentFile"
 import {format} from "date-fns";
+import {AssigmentPropsInterface} from "../../types/AssigmentPropsInterface";
+import {SolutionInterface} from "../../types/SolutionInterface";
 
-function AddSolution({ assignment }: AssigmentProps) {
+
+interface FileRespondMongoInterface {
+  id: string
+  name: string
+  format: string
+}
+
+interface SolutionToSendInterface {
+  creationDatetime: string
+  lastModifiedDatetime: string
+  comment: string
+}
+function AddSolution({ assignment }: AssigmentPropsInterface) {
   const { idAssigment, id = "" } = useParams()
   const { userState } = useContext(userContext)
   const [file, setFile] = useState<File>()
-  const [response, setResponse] = useState<FileRespondMongo>({
+  const [response, setResponse] = useState<FileRespondMongoInterface>({
     format: "",
     id: "",
     name: "",
   })
-  const [solution] = useState<SolutionToSend>({
+  const [solution] = useState<SolutionToSendInterface>({
     creationDatetime: new Date().toISOString(),
     comment: "",
     lastModifiedDatetime: new Date().toISOString(),
   })
-  const [solutionFromServer, setSolutionFromServer] = useState<Solution>({
-    assignmentId: 0,
-    comment: "",
-    creationDateTime: "",
-    groupId: 0,
-    id: 0,
-    lastModifiedDateTime: "",
-    userId: 0,
-  })
+  const [solutionFromServer, setSolutionFromServer] = useState<SolutionInterface | undefined>(undefined)
   const navigate = useNavigate()
   const [isFile, setIsFile] = useState<boolean>()
 
@@ -47,7 +47,7 @@ function AddSolution({ assignment }: AssigmentProps) {
   }, [])
 
   useEffect(() => {
-    if (solutionFromServer.id && response.id) {
+    if (solutionFromServer?.id && response.id) {
       postgresqlDatabase
         .post(`/file/withSolution/${solutionFromServer.id}`, {
           mongo_id: response.id,

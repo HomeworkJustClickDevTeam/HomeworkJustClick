@@ -2,7 +2,6 @@ import { Outlet, useParams } from "react-router-dom"
 import React, {useContext, useEffect, useRef, useState} from "react"
 import userContext from "../../UserContext"
 import postgresqlDatabase from "../../services/postgresDatabase"
-import { Action } from "../../types/types"
 
 import DispatchContext from "../../DispatchContext"
 import GroupHeader from "./GroupHeader"
@@ -11,6 +10,7 @@ import GroupSetRoleContext from "../../GroupSetRoleContext"
 import GroupRoleContext from "../../GroupRoleContext"
 import Loading from "../animations/Loading"
 import {GroupInterface} from "../../types/GroupInterface";
+import {ActionType} from "../../types/ActionType";
 
 function GroupPage() {
   const { id = "" } = useParams<{ id: string }>()
@@ -22,7 +22,7 @@ function GroupPage() {
 
 
   useEffect(() => {
-    const action: Action = {
+    const action: ActionType = {
       type: "homePageOut",
     }
     globalDispatch?.(action)

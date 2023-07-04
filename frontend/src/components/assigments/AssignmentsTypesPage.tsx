@@ -1,4 +1,3 @@
-import { Assigment, PropsForType } from "../../types/types"
 import { useContext, useEffect, useState } from "react"
 import { assigmentFilterStudent } from "./filter/AssigmentFilterStudent"
 import { useNavigate, useParams } from "react-router-dom"
@@ -8,7 +7,7 @@ import Loading from "../animations/Loading"
 import groupRoleContext from "../../GroupRoleContext"
 import {AssignmentInterface} from "../../types/AssignmentInterface";
 
-function AssignmentsTypesPage({ type }: PropsForType) {
+function AssignmentsTypesPage({ type }: {type: string}) {
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [assignments, setAssignments] = useState<AssignmentInterface[]>([])
   const { id = "" } = useParams()

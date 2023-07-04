@@ -2,13 +2,13 @@ import { useNavigate } from "react-router-dom"
 import { useContext } from "react"
 
 import DispatchContext from "../../DispatchContext"
-import { Action } from "../../types/types"
+import {ActionType} from "../../types/ActionType";
 
 function LogOut() {
   const globalDispatch = useContext(DispatchContext)
   const navigate = useNavigate()
   const handleLogout = () => {
-    const logout: Action = {
+    const logout: ActionType = {
       type: "logout",
     }
     globalDispatch?.(logout)

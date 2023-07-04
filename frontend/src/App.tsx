@@ -13,7 +13,6 @@ import UserContext from "./UserContext"
 import AssignmentsGroupDisplayedPage from "./components/assigments/AssignmentsGroupDisplayedPage"
 import AddAssigmentPage from "./components/assigments/AddAssigmentPage"
 import AssigmentSpecPage from "./components/assigments/AssigmentSpecPage"
-import { Action, ApplicationState } from "./types/types"
 import { useImmerReducer } from "use-immer"
 import DispatchContext from "./DispatchContext"
 import Header from "./components/header/Header"
@@ -33,6 +32,8 @@ import UserMarkingTablesSettingsPage from "./components/user/UserMarkingTablesSe
 import GroupSettingsPage from "./components/group/GroupSettingsPage"
 import GroupUserProfilePage from "./components/group/GroupUserProfilePage"
 import HardCodedExamplePage from "./components/solution/HardCodedExamplePage";
+import {ApplicationStateInterface} from "./types/ApplicationStateInterface";
+import {ActionType} from "./types/ActionType";
 
 function App() {
   useEffect(() => {
@@ -41,7 +42,7 @@ function App() {
       localStorage.removeItem("id")
     }
   }, [])
-  const initialState: ApplicationState = {
+  const initialState: ApplicationStateInterface = {
     loggedIn: Boolean(localStorage.getItem("token")),
     homePageIn: true,
     userState: {
@@ -50,7 +51,7 @@ function App() {
     },
   }
   const [role, setRole] = useState<string>("")
-  function ourReducer(draft: ApplicationState, action: Action) {
+  function ourReducer(draft: ApplicationStateInterface, action: ActionType) {
     switch (action.type) {
       case "login":
         draft.loggedIn = true
@@ -67,7 +68,7 @@ function App() {
         break
     }
   }
-  const [state, dispatch] = useImmerReducer<ApplicationState, Action>(
+  const [state, dispatch] = useImmerReducer<ApplicationStateInterface, ActionType>(
     ourReducer,
     initialState
   )

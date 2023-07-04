@@ -1,16 +1,22 @@
 import {useContext, useState} from "react"
-import { RatingProps } from "../../types/types"
 import postgresqlDatabase from "../../services/postgresDatabase"
 import userContext from "../../UserContext"
 import { useNavigate } from "react-router-dom"
 
+interface RatingPropsInterface {
+  maxPoints: number
+  points: number | undefined
+  setPoints: (arg0: number) => void
+  solutionId: number
+  groupId: number
+}
 export function Rating({
   maxPoints,
   points,
   setPoints,
   solutionId,
   groupId,
-}: RatingProps) {
+}: RatingPropsInterface) {
   const [active, setActive] = useState<number>()
   const { userState } = useContext(userContext)
   const navigate = useNavigate()
