@@ -1,22 +1,17 @@
 import { useNavigate, useParams } from "react-router-dom"
 import React, { ChangeEvent, useEffect, useState } from "react"
-import postgresqlDatabase from "../../services/postgresDatabase"
+import postgresqlDatabase, {postAssignmentWithUserAndGroupService} from "../../services/postgresDatabase"
 import ReactDatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import { AssigmentAddFile } from "./AssigmentAddFile"
+import {AssignmentToSendInterface} from "../../types/AssignmentToSendInterface";
 
 
-interface AssigmentToSendInterface {
-  title: string
-  visible: boolean
-  taskDescription: string
-  completionDatetime: Date
-  max_points: number
-}
+
 function AddAssigmentPage() {
   const navigate = useNavigate()
   const { id } = useParams()
-  const [assigment, setAssigment] = useState<AssigmentToSendInterface>({
+  const [assignment, setAssignment] = useState<AssignmentToSendInterface>({
     title: "",
     completionDatetime: new Date(),
     taskDescription: "",
@@ -34,7 +29,7 @@ function AddAssigmentPage() {
   }, [toNavigate])
   const handleTextChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target
-    setAssigment((prevState) => ({
+    setAssignment((prevState) => ({
       ...prevState,
       [name]: value,
     }))
@@ -42,7 +37,7 @@ function AddAssigmentPage() {
 
   const handleNumberChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target
-    setAssigment((prevState) => ({
+    setAssignment((prevState) => ({
       ...prevState,
       [name]: parseInt(value),
     }))
@@ -50,14 +45,14 @@ function AddAssigmentPage() {
 
   const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = event.target
-    setAssigment((prevState) => ({
+    setAssignment((prevState) => ({
       ...prevState,
       [name]: checked,
     }))
   }
 
   const handleDateChange = (date: Date) => {
-    setAssigment((prevState) => ({
+    setAssignment((prevState) => ({
       ...prevState,
       completionDatetime: date,
     }))
@@ -65,20 +60,7 @@ function AddAssigmentPage() {
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
-    try {
-      console.log(assigment)
-      postgresqlDatabase
-        .post(
-          `/assignment/withUserAndGroup/${localStorage.getItem("id")}/${id}`,
-          assigment
-        )
-        .then((r) => {
-          setIdAssigment(r.data.id)
-          setToSend(true)
-        })
-    } catch (e) {
-      console.log(e)
-    }
+    postAssignmentWithUserAndGroupService(id, assignment, setIdAssigment, setToSend)
   }
 
   return (
@@ -114,7 +96,7 @@ function AddAssigmentPage() {
           <ReactDatePicker
 
             name="completionDatetime"
-            selected={assigment.completionDatetime}
+            selected={assignment.completionDatetime}
             onChange={handleDateChange}
             showTimeSelect
             timeFormat="HH:mm"
@@ -128,7 +110,7 @@ function AddAssigmentPage() {
           <input
             name="visible"
             type="checkbox"
-            checked={assigment.visible}
+            checked={assignment.visible}
             onChange={handleCheckboxChange}
 
           />
