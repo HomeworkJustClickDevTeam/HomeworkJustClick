@@ -1,9 +1,9 @@
 import React, { ChangeEvent, useContext, useState } from "react"
 import postgresqlDatabase from "../../services/postgresDatabase"
 import { Link, useNavigate } from "react-router-dom"
-import DispatchContext from "../../DispatchContext"
-import KolkoLewe from './zaloguj_kolko_lewe.svg';
-import KolkoPrawe from './zaloguj_kolko_prawe.svg';
+import DispatchContext from "../../contexts/DispatchContext"
+import KolkoLewe from './login_left_circle.svg';
+import KolkoPrawe from './login_right_circle.svg';
 import {UserStateInterface} from "../../types/UserStateInterface";
 import {ActionType} from "../../types/ActionType";
 
@@ -58,7 +58,7 @@ const LoginPage = () => {
           <input
               name="email"
               type="email"
-              placeholder="LoginPage użytkownika (email)"
+              placeholder="Email"
               onChange={handleChange}
               className='border-b-2 border-b-light_gray mb-8 text-center placeholder:text-light_gray placeholder:text-[12px] w-60 xl:text-[20px] xl:placeholder:text-[20px] xl:w-[320px]'
           />

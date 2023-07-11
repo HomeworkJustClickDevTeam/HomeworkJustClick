@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
-import postgresqlDatabase, {getFilesByAssignmentService} from "../../services/postgresDatabase"
-import mongoDatabase from "../../services/mongoDatabase"
+import postgresqlDatabase, {getFilesByAssignmentPostgresService} from "../../services/postgresDatabase"
+import {getFileMongoService} from "../../services/mongoDatabase"
 import Loading from "../animations/Loading"
 import {FileFromPostInterface} from "../../types/FileFromPostInterface";
 
@@ -13,7 +13,7 @@ export function AssigmentFile(props: { assigmentId: number }) {
     const fetchData = async () => {
       if (props.assigmentId) {
         try {
-          let response = await getFilesByAssignmentService(props.assigmentId)
+          let response = await getFilesByAssignmentPostgresService(props.assigmentId)
           console.log(response.data)
           setDatabaseFile(response.data)
         } catch (e) {
@@ -28,10 +28,7 @@ export function AssigmentFile(props: { assigmentId: number }) {
     const fetchFileData = async () => {
       if (databaseFile) {
         try {
-          const response = await mongoDatabase.get(
-            `file/${databaseFile[0]?.mongo_id}`,
-            {}
-          )
+          const response = await getFileMongoService(databaseFile[0]?.mongo_id)
           const fileData = response.data
           const type = fileData.file.type
           const decodedData = atob(fileData.file.data)

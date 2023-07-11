@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react"
 import postgresqlDatabase from "../../services/postgresDatabase"
-import userContext from "../../UserContext"
+import userContext from "../../contexts/UserContext"
 import { AxiosError } from "axios"
 
 export default function UserAppearanceSettingsPage() {

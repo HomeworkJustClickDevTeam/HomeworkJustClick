@@ -1,6 +1,9 @@
 import React, {useContext, useEffect, useState} from "react";
-import userContext from "../../UserContext";
-import postgresqlDatabase from "../../services/postgresDatabase";
+import userContext from "../../contexts/UserContext";
+import postgresqlDatabase, {
+  getGroupPostgresService,
+  putGroupColorPostgresService
+} from "../../services/postgresDatabase";
 import {AxiosError} from "axios/index";
 import Loading from "../animations/Loading";
 import {useParams} from "react-router-dom";
@@ -8,13 +11,12 @@ import {colorsArray} from "../../assets/colors";
 
 export default function GroupAppearanceSettings(){
   const [color, setColor] = useState<number | undefined>(undefined)
-  const {id} = useParams<{id: string}>()
+  const {idGroup} = useParams<{idGroup: string}>()
 
   const handleColorChange = async (event:React.ChangeEvent<HTMLInputElement>) => {
     setColor(+event.target.value)
     try{
-      await postgresqlDatabase
-        .put(`/group/color/${id}`, +event.target.value).catch((error:AxiosError) => {
+      await putGroupColorPostgresService(idGroup, +event.target.value).catch((error:AxiosError) => {
           console.log("AXIOS ERROR: ", error)
         })
     }
@@ -24,11 +26,10 @@ export default function GroupAppearanceSettings(){
     console.log(color)
   }
   useEffect(() => {
-    postgresqlDatabase
-        .get(`/group/${id}`)
+    getGroupPostgresService(idGroup)
         .then(response => setColor(response.data.color))
         .catch(() => setColor(undefined))
-  }, [id])
+  }, [idGroup])
   return(
 
     <form className='flex inline-block flex-wrap gap-2'>

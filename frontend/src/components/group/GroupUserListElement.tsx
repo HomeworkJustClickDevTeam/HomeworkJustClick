@@ -1,5 +1,5 @@
 import {useContext} from "react";
-import GroupRoleContext from "../../GroupRoleContext";
+import GroupRoleContext from "../../contexts/GroupRoleContext";
 interface GroupUserListElementProps {
   userToShow: {firstname: string, lastname: string, id: number}
   isTeacher?: boolean

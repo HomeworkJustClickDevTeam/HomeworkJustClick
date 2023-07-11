@@ -1,13 +1,18 @@
 import { useNavigate, useParams } from "react-router-dom"
-import postgresqlDatabase from "../../services/postgresDatabase"
+import postgresqlDatabase, {
+  deleteGroupPostgresService,
+  getGroupPostgresService, putGroupArchivePostgresService,
+  putGroupUnarchivePostgresService
+} from "../../services/postgresDatabase"
 import { AxiosError } from "axios"
 import React, { useEffect, useState } from "react"
 import Loading from "../animations/Loading"
+import {id} from "date-fns/locale";
 
 export default function GroupGeneralSettings() {
-  const { id } = useParams<{ id: string }>()
+  const { idGroup } = useParams<{ idGroup: string }>()
   const navigate = useNavigate()
-  const currentURL = `${window.location.origin}/group/${id}`
+  const currentURL = `${window.location.origin}/group/${idGroup}`
   const [group, setGroup] = useState<{
     name: string
     description: string
@@ -19,15 +24,13 @@ export default function GroupGeneralSettings() {
   })
 
   const groupDeletionHandler = async () => {
-    await postgresqlDatabase
-        .delete(`/group/${id}`)
+    await deleteGroupPostgresService(idGroup)
         .catch((error: AxiosError) => console.log(error))
     navigate("/")
   }
   const archivizationHandler = async () => {
     group.isArchived
-        ? await postgresqlDatabase
-            .put(`/group/unarchive/${id}`)
+        ? await putGroupUnarchivePostgresService(idGroup)
             .catch((error: AxiosError) => console.log(error))
             .then(() =>
                 setGroup((prevState) => ({
@@ -35,8 +38,7 @@ export default function GroupGeneralSettings() {
                   isArchived: !prevState.isArchived,
                 }))
             )
-        : await postgresqlDatabase
-            .put(`/group/archive/${id}`)
+        : await putGroupArchivePostgresService(idGroup)
             .catch((error: AxiosError) => console.log(error))
             .then(() =>
                 setGroup((prevState) => ({
@@ -49,7 +51,7 @@ export default function GroupGeneralSettings() {
   const setGroupName = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     await postgresqlDatabase
-        .put(`/group/name/${id}`, group.name)
+        .put(`/group/name/${idGroup}`, group.name)
         .catch((error: AxiosError) => console.log(error))
   }
   const setGroupDescription = async (
@@ -57,7 +59,7 @@ export default function GroupGeneralSettings() {
   ) => {
     event.preventDefault()
     await postgresqlDatabase
-        .put(`/group/description/${id}`, group.description)
+        .put(`/group/description/${idGroup}`, group.description)
         .catch((error: AxiosError) => console.log(error))
   }
   const handelCopyUrl = async () => {
@@ -68,8 +70,7 @@ export default function GroupGeneralSettings() {
     }
   }
   useEffect(() => {
-    postgresqlDatabase
-        .get(`/group/${id}`)
+    getGroupPostgresService(idGroup)
         .then((response) => {
           setGroup((prevState) => ({
             ...prevState,

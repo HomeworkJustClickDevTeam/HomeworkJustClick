@@ -1,14 +1,12 @@
 import React, { useContext, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import postgresqlDatabase from "../../services/postgresDatabase"
-import DispatchContext from "../../DispatchContext"
-import UserContext from "../../UserContext";
+import postgresqlDatabase, {postGroupWithTeacherPostgresService} from "../../services/postgresDatabase"
+import DispatchContext from "../../contexts/DispatchContext"
+import UserContext from "../../contexts/UserContext";
 import {ActionType} from "../../types/ActionType";
+import {GroupCreateInterface} from "../../types/GroupCreateInterface";
 
-interface GroupCreateInterface {
-  name: string
-  description: string
-}
+
 function GroupCreatePage() {
   const {userState} = useContext(UserContext)
   const [group, setGroup] = useState<GroupCreateInterface>({
@@ -26,7 +24,7 @@ function GroupCreatePage() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     try {
-      await postgresqlDatabase.post("/group/withTeacher/" + userState.userId ,group)
+      await postGroupWithTeacherPostgresService(userState.userId, group)
       navigate("/")
     } catch (e) {
       console.log(e)

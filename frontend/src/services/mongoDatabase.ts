@@ -1,4 +1,4 @@
-import axios from "axios"
+import axios, {AxiosRequestConfig} from "axios"
 
 const mongoDatabase = axios.create({
   baseURL: "http://localhost:8082/api/",
@@ -11,4 +11,14 @@ const mongoDatabase = axios.create({
     }),
   },
 })
-export default mongoDatabase
+
+export const postFileMongoService = (file: FormData) => {
+  return mongoDatabase.post("file", file)
+}
+
+export const getFileMongoService = (mongoId: string, config?: AxiosRequestConfig) => {
+  return mongoDatabase.get(
+    `file/${mongoId}`,
+    config
+  )
+}

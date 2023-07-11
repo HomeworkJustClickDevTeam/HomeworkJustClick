@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom"
 import { useContext } from "react"
 
-import DispatchContext from "../../DispatchContext"
+import DispatchContext from "../../contexts/DispatchContext"
 import {ActionType} from "../../types/ActionType";
 
 function LogOut() {

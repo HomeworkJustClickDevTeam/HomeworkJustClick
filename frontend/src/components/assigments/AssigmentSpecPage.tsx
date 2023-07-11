@@ -1,14 +1,18 @@
 import {useLocation, useParams} from "react-router-dom"
 import { useContext, useEffect, useState } from "react"
-import postgresqlDatabase from "../../services/postgresDatabase"
+import postgresqlDatabase, {
+  getAssignmentPostgresService,
+  getCheckedSolutionByUserAssignmentGroupPostgresService,
+  getUncheckedSolutionByUserAssignmentGroupPostgresService
+} from "../../services/postgresDatabase"
 import { parseISO } from "date-fns"
 
-import GroupRoleContext from "../../GroupRoleContext"
+import GroupRoleContext from "../../contexts/GroupRoleContext"
 import AssigmentModify from "./AssigmentModify"
 
 import AddSolution from "../solution/AddSolution"
 import Loading from "../animations/Loading"
-import userContext from "../../UserContext"
+import userContext from "../../contexts/UserContext"
 import { AxiosError } from "axios"
 
 import CheckedSolution from "../solution/CheckedSolution"
@@ -17,7 +21,7 @@ import {AssignmentInterface} from "../../types/AssignmentInterface";
 import {SolutionInterface} from "../../types/SolutionInterface";
 
 function AssigmentSpecPage() {
-  const { idAssigment, id } = useParams()
+  const { idAssigment, idGroup } = useParams()
   const location = useLocation()
   const optionalUserId:string|null = location.state
   const { userState } = useContext(userContext)
@@ -33,10 +37,7 @@ function AssigmentSpecPage() {
     userId = userState.userId
   }
   useEffect(() => {
-    postgresqlDatabase
-      .get(
-        `/solution/getUncheckedSolutionByUserAssignmentGroup/${userId}/${idAssigment}/${id}`
-      )
+    getUncheckedSolutionByUserAssignmentGroupPostgresService(userState.userId, idAssigment, idGroup)
       .then((response) => {
         if (response.data.id !== null) {
           setIsSolutionChecked(false)
@@ -45,10 +46,7 @@ function AssigmentSpecPage() {
       })
       .catch((error: AxiosError) => {
         if(error.response?.status === 404){
-          postgresqlDatabase
-            .get(
-              `/solution/getCheckedSolutionByUserAssignmentGroup/${userId}/${idAssigment}/${id}`
-            )
+          getCheckedSolutionByUserAssignmentGroupPostgresService(userState.userId, idAssigment, idGroup)
             .then((response) => {
               if (response.data.id !== null) {
                 setIsSolutionChecked(true)
@@ -60,8 +58,7 @@ function AssigmentSpecPage() {
         else{console.log(error)}
       })
       .finally(() => {
-        postgresqlDatabase
-          .get(`/assignment/${idAssigment}`)
+        getAssignmentPostgresService(idAssigment)
           .then((response) => {
             const responseData = response.data
             const parsedDate = parseISO(responseData.completionDatetime)

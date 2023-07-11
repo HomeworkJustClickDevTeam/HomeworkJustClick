@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import postgresqlDatabase from "../../services/postgresDatabase"
-import mongoDatabase from "../../services/mongoDatabase"
+import {getFileMongoService} from "../../services/mongoDatabase"
 import {FileFromPostInterface} from "../../types/FileFromPostInterface";
 
 export function SolutionFile(props: { solutionId: number }) {
@@ -25,10 +25,7 @@ export function SolutionFile(props: { solutionId: number }) {
     const fetchFileData = async () => {
       if (databaseFile) {
         try {
-          const response = await mongoDatabase.get(
-            `file/${databaseFile[0]?.mongo_id}`,
-            {}
-          )
+          const response = await getFileMongoService(databaseFile[0]?.mongo_id)
           const fileData = response.data
           const type = fileData.file.type
           const decodedData = atob(fileData.file.data)

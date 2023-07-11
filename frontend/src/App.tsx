@@ -9,17 +9,17 @@ import { BrowserRouter, Route, Routes } from "react-router-dom"
 import HomeGuestPage from "./components/home/HomeGuestPage"
 import GroupCreatePage from "./components/group/GroupCreatePage"
 import GroupPage from "./components/group/GroupPage"
-import UserContext from "./UserContext"
+import UserContext from "./contexts/UserContext"
 import AssignmentsGroupDisplayedPage from "./components/assigments/AssignmentsGroupDisplayedPage"
 import AddAssigmentPage from "./components/assigments/AddAssigmentPage"
 import AssigmentSpecPage from "./components/assigments/AssigmentSpecPage"
 import { useImmerReducer } from "use-immer"
-import DispatchContext from "./DispatchContext"
+import DispatchContext from "./contexts/DispatchContext"
 import Header from "./components/header/Header"
 import GroupUsersPage from "./components/group/GroupUsersPage"
 import NotFoundPage from "./components/errors/NotFoundPage"
-import GroupRoleContext from "./GroupRoleContext"
-import GroupSetRoleContext from "./GroupSetRoleContext"
+import GroupRoleContext from "./contexts/GroupRoleContext"
+import GroupSetRoleContext from "./contexts/GroupSetRoleContext"
 import AssignmentsTypesPage from "./components/assigments/AssignmentsTypesPage"
 import AssignmentsStudentDisplayedPage from "./components/assigments/AssignmentsStudentDisplayedPage"
 import SolutionsTypesPage from "./components/solution/SolutionsTypesPage"
@@ -119,7 +119,7 @@ function App() {
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/create/group" element={<GroupCreatePage />} />
-                <Route path="/group/:id" element={<GroupPage />}>
+                <Route path="/group/:idGroup" element={<GroupPage />}>
                   <Route path="settings" element={<GroupSettingsPage />} />
                   <Route path="users" element={<GroupUsersPage />} />
                   <Route

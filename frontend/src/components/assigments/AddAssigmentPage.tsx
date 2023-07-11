@@ -1,16 +1,19 @@
 import { useNavigate, useParams } from "react-router-dom"
-import React, { ChangeEvent, useEffect, useState } from "react"
-import postgresqlDatabase, {postAssignmentWithUserAndGroupService} from "../../services/postgresDatabase"
+import React, {ChangeEvent, useContext, useEffect, useState} from "react"
+import postgresqlDatabase, {postAssignmentWithUserAndGroupPostgresService} from "../../services/postgresDatabase"
 import ReactDatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import { AssigmentAddFile } from "./AssigmentAddFile"
 import {AssignmentToSendInterface} from "../../types/AssignmentToSendInterface";
+import UserContext from "../../contexts/UserContext";
+import userContext from "../../contexts/UserContext";
 
 
 
 function AddAssigmentPage() {
   const navigate = useNavigate()
-  const { id } = useParams()
+  const {userState} = useContext(userContext)
+  const { idGroup } = useParams()
   const [assignment, setAssignment] = useState<AssignmentToSendInterface>({
     title: "",
     completionDatetime: new Date(),
@@ -19,12 +22,12 @@ function AddAssigmentPage() {
     max_points: 1,
   })
   const [toSend, setToSend] = useState<boolean>(false)
-  const [idAssigment, setIdAssigment] = useState<number>()
+  const [idAssigment, setIdAssignment] = useState<number>()
   const [toNavigate, setToNavigate] = useState<boolean>(false)
 
   useEffect(() => {
     if (toNavigate) {
-      navigate(`/group/${id}/assignments/`)
+      navigate(`/group/${idGroup}/assignments/`)
     }
   }, [toNavigate])
   const handleTextChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -60,8 +63,16 @@ function AddAssigmentPage() {
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
-    postAssignmentWithUserAndGroupService(id, assignment, setIdAssigment, setToSend)
-  }
+    postAssignmentWithUserAndGroupPostgresService(userState.userId, idGroup, assignment)
+      .catch(error => console.log(error))
+      .then(response =>{
+        if(response !== (null || undefined)){
+          setIdAssignment(response.data.id)
+          setToSend(true)
+        }
+      })
+
+    }
 
   return (
     <div className='relative flex flex-col mx-[7.5%] mt-4 border border-border_gray border-1 rounded-md pt-4 px-4 h-80'>

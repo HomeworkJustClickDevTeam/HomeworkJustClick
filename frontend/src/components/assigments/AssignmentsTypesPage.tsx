@@ -1,22 +1,22 @@
 import { useContext, useEffect, useState } from "react"
 import { assigmentFilterStudent } from "./filter/AssigmentFilterStudent"
 import { useNavigate, useParams } from "react-router-dom"
-import userContext from "../../UserContext"
+import userContext from "../../contexts/UserContext"
 import AssigmentListElement from "./AssigmentListElement"
 import Loading from "../animations/Loading"
-import groupRoleContext from "../../GroupRoleContext"
+import groupRoleContext from "../../contexts/GroupRoleContext"
 import {AssignmentInterface} from "../../types/AssignmentInterface";
 
 function AssignmentsTypesPage({ type }: {type: string}) {
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [assignments, setAssignments] = useState<AssignmentInterface[]>([])
-  const { id = "" } = useParams()
+  const { idGroup = "" } = useParams()
   const { userState } = useContext(userContext)
   const { role } = useContext(groupRoleContext)
   const navigate = useNavigate()
   const { doneAssignments, expiredAssignments, noneExpiredAssignments } =
     assigmentFilterStudent({
-      id: id,
+      idGroup: idGroup,
       userId: userState.userId,
       setAssignments: setAssignments,
     })
@@ -43,7 +43,7 @@ function AssignmentsTypesPage({ type }: {type: string}) {
     if (role === "Student") {
       typeOfAssigment()
     } else {
-      navigate(`-/group/${id}`)
+      navigate(`-/group/${idGroup}`)
     }
   }, [type])
   if (isLoading) {
@@ -58,7 +58,7 @@ function AssignmentsTypesPage({ type }: {type: string}) {
       <ul >
         {assignments.map((assignment) => (
           <li key={assignment.id}>
-            <AssigmentListElement assignment={assignment} idGroup={id} />{" "}
+            <AssigmentListElement assignment={assignment} idGroup={idGroup} />{" "}
           </li>
         ))}
       </ul>

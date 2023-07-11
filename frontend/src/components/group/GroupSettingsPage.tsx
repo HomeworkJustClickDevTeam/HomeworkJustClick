@@ -3,7 +3,7 @@ import GroupAppearanceSettings from "./GroupAppearanceSettings";
 import GroupUsersSettings from "./GroupUsersSettings";
 import GroupGeneralSettings from "./GroupGeneralSettings";
 import React, {useContext, useState} from "react";
-import userContext from "../../UserContext";
+import userContext from "../../contexts/UserContext";
 import Loading from "../animations/Loading";
 
 export default function GroupSettingsPage(){

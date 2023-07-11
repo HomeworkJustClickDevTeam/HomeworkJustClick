@@ -1,7 +1,7 @@
 import React, {useContext, useState} from "react";
 import postgresqlDatabase from "../../services/postgresDatabase";
 import {AxiosError} from "axios";
-import GroupRoleContext from "../../GroupRoleContext";
+import GroupRoleContext from "../../contexts/GroupRoleContext";
 import {UserInterface} from "../../types/UserInterface";
 interface GroupUsersSettingsListElementProps{
   makeTeacher(arg:UserInterface): void,

@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 import { Link, useParams } from "react-router-dom"
 
-import groupRoleContext from "../../GroupRoleContext"
+import groupRoleContext from "../../contexts/GroupRoleContext"
 import NotFoundPage from "../errors/NotFoundPage"
 import Loading from "../animations/Loading"
 import { solutionFilter } from "./filter/SolutionFilter"
@@ -12,11 +12,11 @@ function SolutionsTypesPage({ type }: {type: string}) {
   const [solutionsExtended, setSolutionsExtended] = useState<
     SolutionExtendedInterface[]
   >([])
-  const { id = "" } = useParams()
+  const { idGroup = "" } = useParams()
   const { role } = useContext(groupRoleContext)
   const { checkSolutions, uncheckedSolutions, lateSolutions } = solutionFilter({
     setSolutionsExtended,
-    id: id,
+    id: idGroup,
   })
   function typeOfSolutions() {
     switch (type) {

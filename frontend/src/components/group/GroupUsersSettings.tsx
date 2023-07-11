@@ -1,7 +1,7 @@
 import GroupUsersSettingsListElement from "./GroupUsersSettingsListElement";
 import Loading from "../animations/Loading";
 import React, {useContext, useEffect, useState} from "react";
-import userContext from "../../UserContext";
+import userContext from "../../contexts/UserContext";
 import postgresqlDatabase from "../../services/postgresDatabase";
 import {useParams} from "react-router-dom";
 import {tr} from "date-fns/locale";
@@ -11,12 +11,12 @@ export default function GroupUsersSettings(){
   const {loggedIn, userState} = useContext(userContext);
   const [teachers, setTeachers] = useState<UserInterface[]>()
   const [students, setStudents] = useState<UserInterface[]>([])
-  const {id} = useParams<{id: string}>()
+  const {idGroup} = useParams<{idGroup: string}>()
 
 
   useEffect(() => {
     postgresqlDatabase
-      .get(`/user/getTeachersByGroup/${id}`)
+      .get(`/user/getTeachersByGroup/${idGroup}`)
       .then((response) => {
         const teachers: UserInterface[] = response.data
         setTeachers(teachers)
@@ -24,7 +24,7 @@ export default function GroupUsersSettings(){
       .catch((e) => console.log(e))
 
     postgresqlDatabase
-      .get(`/user/getStudentsByGroup/${id}`)
+      .get(`/user/getStudentsByGroup/${idGroup}`)
       .then((response) => {
         const students: UserInterface[] = response.data
         setStudents(students)
@@ -55,11 +55,11 @@ export default function GroupUsersSettings(){
     <dl >
       <dt className='font-semibold'>Nauczyciele</dt>
         <dd>
-          <ul>{teachers?.map((teacher) =>((teacher.id !== +userState.userId) ? <GroupUsersSettingsListElement makeTeacher={makeTeacher} deleteUser={deleteTeacherFromList} groupId={id as string} isStudent={false} userToShow={teacher} key={teacher.id}/> : ""))}</ul>
+          <ul>{teachers?.map((teacher) =>((teacher.id !== +userState.userId) ? <GroupUsersSettingsListElement makeTeacher={makeTeacher} deleteUser={deleteTeacherFromList} groupId={idGroup as string} isStudent={false} userToShow={teacher} key={teacher.id}/> : ""))}</ul>
         </dd>
       <dt className='font-semibold'>Studenci</dt>
         <dd>
-          <ul>{students?.map((student) =>((student.id !== +userState.userId) ? <GroupUsersSettingsListElement makeTeacher={makeTeacher} deleteUser={deleteStudentFromList} groupId={id as string} isStudent={true} userToShow={student} key={student.id}/> : ""))}</ul>
+          <ul>{students?.map((student) =>((student.id !== +userState.userId) ? <GroupUsersSettingsListElement makeTeacher={makeTeacher} deleteUser={deleteStudentFromList} groupId={idGroup as string} isStudent={true} userToShow={student} key={student.id}/> : ""))}</ul>
         </dd>
     </dl>
   )

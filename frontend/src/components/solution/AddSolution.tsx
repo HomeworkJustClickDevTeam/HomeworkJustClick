@@ -1,9 +1,9 @@
 import { ChangeEvent, useContext, useEffect, useState } from "react"
-import mongoDatabase from "../../services/mongoDatabase"
+import {postFileMongoService} from "../../services/mongoDatabase"
 import { useNavigate, useParams } from "react-router-dom"
 import postgresqlDatabase from "../../services/postgresDatabase"
 import AssigmentListElement from "../assigments/AssigmentListElement"
-import userContext from "../../UserContext"
+import userContext from "../../contexts/UserContext"
 import { AssigmentFile } from "../assigments/AssigmentFile"
 import {format} from "date-fns";
 import {AssigmentPropsInterface} from "../../types/AssigmentPropsInterface";
@@ -22,7 +22,7 @@ interface SolutionToSendInterface {
   comment: string
 }
 function AddSolution({ assignment }: AssigmentPropsInterface) {
-  const { idAssigment, id = "" } = useParams()
+  const { idAssigment, idGroup = "" } = useParams()
   const { userState } = useContext(userContext)
   const [file, setFile] = useState<File>()
   const [response, setResponse] = useState<FileRespondMongoInterface>({
@@ -72,8 +72,7 @@ function AddSolution({ assignment }: AssigmentPropsInterface) {
     }
     const formData = new FormData()
     formData.append("file", file)
-    mongoDatabase
-      .post("file", formData)
+    postFileMongoService(formData)
       .then((r) => {
         console.log(r.data)
         setResponse(r.data)

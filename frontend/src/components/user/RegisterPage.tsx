@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useState } from "react"
 import postgresqlDatabase from "../../services/postgresDatabase"
 import { useNavigate } from "react-router-dom"
-import KolkoLewe from './kolko_lewe.svg';
+import KolkoLewe from './left_circle.svg';
 import Smile from './Smile.svg';
 
 

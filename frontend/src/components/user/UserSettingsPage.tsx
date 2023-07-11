@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom"
 import React, { useContext, useEffect, useState } from "react"
-import userContext from "../../UserContext"
+import userContext from "../../contexts/UserContext"
 import Loading from "../animations/Loading"
-import DispatchContext from "../../DispatchContext"
+import DispatchContext from "../../contexts/DispatchContext"
 import {ActionType} from "../../types/ActionType";
 
 export default function UserSettingsPage(): JSX.Element {

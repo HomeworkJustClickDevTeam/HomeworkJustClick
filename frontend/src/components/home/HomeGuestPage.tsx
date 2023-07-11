@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom"
-import KolkoPoLewejStronie from './kolko_po_lewej_stronie.svg';
-import KolkoPoPrawejStronie from './kolko_po_prawej_stronie.svg';
+import KolkoPoLewejStronie from './left_circle.svg';
+import KolkoPoPrawejStronie from './right_circle.svg';
 
 function HomeGuestPage() {
   return (

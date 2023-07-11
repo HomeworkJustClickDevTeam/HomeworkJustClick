@@ -1,6 +1,6 @@
 import {useContext, useState} from "react"
-import postgresqlDatabase from "../../services/postgresDatabase"
-import userContext from "../../UserContext"
+import postgresqlDatabase, {postEvaluationWithUserAndSolution} from "../../services/postgresDatabase"
+import userContext from "../../contexts/UserContext"
 import { useNavigate } from "react-router-dom"
 
 interface RatingPropsInterface {
@@ -22,13 +22,7 @@ export function Rating({
   const navigate = useNavigate()
   const handleMark = () => {
     const body = { result: points, grade: 0 }
-    console.log(userState.userId)
-    console.log(solutionId)
-    postgresqlDatabase
-      .post(
-        `/evaluation/withUserAndSolution/${userState.userId}/${solutionId}`,
-        body
-      )
+    postEvaluationWithUserAndSolution(userState.userId, solutionId.toString(), body)
       .then(() => navigate(`/group/${groupId}`))
       .catch((e) => console.log(e))
   }

@@ -1,6 +1,10 @@
 import { ChangeEvent, useEffect, useState } from "react"
-import postgresqlDatabase from "../../services/postgresDatabase"
-import mongoDatabase from "../../services/mongoDatabase"
+import postgresqlDatabase, {
+  deleteFilePostgresService,
+  getFilesByAssignmentPostgresService,
+  postFileWithAssignmentPostgresService
+} from "../../services/postgresDatabase"
+import {getFileMongoService, postFileMongoService} from "../../services/mongoDatabase"
 import {FileFromPostInterface} from "../../types/FileFromPostInterface";
 
 export function AssigmentModifyFile(props: {
@@ -14,8 +18,7 @@ export function AssigmentModifyFile(props: {
 
   useEffect(() => {
     if (props.assignmentId) {
-      postgresqlDatabase
-        .get(`/files/byAssignment/${props.assignmentId}`)
+      getFilesByAssignmentPostgresService(props.assignmentId)
         .then((response) => {
           setDatabaseFile(response.data)
         })
@@ -29,21 +32,14 @@ export function AssigmentModifyFile(props: {
       if (isChange && file) {
         const formData = new FormData()
         formData.append("file", file)
-        postgresqlDatabase
-          .delete(`file/${databaseFile[0].id}`)
+        deleteFilePostgresService('databaseFile[0].id')
           .then(() => {
-            mongoDatabase
-              .post("file", formData)
+            postFileMongoService(formData)
               .then((response) => {
-                postgresqlDatabase
-                  .post(`file/withAssignment/${props.assignmentId}`, {
-                    mongo_id: response.data.id,
-                    format: response.data.format,
-                    name: response.data.name,
-                  })
+                postFileWithAssignmentPostgresService(`${response.data.id}`, response.data.format, response.data.name, `${props.assignmentId}`)
                   .then(() => props.setToNavigate(true))
               })
-              .catch()
+              .catch(error=>console.log(error))
           })
           .catch((e) => console.log(e))
       } else {
@@ -56,13 +52,7 @@ export function AssigmentModifyFile(props: {
     const fetchFileData = async () => {
       if (databaseFile.length > 0) {
         try {
-          const response = await mongoDatabase.get(
-            `file/${databaseFile[0]?.mongo_id}`,
-            {
-              responseType: "arraybuffer",
-            }
-          )
-
+          const response = await getFileMongoService(databaseFile[0]?.mongo_id, {responseType: "arraybuffer"})
           const fileData = response.data
           const type = databaseFile[0].format
           const file = new File([fileData], databaseFile[0].name, { type })
