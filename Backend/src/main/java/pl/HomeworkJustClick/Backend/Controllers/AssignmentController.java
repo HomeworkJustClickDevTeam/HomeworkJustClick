@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.HomeworkJustClick.Backend.Entities.Assignment;
 import pl.HomeworkJustClick.Backend.Responses.AssignmentResponse;
+import pl.HomeworkJustClick.Backend.Responses.AssignmentResponseCalendar;
 import pl.HomeworkJustClick.Backend.Responses.AssignmentResponseExtended;
 import pl.HomeworkJustClick.Backend.Services.AssignmentService;
 
@@ -409,7 +410,26 @@ public class AssignmentController {
             }
     )
     public ResponseEntity<Void> updatePoints(@PathVariable("assignment_id") int id, @RequestBody int points) {
-        if(assignmentService.changeMaxPoints(id, points)) {
+        if (assignmentService.changeMaxPoints(id, points)) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/assignment/auto_penalty/{assignment_id}")
+    @Operation(
+            summary = "Changes auto penalty of assignment with given id.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Missing assignment with this id.",
+                            content = @Content
+                    )
+            }
+    )
+    public ResponseEntity<Void> updatePenalty(@PathVariable("assignment_id") int id, @RequestBody int auto_penalty) {
+        if (assignmentService.changeAutoPenalty(id, auto_penalty)) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -1066,5 +1086,27 @@ public class AssignmentController {
     )
     public ResponseEntity<Boolean> checkForFileToAssignment(@PathVariable("assignment_id") int assignment_id) {
         return new ResponseEntity<>(assignmentService.checkForFileToAssignment(assignment_id), HttpStatus.OK);
+    }
+
+    @GetMapping("/assignments/calendarListByStudent/{student_id}")
+    @Operation(
+            summary = "Returns list of all student's assignments to calendar.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "No assignments for the student.",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "200",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = AssignmentResponse.class))
+                            )
+                    )
+            }
+    )
+    public ResponseEntity<List<AssignmentResponseCalendar>> getAssignmentsByStudentCalendar(@PathVariable("student_id") int student_id) {
+        return new ResponseEntity<>(assignmentService.getAssignmentsByStudentCalendar(student_id), HttpStatus.OK);
     }
 }

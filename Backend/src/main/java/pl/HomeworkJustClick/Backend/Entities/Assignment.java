@@ -1,7 +1,6 @@
 package pl.HomeworkJustClick.Backend.Entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -10,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,8 +70,11 @@ public class Assignment {
     @Column(name = "max_points")
     @Schema(example = "10")
     private int max_points;
+    @Column(name = "auto_penalty")
+    @Schema(example = "50")
+    private int auto_penalty;
 
-    public Assignment(User user, Group group, String taskDescription, OffsetDateTime creationDatetime, OffsetDateTime lastModifiedDatetime, OffsetDateTime completionDatetime, String title, Boolean visible, int max_points) {
+    public Assignment(User user, Group group, String taskDescription, OffsetDateTime creationDatetime, OffsetDateTime lastModifiedDatetime, OffsetDateTime completionDatetime, String title, Boolean visible, int max_points, int auto_penalty) {
         this.user = user;
         this.group = group;
         this.taskDescription = taskDescription;
@@ -81,6 +84,7 @@ public class Assignment {
         this.title = title;
         this.visible = visible;
         this.max_points = max_points;
+        this.auto_penalty = auto_penalty;
     }
 
     public int getMax_points() {
@@ -162,5 +166,13 @@ public class Assignment {
 
     public void setCompletionDatetime(OffsetDateTime completionDatetime) {
         this.completionDatetime = completionDatetime;
+    }
+
+    public int getAuto_penalty() {
+        return auto_penalty;
+    }
+
+    public void setAuto_penalty(int auto_penalty) {
+        this.auto_penalty = auto_penalty;
     }
 }

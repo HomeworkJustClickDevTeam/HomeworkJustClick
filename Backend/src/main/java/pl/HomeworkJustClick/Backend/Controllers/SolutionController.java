@@ -13,13 +13,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.HomeworkJustClick.Backend.Entities.Solution;
+import pl.HomeworkJustClick.Backend.Responses.AssignmentResponse;
 import pl.HomeworkJustClick.Backend.Responses.SolutionResponse;
+import pl.HomeworkJustClick.Backend.Responses.SolutionResponseCalendar;
 import pl.HomeworkJustClick.Backend.Responses.SolutionResponseExtended;
 import pl.HomeworkJustClick.Backend.Services.SolutionService;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -1427,4 +1428,25 @@ public class SolutionController {
         return new ResponseEntity<>(solutionService.checkForFileToSolution(solution_id), HttpStatus.OK);
     }
 
+    @GetMapping("/solutions/calendarListByTeacher/{teacher_id}")
+    @Operation(
+            summary = "Returns list of all teacher's solutions to calendar.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "No solutions for the teacher.",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "200",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = AssignmentResponse.class))
+                            )
+                    )
+            }
+    )
+    public ResponseEntity<List<SolutionResponseCalendar>> getSolutionsByTeacherCalendar(@PathVariable("teacher_id") int teacher_id) {
+        return new ResponseEntity<>(solutionService.getSolutionsByTeacherCalender(teacher_id), HttpStatus.OK);
+    }
 }

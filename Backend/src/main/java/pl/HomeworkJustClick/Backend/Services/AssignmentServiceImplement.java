@@ -7,15 +7,13 @@ import org.springframework.stereotype.Service;
 import pl.HomeworkJustClick.Backend.Entities.Assignment;
 import pl.HomeworkJustClick.Backend.Entities.Group;
 import pl.HomeworkJustClick.Backend.Entities.User;
+import pl.HomeworkJustClick.Backend.Enums.CalendarStatus;
 import pl.HomeworkJustClick.Backend.Repositories.*;
-import pl.HomeworkJustClick.Backend.Responses.AssignmentResponse;
-import pl.HomeworkJustClick.Backend.Responses.AssignmentResponseExtended;
-import pl.HomeworkJustClick.Backend.Responses.GroupResponse;
-import pl.HomeworkJustClick.Backend.Responses.UserResponse;
+import pl.HomeworkJustClick.Backend.Responses.*;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -152,6 +150,9 @@ public class AssignmentServiceImplement implements AssignmentService {
         if (updatedAssignment.getMax_points() >= 0 && updatedAssignment.getMax_points() != assignment.getMax_points()) {
             assignment.setMax_points(updatedAssignment.getMax_points());
         }
+        if (updatedAssignment.getAuto_penalty() >= 0 && updatedAssignment.getAuto_penalty() <= 100 && updatedAssignment.getAuto_penalty() != assignment.getAuto_penalty()) {
+            assignment.setAuto_penalty(updatedAssignment.getAuto_penalty());
+        }
         updatedAssignment.setUser(assignment.getUser());
         updatedAssignment.setGroup(assignment.getGroup());
         assignmentRepository.save(updatedAssignment);
@@ -249,9 +250,21 @@ public class AssignmentServiceImplement implements AssignmentService {
 
     @Override
     public Boolean changeMaxPoints(int id, int points) {
-        if(assignmentRepository.findById(id).isPresent() && points >= 0) {
+        if (assignmentRepository.findById(id).isPresent() && points >= 0) {
             Assignment assignment = assignmentRepository.findById(id).get();
             assignment.setMax_points(points);
+            assignmentRepository.save(assignment);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean changeAutoPenalty(int id, int auto_penalty) {
+        if (assignmentRepository.findById(id).isPresent() && auto_penalty >= 0 && auto_penalty <= 100) {
+            Assignment assignment = assignmentRepository.findById(id).get();
+            assignment.setAuto_penalty(auto_penalty);
             assignmentRepository.save(assignment);
             return true;
         } else {
@@ -263,7 +276,7 @@ public class AssignmentServiceImplement implements AssignmentService {
     public List<AssignmentResponse> getAssignmentsByGroupId(int id) {
         List<Assignment> assignments = assignmentRepository.getAssignmentsByGroupId(id);
         List<AssignmentResponse> assignmentResponses = new ArrayList<>();
-        for(Assignment assignment : assignments) {
+        for (Assignment assignment : assignments) {
             assignmentResponses.add(AssignmentResponse.builder()
                     .id(assignment.getId())
                     .userId(assignment.getUser().getId())
@@ -586,6 +599,7 @@ public class AssignmentServiceImplement implements AssignmentService {
                 .title(assignment.getTitle())
                 .visible(assignment.getVisible())
                 .max_points(assignment.getMax_points())
+                .auto_penalty(assignment.getAuto_penalty())
                 .build();
     }
 
@@ -621,6 +635,24 @@ public class AssignmentServiceImplement implements AssignmentService {
                 .title(assignment.getTitle())
                 .visible(assignment.getVisible())
                 .max_points(assignment.getMax_points())
+                .auto_penalty(assignment.getAuto_penalty())
+                .build();
+    }
+
+    private AssignmentResponseCalendar buildAssignmentResponseCalendar(Assignment assignment, CalendarStatus status) {
+        return AssignmentResponseCalendar.builder()
+                .id(assignment.getId())
+                .userId(assignment.getUser().getId())
+                .groupId(assignment.getGroup().getId())
+                .taskDescription(assignment.getTaskDescription())
+                .creationDatetime(assignment.getCreationDatetime())
+                .completionDatetime(assignment.getCompletionDatetime())
+                .lastModifiedDatetime(assignment.getLastModifiedDatetime())
+                .title(assignment.getTitle())
+                .visible(assignment.getVisible())
+                .max_points(assignment.getMax_points())
+                .auto_penalty(assignment.getAuto_penalty())
+                .status(status)
                 .build();
     }
 
@@ -638,4 +670,31 @@ public class AssignmentServiceImplement implements AssignmentService {
         } else return false;
     }
 
+    @Override
+    public List<AssignmentResponseCalendar> getAssignmentsByStudentCalendar(int student_id) {
+        List<Assignment> assignmentList = assignmentRepository.getAllAssignmentsByStudent(student_id);
+        List<Assignment> doneAssignmentList = assignmentRepository.getDoneAssignmentsByStudent(student_id);
+        assignmentList.removeAll(doneAssignmentList);
+        List<Assignment> expiredUndoneAssignmentsList = new ArrayList<>();
+        List<Assignment> nonExpiredUndoneAssignmentsList = new ArrayList<>();
+        for (Assignment assignment : assignmentList) {
+            if (assignment.getCompletionDatetime().isBefore(OffsetDateTime.now())) {
+                expiredUndoneAssignmentsList.add(assignment);
+            } else {
+                nonExpiredUndoneAssignmentsList.add(assignment);
+            }
+        }
+        List<AssignmentResponseCalendar> response = new ArrayList<>();
+        for (Assignment assignment : doneAssignmentList) {
+            response.add(buildAssignmentResponseCalendar(assignment, CalendarStatus.DONE));
+        }
+        for (Assignment assignment : expiredUndoneAssignmentsList) {
+            response.add(buildAssignmentResponseCalendar(assignment, CalendarStatus.LATE));
+        }
+        for (Assignment assignment : nonExpiredUndoneAssignmentsList) {
+            response.add(buildAssignmentResponseCalendar(assignment, CalendarStatus.TODO));
+        }
+        response.sort(Comparator.comparing(AssignmentResponseCalendar::getCompletionDatetime));
+        return response;
+    }
 }
