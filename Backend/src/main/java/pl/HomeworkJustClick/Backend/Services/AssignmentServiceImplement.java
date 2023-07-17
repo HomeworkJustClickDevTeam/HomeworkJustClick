@@ -7,14 +7,13 @@ import org.springframework.stereotype.Service;
 import pl.HomeworkJustClick.Backend.Entities.Assignment;
 import pl.HomeworkJustClick.Backend.Entities.Group;
 import pl.HomeworkJustClick.Backend.Entities.User;
+import pl.HomeworkJustClick.Backend.Enums.CalendarStatus;
 import pl.HomeworkJustClick.Backend.Repositories.*;
-import pl.HomeworkJustClick.Backend.Responses.AssignmentResponse;
-import pl.HomeworkJustClick.Backend.Responses.AssignmentResponseExtended;
-import pl.HomeworkJustClick.Backend.Responses.GroupResponse;
-import pl.HomeworkJustClick.Backend.Responses.UserResponse;
+import pl.HomeworkJustClick.Backend.Responses.*;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -600,6 +599,7 @@ public class AssignmentServiceImplement implements AssignmentService {
                 .title(assignment.getTitle())
                 .visible(assignment.getVisible())
                 .max_points(assignment.getMax_points())
+                .auto_penalty(assignment.getAuto_penalty())
                 .build();
     }
 
@@ -635,6 +635,24 @@ public class AssignmentServiceImplement implements AssignmentService {
                 .title(assignment.getTitle())
                 .visible(assignment.getVisible())
                 .max_points(assignment.getMax_points())
+                .auto_penalty(assignment.getAuto_penalty())
+                .build();
+    }
+
+    private AssignmentResponseCalendar buildAssignmentResponseCalendar(Assignment assignment, CalendarStatus status) {
+        return AssignmentResponseCalendar.builder()
+                .id(assignment.getId())
+                .userId(assignment.getUser().getId())
+                .groupId(assignment.getGroup().getId())
+                .taskDescription(assignment.getTaskDescription())
+                .creationDatetime(assignment.getCreationDatetime())
+                .completionDatetime(assignment.getCompletionDatetime())
+                .lastModifiedDatetime(assignment.getLastModifiedDatetime())
+                .title(assignment.getTitle())
+                .visible(assignment.getVisible())
+                .max_points(assignment.getMax_points())
+                .auto_penalty(assignment.getAuto_penalty())
+                .status(status)
                 .build();
     }
 
@@ -652,4 +670,30 @@ public class AssignmentServiceImplement implements AssignmentService {
         } else return false;
     }
 
+    public List<AssignmentResponseCalendar> getAssignmentsByStudentCalendar(int student_id) {
+        List<Assignment> assignmentList = assignmentRepository.getAllAssignmentsByStudent(student_id);
+        List<Assignment> doneAssignmentList = assignmentRepository.getDoneAssignmentsByStudent(student_id);
+        assignmentList.removeAll(doneAssignmentList);
+        List<Assignment> expiredUndoneAssignmentsList = new ArrayList<>();
+        List<Assignment> nonExpiredUndoneAssignmentsList = new ArrayList<>();
+        for (Assignment assignment : assignmentList) {
+            if (assignment.getCompletionDatetime().isBefore(OffsetDateTime.now())) {
+                expiredUndoneAssignmentsList.add(assignment);
+            } else {
+                nonExpiredUndoneAssignmentsList.add(assignment);
+            }
+        }
+        List<AssignmentResponseCalendar> response = new ArrayList<>();
+        for (Assignment assignment : doneAssignmentList) {
+            response.add(buildAssignmentResponseCalendar(assignment, CalendarStatus.DONE));
+        }
+        for (Assignment assignment : expiredUndoneAssignmentsList) {
+            response.add(buildAssignmentResponseCalendar(assignment, CalendarStatus.LATE));
+        }
+        for (Assignment assignment : nonExpiredUndoneAssignmentsList) {
+            response.add(buildAssignmentResponseCalendar(assignment, CalendarStatus.TODO));
+        }
+        response.sort(Comparator.comparing(AssignmentResponseCalendar::getCompletionDatetime));
+        return response;
+    }
 }
