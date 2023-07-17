@@ -409,7 +409,26 @@ public class AssignmentController {
             }
     )
     public ResponseEntity<Void> updatePoints(@PathVariable("assignment_id") int id, @RequestBody int points) {
-        if(assignmentService.changeMaxPoints(id, points)) {
+        if (assignmentService.changeMaxPoints(id, points)) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/assignment/auto_penalty/{assignment_id}")
+    @Operation(
+            summary = "Changes auto penalty of assignment with given id.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Missing assignment with this id.",
+                            content = @Content
+                    )
+            }
+    )
+    public ResponseEntity<Void> updatePenalty(@PathVariable("assignment_id") int id, @RequestBody int auto_penalty) {
+        if (assignmentService.changeAutoPenalty(id, auto_penalty)) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

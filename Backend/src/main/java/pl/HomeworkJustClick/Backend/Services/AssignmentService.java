@@ -38,6 +38,8 @@ public interface AssignmentService {
 
     public Boolean changeMaxPoints(int id, int points);
 
+    public Boolean changeAutoPenalty(int id, int auto_penalty);
+
     public List<AssignmentResponse> getAssignmentsByGroupId(int id);
 
     public List<AssignmentResponse> getUncheckedAssignmentsByGroup(int group_id);

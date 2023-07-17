@@ -66,6 +66,13 @@ public class EvaluationServiceImplement implements EvaluationService {
                 }
             });
             if(ok.get() && !checkForEvaluationToSolution(solution_id)) {
+                var assignment = solution.get().getAssignment();
+                if (assignment.getAuto_penalty() > 0) {
+                    if (assignment.getCompletionDatetime().isBefore(solution.get().getCreationDatetime())) {
+                        double penalty = evaluation.getResult() * ((double) assignment.getAuto_penalty() / 100);
+                        evaluation.setResult(evaluation.getResult() - penalty);
+                    }
+                }
                 evaluation.setSolution(solution.get());
                 evaluation.setUser(user.get());
                 evaluation.setGroup(solution.get().getGroup());
@@ -115,6 +122,13 @@ public class EvaluationServiceImplement implements EvaluationService {
                 }
             });
             if(ok.get() && !checkForEvaluationToSolution(solution_id)) {
+                var assignment = solution.get().getAssignment();
+                if (assignment.getAuto_penalty() > 0) {
+                    if (assignment.getCompletionDatetime().isBefore(solution.get().getCreationDatetime())) {
+                        double penalty = evaluation.getResult() * ((double) assignment.getAuto_penalty() / 100);
+                        evaluation.setResult(evaluation.getResult() - penalty);
+                    }
+                }
                 evaluation.setSolution(solution.get());
                 evaluation.setUser(user.get());
                 evaluation.setGroup(solution.get().getGroup());
