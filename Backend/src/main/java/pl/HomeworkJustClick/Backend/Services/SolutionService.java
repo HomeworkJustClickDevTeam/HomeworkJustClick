@@ -2,10 +2,10 @@ package pl.HomeworkJustClick.Backend.Services;
 
 import pl.HomeworkJustClick.Backend.Entities.Solution;
 import pl.HomeworkJustClick.Backend.Responses.SolutionResponse;
+import pl.HomeworkJustClick.Backend.Responses.SolutionResponseCalendar;
 import pl.HomeworkJustClick.Backend.Responses.SolutionResponseExtended;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface SolutionService {
 
@@ -91,11 +91,13 @@ public interface SolutionService {
 
     List<SolutionResponseExtended> getCheckedSolutionsByTeacherExtended(int teacher_id);
 
-    public boolean checkForEvaluationToSolution (int solution_id);
+    public boolean checkForEvaluationToSolution(int solution_id);
 
     SolutionResponse getCheckedSolutionByUserAssignmentGroup(int user_id, int group_id, int assignment_id);
 
     SolutionResponse getUncheckedSolutionByUserAssignmentGroup(int user_id, int group_id, int assignment_id);
 
     boolean checkForFileToSolution(int solution_id);
+
+    List<SolutionResponseCalendar> getSolutionsByTeacherCalender(int teacher_id);
 }

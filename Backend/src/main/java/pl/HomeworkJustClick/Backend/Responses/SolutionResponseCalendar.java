@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pl.HomeworkJustClick.Backend.Enums.CalendarStatus;
 
 import java.time.OffsetDateTime;
 
@@ -28,4 +29,5 @@ public class SolutionResponseCalendar {
     private String comment;
     @JsonIgnore
     private boolean forbidden;
+    private CalendarStatus status;
 }
