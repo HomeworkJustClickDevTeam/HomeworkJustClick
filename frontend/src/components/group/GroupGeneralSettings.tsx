@@ -26,13 +26,13 @@ export default function GroupGeneralSettings() {
   })
 
   const groupDeletionHandler = async () => {
-    await deleteGroupPostgresService(idGroup)
+    await deleteGroupPostgresService(idGroup as string)
         .catch((error: AxiosError) => console.log(error))
     navigate("/")
   }
   const archivizationHandler = async () => {
     group.isArchived
-        ? await putGroupUnarchivePostgresService(idGroup)
+        ? await putGroupUnarchivePostgresService(idGroup as string)
             .catch((error: AxiosError) => console.log(error))
             .then(() =>
                 setGroup((prevState) => ({
@@ -40,7 +40,7 @@ export default function GroupGeneralSettings() {
                   isArchived: !prevState.isArchived,
                 }))
             )
-        : await putGroupArchivePostgresService(idGroup)
+        : await putGroupArchivePostgresService(idGroup as string)
             .catch((error: AxiosError) => console.log(error))
             .then(() =>
                 setGroup((prevState) => ({
@@ -52,14 +52,14 @@ export default function GroupGeneralSettings() {
 
   const setGroupName = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    await putGroupNamePostgresService(idGroup, group.name)
+    await putGroupNamePostgresService(idGroup as string, group.name)
         .catch((error: AxiosError) => console.log(error))
   }
   const setGroupDescription = async (
       event: React.FormEvent<HTMLFormElement>
   ) => {
     event.preventDefault()
-    await putGroupDescriptionPostgresService(idGroup, group.description)
+    await putGroupDescriptionPostgresService(idGroup as string, group.description)
         .catch((error: AxiosError) => console.log(error))
   }
   const handelCopyUrl = async () => {
@@ -70,7 +70,7 @@ export default function GroupGeneralSettings() {
     }
   }
   useEffect(() => {
-    getGroupPostgresService(idGroup)
+    getGroupPostgresService(idGroup as string)
         .then((response) => {
           setGroup((prevState) => ({
             ...prevState,

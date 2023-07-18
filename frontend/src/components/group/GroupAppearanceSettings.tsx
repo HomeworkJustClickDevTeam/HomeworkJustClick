@@ -11,7 +11,7 @@ export default function GroupAppearanceSettings(){
   const handleColorChange = async (event:React.ChangeEvent<HTMLInputElement>) => {
     setColor(+event.target.value)
     try{
-      await putGroupColorPostgresService(idGroup, +event.target.value).catch((error:AxiosError) => {
+      await putGroupColorPostgresService(idGroup as string, +event.target.value).catch((error:AxiosError) => {
           console.log("AXIOS ERROR: ", error)
         })
     }
@@ -21,7 +21,7 @@ export default function GroupAppearanceSettings(){
     console.log(color)
   }
   useEffect(() => {
-    getGroupPostgresService(idGroup)
+    getGroupPostgresService(idGroup as string)
         .then(response => setColor(response.data.color))
         .catch(() => setColor(undefined))
   }, [idGroup])

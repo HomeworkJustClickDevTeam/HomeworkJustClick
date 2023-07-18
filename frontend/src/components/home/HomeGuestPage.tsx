@@ -1,12 +1,12 @@
 import {Link} from "react-router-dom"
-import KolkoPoLewejStronie from './left_circle.svg';
-import KolkoPoPrawejStronie from './right_circle.svg';
+import left_circle from './left_circle.svg';
+import right_circle from './right_circle.svg';
 
 function HomeGuestPage() {
   return (
     <div className='flex w-screen flex-col items-center text-center font-lato font-normal select-none'>
-       <img className="fixed left-[12%]  bottom-[15%] scale-50 xl:scale-100 -z-50 " src = {KolkoPoLewejStronie} alt="Kółko po lewej stronie"></img>
-       <img className="fixed right-0 top-[12%] scale-50 translate-x-[25%] xl:transform-none -z-50 " src= {KolkoPoPrawejStronie} alt="Kółko po prawej stronie"></img>
+       <img className="fixed left-[12%]  bottom-[15%] scale-50 xl:scale-100 -z-50 " src = {left_circle} alt="Kółko po lewej stronie"></img>
+       <img className="fixed right-0 top-[12%] scale-50 translate-x-[25%] xl:transform-none -z-50 " src= {right_circle} alt="Kółko po prawej stronie"></img>
         <div className='pt-[20vh] pb-8 xl:pb-[8vh]'>
             <h1 className='text-3xl xl:text-[81px] font-medium pb-[calc(4px+1vh)] tracking-wide '>HomeworkJustClick</h1>
             <p className='text-s xl:text-[36px] font-medium '>Prosto, szybko, wygodnie!</p>

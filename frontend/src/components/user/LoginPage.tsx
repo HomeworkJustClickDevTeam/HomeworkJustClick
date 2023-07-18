@@ -2,8 +2,8 @@ import React, {ChangeEvent, useContext, useState} from "react"
 import {postAuthAuthenticatePostgresService} from "../../services/postgresDatabase"
 import {Link, useNavigate} from "react-router-dom"
 import DispatchContext from "../../contexts/DispatchContext"
-import KolkoLewe from './login_left_circle.svg';
-import KolkoPrawe from './login_right_circle.svg';
+import login_left_circle from './login_left_circle.svg';
+import login_right_circle from './login_right_circle.svg';
 import {UserStateInterface} from "../../types/UserStateInterface";
 import {ActionType} from "../../types/ActionType";
 import {LoginUserInterface} from "../../types/LoginUserInterface";
@@ -49,8 +49,8 @@ const LoginPage = () => {
 
   return (
       <div className='flex w-screen flex-col items-center text-center font-lato text-sm select-none'>
-        <img className="fixed left-[7%]  bottom-[3%] scale-50 xl:scale-100 -z-50" src = {KolkoLewe} alt="Kółko po lewej stronie"></img>
-        <img className="fixed right-[9%] top-[18%] scale-50 translate-x-[25%] xl:transform-none -z-50" src= {KolkoPrawe} alt="Kółko po prawej stronie"></img>
+        <img className="fixed left-[7%]  bottom-[3%] scale-50 xl:scale-100 -z-50" src = {login_left_circle} alt="Kółko po lewej stronie"></img>
+        <img className="fixed right-[9%] top-[18%] scale-50 translate-x-[25%] xl:transform-none -z-50" src= {login_right_circle} alt="Kółko po prawej stronie"></img>
         <h1 className='mt-32 mb-16 text-6xl'>Zaloguj się</h1>
         <form onSubmit={handleSubmit} className='flex flex-col items-center'>
           <input

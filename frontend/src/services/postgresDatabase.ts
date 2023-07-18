@@ -22,7 +22,7 @@ const postgresqlDatabase = axios.create({
 
 export const postAssignmentWithUserAndGroupPostgresService = (
   userId: string,
-  groupId: string | undefined,
+  groupId: string,
   assignment: AssignmentToSendInterface) =>{
   return postgresqlDatabase
     .post(
@@ -95,7 +95,7 @@ export const postSolutionWithUserAndAssignmentPostgresService = (userId: string,
     )
 }
 
-export const getFilesByAssignmentPostgresService = (assigmentId: string | number | undefined) => {
+export const getFilesByAssignmentPostgresService = (assigmentId: string | number) => {
   return postgresqlDatabase
     .get(`/files/byAssignment/${assigmentId}` )
 }
@@ -106,7 +106,7 @@ export const getFilesBySolutionPostgresService = (solutionId: string | number) =
   )
 }
 
-export const getUserPostgresService = (userId: string | undefined) =>{
+export const getUserPostgresService = (userId: string) =>{
   return postgresqlDatabase.get(`/user/` + userId)
 }
 
@@ -127,17 +127,17 @@ export const getGroupsByUserPostgresService = (userId: string) => {
     .get("/groups/byUser/" + userId)
 }
 
-export const getUncheckedSolutionByUserAssignmentGroupPostgresService = (userId: string, assignmentId: string | undefined, groupId: undefined | string) => {
+export const getUncheckedSolutionByUserAssignmentGroupPostgresService = (userId: string, assignmentId: string, groupId: string) => {
   return postgresqlDatabase
     .get(`/solution/getUncheckedSolutionByUserAssignmentGroup/${userId}/${assignmentId}/${groupId}`)
 }
 
-export const getCheckedSolutionByUserAssignmentGroupPostgresService = (userId: string, assignmentId: string | undefined, groupId: undefined | string) => {
+export const getCheckedSolutionByUserAssignmentGroupPostgresService = (userId: string, assignmentId: string, groupId: string) => {
   return postgresqlDatabase
     .get(`/solution/getCheckedSolutionByUserAssignmentGroup/${userId}/${assignmentId}/${groupId}`)
 }
 
-export const getAssignmentPostgresService = (assignmentId: string | undefined) => {
+export const getAssignmentPostgresService = (assignmentId: string) => {
   return postgresqlDatabase
     .get(`/assignment/${assignmentId}`)
 
@@ -163,33 +163,33 @@ export const getExtendedSolutionsCheckedByGroupPostgresService = (groupId: strin
     .get(`/extended/solutions/checkedByGroup/${groupId}`)
 }
 
-export const getAssignmentsByStudentPostgresService = (userId: string | undefined) => {
+export const getAssignmentsByStudentPostgresService = (userId: string) => {
   return postgresqlDatabase.get("/assignments/byStudent/" + userId)
 }
 
-export const getAssignmentsDoneByGroupAndStudentPostgresService = (groupId:string | undefined, userId: string | undefined) =>{
+export const getAssignmentsDoneByGroupAndStudentPostgresService = (groupId:string, userId: string) =>{
   return postgresqlDatabase.get(`/assignments/doneByGroupAndStudent/${groupId}/${userId}`)
 }
 
-export const getAssignmentsExpiredUndoneByGroupAndStudentPostgresService = (groupId:string | undefined, userId: string | undefined) =>{
+export const getAssignmentsExpiredUndoneByGroupAndStudentPostgresService = (groupId:string, userId: string) =>{
   return postgresqlDatabase.get(`/assignments/expiredUndoneByGroupAndStudent/${groupId}/${userId}`)
 }
 
-export const getAssignmentsUndoneByGroupAndStudentPostgresService = (groupId:string | undefined, userId: string | undefined) =>{
+export const getAssignmentsUndoneByGroupAndStudentPostgresService = (groupId:string, userId: string) =>{
   return postgresqlDatabase.get(`/assignments/undoneByGroupAndStudent/${groupId}/${userId}`)
 }
 
-export const getUserGetStudentsByGroupPostgresService = (groupId: string | undefined) =>{
+export const getUserGetStudentsByGroupPostgresService = (groupId: string) =>{
   return postgresqlDatabase
     .get("/user/getStudentsByGroup/" + groupId)
 }
 
-export const getUserGetTeachersByGroupPostgresService = (groupId: string | undefined) =>{
+export const getUserGetTeachersByGroupPostgresService = (groupId: string) =>{
   return postgresqlDatabase
     .get("/user/getTeachersByGroup/" + groupId)
 }
 
-export const getGroupPostgresService = (groupId: string | undefined) => {
+export const getGroupPostgresService = (groupId: string) => {
   return postgresqlDatabase.get("/group/" + groupId)
 }
 
@@ -208,15 +208,15 @@ export const putAssignmentPostgresService = (assignment: AssignmentInterface) =>
     .put(`/assignment/${assignment.id}`, assignment)
 }
 
-export const putGroupUnarchivePostgresService = (groupId: string | undefined) => {
+export const putGroupUnarchivePostgresService = (groupId: string) => {
   return postgresqlDatabase.put("/group/unarchive/" + groupId)
 }
 
-export const putGroupArchivePostgresService = (groupId: string | undefined) => {
+export const putGroupArchivePostgresService = (groupId: string) => {
   return postgresqlDatabase.put("/group/archive/" + groupId)
 }
 
-export const putGroupColorPostgresService = (groupId: string | undefined, color: number) => {
+export const putGroupColorPostgresService = (groupId: string, color: number) => {
   return postgresqlDatabase.put("/group/color/" + groupId, color)
 }
 
@@ -230,7 +230,7 @@ export const putUserIndexPostgresService = (userId: string, index: number) => {
     .put(`/user/index/${userId}`, index)
 }
 
-export const putGroupNamePostgresService = (groupId:string|undefined, name: string) => {
+export const putGroupNamePostgresService = (groupId:string, name: string) => {
   return axios.create({
     baseURL: "http://localhost:8080/api",
     timeout: 8000,
@@ -245,7 +245,7 @@ export const putGroupNamePostgresService = (groupId:string|undefined, name: stri
     .put(`/group/name/${groupId}`, name)
 }
 
-export const putGroupDescriptionPostgresService = (groupId:string|undefined, description: string) => {
+export const putGroupDescriptionPostgresService = (groupId:string, description: string) => {
   return axios.create({
     baseURL: "http://localhost:8080/api",
     timeout: 8000,
@@ -269,7 +269,7 @@ export const deleteFilePostgresService = (fileId: string) => {
   return postgresqlDatabase.delete(`file/${fileId}`)
 }
 
-export const deleteGroupPostgresService = (groupId: string | undefined) => {
+export const deleteGroupPostgresService = (groupId: string) => {
   return postgresqlDatabase.delete("/group/" + groupId)
 }
 

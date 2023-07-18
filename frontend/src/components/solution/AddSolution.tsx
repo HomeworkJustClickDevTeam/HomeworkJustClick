@@ -38,7 +38,7 @@ function AddSolution({ assignment }: AssigmentPropsInterface) {
   const [isFile, setIsFile] = useState<boolean>()
 
   useEffect(() => {
-    getFilesByAssignmentPostgresService(idAssigment)
+    getFilesByAssignmentPostgresService(idAssigment as string)
       .then(() => setIsFile(true))
       .catch(() => setIsFile(false))
   }, [])

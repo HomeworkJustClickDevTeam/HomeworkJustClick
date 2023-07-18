@@ -1,7 +1,7 @@
 import React, {ChangeEvent, useState} from "react"
 import {postAuthRegisterPostgresService} from "../../services/postgresDatabase"
 import {useNavigate} from "react-router-dom"
-import KolkoLewe from './left_circle.svg';
+import left_circle from './left_circle.svg';
 import Smile from './Smile.svg';
 import {UserRegisterInterface} from "../../types/UserRegisterInterface";
 
@@ -37,7 +37,7 @@ const RegisterPage = () => {
 
   return (
       <div className='flex w-screen flex-col font-lato font-normal text-sm select-none'>
-        <img className="fixed left-[4%]  bottom-[6%] scale-50 xl:scale-100 -z-50" src = {KolkoLewe} alt="Kółko po lewej stronie"></img>
+        <img className="fixed left-[4%]  bottom-[6%] scale-50 xl:scale-100 -z-50" src = {left_circle} alt="Kółko po lewej stronie"></img>
         <div className='flex justify-center items-center text-center flex-col'>
           <h1 className='mt-16 mb-16 text-4xl xl:text-[64px] ml-[7%]'>Dołącz do nas!
             <img className="relative right-0  scale-50 translate-x-[25%] xl:transform-none -z-50 inline-block pl-10" src= {Smile} alt="Kółko smile"></img>

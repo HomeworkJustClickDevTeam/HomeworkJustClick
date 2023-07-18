@@ -61,7 +61,7 @@ function AddAssigmentPage() {
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
-    postAssignmentWithUserAndGroupPostgresService(userState.userId, idGroup, assignment)
+    postAssignmentWithUserAndGroupPostgresService(userState.userId, idGroup as string, assignment)
       .catch(error => console.log(error))
       .then(response =>{
         if(response !== (null || undefined)){

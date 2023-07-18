@@ -37,7 +37,7 @@ function AssigmentSpecPage() {
     userId = userState.userId
   }
   useEffect(() => {
-    getUncheckedSolutionByUserAssignmentGroupPostgresService(userState.userId, idAssigment, idGroup)
+    getUncheckedSolutionByUserAssignmentGroupPostgresService(userState.userId, idAssigment as string, idGroup as string)
       .then((response) => {
         if (response.data.id !== null) {
           setIsSolutionChecked(false)
@@ -46,7 +46,7 @@ function AssigmentSpecPage() {
       })
       .catch((error: AxiosError) => {
         if(error.response?.status === 404){
-          getCheckedSolutionByUserAssignmentGroupPostgresService(userState.userId, idAssigment, idGroup)
+          getCheckedSolutionByUserAssignmentGroupPostgresService(userState.userId, idAssigment as string, idGroup as string)
             .then((response) => {
               if (response.data.id !== null) {
                 setIsSolutionChecked(true)
@@ -58,7 +58,7 @@ function AssigmentSpecPage() {
         else{console.log(error)}
       })
       .finally(() => {
-        getAssignmentPostgresService(idAssigment)
+        getAssignmentPostgresService(idAssigment as string)
           .then((response) => {
             const responseData = response.data
             const parsedDate = parseISO(responseData.completionDatetime)

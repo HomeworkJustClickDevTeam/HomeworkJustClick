@@ -22,19 +22,19 @@ export default function GroupUserProfilePage(){
   const {userState} = useContext(userContext)
 
   useEffect(()=>{
-    getUserPostgresService(userProfileId)
+    getUserPostgresService(userProfileId as string)
       .then((response) => setUserProfile(response.data))
       .catch((error:AxiosError) => console.log(error))
 
-    getAssignmentsDoneByGroupAndStudentPostgresService(idGroup, userProfileId)
+    getAssignmentsDoneByGroupAndStudentPostgresService(idGroup as string, userProfileId as string)
       .then((r) => setDoneAssignments(r.data))
       .catch((e:AxiosError) =>(e.response?.status === 404) ? setDoneAssignments([]) : console.log(e))
 
-    getAssignmentsExpiredUndoneByGroupAndStudentPostgresService(idGroup, userProfileId)
+    getAssignmentsExpiredUndoneByGroupAndStudentPostgresService(idGroup  as string, userProfileId as string)
       .then((r) => setExpiredUndoneAssignments(r.data))
       .catch((e:AxiosError) =>(e.response?.status === 404) ? setExpiredUndoneAssignments([]) : console.log(e))
 
-    getAssignmentsUndoneByGroupAndStudentPostgresService(idGroup, userProfileId)
+    getAssignmentsUndoneByGroupAndStudentPostgresService(idGroup as string, userProfileId as string)
       .then((r) => setUndoneAssignments(r.data))
       .catch((e:AxiosError) =>(e.response?.status === 404) ? setUndoneAssignments([]) : console.log(e))
   }, [])

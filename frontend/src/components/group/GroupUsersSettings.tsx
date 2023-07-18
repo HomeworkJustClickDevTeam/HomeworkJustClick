@@ -16,14 +16,14 @@ export default function GroupUsersSettings(){
 
 
   useEffect(() => {
-    getUserGetTeachersByGroupPostgresService(idGroup)
+    getUserGetTeachersByGroupPostgresService(idGroup as string)
       .then((response) => {
         const teachers: UserInterface[] = response.data
         setTeachers(teachers)
       })
       .catch((e) => console.log(e))
 
-    getUserGetStudentsByGroupPostgresService(idGroup)
+    getUserGetStudentsByGroupPostgresService(idGroup as string)
       .then((response) => {
         const students: UserInterface[] = response.data
         setStudents(students)
