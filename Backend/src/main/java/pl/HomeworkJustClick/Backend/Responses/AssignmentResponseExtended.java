@@ -31,4 +31,6 @@ public class AssignmentResponseExtended {
     private boolean forbidden;
     @Schema(example = "10")
     private int max_points;
+    @Schema(example = "50")
+    private int auto_penalty;
 }

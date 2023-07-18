@@ -8,13 +8,16 @@ import pl.HomeworkJustClick.Backend.Entities.Assignment;
 import pl.HomeworkJustClick.Backend.Entities.Group;
 import pl.HomeworkJustClick.Backend.Entities.Solution;
 import pl.HomeworkJustClick.Backend.Entities.User;
+import pl.HomeworkJustClick.Backend.Enums.CalendarStatus;
 import pl.HomeworkJustClick.Backend.Repositories.AssignmentRepository;
 import pl.HomeworkJustClick.Backend.Repositories.GroupRepository;
 import pl.HomeworkJustClick.Backend.Repositories.SolutionRepository;
 import pl.HomeworkJustClick.Backend.Repositories.UserRepository;
 import pl.HomeworkJustClick.Backend.Responses.*;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -597,8 +600,21 @@ public class SolutionServiceImplement implements SolutionService{
                 .build();
     }
 
+    private SolutionResponseCalendar buildSolutionResponseCalendar(Solution solution, CalendarStatus calendarStatus) {
+        return SolutionResponseCalendar.builder()
+                .id(solution.getId())
+                .userId(solution.getUser().getId())
+                .groupId(solution.getGroup().getId())
+                .assignmentId(solution.getAssignment().getId())
+                .creationDateTime(solution.getCreationDatetime())
+                .lastModifiedDatetime(solution.getLastModifiedDatetime())
+                .comment(solution.getComment())
+                .status(calendarStatus)
+                .build();
+    }
+
     @Override
-    public boolean checkForEvaluationToSolution (int solution_id) {
+    public boolean checkForEvaluationToSolution(int solution_id) {
         return solutionRepository.checkForEvaluationToSolution(solution_id) != 0;
     }
 
@@ -633,15 +649,40 @@ public class SolutionServiceImplement implements SolutionService{
             Optional<Solution> solution = solutionRepository.getUncheckedSolutionByUserAssignmentGroup(assignment_id, user_id, group_id);
             if (solution.isPresent()){
                 return buildSolutionResponse(solution.get());
-            }
-            else{
+            } else {
                 return SolutionResponse.builder().build();
             }
-        }
-        else{
+        } else {
             return SolutionResponse.builder().forbidden(true).build();
         }
 
+    }
+
+    @Override
+    public List<SolutionResponseCalendar> getSolutionsByTeacherCalender(int teacher_id) {
+        List<Solution> checkedSolutionsList = solutionRepository.getCheckedSolutionsByTeacher(teacher_id);
+        List<Solution> uncheckedSolutionsList = solutionRepository.getUncheckedSolutionsByTeacher(teacher_id);
+        List<Solution> expiredUncheckedSolutionsList = new ArrayList<>();
+        List<Solution> nonExpiredUncheckedSolutionsList = new ArrayList<>();
+        for (Solution solution : uncheckedSolutionsList) {
+            if (solution.getCreationDatetime().plusDays(14).isBefore(OffsetDateTime.now())) {
+                expiredUncheckedSolutionsList.add(solution);
+            } else {
+                nonExpiredUncheckedSolutionsList.add(solution);
+            }
+        }
+        List<SolutionResponseCalendar> response = new ArrayList<>();
+        for (Solution solution : checkedSolutionsList) {
+            response.add(buildSolutionResponseCalendar(solution, CalendarStatus.DONE));
+        }
+        for (Solution solution : expiredUncheckedSolutionsList) {
+            response.add(buildSolutionResponseCalendar(solution, CalendarStatus.LATE));
+        }
+        for (Solution solution : nonExpiredUncheckedSolutionsList) {
+            response.add(buildSolutionResponseCalendar(solution, CalendarStatus.TODO));
+        }
+        response.sort(Comparator.comparing(SolutionResponseCalendar::getCreationDateTime));
+        return response;
     }
 
 }

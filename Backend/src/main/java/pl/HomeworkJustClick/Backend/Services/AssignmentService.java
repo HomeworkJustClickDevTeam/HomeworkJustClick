@@ -2,6 +2,7 @@ package pl.HomeworkJustClick.Backend.Services;
 
 import pl.HomeworkJustClick.Backend.Entities.Assignment;
 import pl.HomeworkJustClick.Backend.Responses.AssignmentResponse;
+import pl.HomeworkJustClick.Backend.Responses.AssignmentResponseCalendar;
 import pl.HomeworkJustClick.Backend.Responses.AssignmentResponseExtended;
 
 import java.time.OffsetDateTime;
@@ -37,6 +38,8 @@ public interface AssignmentService {
     public Boolean changeGroup(int id, int groupId);
 
     public Boolean changeMaxPoints(int id, int points);
+
+    public Boolean changeAutoPenalty(int id, int auto_penalty);
 
     public List<AssignmentResponse> getAssignmentsByGroupId(int id);
 
@@ -90,4 +93,5 @@ public interface AssignmentService {
 
     public boolean checkForFileToAssignment(int assignment_id);
 
+    public List<AssignmentResponseCalendar> getAssignmentsByStudentCalendar(int student_id);
 }

@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pl.HomeworkJustClick.Backend.Enums.CalendarStatus;
 
 import java.time.OffsetDateTime;
 
@@ -13,26 +14,20 @@ import java.time.OffsetDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AssignmentResponse {
+public class SolutionResponseCalendar {
     @Schema(example = "0")
     private int id;
-    @Schema(example = "Example title")
-    private String title;
-    @Schema(example = "true")
-    private Boolean visible;
     @Schema(example = "0")
     private Integer userId;
     @Schema(example = "0")
+    private Integer assignmentId;
+    @Schema(example = "0")
     private Integer groupId;
-    @Schema(example = "Example desc")
-    private String taskDescription;
-    private OffsetDateTime creationDatetime;
+    private OffsetDateTime creationDateTime;
     private OffsetDateTime lastModifiedDatetime;
-    private OffsetDateTime completionDatetime;
+    @Schema(example = "Example comment")
+    private String comment;
     @JsonIgnore
     private boolean forbidden;
-    @Schema(example = "10")
-    private int max_points;
-    @Schema(example = "50")
-    private int auto_penalty;
+    private CalendarStatus status;
 }
