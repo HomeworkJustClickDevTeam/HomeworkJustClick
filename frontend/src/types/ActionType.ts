@@ -1,4 +1,3 @@
-
 import {UserStateInterface} from "./UserStateInterface";
 
 export type ActionType =

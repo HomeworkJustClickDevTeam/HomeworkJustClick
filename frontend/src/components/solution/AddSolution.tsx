@@ -1,25 +1,23 @@
-import { ChangeEvent, useContext, useEffect, useState } from "react"
+import {ChangeEvent, useContext, useEffect, useState} from "react"
 import {postFileMongoService} from "../../services/mongoDatabase"
-import { useNavigate, useParams } from "react-router-dom"
-import postgresqlDatabase from "../../services/postgresDatabase"
-import AssigmentListElement from "../assigments/AssigmentListElement"
+import {useNavigate, useParams} from "react-router-dom"
+import {
+  getFilesByAssignmentPostgresService,
+  postFileWithSolutionPostgresService,
+  postSolutionWithUserAndAssignmentPostgresService
+} from "../../services/postgresDatabase"
 import userContext from "../../contexts/UserContext"
-import { AssigmentFile } from "../assigments/AssigmentFile"
+import {AssigmentFile} from "../assigments/AssigmentFile"
 import {format} from "date-fns";
 import {AssigmentPropsInterface} from "../../types/AssigmentPropsInterface";
 import {SolutionInterface} from "../../types/SolutionInterface";
+import {SolutionToSendInterface} from "../../types/SolutionToSendInterface";
 
 
 interface FileRespondMongoInterface {
   id: string
   name: string
   format: string
-}
-
-interface SolutionToSendInterface {
-  creationDatetime: string
-  lastModifiedDatetime: string
-  comment: string
 }
 function AddSolution({ assignment }: AssigmentPropsInterface) {
   const { idAssigment, idGroup = "" } = useParams()
@@ -40,20 +38,18 @@ function AddSolution({ assignment }: AssigmentPropsInterface) {
   const [isFile, setIsFile] = useState<boolean>()
 
   useEffect(() => {
-    postgresqlDatabase
-      .get(`/files/byAssignment/${idAssigment}`)
+    getFilesByAssignmentPostgresService(idAssigment)
       .then(() => setIsFile(true))
       .catch(() => setIsFile(false))
   }, [])
 
   useEffect(() => {
     if (solutionFromServer?.id && response.id) {
-      postgresqlDatabase
-        .post(`/file/withSolution/${solutionFromServer.id}`, {
-          mongo_id: response.id,
-          format: response.format,
-          name: response.name,
-        })
+      postFileWithSolutionPostgresService(
+        response.id,
+        response.format,
+        response.name,
+        solutionFromServer.id)
         .then((r) => {
           navigate(-1)
           console.log(r)
@@ -78,11 +74,7 @@ function AddSolution({ assignment }: AssigmentPropsInterface) {
         setResponse(r.data)
       })
       .catch()
-    postgresqlDatabase
-      .post(
-        `/solution/withUserAndAssignment/${userState.userId}/${idAssigment}`,
-        solution
-      )
+    postSolutionWithUserAndAssignmentPostgresService(userState.userId, idAssigment as string, solution)
       .then((r) => {
         console.log(r)
         setSolutionFromServer(r.data)

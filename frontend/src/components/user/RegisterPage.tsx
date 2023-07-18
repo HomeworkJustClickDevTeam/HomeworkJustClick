@@ -1,17 +1,11 @@
-import React, { ChangeEvent, useState } from "react"
-import postgresqlDatabase from "../../services/postgresDatabase"
-import { useNavigate } from "react-router-dom"
+import React, {ChangeEvent, useState} from "react"
+import {postAuthRegisterPostgresService} from "../../services/postgresDatabase"
+import {useNavigate} from "react-router-dom"
 import KolkoLewe from './left_circle.svg';
 import Smile from './Smile.svg';
+import {UserRegisterInterface} from "../../types/UserRegisterInterface";
 
 
-interface UserRegisterInterface{
-  firstname: string
-  lastname: string
-  email: string
-  password: string
-  secondPassword: string
-}
 const RegisterPage = () => {
   const [user, setUser] = useState<UserRegisterInterface>({
     firstname: "",
@@ -26,7 +20,7 @@ const RegisterPage = () => {
     event.preventDefault()
     if (!!user.password && user.password === user.secondPassword) {
       try {
-        await postgresqlDatabase.post("/auth/register", user)
+        await postAuthRegisterPostgresService(user)
         navigate("/")
       } catch (e) {
         console.log("Error not send")

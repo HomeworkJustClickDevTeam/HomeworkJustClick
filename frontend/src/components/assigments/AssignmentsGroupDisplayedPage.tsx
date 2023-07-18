@@ -1,11 +1,10 @@
-import { Link, useParams } from "react-router-dom"
-import { useContext, useEffect, useState } from "react"
-import postgresqlDatabase, {getAssignmentsByGroupPostgresService} from "../../services/postgresDatabase"
+import {Link, useParams} from "react-router-dom"
+import {useContext, useEffect, useState} from "react"
+import {getAssignmentsByGroupPostgresService} from "../../services/postgresDatabase"
 import AssigmentListElement from "./AssigmentListElement"
 import Loading from "../animations/Loading"
 import GroupRoleContext from "../../contexts/GroupRoleContext"
 import {Simulate} from "react-dom/test-utils";
-import error = Simulate.error;
 import {AxiosError} from "axios";
 import {AssignmentInterface} from "../../types/AssignmentInterface";
 

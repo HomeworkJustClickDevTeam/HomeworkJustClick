@@ -1,16 +1,14 @@
-import React, { ChangeEvent, useContext, useState } from "react"
-import postgresqlDatabase from "../../services/postgresDatabase"
-import { Link, useNavigate } from "react-router-dom"
+import React, {ChangeEvent, useContext, useState} from "react"
+import {postAuthAuthenticatePostgresService} from "../../services/postgresDatabase"
+import {Link, useNavigate} from "react-router-dom"
 import DispatchContext from "../../contexts/DispatchContext"
 import KolkoLewe from './login_left_circle.svg';
 import KolkoPrawe from './login_right_circle.svg';
 import {UserStateInterface} from "../../types/UserStateInterface";
 import {ActionType} from "../../types/ActionType";
+import {LoginUserInterface} from "../../types/LoginUserInterface";
 
-interface LoginUserInterface {
-  email: string
-  password: string
-}
+
 const LoginPage = () => {
   const [user, setUser] = useState<LoginUserInterface>({
     email: "",
@@ -22,7 +20,7 @@ const LoginPage = () => {
     event.preventDefault()
 
     try {
-      const response = await postgresqlDatabase.post("/auth/authenticate", user)
+      const response = await postAuthAuthenticatePostgresService(user)
       if (response.data) {
         const userState: UserStateInterface = {
           token: response.data.token,

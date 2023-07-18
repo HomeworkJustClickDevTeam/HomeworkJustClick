@@ -1,8 +1,8 @@
 import userContext from "../../contexts/UserContext"
 
-import React, { useContext, useEffect, useState } from "react"
-import postgresqlDatabase from "../../services/postgresDatabase"
-import { AxiosError } from "axios"
+import React, {useContext, useEffect, useState} from "react"
+import {getUserPostgresService, putUserIndexPostgresService} from "../../services/postgresDatabase"
+import {AxiosError} from "axios"
 
 export default function UserGeneralSettingsPage() {
   const { loggedIn, userState } = useContext(userContext)
@@ -10,16 +10,14 @@ export default function UserGeneralSettingsPage() {
 
   const handleIndexSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    await postgresqlDatabase
-      .put(`/user/index/${userState.userId}`, index)
+    await putUserIndexPostgresService(userState.userId, index as number)
       .catch((error: AxiosError) => {
         console.log(error)
       })
   }
 
   useEffect(() => {
-    postgresqlDatabase
-      .get(`/user/${userState.userId}`)
+    getUserPostgresService(userState.userId)
       .then((response) => setIndex(response.data.index))
       .catch(() => setIndex(undefined))
   }, [userState.userId])

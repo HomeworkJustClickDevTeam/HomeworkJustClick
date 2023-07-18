@@ -1,13 +1,15 @@
-import { useNavigate, useParams } from "react-router-dom"
-import postgresqlDatabase, {
+import {useNavigate, useParams} from "react-router-dom"
+import {
   deleteGroupPostgresService,
-  getGroupPostgresService, putGroupArchivePostgresService,
+  getGroupPostgresService,
+  putGroupArchivePostgresService,
+  putGroupDescriptionPostgresService,
+  putGroupNamePostgresService,
   putGroupUnarchivePostgresService
 } from "../../services/postgresDatabase"
-import { AxiosError } from "axios"
-import React, { useEffect, useState } from "react"
+import {AxiosError} from "axios"
+import React, {useEffect, useState} from "react"
 import Loading from "../animations/Loading"
-import {id} from "date-fns/locale";
 
 export default function GroupGeneralSettings() {
   const { idGroup } = useParams<{ idGroup: string }>()
@@ -50,16 +52,14 @@ export default function GroupGeneralSettings() {
 
   const setGroupName = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    await postgresqlDatabase
-        .put(`/group/name/${idGroup}`, group.name)
+    await putGroupNamePostgresService(idGroup, group.name)
         .catch((error: AxiosError) => console.log(error))
   }
   const setGroupDescription = async (
       event: React.FormEvent<HTMLFormElement>
   ) => {
     event.preventDefault()
-    await postgresqlDatabase
-        .put(`/group/description/${idGroup}`, group.description)
+    await putGroupDescriptionPostgresService(idGroup, group.description)
         .catch((error: AxiosError) => console.log(error))
   }
   const handelCopyUrl = async () => {

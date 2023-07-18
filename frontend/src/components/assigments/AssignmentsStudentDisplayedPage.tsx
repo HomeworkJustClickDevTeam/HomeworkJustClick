@@ -1,5 +1,5 @@
-import { useContext, useEffect, useState } from "react"
-import postgresqlDatabase, {getAssignmentsByStudentPostgresService} from "../../services/postgresDatabase"
+import {useContext, useEffect, useState} from "react"
+import {getAssignmentsByStudentPostgresService} from "../../services/postgresDatabase"
 import UserContext from "../../contexts/UserContext"
 import AssigmentListElement from "./AssigmentListElement"
 import {AssignmentInterface} from "../../types/AssignmentInterface";

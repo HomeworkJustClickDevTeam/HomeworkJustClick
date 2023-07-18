@@ -1,4 +1,4 @@
-import { SolutionFile } from "./SolutionFile"
+import {SolutionFile} from "./SolutionFile"
 import {AssignmentInterface} from "../../types/AssignmentInterface";
 import {SolutionInterface} from "../../types/SolutionInterface";
 

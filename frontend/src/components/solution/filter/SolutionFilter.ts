@@ -1,31 +1,32 @@
-import postgresqlDatabase from "../../../services/postgresDatabase"
+import {
+  getExtendedSolutionsCheckedByGroupPostgresService,
+  getExtendedSolutionsLateByGroupPostgresService,
+  getExtendedSolutionsUncheckedByGroupPostgresService
+} from "../../../services/postgresDatabase"
 import {SolutionExtendedInterface} from "../../../types/SolutionExtendedInterface";
 
 interface SolutionTypesPropInterface {
-  id: string
+  idGroup: string
   setSolutionsExtended: (solutionExtended: SolutionExtendedInterface[]) => void
 }
 export const solutionFilter = ({
-  id,
+  idGroup,
   setSolutionsExtended,
 }: SolutionTypesPropInterface) => {
   const lateSolutions = (): void => {
-    postgresqlDatabase
-      .get(`/extended/solutions/lateByGroup/${id}`)
+    getExtendedSolutionsLateByGroupPostgresService(idGroup)
       .then((r) => setSolutionsExtended(r.data))
       .catch(() => setSolutionsExtended([]))
   }
 
   const uncheckedSolutions = (): void => {
-    postgresqlDatabase
-      .get(`extended/solutions/uncheckedByGroup/${id}`)
+    getExtendedSolutionsUncheckedByGroupPostgresService(idGroup)
       .then((r) => setSolutionsExtended(r.data))
       .catch(() => setSolutionsExtended([]))
   }
 
   const checkSolutions = (): void => {
-    postgresqlDatabase
-      .get(`/extended/solutions/checkedByGroup/${id}`)
+    getExtendedSolutionsCheckedByGroupPostgresService(idGroup)
       .then((r) => setSolutionsExtended(r.data))
       .catch(() => setSolutionsExtended([]))
   }

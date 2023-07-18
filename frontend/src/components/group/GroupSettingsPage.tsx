@@ -1,4 +1,3 @@
-import {useParams} from "react-router-dom";
 import GroupAppearanceSettings from "./GroupAppearanceSettings";
 import GroupUsersSettings from "./GroupUsersSettings";
 import GroupGeneralSettings from "./GroupGeneralSettings";

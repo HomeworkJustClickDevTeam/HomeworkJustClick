@@ -1,7 +1,7 @@
 import {useContext, useState} from "react"
-import postgresqlDatabase, {postEvaluationWithUserAndSolution} from "../../services/postgresDatabase"
+import {postEvaluationWithUserAndSolution} from "../../services/postgresDatabase"
 import userContext from "../../contexts/UserContext"
-import { useNavigate } from "react-router-dom"
+import {useNavigate} from "react-router-dom"
 
 interface RatingPropsInterface {
   maxPoints: number

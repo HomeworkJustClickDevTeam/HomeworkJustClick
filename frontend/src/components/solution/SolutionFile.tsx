@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react"
-import postgresqlDatabase from "../../services/postgresDatabase"
+import {useEffect, useState} from "react"
+import {getFilesBySolutionPostgresService} from "../../services/postgresDatabase"
 import {getFileMongoService} from "../../services/mongoDatabase"
 import {FileFromPostInterface} from "../../types/FileFromPostInterface";
 
@@ -11,9 +11,7 @@ export function SolutionFile(props: { solutionId: number }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await postgresqlDatabase.get(
-          `/files/bySolution/${props.solutionId}`
-        )
+        const response = await getFilesBySolutionPostgresService(props.solutionId)
         setDatabaseFile(response.data)
       } catch (e) {
         console.log("Error retrieving database file:", e)

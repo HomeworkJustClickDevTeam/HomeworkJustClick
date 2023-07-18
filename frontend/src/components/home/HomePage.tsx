@@ -1,11 +1,10 @@
-import { useContext, useEffect, useState } from "react"
+import {useContext, useEffect, useState} from "react"
 import GroupListElement from "../group/GroupListElement"
-import { Link } from "react-router-dom"
-import { groupFilter } from "../group/filter/GroupFilter"
+import {Link} from "react-router-dom"
+import {groupFilter} from "../group/filter/GroupFilter"
 import Loading from "../animations/Loading"
 import userContext from "../../contexts/UserContext"
 import DispatchContext from "../../contexts/DispatchContext"
-import {render} from "@testing-library/react";
 import {FaCaretDown} from 'react-icons/fa';
 import {GroupInterface} from "../../types/GroupInterface";
 import {ActionType} from "../../types/ActionType";
@@ -27,6 +26,7 @@ function HomePage() {
   const { teacherUserGroups, studentsUserGroups, allUserGroups } = groupFilter({
     setGroups,
     setIsLoading,
+    userId: userState.userId
   })
 
   useEffect(() => {

@@ -1,8 +1,13 @@
 import React, {useContext, useState} from "react";
-import postgresqlDatabase from "../../services/postgresDatabase";
+import {
+  deleteGroupDeleteStudentPostgresService,
+  deleteGroupDeleteTeacherPostgresService,
+  postGroupAddTeacherPostgresService
+} from "../../services/postgresDatabase";
 import {AxiosError} from "axios";
 import GroupRoleContext from "../../contexts/GroupRoleContext";
 import {UserInterface} from "../../types/UserInterface";
+
 interface GroupUsersSettingsListElementProps{
   makeTeacher(arg:UserInterface): void,
   deleteUser(arg: UserInterface): void,
@@ -14,23 +19,19 @@ export default function GroupUsersSettingsListElement(props:GroupUsersSettingsLi
   const {role} = useContext(GroupRoleContext)
   const handleUserDeletion = async () =>{
     props.isStudent ?
-      (await postgresqlDatabase
-        .delete(`/group/deleteStudent/${props.userToShow.id}/${props.groupId}`)
+      (await deleteGroupDeleteStudentPostgresService(props.userToShow.id.toString(), props.groupId)
         .catch((error:AxiosError) => console.log(error))
         .then(() => props.deleteUser(props.userToShow)))
-      : (await postgresqlDatabase
-          .delete(`/group/deleteTeacher/${props.userToShow.id}/${props.groupId}`)
+      : (await deleteGroupDeleteTeacherPostgresService(props.userToShow.id.toString(), props.groupId)
           .catch((error:AxiosError) => console.log(error))
           .then(() => props.deleteUser(props.userToShow)))
   }
 
   const handlePermissionsChange = async () =>{
-    await postgresqlDatabase
-      .delete(`/group/deleteStudent/${props.userToShow.id}/${props.groupId}`)
+    await deleteGroupDeleteStudentPostgresService(props.userToShow.id.toString(), props.groupId)
       .catch((error:AxiosError) => console.log(error))
       .then(()=>{
-        postgresqlDatabase
-          .post(`/group/addTeacher/${props.userToShow.id}/${props.groupId}`)
+        postGroupAddTeacherPostgresService(props.userToShow.id.toString(), props.groupId)
           .catch((error:AxiosError) => console.log(error))
           .then(()=> props.makeTeacher(props.userToShow))
       })

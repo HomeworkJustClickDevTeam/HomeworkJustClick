@@ -1,9 +1,9 @@
-import { useNavigate, useParams } from "react-router-dom"
-import React, { ChangeEvent, useEffect, useState } from "react"
-import postgresqlDatabase, {deleteAssignmentPostgresService, putAssignmentPostgresService} from "../../services/postgresDatabase"
+import {useNavigate, useParams} from "react-router-dom"
+import React, {ChangeEvent, useEffect, useState} from "react"
+import {deleteAssignmentPostgresService, putAssignmentPostgresService} from "../../services/postgresDatabase"
 import ReactDatePicker from "react-datepicker"
 
-import { AssigmentModifyFile } from "./AssigmentModifyFile"
+import {AssigmentModifyFile} from "./AssigmentModifyFile"
 import {AssigmentPropsInterface} from "../../types/AssigmentPropsInterface";
 
 interface AssigmentModifyPropsInterface extends AssigmentPropsInterface {

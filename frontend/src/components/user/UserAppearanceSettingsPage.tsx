@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useState } from "react"
-import postgresqlDatabase from "../../services/postgresDatabase"
+import React, {useContext, useEffect, useState} from "react"
+import {getUserPostgresService, putUserColorPostgresService} from "../../services/postgresDatabase"
 import userContext from "../../contexts/UserContext"
-import { AxiosError } from "axios"
+import {AxiosError} from "axios"
 
 export default function UserAppearanceSettingsPage() {
   const [color, setColor] = useState<number | undefined>(undefined)
@@ -12,8 +12,7 @@ export default function UserAppearanceSettingsPage() {
   ) => {
     setColor(+event.target.value)
     try {
-      await postgresqlDatabase
-        .put(`/user/color/${userState.userId}`, +event.target.value)
+      await putUserColorPostgresService(userState.userId, +event.target.value)
         .catch((error: AxiosError) => {
           console.log("AXIOS ERROR: ", error)
         })
@@ -22,8 +21,7 @@ export default function UserAppearanceSettingsPage() {
     }
   }
   useEffect(() => {
-    postgresqlDatabase
-      .get(`/user/${userState.userId}`)
+    getUserPostgresService(userState.userId)
       .then((response) => setColor(response.data.color))
       .catch(() => setColor(undefined))
   }, [userState.userId])

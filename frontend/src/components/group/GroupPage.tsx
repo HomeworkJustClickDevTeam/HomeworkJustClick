@@ -1,7 +1,11 @@
-import { Outlet, useParams } from "react-router-dom"
-import React, {useContext, useEffect, useRef, useState} from "react"
+import {Outlet, useParams} from "react-router-dom"
+import React, {useContext, useEffect, useState} from "react"
 import userContext from "../../contexts/UserContext"
-import postgresqlDatabase from "../../services/postgresDatabase"
+import {
+  getGroupPostgresService,
+  getGroupUserCheckWithRolePostgresService,
+  postGroupAddStudentPostgresService
+} from "../../services/postgresDatabase"
 
 import DispatchContext from "../../contexts/DispatchContext"
 import GroupHeader from "./GroupHeader"
@@ -35,22 +39,20 @@ function GroupPage() {
   }
 
   function checkRole() {
-    postgresqlDatabase
-      .get(`/group/userCheckWithRole/${userState.userId}/${idGroup}`)
+    getGroupUserCheckWithRolePostgresService(userState.userId, idGroup)
       .then((r) => setRole(r.data))
       .catch(() => setRole("User not in group"))
   }
 
 
   function getNameAndDesc() {
-    postgresqlDatabase
-        .get(`/group/${idGroup}`)
+    getGroupPostgresService(idGroup)
         .then((r) => setGroup(r.data))
   }
 
 
   async function addToGroup() {
-    await postgresqlDatabase.post(`/group/addStudent/${userState.userId}/${idGroup}`)
+    await postGroupAddStudentPostgresService(userState.userId, idGroup)
     checkRole()
   }
 

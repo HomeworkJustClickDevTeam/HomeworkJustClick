@@ -1,10 +1,8 @@
-import {Link, Outlet, useLocation} from "react-router-dom"
-import { useEffect, useState } from "react"
-import AssigmentListElement from "../assigments/AssigmentListElement"
-import postgresqlDatabase from "../../services/postgresDatabase"
-import { Rating } from "../evaluation/Rating"
-import { SolutionFile } from "./SolutionFile"
-import {format} from "date-fns";
+import {Link, useLocation} from "react-router-dom"
+import {useEffect, useState} from "react"
+import {getEvaluationBySolutionPostgresService} from "../../services/postgresDatabase"
+import {Rating} from "../evaluation/Rating"
+import {SolutionFile} from "./SolutionFile"
 import {SolutionExtendedInterface} from "../../types/SolutionExtendedInterface";
 
 function SolutionPage() {
@@ -14,8 +12,7 @@ function SolutionPage() {
   const [showRating, setShowRating] = useState<boolean>(false)
   const [isCheck, setIsCheck] = useState<boolean>(false)
   useEffect(() => {
-    postgresqlDatabase
-      .get(`/evaluation/bySolution/${solutionExtended.id}`)
+    getEvaluationBySolutionPostgresService(solutionExtended.id)
       .then((r) => {
         setPoints(r.data.result)
         setIsCheck(true)

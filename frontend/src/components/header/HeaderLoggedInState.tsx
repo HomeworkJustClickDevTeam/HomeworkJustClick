@@ -1,7 +1,7 @@
-import { useContext } from "react"
+import {useContext} from "react"
 import userContext from "../../contexts/UserContext"
-import { FaChevronLeft } from 'react-icons/fa';
-import { Link, useNavigate } from "react-router-dom"
+import {FaChevronLeft} from 'react-icons/fa';
+import {Link, useNavigate} from "react-router-dom"
 import LogOut from "../user/LogOut"
 
 function HeaderLoggedInState() {

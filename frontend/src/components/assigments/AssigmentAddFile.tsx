@@ -1,6 +1,6 @@
-import { ChangeEvent, useEffect, useState } from "react"
+import {ChangeEvent, useEffect, useState} from "react"
 import {postFileMongoService} from "../../services/mongoDatabase"
-import postgresqlDatabase, {postFileWithAssignmentPostgresService} from "../../services/postgresDatabase"
+import {postFileWithAssignmentPostgresService} from "../../services/postgresDatabase"
 import {AssignmentAddFilePropsInterface} from "../../types/AssignmentAddFilePropsInterface";
 
 export function AssigmentAddFile(props: AssignmentAddFilePropsInterface) {

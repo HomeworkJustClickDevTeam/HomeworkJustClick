@@ -1,10 +1,11 @@
-import postgresqlDatabase, {
+import {
   getAssignmentsDoneByGroupAndStudentPostgresService,
   getAssignmentsExpiredUndoneByGroupAndStudentPostgresService,
   getAssignmentsUndoneByGroupAndStudentPostgresService
 } from "../../../services/postgresDatabase"
 import {AxiosError} from "axios";
 import {AssignmentInterface} from "../../../types/AssignmentInterface";
+
 interface AssignmentFilterStudentProps {
   setAssignments: (assignments: AssignmentInterface[]) => void
   userId: string

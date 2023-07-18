@@ -1,10 +1,8 @@
-
-import { useEffect, useState } from "react"
-import { EvaluationInterface } from "../../types/EvaluationInterface"
-import postgresqlDatabase from "../../services/postgresDatabase"
-import { AxiosError } from "axios"
-import Loading from "../animations/Loading"
-import { SolutionFile } from "./SolutionFile"
+import {useEffect, useState} from "react"
+import {EvaluationInterface} from "../../types/EvaluationInterface"
+import {getEvaluationBySolutionPostgresService} from "../../services/postgresDatabase"
+import {AxiosError} from "axios"
+import {SolutionFile} from "./SolutionFile"
 import {AssignmentInterface} from "../../types/AssignmentInterface";
 import {SolutionInterface} from "../../types/SolutionInterface";
 
@@ -17,8 +15,7 @@ export default function CheckedSolution(props: {
   )
 
   useEffect(() => {
-    postgresqlDatabase
-      .get(`/evaluation/bySolution/${props.solution?.id}`)
+    getEvaluationBySolutionPostgresService(props.solution?.id)
       .then((response) => setEvaluation(response.data))
       .catch((error: AxiosError) => console.log(error))
   }, [])

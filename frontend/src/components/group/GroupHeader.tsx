@@ -1,8 +1,9 @@
-import { Link, useLocation } from "react-router-dom"
-import { useContext } from "react"
+import {Link, useLocation} from "react-router-dom"
+import {useContext} from "react"
 import GroupContext from "../../contexts/GroupRoleContext"
 import {colorsArray} from "../../assets/colors";
 import {GroupListElementPropsInterface} from "../../types/GroupListElementPropsInterface";
+
 //import {theme.colors.colorsArray: string[]} = require("../../../tailwind.config")
 
 function GroupHeader({ group }: GroupListElementPropsInterface) {

@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom"
-import { format } from "date-fns"
+import {Link} from "react-router-dom"
+import {format} from "date-fns"
 import {AssigmentPropsInterface} from "../../types/AssigmentPropsInterface";
 
 interface AssigmentItemPropsInterface extends AssigmentPropsInterface {

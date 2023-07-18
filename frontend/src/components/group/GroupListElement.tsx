@@ -1,4 +1,3 @@
-
 import {colorsArray} from "../../assets/colors";
 import {GroupListElementPropsInterface} from "../../types/GroupListElementPropsInterface";
 

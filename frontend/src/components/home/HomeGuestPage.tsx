@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom"
+import {Link} from "react-router-dom"
 import KolkoPoLewejStronie from './left_circle.svg';
 import KolkoPoPrawejStronie from './right_circle.svg';
 

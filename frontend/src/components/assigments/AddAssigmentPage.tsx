@@ -1,13 +1,11 @@
-import { useNavigate, useParams } from "react-router-dom"
+import {useNavigate, useParams} from "react-router-dom"
 import React, {ChangeEvent, useContext, useEffect, useState} from "react"
-import postgresqlDatabase, {postAssignmentWithUserAndGroupPostgresService} from "../../services/postgresDatabase"
+import {postAssignmentWithUserAndGroupPostgresService} from "../../services/postgresDatabase"
 import ReactDatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
-import { AssigmentAddFile } from "./AssigmentAddFile"
+import {AssigmentAddFile} from "./AssigmentAddFile"
 import {AssignmentToSendInterface} from "../../types/AssignmentToSendInterface";
-import UserContext from "../../contexts/UserContext";
 import userContext from "../../contexts/UserContext";
-
 
 
 function AddAssigmentPage() {

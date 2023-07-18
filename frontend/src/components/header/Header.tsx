@@ -1,4 +1,4 @@
-import { useContext } from "react"
+import {useContext} from "react"
 import UserContext from "../../contexts/UserContext"
 import HeaderLogoutState from "./HeaderLogoutState"
 import HeaderLoggedInState from "./HeaderLoggedInState"

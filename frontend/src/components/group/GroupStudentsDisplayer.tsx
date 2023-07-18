@@ -1,13 +1,12 @@
-import { useEffect, useState } from "react"
-import postgresqlDatabase from "../../services/postgresDatabase"
+import {useEffect, useState} from "react"
+import {getUserGetStudentsByGroupPostgresService} from "../../services/postgresDatabase"
 import GroupUserListElement from "./GroupUserListElement"
 import {UserInterface} from "../../types/UserInterface";
 
-function GroupStudentsDisplayer({id}: {id: string}) {
+function GroupStudentsDisplayer({groupId}: {groupId: string}) {
   const [students, setStudents] = useState<UserInterface[]>()
   useEffect(() => {
-    postgresqlDatabase
-      .get("/user/getStudentsByGroup/" + id)
+    getUserGetStudentsByGroupPostgresService(groupId)
       .then((response) => {
         const student: UserInterface[] = response.data
         setStudents(student)

@@ -1,11 +1,11 @@
 import {useLocation, useParams} from "react-router-dom"
-import { useContext, useEffect, useState } from "react"
-import postgresqlDatabase, {
+import {useContext, useEffect, useState} from "react"
+import {
   getAssignmentPostgresService,
   getCheckedSolutionByUserAssignmentGroupPostgresService,
   getUncheckedSolutionByUserAssignmentGroupPostgresService
 } from "../../services/postgresDatabase"
-import { parseISO } from "date-fns"
+import {parseISO} from "date-fns"
 
 import GroupRoleContext from "../../contexts/GroupRoleContext"
 import AssigmentModify from "./AssigmentModify"
@@ -13,7 +13,7 @@ import AssigmentModify from "./AssigmentModify"
 import AddSolution from "../solution/AddSolution"
 import Loading from "../animations/Loading"
 import userContext from "../../contexts/UserContext"
-import { AxiosError } from "axios"
+import {AxiosError} from "axios"
 
 import CheckedSolution from "../solution/CheckedSolution"
 import UncheckedSolution from "../solution/UncheckedSolution"

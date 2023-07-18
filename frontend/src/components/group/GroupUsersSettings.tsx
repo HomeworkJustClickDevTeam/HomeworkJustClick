@@ -1,10 +1,11 @@
 import GroupUsersSettingsListElement from "./GroupUsersSettingsListElement";
-import Loading from "../animations/Loading";
 import React, {useContext, useEffect, useState} from "react";
 import userContext from "../../contexts/UserContext";
-import postgresqlDatabase from "../../services/postgresDatabase";
+import {
+  getUserGetStudentsByGroupPostgresService,
+  getUserGetTeachersByGroupPostgresService
+} from "../../services/postgresDatabase";
 import {useParams} from "react-router-dom";
-import {tr} from "date-fns/locale";
 import {UserInterface} from "../../types/UserInterface";
 
 export default function GroupUsersSettings(){
@@ -15,16 +16,14 @@ export default function GroupUsersSettings(){
 
 
   useEffect(() => {
-    postgresqlDatabase
-      .get(`/user/getTeachersByGroup/${idGroup}`)
+    getUserGetTeachersByGroupPostgresService(idGroup)
       .then((response) => {
         const teachers: UserInterface[] = response.data
         setTeachers(teachers)
       })
       .catch((e) => console.log(e))
 
-    postgresqlDatabase
-      .get(`/user/getStudentsByGroup/${idGroup}`)
+    getUserGetStudentsByGroupPostgresService(idGroup)
       .then((response) => {
         const students: UserInterface[] = response.data
         setStudents(students)

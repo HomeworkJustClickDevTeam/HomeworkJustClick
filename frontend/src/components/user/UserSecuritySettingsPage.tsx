@@ -1,12 +1,9 @@
-import { useState } from "react";
-import postgresqlDatabase from "../../services/postgresDatabase";
-import { AxiosError } from "axios";
+import {useState} from "react";
+import {postChangePasswordPostgresService} from "../../services/postgresDatabase";
+import {AxiosError} from "axios";
+import {CredentialsInterface} from "../../types/CredentialsInterface";
 
-interface CredentialsInterface {
-  email: string | undefined
-  password: string | undefined
-  newPassword: string | undefined
-}
+
 export default function UserSecuritySettingsPage(): JSX.Element{
     const [newCredentials, setNewCredentials] = useState<CredentialsInterface>({
         "email": undefined,
@@ -18,8 +15,7 @@ export default function UserSecuritySettingsPage(): JSX.Element{
         event.preventDefault()
         console.log(newCredentials)
         if((newCredentials.newPassword === newPasswordApproval) && ((newCredentials.password || newCredentials.newPassword || newPasswordApproval) !== undefined)){
-            await postgresqlDatabase
-                .post("/changePassword", newCredentials)
+            await postChangePasswordPostgresService(newCredentials)
                 .catch((error:AxiosError) => {
                     console.log(error)
                 })
