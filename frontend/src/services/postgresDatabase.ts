@@ -28,7 +28,7 @@ postgresqlDatabase.interceptors.request.use((config) => {
   return config
 })
 
-export const postAssignmentWithUserAndGroupPostgresService = (
+export const createAssignmentWithUserAndGroupPostgresService = (
   userId: string,
   groupId: string,
   assignment: AssignmentToSendInterface) =>{
@@ -38,11 +38,11 @@ export const postAssignmentWithUserAndGroupPostgresService = (
       assignment)
 }
 
-export const postAuthAuthenticatePostgresService = (user: LoginUserInterface) => {
+export const loginPostgresService = (user: LoginUserInterface) => {
   return postgresqlDatabase.post("/auth/authenticate", user)
 }
 
-export const postAuthRegisterPostgresService = (user: UserRegisterInterface) => {
+export const registerPostgresService = (user: UserRegisterInterface) => {
   return postgresqlDatabase.post("/auth/register", user)
 }
 

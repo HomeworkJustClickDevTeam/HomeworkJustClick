@@ -1,5 +1,5 @@
 import React, {ChangeEvent, useState} from "react"
-import {postAuthRegisterPostgresService} from "../../services/postgresDatabase"
+import {registerPostgresService} from "../../services/postgresDatabase"
 import {useNavigate} from "react-router-dom"
 import left_circle from './left_circle.svg';
 import Smile from './Smile.svg';
@@ -20,7 +20,7 @@ const RegisterPage = () => {
     event.preventDefault()
     if (!!user.password && user.password === user.secondPassword) {
       try {
-        await postAuthRegisterPostgresService(user)
+        await registerPostgresService(user)
         navigate("/")
       } catch (e) {
         console.log("Error not send")

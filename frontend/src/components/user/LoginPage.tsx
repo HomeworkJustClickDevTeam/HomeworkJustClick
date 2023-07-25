@@ -1,5 +1,5 @@
 import React, {ChangeEvent, useContext, useState} from "react"
-import {postAuthAuthenticatePostgresService} from "../../services/postgresDatabase"
+import {loginPostgresService} from "../../services/postgresDatabase"
 import {Link, useNavigate} from "react-router-dom"
 import DispatchContext from "../../contexts/DispatchContext"
 import login_left_circle from './login_left_circle.svg';
@@ -20,7 +20,7 @@ const LoginPage = () => {
     event.preventDefault()
 
     try {
-      const response = await postAuthAuthenticatePostgresService(user)
+      const response = await loginPostgresService(user)
       if (response.data) {
         const userState: UserStateInterface = {
           token: response.data.token,

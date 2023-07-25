@@ -1,6 +1,6 @@
 import {useNavigate, useParams} from "react-router-dom"
 import React, {ChangeEvent, useContext, useEffect, useState} from "react"
-import {postAssignmentWithUserAndGroupPostgresService} from "../../services/postgresDatabase"
+import {createAssignmentWithUserAndGroupPostgresService} from "../../services/postgresDatabase"
 import ReactDatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import {AssigmentAddFile} from "./AssigmentAddFile"
@@ -61,7 +61,7 @@ function AddAssigmentPage() {
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
-    postAssignmentWithUserAndGroupPostgresService(userState.userId, idGroup as string, assignment)
+    createAssignmentWithUserAndGroupPostgresService(userState.userId, idGroup as string, assignment)
       .catch(error => console.log(error))
       .then(response =>{
         if(response !== (null || undefined)){
