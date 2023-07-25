@@ -13,11 +13,19 @@ const postgresqlDatabase = axios.create({
   timeout: 8000,
   headers: {
     "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "http://localhost:3000",
-    ...(localStorage.getItem("token") && {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    }),
+    "Access-Control-Allow-Origin": "http://localhost:3000"
   },
+})
+
+postgresqlDatabase.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token")
+  if(token !== null){
+    config.headers["Authorization"] = "Bearer " + token
+  }
+  else{
+    config.headers["Authorization"] = ""
+  }
+  return config
 })
 
 export const postAssignmentWithUserAndGroupPostgresService = (

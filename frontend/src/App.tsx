@@ -34,6 +34,7 @@ import GroupUserProfilePage from "./components/group/GroupUserProfilePage"
 import HardCodedExamplePage from "./components/solution/HardCodedExamplePage";
 import {ApplicationStateInterface} from "./types/ApplicationStateInterface";
 import {ActionType} from "./types/ActionType";
+import {getUserPostgresService} from "./services/postgresDatabase";
 
 function App() {
   useEffect(() => {
@@ -42,8 +43,16 @@ function App() {
       localStorage.removeItem("id")
     }
   }, [])
+
+  const checkToken = ():boolean => {
+    getUserPostgresService(localStorage.getItem("id") as string)
+      .catch((error)=>{
+        if(error) return false
+      })
+    return true
+  }
   const initialState: ApplicationStateInterface = {
-    loggedIn: Boolean(localStorage.getItem("token")),
+    loggedIn: checkToken(),
     homePageIn: true,
     userState: {
       token: localStorage.getItem("token")!,
