@@ -37,12 +37,6 @@ import {ActionType} from "./types/ActionType";
 import {getUserPostgresService} from "./services/postgresDatabase";
 
 function App() {
-  useEffect(() => {
-    if (localStorage.getItem("token") && localStorage.getItem("id")) {
-      localStorage.removeItem("token")
-      localStorage.removeItem("id")
-    }
-  }, [])
 
   const checkToken = ():boolean => {
     getUserPostgresService(localStorage.getItem("id") as string)

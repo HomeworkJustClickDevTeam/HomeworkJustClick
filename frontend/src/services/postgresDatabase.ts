@@ -12,13 +12,13 @@ const postgresqlDatabase = axios.create({
   baseURL: "http://localhost:8080/api",
   timeout: 8000,
   headers: {
-    "Content-Type": "application/json",
     "Access-Control-Allow-Origin": "http://localhost:3000"
   },
 })
 
 postgresqlDatabase.interceptors.request.use((config) => {
   const token = localStorage.getItem("token")
+  config.headers["Content-Type"] = "application/json"
   if(token !== null){
     config.headers["Authorization"] = "Bearer " + token
   }
@@ -239,33 +239,19 @@ export const putUserIndexPostgresService = (userId: string, index: number) => {
 }
 
 export const putGroupNamePostgresService = (groupId:string, name: string) => {
-  return axios.create({
-    baseURL: "http://localhost:8080/api",
-    timeout: 8000,
-    headers: {
-      "Content-Type": "text/plain",
-      "Access-Control-Allow-Origin": "http://localhost:3000",
-      ...(localStorage.getItem("token") && {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      }),
-    },
+  postgresqlDatabase.interceptors.request.use(config => {
+    config.headers["Content-Type"] = "text/plain"
+    return config
   })
-    .put(`/group/name/${groupId}`, name)
+  return postgresqlDatabase.put(`/group/name/${groupId}`, name)
 }
 
 export const putGroupDescriptionPostgresService = (groupId:string, description: string) => {
-  return axios.create({
-    baseURL: "http://localhost:8080/api",
-    timeout: 8000,
-    headers: {
-      "Content-Type": "text/plain",
-      "Access-Control-Allow-Origin": "http://localhost:3000",
-      ...(localStorage.getItem("token") && {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      }),
-    },
+  postgresqlDatabase.interceptors.request.use(config => {
+    config.headers["Content-Type"] = "text/plain"
+    return config
   })
-    .put(`/group/description/${groupId}`, description)
+   return postgresqlDatabase.put(`/group/description/${groupId}`, description)
 }
 
 export const deleteAssignmentPostgresService = (assignmentId: string) => {
