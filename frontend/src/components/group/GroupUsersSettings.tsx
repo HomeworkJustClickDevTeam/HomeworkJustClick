@@ -4,7 +4,7 @@ import userContext from "../../contexts/UserContext";
 import {
   getUserGetStudentsByGroupPostgresService,
   getUserGetTeachersByGroupPostgresService
-} from "../../services/postgresDatabase";
+} from "../../services/postgresDatabaseServices";
 import {useParams} from "react-router-dom";
 import {UserInterface} from "../../types/UserInterface";
 

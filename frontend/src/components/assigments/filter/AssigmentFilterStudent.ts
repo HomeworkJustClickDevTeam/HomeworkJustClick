@@ -2,7 +2,7 @@ import {
   getAssignmentsDoneByGroupAndStudentPostgresService,
   getAssignmentsExpiredUndoneByGroupAndStudentPostgresService,
   getAssignmentsUndoneByGroupAndStudentPostgresService
-} from "../../../services/postgresDatabase"
+} from "../../../services/postgresDatabaseServices"
 import {AxiosError} from "axios";
 import {AssignmentInterface} from "../../../types/AssignmentInterface";
 

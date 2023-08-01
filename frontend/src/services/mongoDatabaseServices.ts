@@ -1,6 +1,6 @@
 import axios, {AxiosRequestConfig} from "axios"
 
-const mongoDatabase = axios.create({
+const mongoDatabaseServices = axios.create({
   baseURL: "http://localhost:8082/api/",
   timeout: 8082,
   headers: {
@@ -13,11 +13,11 @@ const mongoDatabase = axios.create({
 })
 
 export const postFileMongoService = (file: FormData) => {
-  return mongoDatabase.post("file", file)
+  return mongoDatabaseServices.post("file", file)
 }
 
 export const getFileMongoService = (mongoId: string, config?: AxiosRequestConfig) => {
-  return mongoDatabase.get(
+  return mongoDatabaseServices.get(
     `file/${mongoId}`,
     config
   )

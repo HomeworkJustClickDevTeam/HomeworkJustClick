@@ -1,12 +1,12 @@
 import {Link} from "react-router-dom"
 import React, {useContext, useEffect, useState} from "react"
-import userContext from "../../contexts/UserContext"
 import Loading from "../animations/Loading"
 import DispatchContext from "../../contexts/DispatchContext"
 import {ActionType} from "../../types/ActionType";
+import {getUser} from "../../services/otherServices";
 
 export default function UserSettingsPage(): JSX.Element {
-  const { loggedIn, userState } = useContext(userContext)
+  const userState = getUser()
   const [loading, setLoading] = useState<boolean>(false)
   const globalDispatch = useContext(DispatchContext)
   useEffect(() => {
@@ -18,7 +18,7 @@ export default function UserSettingsPage(): JSX.Element {
   if (loading) {
     return <Loading></Loading>
   }
-  if (!loggedIn) {
+  if (userState === undefined) {
     return <>Not log in</>
   }
   return (

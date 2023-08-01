@@ -1,6 +1,6 @@
 import {useNavigate, useParams} from "react-router-dom"
 import React, {ChangeEvent, useContext, useEffect, useState} from "react"
-import {createAssignmentWithUserAndGroupPostgresService} from "../../services/postgresDatabase"
+import {createAssignmentWithUserAndGroupPostgresService} from "../../services/postgresDatabaseServices"
 import ReactDatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import {AssigmentAddFile} from "./AssigmentAddFile"

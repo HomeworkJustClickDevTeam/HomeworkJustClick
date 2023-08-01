@@ -1,6 +1,6 @@
 import {useNavigate, useParams} from "react-router-dom"
 import React, {ChangeEvent, useEffect, useState} from "react"
-import {deleteAssignmentPostgresService, putAssignmentPostgresService} from "../../services/postgresDatabase"
+import {deleteAssignmentPostgresService, putAssignmentPostgresService} from "../../services/postgresDatabaseServices"
 import ReactDatePicker from "react-datepicker"
 
 import {AssigmentModifyFile} from "./AssigmentModifyFile"

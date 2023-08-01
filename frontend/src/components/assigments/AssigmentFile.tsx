@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react"
-import {getFilesByAssignmentPostgresService} from "../../services/postgresDatabase"
-import {getFileMongoService} from "../../services/mongoDatabase"
+import {getFilesByAssignmentPostgresService} from "../../services/postgresDatabaseServices"
+import {getFileMongoService} from "../../services/mongoDatabaseServices"
 import {FileFromPostInterface} from "../../types/FileFromPostInterface";
 
 export function AssigmentFile(props: { assigmentId: number }) {

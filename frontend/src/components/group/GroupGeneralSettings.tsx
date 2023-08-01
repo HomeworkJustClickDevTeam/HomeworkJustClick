@@ -6,7 +6,7 @@ import {
   putGroupDescriptionPostgresService,
   putGroupNamePostgresService,
   putGroupUnarchivePostgresService
-} from "../../services/postgresDatabase"
+} from "../../services/postgresDatabaseServices"
 import {AxiosError} from "axios"
 import React, {useEffect, useState} from "react"
 import Loading from "../animations/Loading"

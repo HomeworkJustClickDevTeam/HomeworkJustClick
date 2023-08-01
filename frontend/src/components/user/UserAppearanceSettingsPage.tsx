@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from "react"
-import {getUserPostgresService, putUserColorPostgresService} from "../../services/postgresDatabase"
+import {getUserPostgresService, putUserColorPostgresService} from "../../services/postgresDatabaseServices"
 import userContext from "../../contexts/UserContext"
 import {AxiosError} from "axios"
 

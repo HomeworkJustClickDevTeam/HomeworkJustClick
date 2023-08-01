@@ -2,7 +2,7 @@ import {
   getExtendedSolutionsCheckedByGroupPostgresService,
   getExtendedSolutionsLateByGroupPostgresService,
   getExtendedSolutionsUncheckedByGroupPostgresService
-} from "../../../services/postgresDatabase"
+} from "../../../services/postgresDatabaseServices"
 import {SolutionExtendedInterface} from "../../../types/SolutionExtendedInterface";
 
 interface SolutionTypesPropInterface {

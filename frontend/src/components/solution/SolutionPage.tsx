@@ -1,6 +1,6 @@
 import {Link, useLocation} from "react-router-dom"
 import {useEffect, useState} from "react"
-import {getEvaluationBySolutionPostgresService} from "../../services/postgresDatabase"
+import {getEvaluationBySolutionPostgresService} from "../../services/postgresDatabaseServices"
 import {Rating} from "../evaluation/Rating"
 import {SolutionFile} from "./SolutionFile"
 import {SolutionExtendedInterface} from "../../types/SolutionExtendedInterface";

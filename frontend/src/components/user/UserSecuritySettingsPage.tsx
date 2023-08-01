@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {postChangePasswordPostgresService} from "../../services/postgresDatabase";
+import {postChangePasswordPostgresService} from "../../services/postgresDatabaseServices";
 import {AxiosError} from "axios";
 import {CredentialsInterface} from "../../types/CredentialsInterface";
 

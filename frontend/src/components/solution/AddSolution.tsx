@@ -1,11 +1,11 @@
 import {ChangeEvent, useContext, useEffect, useState} from "react"
-import {postFileMongoService} from "../../services/mongoDatabase"
+import {postFileMongoService} from "../../services/mongoDatabaseServices"
 import {useNavigate, useParams} from "react-router-dom"
 import {
   getFilesByAssignmentPostgresService,
   postFileWithSolutionPostgresService,
   postSolutionWithUserAndAssignmentPostgresService
-} from "../../services/postgresDatabase"
+} from "../../services/postgresDatabaseServices"
 import userContext from "../../contexts/UserContext"
 import {AssigmentFile} from "../assigments/AssigmentFile"
 import {format} from "date-fns";

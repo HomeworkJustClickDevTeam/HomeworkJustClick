@@ -1,5 +1,5 @@
 import React, {ChangeEvent, useState} from "react"
-import {registerPostgresService} from "../../services/postgresDatabase"
+import {registerPostgresService} from "../../services/postgresDatabaseServices"
 import {useNavigate} from "react-router-dom"
 import left_circle from './left_circle.svg';
 import Smile from './Smile.svg';

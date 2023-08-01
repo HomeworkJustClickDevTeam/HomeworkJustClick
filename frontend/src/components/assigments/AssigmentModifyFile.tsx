@@ -3,8 +3,8 @@ import {
   deleteFilePostgresService,
   getFilesByAssignmentPostgresService,
   postFileWithAssignmentPostgresService
-} from "../../services/postgresDatabase"
-import {getFileMongoService, postFileMongoService} from "../../services/mongoDatabase"
+} from "../../services/postgresDatabaseServices"
+import {getFileMongoService, postFileMongoService} from "../../services/mongoDatabaseServices"
 import {FileFromPostInterface} from "../../types/FileFromPostInterface";
 
 export function AssigmentModifyFile(props: {

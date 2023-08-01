@@ -4,7 +4,7 @@ import {
   getAssignmentPostgresService,
   getCheckedSolutionByUserAssignmentGroupPostgresService,
   getUncheckedSolutionByUserAssignmentGroupPostgresService
-} from "../../services/postgresDatabase"
+} from "../../services/postgresDatabaseServices"
 import {parseISO} from "date-fns"
 
 import GroupRoleContext from "../../contexts/GroupRoleContext"

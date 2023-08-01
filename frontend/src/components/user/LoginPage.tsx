@@ -1,5 +1,5 @@
 import React, {ChangeEvent, useContext, useState} from "react"
-import {loginPostgresService} from "../../services/postgresDatabase"
+import {loginPostgresService} from "../../services/postgresDatabaseServices"
 import {Link, useNavigate} from "react-router-dom"
 import DispatchContext from "../../contexts/DispatchContext"
 import login_left_circle from './login_left_circle.svg';
@@ -21,12 +21,13 @@ const LoginPage = () => {
 
     try {
       const response = await loginPostgresService(user)
-      if (response.data) {
+      if (response.data.token) {
         const userState: UserStateInterface = {
           token: response.data.token,
           userId: response.data.id,
         }
-        const action: ActionType = { type: "login", data: userState }
+        localStorage.setItem("user", JSON.stringify(response.data))
+        const action: ActionType = { type: "login" }
         globalDispatch?.(action)
         navigate("/")
       } else {

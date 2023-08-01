@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react"
-import {getUserGetTeachersByGroupPostgresService} from "../../services/postgresDatabase"
+import {getUserGetTeachersByGroupPostgresService} from "../../services/postgresDatabaseServices"
 import GroupUserListElement from "./GroupUserListElement"
 import {UserInterface} from "../../types/UserInterface";
 

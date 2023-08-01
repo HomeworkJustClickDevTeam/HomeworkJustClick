@@ -5,7 +5,7 @@ import {
   getAssignmentsExpiredUndoneByGroupAndStudentPostgresService,
   getAssignmentsUndoneByGroupAndStudentPostgresService,
   getUserPostgresService
-} from "../../services/postgresDatabase";
+} from "../../services/postgresDatabaseServices";
 import {AxiosError} from "axios";
 import Loading from "../animations/Loading";
 import userContext from "../../contexts/UserContext";

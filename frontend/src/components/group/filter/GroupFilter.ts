@@ -2,7 +2,7 @@ import {
   getGroupsByStudentPostgresService,
   getGroupsByTeacherPostgresService,
   getGroupsByUserPostgresService
-} from "../../../services/postgresDatabase"
+} from "../../../services/postgresDatabaseServices"
 import {GroupInterface} from "../../../types/GroupInterface";
 
 interface GroupFilterProps {

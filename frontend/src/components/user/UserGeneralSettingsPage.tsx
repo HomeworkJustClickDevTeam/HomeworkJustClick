@@ -1,26 +1,32 @@
-import userContext from "../../contexts/UserContext"
+
 
 import React, {useContext, useEffect, useState} from "react"
-import {getUserPostgresService, putUserIndexPostgresService} from "../../services/postgresDatabase"
+import {getUserPostgresService, putUserIndexPostgresService} from "../../services/postgresDatabaseServices"
 import {AxiosError} from "axios"
+import {getUser} from "../../services/otherServices";
+import Loading from "../animations/Loading";
 
 export default function UserGeneralSettingsPage() {
-  const { loggedIn, userState } = useContext(userContext)
+  const userState = getUser()
   const [index, setIndex] = useState<number | undefined>(undefined)
 
+
+  if(userState === undefined){
+    return <Loading></Loading>
+  }
   const handleIndexSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    await putUserIndexPostgresService(userState.userId, index as number)
+    await putUserIndexPostgresService(userState.id.toString(), index as number)
       .catch((error: AxiosError) => {
         console.log(error)
       })
   }
 
   useEffect(() => {
-    getUserPostgresService(userState.userId)
+    getUserPostgresService(userState.id.toString())
       .then((response) => setIndex(response.data.index))
       .catch(() => setIndex(undefined))
-  }, [userState.userId])
+  }, [userState.id])
   return (
     <>
       <form onSubmit={handleIndexSubmit}>

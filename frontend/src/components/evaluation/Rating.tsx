@@ -1,5 +1,5 @@
 import {useContext, useState} from "react"
-import {postEvaluationWithUserAndSolution} from "../../services/postgresDatabase"
+import {postEvaluationWithUserAndSolution} from "../../services/postgresDatabaseServices"
 import userContext from "../../contexts/UserContext"
 import {useNavigate} from "react-router-dom"
 

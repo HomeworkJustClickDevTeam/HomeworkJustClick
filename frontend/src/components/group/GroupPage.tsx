@@ -5,7 +5,7 @@ import {
   getGroupPostgresService,
   getGroupUserCheckWithRolePostgresService,
   postGroupAddStudentPostgresService
-} from "../../services/postgresDatabase"
+} from "../../services/postgresDatabaseServices"
 
 import DispatchContext from "../../contexts/DispatchContext"
 import GroupHeader from "./GroupHeader"

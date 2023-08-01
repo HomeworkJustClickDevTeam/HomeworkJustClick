@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react"
-import {getFilesBySolutionPostgresService} from "../../services/postgresDatabase"
-import {getFileMongoService} from "../../services/mongoDatabase"
+import {getFilesBySolutionPostgresService} from "../../services/postgresDatabaseServices"
+import {getFileMongoService} from "../../services/mongoDatabaseServices"
 import {FileFromPostInterface} from "../../types/FileFromPostInterface";
 
 export function SolutionFile(props: { solutionId: number }) {

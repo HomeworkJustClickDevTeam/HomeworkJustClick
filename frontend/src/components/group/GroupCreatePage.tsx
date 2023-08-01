@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from "react"
 import {useNavigate} from "react-router-dom"
-import {postGroupWithTeacherPostgresService} from "../../services/postgresDatabase"
+import {postGroupWithTeacherPostgresService} from "../../services/postgresDatabaseServices"
 import DispatchContext from "../../contexts/DispatchContext"
 import UserContext from "../../contexts/UserContext";
 import {ActionType} from "../../types/ActionType";

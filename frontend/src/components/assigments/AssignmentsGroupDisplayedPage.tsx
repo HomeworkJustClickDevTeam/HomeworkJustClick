@@ -1,6 +1,6 @@
 import {Link, useParams} from "react-router-dom"
 import {useContext, useEffect, useState} from "react"
-import {getAssignmentsByGroupPostgresService} from "../../services/postgresDatabase"
+import {getAssignmentsByGroupPostgresService} from "../../services/postgresDatabaseServices"
 import AssigmentListElement from "./AssigmentListElement"
 import Loading from "../animations/Loading"
 import GroupRoleContext from "../../contexts/GroupRoleContext"

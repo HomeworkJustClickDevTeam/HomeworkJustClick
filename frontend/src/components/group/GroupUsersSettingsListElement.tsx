@@ -3,7 +3,7 @@ import {
   deleteGroupDeleteStudentPostgresService,
   deleteGroupDeleteTeacherPostgresService,
   postGroupAddTeacherPostgresService
-} from "../../services/postgresDatabase";
+} from "../../services/postgresDatabaseServices";
 import {AxiosError} from "axios";
 import GroupRoleContext from "../../contexts/GroupRoleContext";
 import {UserInterface} from "../../types/UserInterface";
