@@ -1,22 +1,26 @@
 import {useContext, useEffect, useState} from "react"
 import GroupListElement from "../group/GroupListElement"
-import {Link} from "react-router-dom"
+import {Link, useNavigate} from "react-router-dom"
 import {groupFilter} from "../group/filter/GroupFilter"
 import Loading from "../animations/Loading"
-import userContext from "../../contexts/UserContext"
 import DispatchContext from "../../contexts/DispatchContext"
 import {FaCaretDown} from 'react-icons/fa';
 import {GroupInterface} from "../../types/GroupInterface";
 import {ActionType} from "../../types/ActionType";
+import {getUser} from "../../services/otherServices";
 
 function HomePage() {
   const [groups, setGroups] = useState<GroupInterface[] | undefined>(undefined)
   const [isLoading, setIsLoading] = useState<boolean>()
   const [isOpen, setIsOpen] = useState(false)
   const [btnName, setBtnName] = useState('Wszystkie grupy')
-  const { userState } = useContext(userContext)
+  const navigate = useNavigate()
+  const userState = getUser()
   const globalDispatch = useContext(DispatchContext)
   console.log(userState)
+  if(userState === undefined){
+    return navigate("/")
+  }
   useEffect(() => {
     const action: ActionType = {
       type: "homePageIn",
@@ -26,14 +30,12 @@ function HomePage() {
   const { teacherUserGroups, studentsUserGroups, allUserGroups } = groupFilter({
     setGroups,
     setIsLoading,
-    userId: userState.userId
+    userId: userState.id.toString()
   })
 
   useEffect(() => {
-    if (userState.userId !== undefined || userState.userId !== null) {
-      allUserGroups()
-    }
-  }, [userState.userId])
+    allUserGroups()
+  }, [userState.id])
 
   if (groups === undefined || groups === null) {
     return <Loading />

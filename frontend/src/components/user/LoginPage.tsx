@@ -22,10 +22,6 @@ const LoginPage = () => {
     try {
       const response = await loginPostgresService(user)
       if (response.data.token) {
-        const userState: UserStateInterface = {
-          token: response.data.token,
-          userId: response.data.id,
-        }
         localStorage.setItem("user", JSON.stringify(response.data))
         const action: ActionType = { type: "login" }
         globalDispatch?.(action)

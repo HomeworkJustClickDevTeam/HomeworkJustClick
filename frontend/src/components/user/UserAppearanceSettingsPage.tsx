@@ -1,18 +1,24 @@
 import React, {useContext, useEffect, useState} from "react"
 import {getUserPostgresService, putUserColorPostgresService} from "../../services/postgresDatabaseServices"
-import userContext from "../../contexts/UserContext"
 import {AxiosError} from "axios"
+import {getUser} from "../../services/otherServices";
+import {useNavigate} from "react-router-dom";
 
 export default function UserAppearanceSettingsPage() {
   const [color, setColor] = useState<number | undefined>(undefined)
-  const { loggedIn, userState } = useContext(userContext)
+  const userState = getUser()
+  const navigate = useNavigate()
+
+  if(userState === undefined){
+    return navigate("/")
+  }
 
   const handleColorChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setColor(+event.target.value)
     try {
-      await putUserColorPostgresService(userState.userId, +event.target.value)
+      await putUserColorPostgresService(userState.id.toString(), +event.target.value)
         .catch((error: AxiosError) => {
           console.log("AXIOS ERROR: ", error)
         })
@@ -21,10 +27,10 @@ export default function UserAppearanceSettingsPage() {
     }
   }
   useEffect(() => {
-    getUserPostgresService(userState.userId)
+    getUserPostgresService(userState.id.toString())
       .then((response) => setColor(response.data.color))
       .catch(() => setColor(undefined))
-  }, [userState.userId])
+  }, [userState.id])
   return (
     <>
       <p>Wybierz swój kolor:</p>

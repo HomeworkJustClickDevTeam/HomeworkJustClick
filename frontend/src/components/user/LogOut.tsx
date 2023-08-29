@@ -3,15 +3,17 @@ import {useContext} from "react"
 
 import DispatchContext from "../../contexts/DispatchContext"
 import {ActionType} from "../../types/ActionType";
+import {logout} from "../../services/otherServices";
 
 function LogOut() {
   const globalDispatch = useContext(DispatchContext)
   const navigate = useNavigate()
   const handleLogout = () => {
-    const logout: ActionType = {
-      type: "logout",
+    const action: ActionType = {
+      type: "logout"
     }
-    globalDispatch?.(logout)
+    globalDispatch?.(action)
+    logout()
     navigate("/")
   }
 

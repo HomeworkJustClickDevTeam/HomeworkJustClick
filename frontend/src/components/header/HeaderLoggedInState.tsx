@@ -1,11 +1,11 @@
 import {useContext} from "react"
-import userContext from "../../contexts/UserContext"
 import {FaChevronLeft} from 'react-icons/fa';
 import {Link, useNavigate} from "react-router-dom"
 import LogOut from "../user/LogOut"
+import dispatchContext from "../../contexts/DispatchContext";
 
 function HeaderLoggedInState() {
-  const userState = useContext(userContext)
+  const userState = useContext(dispatchContext)
   const navigate = useNavigate()
   return (
       <section className='relative flex h-16 text-white font-lato font-normal bg-main_blue items-center select-none'>

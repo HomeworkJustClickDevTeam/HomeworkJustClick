@@ -6,12 +6,12 @@ import {
   postFileWithSolutionPostgresService,
   postSolutionWithUserAndAssignmentPostgresService
 } from "../../services/postgresDatabaseServices"
-import userContext from "../../contexts/UserContext"
 import {AssigmentFile} from "../assigments/AssigmentFile"
 import {format} from "date-fns";
 import {AssigmentPropsInterface} from "../../types/AssigmentPropsInterface";
 import {SolutionInterface} from "../../types/SolutionInterface";
 import {SolutionToSendInterface} from "../../types/SolutionToSendInterface";
+import {getUser} from "../../services/otherServices";
 
 
 interface FileRespondMongoInterface {
@@ -20,8 +20,9 @@ interface FileRespondMongoInterface {
   format: string
 }
 function AddSolution({ assignment }: AssigmentPropsInterface) {
+  const navigate = useNavigate()
   const { idAssigment, idGroup = "" } = useParams()
-  const { userState } = useContext(userContext)
+  const userState = getUser()
   const [file, setFile] = useState<File>()
   const [response, setResponse] = useState<FileRespondMongoInterface>({
     format: "",
@@ -33,9 +34,11 @@ function AddSolution({ assignment }: AssigmentPropsInterface) {
     comment: "",
     lastModifiedDatetime: new Date().toISOString(),
   })
+
   const [solutionFromServer, setSolutionFromServer] = useState<SolutionInterface | undefined>(undefined)
-  const navigate = useNavigate()
   const [isFile, setIsFile] = useState<boolean>()
+
+
 
   useEffect(() => {
     getFilesByAssignmentPostgresService(idAssigment as string)
@@ -44,6 +47,7 @@ function AddSolution({ assignment }: AssigmentPropsInterface) {
   }, [])
 
   useEffect(() => {
+
     if (solutionFromServer?.id && response.id) {
       postFileWithSolutionPostgresService(
         response.id,
@@ -66,6 +70,9 @@ function AddSolution({ assignment }: AssigmentPropsInterface) {
     if (!file) {
       return
     }
+    if (userState === undefined){
+      return navigate("/")
+    }
     const formData = new FormData()
     formData.append("file", file)
     postFileMongoService(formData)
@@ -74,7 +81,7 @@ function AddSolution({ assignment }: AssigmentPropsInterface) {
         setResponse(r.data)
       })
       .catch()
-    postSolutionWithUserAndAssignmentPostgresService(userState.userId, idAssigment as string, solution)
+    postSolutionWithUserAndAssignmentPostgresService(userState.id.toString(), idAssigment as string, solution)
       .then((r) => {
         console.log(r)
         setSolutionFromServer(r.data)
