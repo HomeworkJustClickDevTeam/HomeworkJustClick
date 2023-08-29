@@ -1,4 +1,4 @@
-import {useLocation, useParams} from "react-router-dom"
+import {useLocation, useNavigate, useParams} from "react-router-dom"
 import React, {useContext, useEffect, useState} from "react"
 import {
   getAssignmentPostgresService,
@@ -19,10 +19,12 @@ import UncheckedSolution from "../solution/UncheckedSolution"
 import {AssignmentInterface} from "../../types/AssignmentInterface";
 import {SolutionInterface} from "../../types/SolutionInterface";
 import {getUser} from "../../services/otherServices";
+import HomePage from "../home/HomePage";
 
 function AssigmentSpecPage() {
   const { idAssigment, idGroup } = useParams()
   const location = useLocation()
+  const navigate = useNavigate()
   const optionalUserId:string|null = location.state
   const userState = getUser()
   const { role } = useContext(GroupRoleContext)
@@ -72,7 +74,7 @@ function AssigmentSpecPage() {
     }, [])
 
   if(userState === undefined){
-    return <>Not logged in</>
+    navigate("/")
   }
   if(assignment === undefined){
     return(<Loading/>)
@@ -81,7 +83,9 @@ function AssigmentSpecPage() {
     userId = optionalUserId
   }
   else{
-    userId = userState.id.toString()
+    if(userState !== undefined) {
+      userId = userState.id.toString()
+    }
   }
   return (
     <div >

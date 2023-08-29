@@ -3,10 +3,9 @@ import GroupListElement from "../group/GroupListElement"
 import {Link, useNavigate} from "react-router-dom"
 import {groupFilter} from "../group/filter/GroupFilter"
 import Loading from "../animations/Loading"
-import DispatchContext from "../../contexts/DispatchContext"
+import HomePageContext from "../../contexts/HomePageContext"
 import {FaCaretDown} from 'react-icons/fa';
 import {GroupInterface} from "../../types/GroupInterface";
-import {ActionType} from "../../types/ActionType";
 import {getUser} from "../../services/otherServices";
 
 function HomePage() {
@@ -16,7 +15,9 @@ function HomePage() {
   const [btnName, setBtnName] = useState('Wszystkie grupy')
   const navigate = useNavigate()
   const userState = getUser()
-  const globalDispatch = useContext(DispatchContext)
+
+  navigate("/")
+
   let teacherUserGroups = () => {}
   let studentsUserGroups = () => {}
   let allUserGroups = () => {}
@@ -29,21 +30,12 @@ function HomePage() {
     }))
   }
   useEffect(() => {
-    const action: ActionType = {
-      type: "homePageIn",
-    }
-    globalDispatch?.dispatch(action)
     allUserGroups()
   }, [])
 
   if (groups === undefined || groups === null) {
     return <Loading />
   }
-  if(userState === undefined){
-    return <>User Not Logged in</>
-  }
-
-
   return (
     <div className='pl-6 pr-8'>
         <div className='flex inline-block mb-4 mt-4 pl-5'>

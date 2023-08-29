@@ -1,8 +1,7 @@
 import React, {useContext, useEffect, useState} from "react"
 import {useNavigate} from "react-router-dom"
 import {postGroupWithTeacherPostgresService} from "../../services/postgresDatabaseServices"
-import DispatchContext from "../../contexts/DispatchContext"
-import {ActionType} from "../../types/ActionType";
+import HomePageContext from "../../contexts/HomePageContext"
 import {GroupCreateInterface} from "../../types/GroupCreateInterface";
 import {getUser} from "../../services/otherServices";
 
@@ -13,16 +12,10 @@ function GroupCreatePage() {
     name: "",
     description: "",
   })
-  if(userState === undefined){
-    return <>Not logged in</>
-  }
   const navigate = useNavigate()
-  const globalDispatch = useContext(DispatchContext)
+  const {setHomePageIn} = useContext(HomePageContext)
   useEffect(() => {
-    const action: ActionType = {
-      type: "homePageOut",
-    }
-    globalDispatch?.dispatch(action)
+    setHomePageIn(false)
   }, [])
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()

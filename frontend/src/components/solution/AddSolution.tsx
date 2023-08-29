@@ -1,4 +1,4 @@
-import {ChangeEvent, useContext, useEffect, useState} from "react"
+import React, {ChangeEvent, useContext, useEffect, useState} from "react"
 import {postFileMongoService} from "../../services/mongoDatabaseServices"
 import {useNavigate, useParams} from "react-router-dom"
 import {
@@ -12,6 +12,7 @@ import {AssigmentPropsInterface} from "../../types/AssigmentPropsInterface";
 import {SolutionInterface} from "../../types/SolutionInterface";
 import {SolutionToSendInterface} from "../../types/SolutionToSendInterface";
 import {getUser} from "../../services/otherServices";
+import HomePage from "../home/HomePage";
 
 
 interface FileRespondMongoInterface {
@@ -71,22 +72,23 @@ function AddSolution({ assignment }: AssigmentPropsInterface) {
       return
     }
     if (userState === undefined){
-      return navigate("/")
-    }
-    const formData = new FormData()
-    formData.append("file", file)
-    postFileMongoService(formData)
-      .then((r) => {
-        console.log(r.data)
-        setResponse(r.data)
-      })
-      .catch()
-    postSolutionWithUserAndAssignmentPostgresService(userState.id.toString(), idAssigment as string, solution)
-      .then((r) => {
-        console.log(r)
-        setSolutionFromServer(r.data)
-      })
-      .catch()
+      navigate("/")
+    }else {
+      const formData = new FormData()
+      formData.append("file", file)
+      postFileMongoService(formData)
+        .then((r) => {
+          console.log(r.data)
+          setResponse(r.data)
+        })
+        .catch()
+      postSolutionWithUserAndAssignmentPostgresService(userState.id.toString(), idAssigment as string, solution)
+        .then((r) => {
+          console.log(r)
+          setSolutionFromServer(r.data)
+        })
+        .catch()
+      }
   }
 
   return (

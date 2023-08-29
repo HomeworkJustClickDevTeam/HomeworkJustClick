@@ -2,6 +2,7 @@ import React, {useContext, useState} from "react"
 import {postEvaluationWithUserAndSolution} from "../../services/postgresDatabaseServices"
 import {useNavigate} from "react-router-dom"
 import {getUser} from "../../services/otherServices";
+import HomePage from "../home/HomePage";
 
 interface RatingPropsInterface {
   maxPoints: number
@@ -22,7 +23,7 @@ export function Rating({
   const navigate = useNavigate()
 
   if(userState === undefined){
-    return <>Not logged in</>
+    navigate("/")
   }
   const handleMark = () => {
     const body = { result: points, grade: 0 }

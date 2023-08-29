@@ -2,17 +2,17 @@ import {useContext} from "react"
 import {FaChevronLeft} from 'react-icons/fa';
 import {Link, useNavigate} from "react-router-dom"
 import LogOut from "../user/LogOut"
-import dispatchContext from "../../contexts/DispatchContext";
+import dispatchContext from "../../contexts/HomePageContext";
 import {getUser} from "../../services/otherServices";
-import DispatchContext from "../../contexts/DispatchContext";
+import HomePageContext from "../../contexts/HomePageContext";
 
 function HeaderLoggedInState() {
   const navigate = useNavigate()
   const userState = getUser()
-  const globalDispatch = useContext(DispatchContext)
+  const {homePageIn} = useContext(HomePageContext)
   return (
       <section className='relative flex h-16 text-white font-lato font-normal bg-main_blue items-center select-none'>
-          {!globalDispatch?.state.homePageIn && (
+          {!homePageIn && (
               <Link className='absolute flex pl-[3vw] w-[9vw] hover:bg-hover_blue h-full items-center' to="#" onClick={() => navigate(-1)}>
                   <FaChevronLeft className='pr-[calc(0.5vw)]'/>
                   Powrót

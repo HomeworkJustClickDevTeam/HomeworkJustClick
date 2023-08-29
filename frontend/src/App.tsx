@@ -13,7 +13,7 @@ import AssignmentsGroupDisplayedPage from "./components/assigments/AssignmentsGr
 import AddAssigmentPage from "./components/assigments/AddAssigmentPage"
 import AssigmentSpecPage from "./components/assigments/AssigmentSpecPage"
 import {useImmerReducer} from "use-immer"
-import DispatchContext from "./contexts/DispatchContext"
+import HomePageContext from "./contexts/HomePageContext"
 import Header from "./components/header/Header"
 import GroupUsersPage from "./components/group/GroupUsersPage"
 import NotFoundPage from "./components/errors/NotFoundPage"
@@ -31,42 +31,14 @@ import UserMarkingTablesSettingsPage from "./components/user/UserMarkingTablesSe
 import GroupSettingsPage from "./components/group/GroupSettingsPage"
 import GroupUserProfilePage from "./components/group/GroupUserProfilePage"
 import HardCodedExamplePage from "./components/solution/HardCodedExamplePage";
-import {ApplicationStateInterface} from "./types/ApplicationStateInterface";
-import {ActionType} from "./types/ActionType";
-import {getUserPostgresService} from "./services/postgresDatabaseServices";
-import {tr} from "date-fns/locale";
-import {stat} from "fs";
 import {getUser} from "./services/otherServices";
 
 function App() {
 
-
-  const initialState: ApplicationStateInterface = {
-    loggedIn: Boolean(getUser()),
-    homePageIn: true
-  }
-
   const [role, setRole] = useState<string>("")
-
-  function ourReducer(draft: ApplicationStateInterface, action: ActionType): ApplicationStateInterface {
-    switch (action.type) {
-      case "login":
-        return {loggedIn: true, homePageIn: true}
-      case "logout":
-        return {loggedIn: false, homePageIn: true}
-      case "homePageIn":
-        return {loggedIn: Boolean(getUser()), homePageIn: true}
-      case "homePageOut":
-        return {loggedIn: Boolean(getUser()), homePageIn: false}
-    }
-  }
-  const [state, dispatch] = useReducer(
-    ourReducer,
-    initialState
-  )
-  console.log(state.loggedIn)
+  const [homePageIn, setHomePageIn] = useState<boolean>(true)
   return (
-      <DispatchContext.Provider value={{dispatch, state}}>
+      <HomePageContext.Provider value={{setHomePageIn, homePageIn}}>
         <GroupRoleContext.Provider value={{ role }}>
           <GroupSetRoleContext.Provider value={{ setRole }}>
             <BrowserRouter>
@@ -74,7 +46,7 @@ function App() {
               <Routes>
                 <Route
                   path="/"
-                  element={state.loggedIn ? <HomePage /> : <HomeGuestPage />}
+                  element={Boolean(getUser()) ? <HomePage /> : <HomeGuestPage />}
                 />
                 <Route
                   path="/:id/assignments"
@@ -153,7 +125,7 @@ function App() {
             </BrowserRouter>
           </GroupSetRoleContext.Provider>
         </GroupRoleContext.Provider>
-      </DispatchContext.Provider>
+      </HomePageContext.Provider>
   )
 }
 

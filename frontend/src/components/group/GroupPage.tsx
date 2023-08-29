@@ -6,32 +6,25 @@ import {
   postGroupAddStudentPostgresService
 } from "../../services/postgresDatabaseServices"
 
-import DispatchContext from "../../contexts/DispatchContext"
+import HomePageContext from "../../contexts/HomePageContext"
 import GroupHeader from "./GroupHeader"
 
 import GroupSetRoleContext from "../../contexts/GroupSetRoleContext"
 import GroupRoleContext from "../../contexts/GroupRoleContext"
 import Loading from "../animations/Loading"
 import {GroupInterface} from "../../types/GroupInterface";
-import {ActionType} from "../../types/ActionType";
 import {getUser} from "../../services/otherServices";
 
 function GroupPage() {
   const { idGroup = "" } = useParams<{ idGroup: string }>()
   const userState = getUser()
-  const globalDispatch = useContext(DispatchContext)
+  const {setHomePageIn} = useContext(HomePageContext)
   const { setRole } = useContext(GroupSetRoleContext)
   const { role } = useContext(GroupRoleContext)
   const [group, setGroup] = useState<GroupInterface | undefined>(undefined);
 
-  if (userState === undefined) {
-    return <>Not log in</>
-  }
   useEffect(() => {
-    const action: ActionType = {
-      type: "homePageOut",
-    }
-    globalDispatch?.dispatch(action)
+    setHomePageIn(false)
     checkRole()
     getNameAndDesc();
   }, [])

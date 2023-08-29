@@ -6,6 +6,7 @@ import Loading from "../animations/Loading"
 import groupRoleContext from "../../contexts/GroupRoleContext"
 import {AssignmentInterface} from "../../types/AssignmentInterface";
 import {getUser} from "../../services/otherServices";
+import HomePage from "../home/HomePage";
 
 function AssignmentsTypesPage({ type }: {type: string}) {
   const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -42,7 +43,7 @@ function AssignmentsTypesPage({ type }: {type: string}) {
     }
   }, [type])
   if(userState === undefined){
-    return <>Not logged in</>
+    navigate("/")
   }
   const { doneAssignments, expiredAssignments, noneExpiredAssignments } =
     assigmentFilterStudent({

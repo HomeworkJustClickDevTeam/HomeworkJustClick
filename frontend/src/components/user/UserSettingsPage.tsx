@@ -1,25 +1,23 @@
-import {Link} from "react-router-dom"
+import {Link, useNavigate} from "react-router-dom"
 import React, {useContext, useEffect, useState} from "react"
 import Loading from "../animations/Loading"
-import DispatchContext from "../../contexts/DispatchContext"
-import {ActionType} from "../../types/ActionType";
+import HomePageContext from "../../contexts/HomePageContext"
 import {getUser} from "../../services/otherServices";
+import HomePage from "../home/HomePage";
 
 export default function UserSettingsPage(): JSX.Element {
   const userState = getUser()
+  const navigate = useNavigate()
   const [loading, setLoading] = useState<boolean>(false)
-  const globalDispatch = useContext(DispatchContext)
+  const {setHomePageIn} = useContext(HomePageContext)
   useEffect(() => {
-    const action: ActionType = {
-      type: "homePageOut",
-    }
-    globalDispatch?.dispatch(action)
+    setHomePageIn(false)
   }, [])
   if (loading) {
     return <Loading></Loading>
   }
   if (userState === undefined) {
-    return <>Not log in</>
+    navigate("/")
   }
   return (
       <div className='flex bg-lilly-bg h-[100vh] justify-center'>

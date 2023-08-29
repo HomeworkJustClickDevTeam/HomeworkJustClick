@@ -1,11 +1,11 @@
 import React, {ChangeEvent, useContext, useState} from "react"
 import {loginPostgresService} from "../../services/postgresDatabaseServices"
 import {Link, useNavigate} from "react-router-dom"
-import DispatchContext from "../../contexts/DispatchContext"
+import HomePageContext from "../../contexts/HomePageContext"
 import login_left_circle from './login_left_circle.svg';
 import login_right_circle from './login_right_circle.svg';
-import {ActionType} from "../../types/ActionType";
 import {LoginUserInterface} from "../../types/LoginUserInterface";
+import HomePage from "../home/HomePage";
 
 
 const LoginPage = () => {
@@ -13,18 +13,16 @@ const LoginPage = () => {
     email: "",
     password: "",
   })
-  const globalDispatch = useContext(DispatchContext)
-  const navigate = useNavigate()
+  const {setHomePageIn} = useContext(HomePageContext)
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
     try {
       const response = await loginPostgresService(user)
-      if (response.data.token) {
+      if (response?.data.token) {
         localStorage.setItem("user", JSON.stringify(response.data))
-        const action: ActionType = { type: "login" }
-        globalDispatch?.dispatch(action)
-        navigate("/")
+        setHomePageIn(true)
+        return <HomePage/>
       } else {
         console.log("Zle haslo / uzytkownik")
       }

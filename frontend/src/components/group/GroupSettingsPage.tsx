@@ -4,16 +4,19 @@ import GroupGeneralSettings from "./GroupGeneralSettings";
 import React, {useContext, useState} from "react";
 import Loading from "../animations/Loading";
 import {getUser} from "../../services/otherServices";
+import HomePage from "../home/HomePage";
+import {useNavigate} from "react-router-dom";
 
 export default function GroupSettingsPage(){
   const userState = getUser()
   const [loading, setLoading] = useState<boolean>(false)
+  const navigate = useNavigate()
 
   if(loading){
     return <Loading></Loading>
   }
   if (userState === undefined) {
-    return <>Not log in</>
+    navigate("/")
   }
   return(
     <div className='relative flex flex-col mx-[7.5%] mt-4 border border-border_gray border-1 rounded-md  h-fit py-2 px-6'>

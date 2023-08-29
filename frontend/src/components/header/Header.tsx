@@ -1,13 +1,13 @@
 import {useContext} from "react"
 import HeaderLoggedOutState from "./HeaderLoggedOutState"
 import HeaderLoggedInState from "./HeaderLoggedInState"
-import DispatchContext from "../../contexts/DispatchContext";
+import HomePageContext from "../../contexts/HomePageContext";
+import {getUser} from "../../services/otherServices";
 
 function Header() {
-  const globalDispatch = useContext(DispatchContext)
   return (
     <header>
-      {globalDispatch?.state.loggedIn ? <HeaderLoggedInState /> : <HeaderLoggedOutState />}
+      {Boolean(getUser()) ? <HeaderLoggedInState /> : <HeaderLoggedOutState />}
     </header>
   )
 }
