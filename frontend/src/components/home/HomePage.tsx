@@ -13,10 +13,8 @@ function HomePage() {
   const [isLoading, setIsLoading] = useState<boolean>()
   const [isOpen, setIsOpen] = useState(false)
   const [btnName, setBtnName] = useState('Wszystkie grupy')
-  const navigate = useNavigate()
-  const userState = getUser()
 
-  navigate("/")
+  const userState = getUser()
 
   let teacherUserGroups = () => {}
   let studentsUserGroups = () => {}

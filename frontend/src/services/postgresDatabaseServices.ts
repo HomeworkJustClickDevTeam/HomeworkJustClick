@@ -31,7 +31,7 @@ postgresqlDatabase.interceptors.request.use((config) => {
 
 postgresqlDatabase.interceptors.response.use(null, function (error){
   if(error.response.status === 403){
-    logout()
+
   }
   else if(error.response.status === 404){
     return []

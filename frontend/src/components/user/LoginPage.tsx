@@ -14,6 +14,7 @@ const LoginPage = () => {
     password: "",
   })
   const {setHomePageIn} = useContext(HomePageContext)
+  const navigate = useNavigate()
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
@@ -22,7 +23,8 @@ const LoginPage = () => {
       if (response?.data.token) {
         localStorage.setItem("user", JSON.stringify(response.data))
         setHomePageIn(true)
-        return <HomePage/>
+        navigate("/")
+        window.location.reload();
       } else {
         console.log("Zle haslo / uzytkownik")
       }
