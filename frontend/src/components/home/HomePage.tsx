@@ -25,7 +25,7 @@ function HomePage() {
     const action: ActionType = {
       type: "homePageIn",
     }
-    globalDispatch?.(action)
+    globalDispatch?.dispatch(action)
   }, [])
   const { teacherUserGroups, studentsUserGroups, allUserGroups } = groupFilter({
     setGroups,

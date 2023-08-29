@@ -1,6 +1,5 @@
 import {Outlet, useParams} from "react-router-dom"
 import React, {useContext, useEffect, useState} from "react"
-import userContext from "../../contexts/UserContext"
 import {
   getGroupPostgresService,
   getGroupUserCheckWithRolePostgresService,
@@ -15,21 +14,24 @@ import GroupRoleContext from "../../contexts/GroupRoleContext"
 import Loading from "../animations/Loading"
 import {GroupInterface} from "../../types/GroupInterface";
 import {ActionType} from "../../types/ActionType";
+import {getUser} from "../../services/otherServices";
 
 function GroupPage() {
   const { idGroup = "" } = useParams<{ idGroup: string }>()
-  const { loggedIn, userState } = useContext(userContext)
+  const userState = getUser()
   const globalDispatch = useContext(DispatchContext)
   const { setRole } = useContext(GroupSetRoleContext)
   const { role } = useContext(GroupRoleContext)
   const [group, setGroup] = useState<GroupInterface | undefined>(undefined);
 
-
+  if (userState === undefined) {
+    return <>Not log in</>
+  }
   useEffect(() => {
     const action: ActionType = {
       type: "homePageOut",
     }
-    globalDispatch?.(action)
+    globalDispatch?.dispatch(action)
     checkRole()
     getNameAndDesc();
   }, [])
@@ -39,7 +41,7 @@ function GroupPage() {
   }
 
   function checkRole() {
-    getGroupUserCheckWithRolePostgresService(userState.userId, idGroup)
+    getGroupUserCheckWithRolePostgresService(userState?.id as unknown as string, idGroup)
       .then((r) => setRole(r.data))
       .catch(() => setRole("User not in group"))
   }
@@ -52,14 +54,12 @@ function GroupPage() {
 
 
   async function addToGroup() {
-    await postGroupAddStudentPostgresService(userState.userId, idGroup)
+    await postGroupAddStudentPostgresService(userState?.id as unknown as string, idGroup)
     checkRole()
   }
 
 
-  if (!loggedIn) {
-    return <>Not log in</>
-  }
+
   if (role === "User not in group") {
     return (
       <>

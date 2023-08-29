@@ -8,10 +8,10 @@ import {
 } from "../../services/postgresDatabaseServices";
 import {AxiosError} from "axios";
 import Loading from "../animations/Loading";
-import userContext from "../../contexts/UserContext";
 import AssigmentListElement from "../assigments/AssigmentListElement";
 import {UserInterface} from "../../types/UserInterface";
 import {AssignmentInterface} from "../../types/AssignmentInterface";
+import {getUser} from "../../services/otherServices";
 
 export default function GroupUserProfilePage(){
   const {userProfileId,idGroup} = useParams()
@@ -19,7 +19,7 @@ export default function GroupUserProfilePage(){
   const [doneAssignments, setDoneAssignments] = useState<AssignmentInterface[] | undefined>(undefined)
   const [expiredUndoneAssignments, setExpiredUndoneAssignments] = useState<AssignmentInterface[] | undefined>(undefined)
   const [undoneAssignments, setUndoneAssignments] = useState<AssignmentInterface[] | undefined>(undefined)
-  const {userState} = useContext(userContext)
+  const userState = getUser()
 
   useEffect(()=>{
     getUserPostgresService(userProfileId as string)

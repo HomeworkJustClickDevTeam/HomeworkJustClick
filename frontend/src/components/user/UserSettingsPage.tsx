@@ -13,7 +13,7 @@ export default function UserSettingsPage(): JSX.Element {
     const action: ActionType = {
       type: "homePageOut",
     }
-    globalDispatch?.(action)
+    globalDispatch?.dispatch(action)
   }, [])
   if (loading) {
     return <Loading></Loading>

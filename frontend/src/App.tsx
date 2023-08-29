@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react"
+import React, {useEffect, useReducer, useState} from "react"
 
 import './App.css'
 // import "./assets/App.css"
@@ -34,6 +34,7 @@ import HardCodedExamplePage from "./components/solution/HardCodedExamplePage";
 import {ApplicationStateInterface} from "./types/ApplicationStateInterface";
 import {ActionType} from "./types/ActionType";
 import {getUserPostgresService} from "./services/postgresDatabaseServices";
+import {tr} from "date-fns/locale";
 
 function App() {
 
@@ -49,28 +50,24 @@ function App() {
     homePageIn: true
   }
   const [role, setRole] = useState<string>("")
-  function ourReducer(draft: ApplicationStateInterface, action: ActionType) {
+  function ourReducer(draft: ApplicationStateInterface, action: ActionType): ApplicationStateInterface {
     switch (action.type) {
       case "login":
-        draft.loggedIn = true
-        break
+        return {loggedIn: true, homePageIn: true}
       case "logout":
-        draft.loggedIn = false
-        break
+        return {loggedIn: false, homePageIn: true}
       case "homePageIn":
-        draft.homePageIn = true
-        break
+        return {loggedIn: checkToken(), homePageIn: true}
       case "homePageOut":
-        draft.homePageIn = false
-        break
+        return {loggedIn: checkToken(), homePageIn: false}
     }
   }
-  const [state, dispatch] = useImmerReducer<ApplicationStateInterface, ActionType>(
+  const [state, dispatch] = useReducer(
     ourReducer,
     initialState
   )
   return (
-      <DispatchContext.Provider value={dispatch}>
+      <DispatchContext.Provider value={{dispatch, state}}>
         <GroupRoleContext.Provider value={{ role }}>
           <GroupSetRoleContext.Provider value={{ setRole }}>
             <BrowserRouter>

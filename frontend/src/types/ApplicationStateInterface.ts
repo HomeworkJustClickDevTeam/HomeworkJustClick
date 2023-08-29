@@ -1,4 +1,3 @@
-import {UserStateInterface} from "./UserStateInterface";
 
 export interface ApplicationStateInterface {
   loggedIn: boolean

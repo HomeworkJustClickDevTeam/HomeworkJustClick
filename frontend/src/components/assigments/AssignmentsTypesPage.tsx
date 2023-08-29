@@ -1,23 +1,26 @@
-import {useContext, useEffect, useState} from "react"
+import React, {useContext, useEffect, useState} from "react"
 import {assigmentFilterStudent} from "./filter/AssigmentFilterStudent"
 import {useNavigate, useParams} from "react-router-dom"
-import userContext from "../../contexts/UserContext"
 import AssigmentListElement from "./AssigmentListElement"
 import Loading from "../animations/Loading"
 import groupRoleContext from "../../contexts/GroupRoleContext"
 import {AssignmentInterface} from "../../types/AssignmentInterface";
+import {getUser} from "../../services/otherServices";
 
 function AssignmentsTypesPage({ type }: {type: string}) {
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [assignments, setAssignments] = useState<AssignmentInterface[]>([])
   const { idGroup = "" } = useParams()
-  const { userState } = useContext(userContext)
+  const userState = getUser()
   const { role } = useContext(groupRoleContext)
   const navigate = useNavigate()
+  if(userState === undefined){
+    return <>Not logged in</>
+  }
   const { doneAssignments, expiredAssignments, noneExpiredAssignments } =
     assigmentFilterStudent({
       idGroup: idGroup,
-      userId: userState.userId,
+      userId: userState?.id as unknown as string,
       setAssignments: setAssignments,
     })
 

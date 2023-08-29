@@ -3,13 +3,16 @@ import {FaChevronLeft} from 'react-icons/fa';
 import {Link, useNavigate} from "react-router-dom"
 import LogOut from "../user/LogOut"
 import dispatchContext from "../../contexts/DispatchContext";
+import {getUser} from "../../services/otherServices";
+import DispatchContext from "../../contexts/DispatchContext";
 
 function HeaderLoggedInState() {
-  const userState = useContext(dispatchContext)
   const navigate = useNavigate()
+  const userState = getUser()
+  const globalDispatch = useContext(DispatchContext)
   return (
       <section className='relative flex h-16 text-white font-lato font-normal bg-main_blue items-center select-none'>
-          {!userState.homePageIn && (
+          {!globalDispatch?.state.homePageIn && (
               <Link className='absolute flex pl-[3vw] w-[9vw] hover:bg-hover_blue h-full items-center' to="#" onClick={() => navigate(-1)}>
                   <FaChevronLeft className='pr-[calc(0.5vw)]'/>
                   Powrót
@@ -17,7 +20,7 @@ function HeaderLoggedInState() {
           )}
 
               <Link className='flex items-center ml-[9vw] px-[3vw] hover:bg-hover_blue h-full' to="/">Moje Grupy</Link>
-              <Link className='flex items-center px-[2.5vw] hover:bg-hover_blue h-full' to={`/${userState.userState.userId}/assignments`}>
+              <Link className='flex items-center px-[2.5vw] hover:bg-hover_blue h-full' to={`/${userState?.id}/assignments`}>
                   Moje zadanie domowe
               </Link>
               <Link className='flex items-center px-[2.5vw] hover:bg-hover_blue h-full' to={`/settings`}>

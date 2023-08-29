@@ -28,6 +28,12 @@ postgresqlDatabase.interceptors.request.use((config) => {
   return config
 })
 
+postgresqlDatabase.interceptors.response.use(null, function(error){
+  if(error.status === 403){
+
+  }
+})
+
 export const createAssignmentWithUserAndGroupPostgresService = (
   userId: string,
   groupId: string,

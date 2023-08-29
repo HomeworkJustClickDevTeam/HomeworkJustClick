@@ -24,7 +24,7 @@ const LoginPage = () => {
       if (response.data.token) {
         localStorage.setItem("user", JSON.stringify(response.data))
         const action: ActionType = { type: "login" }
-        globalDispatch?.(action)
+        globalDispatch?.dispatch(action)
         navigate("/")
       } else {
         console.log("Zle haslo / uzytkownik")

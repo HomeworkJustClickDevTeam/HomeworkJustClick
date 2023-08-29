@@ -2,17 +2,17 @@ import GroupAppearanceSettings from "./GroupAppearanceSettings";
 import GroupUsersSettings from "./GroupUsersSettings";
 import GroupGeneralSettings from "./GroupGeneralSettings";
 import React, {useContext, useState} from "react";
-import userContext from "../../contexts/UserContext";
 import Loading from "../animations/Loading";
+import {getUser} from "../../services/otherServices";
 
 export default function GroupSettingsPage(){
-  const {loggedIn, userState} = useContext(userContext);
+  const userState = getUser()
   const [loading, setLoading] = useState<boolean>(false)
 
   if(loading){
     return <Loading></Loading>
   }
-  if (!loggedIn) {
+  if (userState === undefined) {
     return <>Not log in</>
   }
   return(

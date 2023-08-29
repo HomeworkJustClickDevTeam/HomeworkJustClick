@@ -2,29 +2,32 @@ import React, {useContext, useEffect, useState} from "react"
 import {useNavigate} from "react-router-dom"
 import {postGroupWithTeacherPostgresService} from "../../services/postgresDatabaseServices"
 import DispatchContext from "../../contexts/DispatchContext"
-import UserContext from "../../contexts/UserContext";
 import {ActionType} from "../../types/ActionType";
 import {GroupCreateInterface} from "../../types/GroupCreateInterface";
+import {getUser} from "../../services/otherServices";
 
 
 function GroupCreatePage() {
-  const {userState} = useContext(UserContext)
+  const userState = getUser()
   const [group, setGroup] = useState<GroupCreateInterface>({
     name: "",
     description: "",
   })
+  if(userState === undefined){
+    return <>Not logged in</>
+  }
   const navigate = useNavigate()
   const globalDispatch = useContext(DispatchContext)
   useEffect(() => {
     const action: ActionType = {
       type: "homePageOut",
     }
-    globalDispatch?.(action)
+    globalDispatch?.dispatch(action)
   }, [])
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     try {
-      await postGroupWithTeacherPostgresService(userState.userId, group)
+      await postGroupWithTeacherPostgresService(userState?.id as unknown as string, group)
       navigate("/")
     } catch (e) {
       console.log(e)

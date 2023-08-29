@@ -12,7 +12,7 @@ function LogOut() {
     const action: ActionType = {
       type: "logout"
     }
-    globalDispatch?.(action)
+    globalDispatch?.dispatch(action)
     logout()
     navigate("/")
   }
