@@ -1,4 +1,4 @@
-import {useContext, useEffect, useState} from "react"
+import React, {useContext, useEffect, useState} from "react"
 import GroupListElement from "../group/GroupListElement"
 import {Link, useNavigate} from "react-router-dom"
 import {groupFilter} from "../group/filter/GroupFilter"
@@ -17,28 +17,30 @@ function HomePage() {
   const navigate = useNavigate()
   const userState = getUser()
   const globalDispatch = useContext(DispatchContext)
-  console.log(userState)
-  if(userState === undefined){
-    return navigate("/")
+  let teacherUserGroups = () => {}
+  let studentsUserGroups = () => {}
+  let allUserGroups = () => {}
+
+  if(userState !== undefined){
+    ({teacherUserGroups, studentsUserGroups, allUserGroups } = groupFilter({
+      setGroups,
+      setIsLoading,
+      userId: userState.id.toString()
+    }))
   }
   useEffect(() => {
     const action: ActionType = {
       type: "homePageIn",
     }
     globalDispatch?.dispatch(action)
-  }, [])
-  const { teacherUserGroups, studentsUserGroups, allUserGroups } = groupFilter({
-    setGroups,
-    setIsLoading,
-    userId: userState.id.toString()
-  })
-
-  useEffect(() => {
     allUserGroups()
-  }, [userState.id])
+  }, [])
 
   if (groups === undefined || groups === null) {
     return <Loading />
+  }
+  if(userState === undefined){
+    return <>User Not Logged in</>
   }
 
 

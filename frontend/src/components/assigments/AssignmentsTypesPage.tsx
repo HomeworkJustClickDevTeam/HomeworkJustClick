@@ -14,15 +14,7 @@ function AssignmentsTypesPage({ type }: {type: string}) {
   const userState = getUser()
   const { role } = useContext(groupRoleContext)
   const navigate = useNavigate()
-  if(userState === undefined){
-    return <>Not logged in</>
-  }
-  const { doneAssignments, expiredAssignments, noneExpiredAssignments } =
-    assigmentFilterStudent({
-      idGroup: idGroup,
-      userId: userState?.id as unknown as string,
-      setAssignments: setAssignments,
-    })
+
 
   useEffect(() => {
     function typeOfAssigment() {
@@ -49,6 +41,15 @@ function AssignmentsTypesPage({ type }: {type: string}) {
       navigate(`-/group/${idGroup}`)
     }
   }, [type])
+  if(userState === undefined){
+    return <>Not logged in</>
+  }
+  const { doneAssignments, expiredAssignments, noneExpiredAssignments } =
+    assigmentFilterStudent({
+      idGroup: idGroup,
+      userId: userState?.id as unknown as string,
+      setAssignments: setAssignments,
+    })
   if (isLoading) {
     return (
       <>

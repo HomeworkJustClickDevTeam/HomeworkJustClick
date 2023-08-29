@@ -9,28 +9,30 @@ export default function UserAppearanceSettingsPage() {
   const userState = getUser()
   const navigate = useNavigate()
 
-  if(userState === undefined){
-    return navigate("/")
-  }
+
 
   const handleColorChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setColor(+event.target.value)
     try {
-      await putUserColorPostgresService(userState.id.toString(), +event.target.value)
-        .catch((error: AxiosError) => {
-          console.log("AXIOS ERROR: ", error)
-        })
+      if(userState !== undefined){
+        await putUserColorPostgresService(userState.id.toString(), +event.target.value)
+          .catch((error: AxiosError) => {
+            console.log("AXIOS ERROR: ", error)
+          })
+      }
     } catch (e) {
       console.log(e)
     }
   }
   useEffect(() => {
-    getUserPostgresService(userState.id.toString())
-      .then((response) => setColor(response.data.color))
-      .catch(() => setColor(undefined))
-  }, [userState.id])
+    if(userState !== undefined){
+      getUserPostgresService(userState.id.toString())
+        .then((response) => setColor(response.data.color))
+        .catch(() => setColor(undefined))
+    }
+  }, [userState?.id])
   return (
     <>
       <p>Wybierz swój kolor:</p>

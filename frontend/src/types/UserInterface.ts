@@ -8,4 +8,5 @@ export interface UserInterface{
   username: string
   verified: boolean
   email: string
+  token: string
 }

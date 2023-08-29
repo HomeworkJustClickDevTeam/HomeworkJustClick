@@ -5,12 +5,12 @@ import ReactDatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import {AssigmentAddFile} from "./AssigmentAddFile"
 import {AssignmentToSendInterface} from "../../types/AssignmentToSendInterface";
-import userContext from "../../contexts/UserContext";
+import {getUser} from "../../services/otherServices";
 
 
 function AddAssigmentPage() {
   const navigate = useNavigate()
-  const {userState} = useContext(userContext)
+  const userState = getUser()
   const { idGroup } = useParams()
   const [assignment, setAssignment] = useState<AssignmentToSendInterface>({
     title: "",
@@ -28,6 +28,10 @@ function AddAssigmentPage() {
       navigate(`/group/${idGroup}/assignments/`)
     }
   }, [toNavigate])
+
+  if(userState === undefined){
+    return <>Not logged in</>
+  }
   const handleTextChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target
     setAssignment((prevState) => ({
@@ -61,7 +65,10 @@ function AddAssigmentPage() {
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
-    createAssignmentWithUserAndGroupPostgresService(userState.userId, idGroup as string, assignment)
+    if(userState === undefined){
+      return <>Not logged in</>
+    }
+    createAssignmentWithUserAndGroupPostgresService(userState.id.toString(), idGroup as string, assignment)
       .catch(error => console.log(error))
       .then(response =>{
         if(response !== (null || undefined)){

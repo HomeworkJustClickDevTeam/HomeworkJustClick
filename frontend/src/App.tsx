@@ -35,21 +35,19 @@ import {ApplicationStateInterface} from "./types/ApplicationStateInterface";
 import {ActionType} from "./types/ActionType";
 import {getUserPostgresService} from "./services/postgresDatabaseServices";
 import {tr} from "date-fns/locale";
+import {stat} from "fs";
+import {getUser} from "./services/otherServices";
 
 function App() {
 
-  const checkToken = ():boolean => {
-    getUserPostgresService(localStorage.getItem("id") as string)
-      .catch((error)=>{
-        if(error) return false
-      })
-    return true
-  }
+
   const initialState: ApplicationStateInterface = {
-    loggedIn: checkToken(),
+    loggedIn: Boolean(getUser()),
     homePageIn: true
   }
+
   const [role, setRole] = useState<string>("")
+
   function ourReducer(draft: ApplicationStateInterface, action: ActionType): ApplicationStateInterface {
     switch (action.type) {
       case "login":
@@ -57,15 +55,16 @@ function App() {
       case "logout":
         return {loggedIn: false, homePageIn: true}
       case "homePageIn":
-        return {loggedIn: checkToken(), homePageIn: true}
+        return {loggedIn: Boolean(getUser()), homePageIn: true}
       case "homePageOut":
-        return {loggedIn: checkToken(), homePageIn: false}
+        return {loggedIn: Boolean(getUser()), homePageIn: false}
     }
   }
   const [state, dispatch] = useReducer(
     ourReducer,
     initialState
   )
+  console.log(state.loggedIn)
   return (
       <DispatchContext.Provider value={{dispatch, state}}>
         <GroupRoleContext.Provider value={{ role }}>

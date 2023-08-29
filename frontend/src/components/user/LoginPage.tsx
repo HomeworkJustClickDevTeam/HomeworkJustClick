@@ -4,7 +4,6 @@ import {Link, useNavigate} from "react-router-dom"
 import DispatchContext from "../../contexts/DispatchContext"
 import login_left_circle from './login_left_circle.svg';
 import login_right_circle from './login_right_circle.svg';
-import {UserStateInterface} from "../../types/UserStateInterface";
 import {ActionType} from "../../types/ActionType";
 import {LoginUserInterface} from "../../types/LoginUserInterface";
 

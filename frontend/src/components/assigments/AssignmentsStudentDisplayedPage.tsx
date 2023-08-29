@@ -1,19 +1,26 @@
-import {useContext, useEffect, useState} from "react"
+import React, {useContext, useEffect, useState} from "react"
 import {getAssignmentsByStudentPostgresService} from "../../services/postgresDatabaseServices"
-import UserContext from "../../contexts/UserContext"
 import AssigmentListElement from "./AssigmentListElement"
 import {AssignmentInterface} from "../../types/AssignmentInterface";
+import {getUser} from "../../services/otherServices";
 
 export default function AssignmentsStudentDisplayedPage() {
   const [assignments, setAssignments] = useState<AssignmentInterface[]>([])
-  const { userState } = useContext(UserContext)
+  const userState = getUser()
+
   useEffect(() => {
-    getAssignmentsByStudentPostgresService(userState.userId)
-      .then((response) => {
-        const assigmentFromServer = response.data as AssignmentInterface[]
-        setAssignments(assigmentFromServer)
-      })
+    if(userState !== undefined) {
+      getAssignmentsByStudentPostgresService(userState.id.toString())
+        .then((response) => {
+          const assigmentFromServer = response.data as AssignmentInterface[]
+          console.log('assigmner', assigmentFromServer)
+          setAssignments(assigmentFromServer)
+        })
+    }
   }, [])
+  if(userState === undefined){
+    return <>Not logged in</>
+  }
   return (
     <div>
       <ul>

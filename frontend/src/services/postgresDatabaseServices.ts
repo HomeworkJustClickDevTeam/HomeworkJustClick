@@ -7,6 +7,7 @@ import {SolutionToSendInterface} from "../types/SolutionToSendInterface";
 import {LoginUserInterface} from "../types/LoginUserInterface";
 import {UserRegisterInterface} from "../types/UserRegisterInterface";
 import {CredentialsInterface} from "../types/CredentialsInterface";
+import {getUser, logout} from "./otherServices";
 
 const postgresqlDatabase = axios.create({
   baseURL: "http://localhost:8080/api",
@@ -17,9 +18,9 @@ const postgresqlDatabase = axios.create({
 })
 
 postgresqlDatabase.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token")
+  const token = getUser()?.token
   config.headers["Content-Type"] = "application/json"
-  if(token !== null){
+  if(token !== undefined){
     config.headers["Authorization"] = "Bearer " + token
   }
   else{
@@ -28,11 +29,16 @@ postgresqlDatabase.interceptors.request.use((config) => {
   return config
 })
 
-postgresqlDatabase.interceptors.response.use(null, function(error){
-  if(error.status === 403){
-
+postgresqlDatabase.interceptors.response.use(null, function (error){
+  if(error.response.status === 403){
+    logout()
   }
+  else if(error.response.status === 404){
+    return []
+  }
+  return Promise.reject(error);
 })
+
 
 export const createAssignmentWithUserAndGroupPostgresService = (
   userId: string,
