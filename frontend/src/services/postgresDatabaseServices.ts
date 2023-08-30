@@ -7,7 +7,7 @@ import {SolutionToSendInterface} from "../types/SolutionToSendInterface";
 import {LoginUserInterface} from "../types/LoginUserInterface";
 import {UserRegisterInterface} from "../types/UserRegisterInterface";
 import {CredentialsInterface} from "../types/CredentialsInterface";
-import {getUser, logout} from "./otherServices";
+import {getUser} from "./otherServices";
 
 const postgresqlDatabase = axios.create({
   baseURL: "http://localhost:8080/api",
@@ -17,23 +17,25 @@ const postgresqlDatabase = axios.create({
   },
 })
 
-postgresqlDatabase.interceptors.request.use((config) => {
-  const token = getUser()?.token
-  config.headers["Content-Type"] = "application/json"
-  if(token !== undefined){
-    config.headers["Authorization"] = "Bearer " + token
-  }
-  else{
-    config.headers["Authorization"] = ""
-  }
-  return config
-})
+postgresqlDatabase.interceptors.request.use(async (config) => {
+    const token = getUser()?.token
+    config.headers["Content-Type"] = "application/json"
+    if (token !== undefined) {
+      config.headers["Authorization"] = "Bearer " + token
+    } else {
+      config.headers["Authorization"] = ""
+    }
+    return config
+  },
+  (error) => {
+    return Promise.reject(error)
+  })
 
 
 export const createAssignmentWithUserAndGroupPostgresService = (
   userId: string,
   groupId: string,
-  assignment: AssignmentToSendInterface) =>{
+  assignment: AssignmentToSendInterface) => {
   return postgresqlDatabase
     .post(
       `/assignment/withUserAndGroup/${userId}/${groupId}`,
@@ -81,23 +83,23 @@ export const postEvaluationWithUserAndSolution = (userId: string, solutionId: st
 }
 
 export const postGroupAddTeacherPostgresService = (userId: string, groupId: string) => {
-return postgresqlDatabase
-  .post(`/group/addTeacher/${userId}/${groupId}`)
+  return postgresqlDatabase
+    .post(`/group/addTeacher/${userId}/${groupId}`)
 }
 export const postGroupWithTeacherPostgresService = (userId: string, group: GroupCreateInterface) => {
   return postgresqlDatabase.post("/group/withTeacher/" + userId, group)
 }
 
 export const postChangePasswordPostgresService = (newCredentials: CredentialsInterface) => {
-return postgresqlDatabase
-  .post("/changePassword", newCredentials)
+  return postgresqlDatabase
+    .post("/changePassword", newCredentials)
 }
 
 export const postGroupAddStudentPostgresService = (userId: string, groupId: string) => {
   return postgresqlDatabase.post(`/group/addStudent/${userId}/${groupId}`)
 }
 
-export const postSolutionWithUserAndAssignmentPostgresService = (userId: string, assignmentId:string, solution:SolutionToSendInterface) =>{
+export const postSolutionWithUserAndAssignmentPostgresService = (userId: string, assignmentId: string, solution: SolutionToSendInterface) => {
   return postgresqlDatabase
     .post(
       `/solution/withUserAndAssignment/${userId}/${assignmentId}`,
@@ -107,7 +109,7 @@ export const postSolutionWithUserAndAssignmentPostgresService = (userId: string,
 
 export const getFilesByAssignmentPostgresService = (assigmentId: string | number) => {
   return postgresqlDatabase
-    .get(`/files/byAssignment/${assigmentId}` )
+    .get(`/files/byAssignment/${assigmentId}`)
 }
 
 export const getFilesBySolutionPostgresService = (solutionId: string | number) => {
@@ -116,7 +118,7 @@ export const getFilesBySolutionPostgresService = (solutionId: string | number) =
   )
 }
 
-export const getUserPostgresService = (userId: string) =>{
+export const getUserPostgresService = (userId: string) => {
   return postgresqlDatabase.get(`/user/` + userId)
 }
 
@@ -124,7 +126,6 @@ export const getGroupsByTeacherPostgresService = (userId: string) => {
   return postgresqlDatabase
     .get("/groups/byTeacher/" + userId)
 }
-
 
 
 export const getGroupsByStudentPostgresService = (userId: string) => {
@@ -177,24 +178,24 @@ export const getAssignmentsByStudentPostgresService = (userId: string) => {
   return postgresqlDatabase.get("/assignments/byStudent/" + userId)
 }
 
-export const getAssignmentsDoneByGroupAndStudentPostgresService = (groupId:string, userId: string) =>{
+export const getAssignmentsDoneByGroupAndStudentPostgresService = (groupId: string, userId: string) => {
   return postgresqlDatabase.get(`/assignments/doneByGroupAndStudent/${groupId}/${userId}`)
 }
 
-export const getAssignmentsExpiredUndoneByGroupAndStudentPostgresService = (groupId:string, userId: string) =>{
+export const getAssignmentsExpiredUndoneByGroupAndStudentPostgresService = (groupId: string, userId: string) => {
   return postgresqlDatabase.get(`/assignments/expiredUndoneByGroupAndStudent/${groupId}/${userId}`)
 }
 
-export const getAssignmentsUndoneByGroupAndStudentPostgresService = (groupId:string, userId: string) =>{
+export const getAssignmentsUndoneByGroupAndStudentPostgresService = (groupId: string, userId: string) => {
   return postgresqlDatabase.get(`/assignments/undoneByGroupAndStudent/${groupId}/${userId}`)
 }
 
-export const getUserGetStudentsByGroupPostgresService = (groupId: string) =>{
+export const getUserGetStudentsByGroupPostgresService = (groupId: string) => {
   return postgresqlDatabase
     .get("/user/getStudentsByGroup/" + groupId)
 }
 
-export const getUserGetTeachersByGroupPostgresService = (groupId: string) =>{
+export const getUserGetTeachersByGroupPostgresService = (groupId: string) => {
   return postgresqlDatabase
     .get("/user/getTeachersByGroup/" + groupId)
 }
@@ -207,13 +208,13 @@ export const getAssignmentsByGroupPostgresService = (groupId: string) => {
   return postgresqlDatabase.get("/assignments/byGroupId/" + groupId)
 }
 
-export const getGroupUserCheckWithRolePostgresService = (userId: string, groupId: string) =>{
+export const getGroupUserCheckWithRolePostgresService = (userId: string, groupId: string) => {
   return postgresqlDatabase
     .get(`/group/userCheckWithRole/${userId}/${groupId}`)
 }
 
 
-export const putAssignmentPostgresService = (assignment: AssignmentInterface) =>{
+export const putAssignmentPostgresService = (assignment: AssignmentInterface) => {
   return postgresqlDatabase
     .put(`/assignment/${assignment.id}`, assignment)
 }
@@ -240,7 +241,7 @@ export const putUserIndexPostgresService = (userId: string, index: number) => {
     .put(`/user/index/${userId}`, index)
 }
 
-export const putGroupNamePostgresService = (groupId:string, name: string) => {
+export const putGroupNamePostgresService = (groupId: string, name: string) => {
   postgresqlDatabase.interceptors.request.use(config => {
     config.headers["Content-Type"] = "text/plain"
     return config
@@ -248,12 +249,12 @@ export const putGroupNamePostgresService = (groupId:string, name: string) => {
   return postgresqlDatabase.put(`/group/name/${groupId}`, name)
 }
 
-export const putGroupDescriptionPostgresService = (groupId:string, description: string) => {
+export const putGroupDescriptionPostgresService = (groupId: string, description: string) => {
   postgresqlDatabase.interceptors.request.use(config => {
     config.headers["Content-Type"] = "text/plain"
     return config
   })
-   return postgresqlDatabase.put(`/group/description/${groupId}`, description)
+  return postgresqlDatabase.put(`/group/description/${groupId}`, description)
 }
 
 export const deleteAssignmentPostgresService = (assignmentId: string) => {
@@ -269,12 +270,12 @@ export const deleteGroupPostgresService = (groupId: string) => {
   return postgresqlDatabase.delete("/group/" + groupId)
 }
 
-export const deleteGroupDeleteStudentPostgresService = (userId: string, groupId: string) =>{
+export const deleteGroupDeleteStudentPostgresService = (userId: string, groupId: string) => {
   return postgresqlDatabase
     .delete(`/group/deleteStudent/${userId}/${groupId}`)
 }
 
-export const deleteGroupDeleteTeacherPostgresService = (userId: string, groupId: string) =>{
+export const deleteGroupDeleteTeacherPostgresService = (userId: string, groupId: string) => {
   return postgresqlDatabase
     .delete(`/group/deleteTeacher/${userId}/${groupId}`)
 }

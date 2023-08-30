@@ -3,7 +3,9 @@ import {createContext, Dispatch, SetStateAction} from "react"
 interface GroupSetRoleInterface {
   setRole: Dispatch<SetStateAction<string>>
 }
+
 const GroupSetRoleContext = createContext<GroupSetRoleInterface>({
-  setRole: () => {},
+  setRole: () => {
+  },
 })
 export default GroupSetRoleContext

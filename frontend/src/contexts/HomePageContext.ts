@@ -6,6 +6,9 @@ interface HomePageContextInterface {
 }
 
 
-const HomePageContext = createContext<HomePageContextInterface>({homePageIn: true, setHomePageIn: () => {}})
+const HomePageContext = createContext<HomePageContextInterface>({
+  homePageIn: true, setHomePageIn: () => {
+  }
+})
 
 export default HomePageContext

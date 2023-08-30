@@ -2,17 +2,18 @@ import {
   getExtendedSolutionsCheckedByGroupPostgresService,
   getExtendedSolutionsLateByGroupPostgresService,
   getExtendedSolutionsUncheckedByGroupPostgresService
-} from "../../../services/postgresDatabaseServices"
-import {SolutionExtendedInterface} from "../../../types/SolutionExtendedInterface";
+} from "../services/postgresDatabaseServices"
+import {SolutionExtendedInterface} from "../types/SolutionExtendedInterface";
 
 interface SolutionTypesPropInterface {
   idGroup: string
   setSolutionsExtended: (solutionExtended: SolutionExtendedInterface[]) => void
 }
+
 export const solutionFilter = ({
-  idGroup,
-  setSolutionsExtended,
-}: SolutionTypesPropInterface) => {
+                                 idGroup,
+                                 setSolutionsExtended,
+                               }: SolutionTypesPropInterface) => {
   const lateSolutions = (): void => {
     getExtendedSolutionsLateByGroupPostgresService(idGroup)
       .then((r) => setSolutionsExtended(r.data))

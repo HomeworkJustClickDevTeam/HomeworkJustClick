@@ -35,7 +35,7 @@ export function AssigmentFile(props: { assigmentId: number }) {
           for (let i = 0; i < decodedData.length; i++) {
             byteArray[i] = decodedData.charCodeAt(i)
           }
-          const blob = new Blob([byteArray], { type })
+          const blob = new Blob([byteArray], {type})
           setFile(blob)
           setFileName(response.data.name)
           setIsLoading(false)

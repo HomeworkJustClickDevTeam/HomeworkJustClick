@@ -19,22 +19,21 @@ import UncheckedSolution from "../solution/UncheckedSolution"
 import {AssignmentInterface} from "../../types/AssignmentInterface";
 import {SolutionInterface} from "../../types/SolutionInterface";
 import {getUser} from "../../services/otherServices";
-import HomePage from "../home/HomePage";
 
 function AssigmentSpecPage() {
-  const { idAssigment, idGroup } = useParams()
+  const {idAssigment, idGroup} = useParams()
   const location = useLocation()
   const navigate = useNavigate()
-  const optionalUserId:string|null = location.state
+  const optionalUserId: string | null = location.state
   const userState = getUser()
-  const { role } = useContext(GroupRoleContext)
+  const {role} = useContext(GroupRoleContext)
   const [isSolutionChecked, setIsSolutionChecked] = useState<boolean | undefined>(undefined)
   const [solution, setSolution] = useState<SolutionInterface | undefined>(undefined)
   const [assignment, setAssignment] = useState<AssignmentInterface | undefined>(undefined)
-  let userId: null|string = null
+  let userId: null | string = null
 
   useEffect(() => {
-    if(userState !== undefined) {
+    if (userState !== undefined) {
       getUncheckedSolutionByUserAssignmentGroupPostgresService(userState.id.toString(), idAssigment as string, idGroup as string)
         .then((response) => {
           if (response.data.id !== null) {
@@ -71,35 +70,35 @@ function AssigmentSpecPage() {
             })
         })
     }
-    }, [])
+  }, [])
 
-  if(userState === undefined){
+  if (userState === undefined) {
     navigate("/")
   }
-  if(assignment === undefined){
-    return(<Loading/>)
+  if (assignment === undefined) {
+    return (<Loading/>)
   }
-  if(optionalUserId !== null){
+  if (optionalUserId !== null) {
     userId = optionalUserId
-  }
-  else{
-    if(userState !== undefined) {
+  } else {
+    if (userState !== undefined) {
       userId = userState.id.toString()
     }
   }
   return (
-    <div >
+    <div>
       {((role === "Teacher") && (userId === null)) ? (
-        <AssigmentModify assignment={assignment} setAssigment={setAssignment} />
+        <AssigmentModify assignment={assignment} setAssigment={setAssignment}/>
       ) : ((solution === undefined) && (userId === null)) ? (
-        <AddSolution assignment={assignment} />
+        <AddSolution assignment={assignment}/>
       ) : isSolutionChecked ? (
 
-        <CheckedSolution assignment={assignment} solution={solution as SolutionInterface} />
+        <CheckedSolution assignment={assignment} solution={solution as SolutionInterface}/>
       ) : (
-        <UncheckedSolution assignment={assignment} solution={solution as SolutionInterface} />
+        <UncheckedSolution assignment={assignment} solution={solution as SolutionInterface}/>
       )}
     </div>
   )
 }
+
 export default AssigmentSpecPage

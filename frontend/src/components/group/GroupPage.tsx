@@ -16,11 +16,11 @@ import {GroupInterface} from "../../types/GroupInterface";
 import {getUser} from "../../services/otherServices";
 
 function GroupPage() {
-  const { idGroup = "" } = useParams<{ idGroup: string }>()
+  const {idGroup = ""} = useParams<{ idGroup: string }>()
   const userState = getUser()
   const {setHomePageIn} = useContext(HomePageContext)
-  const { setRole } = useContext(GroupSetRoleContext)
-  const { role } = useContext(GroupRoleContext)
+  const {setRole} = useContext(GroupSetRoleContext)
+  const {role} = useContext(GroupRoleContext)
   const [group, setGroup] = useState<GroupInterface | undefined>(undefined);
 
   useEffect(() => {
@@ -29,7 +29,7 @@ function GroupPage() {
     getNameAndDesc();
   }, [])
 
-  if(group === undefined || group === null){
+  if (group === undefined || group === null) {
     return <Loading/>
   }
 
@@ -42,7 +42,7 @@ function GroupPage() {
 
   function getNameAndDesc() {
     getGroupPostgresService(idGroup)
-        .then((r) => setGroup(r.data))
+      .then((r) => setGroup(r.data))
   }
 
 
@@ -50,7 +50,6 @@ function GroupPage() {
     await postGroupAddStudentPostgresService(userState?.id as unknown as string, idGroup)
     checkRole()
   }
-
 
 
   if (role === "User not in group") {
@@ -65,8 +64,8 @@ function GroupPage() {
 
   return (
     <div>
-      <GroupHeader group = {group} key={group.id}/>
-      <Outlet />
+      <GroupHeader group={group} key={group.id}/>
+      <Outlet/>
     </div>
   )
 }

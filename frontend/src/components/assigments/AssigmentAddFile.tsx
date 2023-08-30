@@ -19,15 +19,18 @@ export function AssigmentAddFile(props: AssignmentAddFilePropsInterface) {
       }
     }
   }, [props.toSend])
+
   function handleChangeFile(e: ChangeEvent<HTMLInputElement>) {
     if (e.target.files) {
       setFile(e.target.files[0])
     }
   }
+
   return (
     <>
-      <input type="file" onChange={handleChangeFile} />
-      <div> {file && `${file.name} - ${file.type}`}</div>{" "}
+      <input type="file" onChange={handleChangeFile}/>
+      <div> {file && `${file.name} - ${file.type}`}</div>
+      {" "}
     </>
   )
 }

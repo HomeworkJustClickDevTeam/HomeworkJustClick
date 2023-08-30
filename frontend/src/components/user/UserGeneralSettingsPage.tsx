@@ -1,11 +1,7 @@
-
-
-import React, {useContext, useEffect, useState} from "react"
+import React, {useEffect, useState} from "react"
 import {getUserPostgresService, putUserIndexPostgresService} from "../../services/postgresDatabaseServices"
 import {AxiosError} from "axios"
 import {getUser} from "../../services/otherServices";
-import Loading from "../animations/Loading";
-import HomePage from "../home/HomePage";
 import {useNavigate} from "react-router-dom";
 
 export default function UserGeneralSettingsPage() {
@@ -14,7 +10,7 @@ export default function UserGeneralSettingsPage() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    if(userState !== undefined) {
+    if (userState !== undefined) {
       getUserPostgresService(userState.id.toString())
         .then((response) => setIndex(response.data.index))
         .catch(() => setIndex(undefined))
@@ -22,11 +18,11 @@ export default function UserGeneralSettingsPage() {
   }, [userState?.id])
 
 
-  if(userState === undefined){
+  if (userState === undefined) {
     navigate("/")
   }
   const handleIndexSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    if(userState !== undefined) {
+    if (userState !== undefined) {
       event.preventDefault()
       await putUserIndexPostgresService(userState.id.toString(), index as number)
         .catch((error: AxiosError) => {
@@ -47,7 +43,7 @@ export default function UserGeneralSettingsPage() {
           defaultValue={index}
           onChange={(e) => setIndex(+e.target.value)}
         />
-        <input type="submit" value="Potwierdź" />
+        <input type="submit" value="Potwierdź"/>
       </form>
     </>
   )

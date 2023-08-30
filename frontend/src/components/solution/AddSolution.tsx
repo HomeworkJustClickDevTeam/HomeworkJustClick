@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useContext, useEffect, useState} from "react"
+import React, {ChangeEvent, useEffect, useState} from "react"
 import {postFileMongoService} from "../../services/mongoDatabaseServices"
 import {useNavigate, useParams} from "react-router-dom"
 import {
@@ -12,7 +12,6 @@ import {AssigmentPropsInterface} from "../../types/AssigmentPropsInterface";
 import {SolutionInterface} from "../../types/SolutionInterface";
 import {SolutionToSendInterface} from "../../types/SolutionToSendInterface";
 import {getUser} from "../../services/otherServices";
-import HomePage from "../home/HomePage";
 
 
 interface FileRespondMongoInterface {
@@ -20,9 +19,10 @@ interface FileRespondMongoInterface {
   name: string
   format: string
 }
-function AddSolution({ assignment }: AssigmentPropsInterface) {
+
+function AddSolution({assignment}: AssigmentPropsInterface) {
   const navigate = useNavigate()
-  const { idAssigment, idGroup = "" } = useParams()
+  const {idAssigment, idGroup = ""} = useParams()
   const userState = getUser()
   const [file, setFile] = useState<File>()
   const [response, setResponse] = useState<FileRespondMongoInterface>({
@@ -38,7 +38,6 @@ function AddSolution({ assignment }: AssigmentPropsInterface) {
 
   const [solutionFromServer, setSolutionFromServer] = useState<SolutionInterface | undefined>(undefined)
   const [isFile, setIsFile] = useState<boolean>()
-
 
 
   useEffect(() => {
@@ -62,18 +61,20 @@ function AddSolution({ assignment }: AssigmentPropsInterface) {
         .catch((e) => console.log(e))
     }
   }, [solutionFromServer, response])
+
   function handleChangeFile(e: ChangeEvent<HTMLInputElement>) {
     if (e.target.files) {
       setFile(e.target.files[0])
     }
   }
+
   function handleUploadClick() {
     if (!file) {
       return
     }
-    if (userState === undefined){
+    if (userState === undefined) {
       navigate("/")
-    }else {
+    } else {
       const formData = new FormData()
       formData.append("file", file)
       postFileMongoService(formData)
@@ -88,18 +89,25 @@ function AddSolution({ assignment }: AssigmentPropsInterface) {
           setSolutionFromServer(r.data)
         })
         .catch()
-      }
+    }
   }
 
   return (
-    <div className='relative flex flex-col mx-[7.5%] mt-4 border border-border_gray border-1 rounded-md pt-4 px-4 h-80 gap-2'>
+    <div
+      className='relative flex flex-col mx-[7.5%] mt-4 border border-border_gray border-1 rounded-md pt-4 px-4 h-80 gap-2'>
       <div><span className='font-semibold'>Tytuł zadania: </span>{assignment.title}</div>
-      <div><span className='font-semibold'>Data ukończenia: </span>{format(assignment.completionDatetime, "dd.MM.yyyy, HH:mm")}</div>
-      {isFile && <AssigmentFile assigmentId={assignment.id} />}
-      <input type="file" onChange={handleChangeFile} />
+      <div><span
+        className='font-semibold'>Data ukończenia: </span>{format(assignment.completionDatetime, "dd.MM.yyyy, HH:mm")}
+      </div>
+      {isFile && <AssigmentFile assigmentId={assignment.id}/>}
+      <input type="file" onChange={handleChangeFile}/>
       <div> {file && `${file.name} - ${file.type}`}</div>
-      <button onClick={handleUploadClick} className='absolute bg-main_blue text-white px-6 py-1 rounded w-40 bottom-0 left-0 ml-4 mb-6 hover:bg-hover_blue hover:shadow-md active:shadow-none'>Wyslij zadanie</button>
+      <button onClick={handleUploadClick}
+              className='absolute bg-main_blue text-white px-6 py-1 rounded w-40 bottom-0 left-0 ml-4 mb-6 hover:bg-hover_blue hover:shadow-md active:shadow-none'>Wyslij
+        zadanie
+      </button>
     </div>
   )
 }
+
 export default AddSolution

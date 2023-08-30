@@ -39,7 +39,7 @@ export function AssigmentModifyFile(props: {
                 postFileWithAssignmentPostgresService(`${response.data.id}`, response.data.format, response.data.name, `${props.assignmentId}`)
                   .then(() => props.setToNavigate(true))
               })
-              .catch(error=>console.log(error))
+              .catch(error => console.log(error))
           })
           .catch((e) => console.log(e))
       } else {
@@ -55,7 +55,7 @@ export function AssigmentModifyFile(props: {
           const response = await getFileMongoService(databaseFile[0]?.mongo_id, {responseType: "arraybuffer"})
           const fileData = response.data
           const type = databaseFile[0].format
-          const file = new File([fileData], databaseFile[0].name, { type })
+          const file = new File([fileData], databaseFile[0].name, {type})
           setFile(file)
         } catch (error) {
           console.error("Error retrieving file:", error)
@@ -65,18 +65,21 @@ export function AssigmentModifyFile(props: {
 
     fetchFileData()
   }, [databaseFile])
+
   function handleChangeFile(e: ChangeEvent<HTMLInputElement>) {
     if (e.target.files) {
       setFile(e.target.files[0])
       setIsChange(true)
     }
   }
+
   console.log(isChange)
   return (
     <>
       <>
-        <input type="file" onChange={handleChangeFile} />
-        <div> {file && `${file.name} - ${file.type}`}</div>{" "}
+        <input type="file" onChange={handleChangeFile}/>
+        <div> {file && `${file.name} - ${file.type}`}</div>
+        {" "}
       </>
     </>
   )

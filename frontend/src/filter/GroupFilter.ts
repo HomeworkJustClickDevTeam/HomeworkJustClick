@@ -2,15 +2,16 @@ import {
   getGroupsByStudentPostgresService,
   getGroupsByTeacherPostgresService,
   getGroupsByUserPostgresService
-} from "../../../services/postgresDatabaseServices"
-import {GroupInterface} from "../../../types/GroupInterface";
+} from "../services/postgresDatabaseServices"
+import {GroupInterface} from "../types/GroupInterface";
 
 interface GroupFilterProps {
   setGroups: (groups: GroupInterface[] | undefined) => void
   setIsLoading: (loading: boolean) => void
   userId: string
 }
-export const groupFilter = ({ setGroups, setIsLoading, userId }: GroupFilterProps) => {
+
+export const groupFilter = ({setGroups, setIsLoading, userId}: GroupFilterProps) => {
 
   const teacherUserGroups = (): void => {
     setIsLoading(true)

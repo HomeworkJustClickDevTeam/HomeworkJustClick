@@ -1,19 +1,18 @@
 import React, {useContext, useEffect, useState} from "react"
-import {assigmentFilterStudent} from "./filter/AssigmentFilterStudent"
+import {assigmentFilterStudent} from "../../filter/AssigmentFilterStudent"
 import {useNavigate, useParams} from "react-router-dom"
 import AssigmentListElement from "./AssigmentListElement"
 import Loading from "../animations/Loading"
 import groupRoleContext from "../../contexts/GroupRoleContext"
 import {AssignmentInterface} from "../../types/AssignmentInterface";
 import {getUser} from "../../services/otherServices";
-import HomePage from "../home/HomePage";
 
-function AssignmentsTypesPage({ type }: {type: string}) {
+function AssignmentsTypesPage({type}: { type: string }) {
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [assignments, setAssignments] = useState<AssignmentInterface[]>([])
-  const { idGroup = "" } = useParams()
+  const {idGroup = ""} = useParams()
   const userState = getUser()
-  const { role } = useContext(groupRoleContext)
+  const {role} = useContext(groupRoleContext)
   const navigate = useNavigate()
 
 
@@ -36,16 +35,17 @@ function AssignmentsTypesPage({ type }: {type: string}) {
           break
       }
     }
+
     if (role === "Student") {
       typeOfAssigment()
     } else {
       navigate(`-/group/${idGroup}`)
     }
   }, [type])
-  if(userState === undefined){
+  if (userState === undefined) {
     navigate("/")
   }
-  const { doneAssignments, expiredAssignments, noneExpiredAssignments } =
+  const {doneAssignments, expiredAssignments, noneExpiredAssignments} =
     assigmentFilterStudent({
       idGroup: idGroup,
       userId: userState?.id as unknown as string,
@@ -54,20 +54,21 @@ function AssignmentsTypesPage({ type }: {type: string}) {
   if (isLoading) {
     return (
       <>
-        <Loading />
+        <Loading/>
       </>
     )
   }
   return (
-    <div >
-      <ul >
+    <div>
+      <ul>
         {assignments.map((assignment) => (
           <li key={assignment.id}>
-            <AssigmentListElement assignment={assignment} idGroup={idGroup} />{" "}
+            <AssigmentListElement assignment={assignment} idGroup={idGroup}/>{" "}
           </li>
         ))}
       </ul>
     </div>
   )
 }
+
 export default AssignmentsTypesPage

@@ -1,9 +1,8 @@
-import React, {useContext, useEffect, useState} from "react"
+import React, {useEffect, useState} from "react"
 import {getAssignmentsByStudentPostgresService} from "../../services/postgresDatabaseServices"
 import AssigmentListElement from "./AssigmentListElement"
 import {AssignmentInterface} from "../../types/AssignmentInterface";
 import {getUser} from "../../services/otherServices";
-import HomePage from "../home/HomePage";
 import {useNavigate} from "react-router-dom";
 
 export default function AssignmentsStudentDisplayedPage() {
@@ -12,7 +11,7 @@ export default function AssignmentsStudentDisplayedPage() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    if(userState !== undefined) {
+    if (userState !== undefined) {
       getAssignmentsByStudentPostgresService(userState.id.toString())
         .then((response) => {
           const assigmentFromServer = response.data as AssignmentInterface[]
@@ -20,7 +19,7 @@ export default function AssignmentsStudentDisplayedPage() {
         })
     }
   }, [])
-  if(userState === undefined){
+  if (userState === undefined) {
     navigate("/")
   }
   return (

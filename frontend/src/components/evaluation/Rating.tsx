@@ -1,8 +1,7 @@
-import React, {useContext, useState} from "react"
+import React, {useState} from "react"
 import {postEvaluationWithUserAndSolution} from "../../services/postgresDatabaseServices"
 import {useNavigate} from "react-router-dom"
 import {getUser} from "../../services/otherServices";
-import HomePage from "../home/HomePage";
 
 interface RatingPropsInterface {
   maxPoints: number
@@ -11,22 +10,23 @@ interface RatingPropsInterface {
   solutionId: number
   groupId: number
 }
+
 export function Rating({
-  maxPoints,
-  points,
-  setPoints,
-  solutionId,
-  groupId,
-}: RatingPropsInterface) {
+                         maxPoints,
+                         points,
+                         setPoints,
+                         solutionId,
+                         groupId,
+                       }: RatingPropsInterface) {
   const [active, setActive] = useState<number>()
   const userState = getUser()
   const navigate = useNavigate()
 
-  if(userState === undefined){
+  if (userState === undefined) {
     navigate("/")
   }
   const handleMark = () => {
-    const body = { result: points, grade: 0 }
+    const body = {result: points, grade: 0}
     postEvaluationWithUserAndSolution(userState?.id as unknown as string, solutionId.toString(), body)
       .then(() => navigate(`/group/${groupId}`))
       .catch((e) => console.log(e))
@@ -36,7 +36,10 @@ export function Rating({
     const buttons = []
     for (let i = 0; i <= maxPoints; i++) {
       buttons.push(
-        <button key={i} onClick={() => {setPoints(i); setActive(i)}} className={`border border-black w-20 h-6 text-center rounded-md hover:bg-lilly-bg focus:bg-hover_blue`}>
+        <button key={i} onClick={() => {
+          setPoints(i);
+          setActive(i)
+        }} className={`border border-black w-20 h-6 text-center rounded-md hover:bg-lilly-bg focus:bg-hover_blue`}>
           {i}
         </button>
       )

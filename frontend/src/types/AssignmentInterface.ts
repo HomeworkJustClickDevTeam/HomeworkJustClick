@@ -1,4 +1,4 @@
-export interface AssignmentInterface{
+export interface AssignmentInterface {
   id: number
   title: string
   visible: boolean
