@@ -29,16 +29,6 @@ postgresqlDatabase.interceptors.request.use((config) => {
   return config
 })
 
-postgresqlDatabase.interceptors.response.use(null, function (error){
-  if(error.response.status === 403){
-
-  }
-  else if(error.response.status === 404){
-    return []
-  }
-  return Promise.reject(error);
-})
-
 
 export const createAssignmentWithUserAndGroupPostgresService = (
   userId: string,

@@ -10,7 +10,6 @@ function LogOut() {
   const handleLogout = () => {
     logout()
     navigate("/")
-    window.location.reload();
   }
 
   return <button onClick={handleLogout}>Wyloguj się</button>

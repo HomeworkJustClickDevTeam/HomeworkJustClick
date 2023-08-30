@@ -6,6 +6,7 @@ import login_left_circle from './login_left_circle.svg';
 import login_right_circle from './login_right_circle.svg';
 import {LoginUserInterface} from "../../types/LoginUserInterface";
 import HomePage from "../home/HomePage";
+import {login, logout} from "../../services/otherServices";
 
 
 const LoginPage = () => {
@@ -19,15 +20,9 @@ const LoginPage = () => {
     event.preventDefault()
 
     try {
-      const response = await loginPostgresService(user)
-      if (response?.data.token) {
-        localStorage.setItem("user", JSON.stringify(response.data))
-        setHomePageIn(true)
-        navigate("/")
-        window.location.reload();
-      } else {
-        console.log("Zle haslo / uzytkownik")
-      }
+      navigate("/")
+      await login(user)
+      setHomePageIn(true)
     } catch (e) {
       console.log(e)
     }

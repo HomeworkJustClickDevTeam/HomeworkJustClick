@@ -1,4 +1,6 @@
 import {UserInterface} from "../types/UserInterface";
+import {LoginUserInterface} from "../types/LoginUserInterface";
+import {loginPostgresService} from "./postgresDatabaseServices";
 
 export const getUser = ():(UserInterface | undefined) =>{
   const userString = localStorage.getItem("user")
@@ -7,6 +9,20 @@ export const getUser = ():(UserInterface | undefined) =>{
   else return undefined
 }
 
+export const login = async (user: LoginUserInterface) => {
+  await loginPostgresService(user)
+    .then((response)=>{
+      if (response?.data.token) {
+        localStorage.setItem("user", JSON.stringify(response.data))
+        window.location.reload();
+      } else {
+        console.log("Zle haslo / uzytkownik")
+      }
+    })
+    .catch((error) => console.log(error))
+}
+
 export const logout = () =>{
   localStorage.removeItem("user")
+  window.location.reload()
 }
