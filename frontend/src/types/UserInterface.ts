@@ -1,6 +1,5 @@
 export interface UserInterface {
   id: number
-  role: string
   index: number
   firstname: string
   lastname: string
@@ -9,4 +8,5 @@ export interface UserInterface {
   verified: boolean
   email: string
   token: string
+  role: string
 }

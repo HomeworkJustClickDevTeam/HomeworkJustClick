@@ -17,7 +17,6 @@ function HomePage() {
   const {setApplicationState, applicationState} = useContext(ApplicationStateContext)
 
 
-
   let teacherUserGroups = () => {
   }
   let studentsUserGroups = () => {
@@ -25,16 +24,20 @@ function HomePage() {
   let allUserGroups = () => {
   }
 
+  if (applicationState?.userState !== undefined) {
+    ({teacherUserGroups, studentsUserGroups, allUserGroups} = groupFilter({
+      setGroups,
+      setIsLoading,
+      userId: applicationState.userState.id.toString()
+    }))
+  }
+
 
   useEffect(() => {
     setApplicationState({type:"setGroupView", group:undefined})
-    if (applicationState?.userState !== undefined) {
-      ({teacherUserGroups, studentsUserGroups, allUserGroups} = groupFilter({
-        setGroups,
-        setIsLoading,
-        userId: applicationState.userState.id.toString()
-      }))
-    }
+    setApplicationState({type:"setHomePageIn", homePageIn:true})
+
+    allUserGroups()
   }, [])
 
   if (groups === undefined || groups === null) {

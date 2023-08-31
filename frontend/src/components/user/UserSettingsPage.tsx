@@ -1,7 +1,6 @@
 import {Link, useNavigate} from "react-router-dom"
 import React, {useContext, useEffect, useState} from "react"
 import Loading from "../animations/Loading"
-import HomePageContext from "../../contexts/HomePageContext"
 import {getUser} from "../../services/otherServices";
 import UserGeneralSettingsPage from "./UserGeneralSettingsPage";
 import UserSecuritySettingsPage from "./UserSecuritySettingsPage";
@@ -10,12 +9,11 @@ import UserMarkingTablesSettingsPage from "./UserMarkingTablesSettingsPage";
 import ApplicationStateContext from "../../contexts/ApplicationStateContext";
 
 export default function UserSettingsPage(): JSX.Element {
-  const {applicationState} = useContext(ApplicationStateContext)
+  const {applicationState, setApplicationState} = useContext(ApplicationStateContext)
   const navigate = useNavigate()
   const [loading, setLoading] = useState<boolean>(false)
-  const {setHomePageIn} = useContext(HomePageContext)
   useEffect(() => {
-    setHomePageIn(false)
+    setApplicationState({type:"setHomePageIn", homePageIn: false})
   }, [])
   if (loading) {
     return <Loading></Loading>

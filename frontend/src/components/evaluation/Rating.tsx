@@ -1,7 +1,8 @@
-import React, {useState} from "react"
+import React, {useContext, useState} from "react"
 import {postEvaluationWithUserAndSolution} from "../../services/postgresDatabaseServices"
 import {useNavigate} from "react-router-dom"
 import {getUser} from "../../services/otherServices";
+import ApplicationStateContext from "../../contexts/ApplicationStateContext";
 
 interface RatingPropsInterface {
   maxPoints: number
@@ -19,15 +20,15 @@ export function Rating({
                          groupId,
                        }: RatingPropsInterface) {
   const [active, setActive] = useState<number>()
-  const userState = getUser()
   const navigate = useNavigate()
+  const {applicationState} = useContext(ApplicationStateContext)
 
-  if (userState === undefined) {
+  if (applicationState?.userState === undefined) {
     navigate("/")
   }
   const handleMark = () => {
     const body = {result: points, grade: 0}
-    postEvaluationWithUserAndSolution(userState?.id as unknown as string, solutionId.toString(), body)
+    postEvaluationWithUserAndSolution(applicationState?.userState?.id as unknown as string, solutionId.toString(), body)
       .then(() => navigate(`/group/${groupId}`))
       .catch((e) => console.log(e))
   }

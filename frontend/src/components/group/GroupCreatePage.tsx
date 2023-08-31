@@ -1,22 +1,20 @@
 import React, {useContext, useEffect, useState} from "react"
 import {useNavigate} from "react-router-dom"
 import {postGroupWithTeacherPostgresService} from "../../services/postgresDatabaseServices"
-import HomePageContext from "../../contexts/HomePageContext"
 import {GroupCreateInterface} from "../../types/GroupCreateInterface";
 import {getUser} from "../../services/otherServices";
 import ApplicationStateContext from "../../contexts/ApplicationStateContext";
 
 
 function GroupCreatePage() {
-  const {applicationState} = useContext(ApplicationStateContext)
+  const {applicationState, setApplicationState} = useContext(ApplicationStateContext)
   const [group, setGroup] = useState<GroupCreateInterface>({
     name: "",
     description: "",
   })
   const navigate = useNavigate()
-  const {setHomePageIn} = useContext(HomePageContext)
   useEffect(() => {
-    setHomePageIn(false)
+    setApplicationState({type:"setHomePageIn", homePageIn: false})
   }, [])
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()

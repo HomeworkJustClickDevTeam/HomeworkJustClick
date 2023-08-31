@@ -6,3 +6,4 @@ export type ActionTypes =
   | {type: "logOut"}
   | {type: "setGroupView", group?: GroupInterface}
   | {type: "setGroupViewRole", role: string}
+  | {type: "setHomePageIn", homePageIn: boolean}

@@ -5,4 +5,5 @@ export interface ApplicationStateInterface {
   userState?: UserInterface
   role?: string
   group?: GroupInterface
+  homePageIn: boolean
 }

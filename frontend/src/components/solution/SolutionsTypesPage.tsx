@@ -14,11 +14,10 @@ function SolutionsTypesPage({type}: { type: string }) {
   const [solutionsExtended, setSolutionsExtended] = useState<
     SolutionExtendedInterface[]
   >([])
-  const {idGroup = ""} = useParams()
   const {applicationState} = useContext(ApplicationStateContext)
   const {checkSolutions, uncheckedSolutions, lateSolutions} = solutionFilter({
     setSolutionsExtended,
-    idGroup: idGroup,
+    idGroup: applicationState?.group?.id as unknown as string,
   })
 
   function typeOfSolutions() {

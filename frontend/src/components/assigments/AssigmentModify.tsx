@@ -1,10 +1,11 @@
 import {useNavigate, useParams} from "react-router-dom"
-import React, {ChangeEvent, useEffect, useState} from "react"
+import React, {ChangeEvent, useContext, useEffect, useState} from "react"
 import {deleteAssignmentPostgresService, putAssignmentPostgresService} from "../../services/postgresDatabaseServices"
 import ReactDatePicker from "react-datepicker"
 
 import {AssigmentModifyFile} from "./AssigmentModifyFile"
 import {AssigmentPropsInterface} from "../../types/AssigmentPropsInterface";
+import ApplicationStateContext from "../../contexts/ApplicationStateContext";
 
 interface AssigmentModifyPropsInterface extends AssigmentPropsInterface {
   setAssigment: (assignment: (prevState: any) => any) => void
@@ -12,12 +13,13 @@ interface AssigmentModifyPropsInterface extends AssigmentPropsInterface {
 
 function AssigmentModify({assignment, setAssigment}: AssigmentModifyPropsInterface) {
   const navigate = useNavigate()
-  const {idGroup} = useParams()
   const [toSend, setToSend] = useState<boolean>(false)
   const [toNavigate, setToNavigate] = useState<boolean>(false)
+  const {applicationState} = useContext(ApplicationStateContext)
+
   useEffect(() => {
     if (toNavigate) {
-      navigate(`/group/${idGroup}/assignments/`)
+      navigate(`/group/${applicationState?.group?.id}/assignments/`)
     }
   }, [toNavigate])
 
@@ -61,7 +63,7 @@ function AssigmentModify({assignment, setAssigment}: AssigmentModifyPropsInterfa
 
   function handleDelete() {
     deleteAssignmentPostgresService('assignment.id')
-      .then(() => navigate(`/group/${idGroup}/assignments/`))
+      .then(() => navigate(`/group/${applicationState?.group?.id}/assignments/`))
       .catch((e) => console.log(e))
   }
 

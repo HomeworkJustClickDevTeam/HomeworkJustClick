@@ -6,7 +6,6 @@ import {ActionTypes} from "../types/ActionTypes";
 
 export const getUser = (): (UserInterface | undefined) => {
   const userString = localStorage.getItem("user")
-  console.log("USER:", userString)
   if (userString !== null) return JSON.parse(userString)
   else return undefined
 }

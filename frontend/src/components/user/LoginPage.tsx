@@ -1,6 +1,5 @@
 import React, {ChangeEvent, useContext, useState} from "react"
 import {Link, useNavigate} from "react-router-dom"
-import HomePageContext from "../../contexts/HomePageContext"
 import login_left_circle from './login_left_circle.svg';
 import login_right_circle from './login_right_circle.svg';
 import {LoginUserInterface} from "../../types/LoginUserInterface";
@@ -13,8 +12,6 @@ const LoginPage = () => {
     email: "",
     password: "",
   })
-
-  const {setHomePageIn} = useContext(HomePageContext)
   const navigate = useNavigate()
   const {setApplicationState} = useContext(ApplicationStateContext)
 
@@ -23,8 +20,9 @@ const LoginPage = () => {
 
     try {
       await login(user, setApplicationState)
+
       navigate("/")
-      setHomePageIn(true)
+      setApplicationState({type:"setHomePageIn", homePageIn:true})
     } catch (e) {
       console.log(e)
     }

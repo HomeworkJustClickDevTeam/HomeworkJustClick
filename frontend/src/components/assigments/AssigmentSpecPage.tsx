@@ -21,11 +21,10 @@ import {SolutionInterface} from "../../types/SolutionInterface";
 import {getUser} from "../../services/otherServices";
 
 function AssigmentSpecPage() {
-  const {idAssigment, idGroup} = useParams()
+  const {idAssigment} = useParams()
   const location = useLocation()
   const navigate = useNavigate()
   const optionalUserId: string | null = location.state
-  const userState = getUser()
   const {applicationState} = useContext(ApplicationStateContext)
   const [isSolutionChecked, setIsSolutionChecked] = useState<boolean | undefined>(undefined)
   const [solution, setSolution] = useState<SolutionInterface | undefined>(undefined)
@@ -33,8 +32,8 @@ function AssigmentSpecPage() {
   let userId: null | string = null
 
   useEffect(() => {
-    if (userState !== undefined) {
-      getUncheckedSolutionByUserAssignmentGroupPostgresService(userState.id.toString(), idAssigment as string, idGroup as string)
+    if (applicationState?.userState !== undefined) {
+      getUncheckedSolutionByUserAssignmentGroupPostgresService(applicationState?.userState.id.toString(), idAssigment as string, applicationState?.group?.id as unknown as string)
         .then((response) => {
           if (response.data.id !== null) {
             setIsSolutionChecked(false)
@@ -43,7 +42,7 @@ function AssigmentSpecPage() {
         })
         .catch((error: AxiosError) => {
           if (error.response?.status === 404) {
-            getCheckedSolutionByUserAssignmentGroupPostgresService(userState.id.toString(), idAssigment as string, idGroup as string)
+            getCheckedSolutionByUserAssignmentGroupPostgresService(applicationState?.userState?.id as unknown as string, idAssigment as string, applicationState?.group?.id as unknown as string)
               .then((response) => {
                 if (response.data.id !== null) {
                   setIsSolutionChecked(true)
@@ -72,7 +71,7 @@ function AssigmentSpecPage() {
     }
   }, [])
 
-  if (userState === undefined) {
+  if (applicationState?.userState === undefined) {
     navigate("/")
   }
   if (assignment === undefined) {
@@ -81,8 +80,8 @@ function AssigmentSpecPage() {
   if (optionalUserId !== null) {
     userId = optionalUserId
   } else {
-    if (userState !== undefined) {
-      userId = userState.id.toString()
+    if (applicationState?.userState !== undefined) {
+      userId = applicationState?.userState.id.toString()
     }
   }
   return (

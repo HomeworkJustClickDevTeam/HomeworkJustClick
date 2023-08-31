@@ -12,19 +12,18 @@ import ApplicationStateContext from "../../contexts/ApplicationStateContext";
 export default function GroupUsersSettings() {
   const [teachers, setTeachers] = useState<UserInterface[]>()
   const [students, setStudents] = useState<UserInterface[]>([])
-  const {idGroup} = useParams<{ idGroup: string }>()
   const {applicationState} = useContext(ApplicationStateContext)
 
 
   useEffect(() => {
-    getUserGetTeachersByGroupPostgresService(idGroup as string)
+    getUserGetTeachersByGroupPostgresService(applicationState?.group?.id as unknown as string)
       .then((response) => {
         const teachers: UserInterface[] = response.data
         setTeachers(teachers)
       })
       .catch((e) => console.log(e))
 
-    getUserGetStudentsByGroupPostgresService(idGroup as string)
+    getUserGetStudentsByGroupPostgresService(applicationState?.group?.id as unknown as string)
       .then((response) => {
         const students: UserInterface[] = response.data
         setStudents(students)
@@ -61,14 +60,14 @@ export default function GroupUsersSettings() {
       <dd>
         <ul>{teachers?.map((teacher) => ((teacher.id !== applicationState?.userState?.id as number) ?
           <GroupUsersSettingsListElement makeTeacher={makeTeacher} deleteUser={deleteTeacherFromList}
-                                         groupId={idGroup as string} isStudent={false} userToShow={teacher}
+                                         groupId={applicationState?.group?.id as unknown as string} isStudent={false} userToShow={teacher}
                                          key={teacher.id}/> : ""))}</ul>
       </dd>
       <dt className='font-semibold'>Studenci</dt>
       <dd>
         <ul>{students?.map((student) => ((student.id !== applicationState?.userState?.id as number) ?
           <GroupUsersSettingsListElement makeTeacher={makeTeacher} deleteUser={deleteStudentFromList}
-                                         groupId={idGroup as string} isStudent={true} userToShow={student}
+                                         groupId={applicationState?.group?.id as unknown as string} isStudent={true} userToShow={student}
                                          key={student.id}/> : ""))}</ul>
       </dd>
     </dl>

@@ -10,8 +10,6 @@ import {getUser} from "../../services/otherServices";
 function AssignmentsTypesPage({type}: { type: string }) {
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [assignments, setAssignments] = useState<AssignmentInterface[]>([])
-  const {idGroup = ""} = useParams()
-  const userState = getUser()
   const {applicationState} = useContext(groupRoleContext)
   const navigate = useNavigate()
 
@@ -39,16 +37,16 @@ function AssignmentsTypesPage({type}: { type: string }) {
     if (applicationState?.role === "Student") {
       typeOfAssigment()
     } else {
-      navigate(`-/group/${idGroup}`)
+      navigate(`-/group/${applicationState?.group?.id}`)
     }
   }, [type])
-  if (userState === undefined) {
+  if (applicationState?.userState === undefined) {
     navigate("/")
   }
   const {doneAssignments, expiredAssignments, noneExpiredAssignments} =
     assigmentFilterStudent({
-      idGroup: idGroup,
-      userId: userState?.id as unknown as string,
+      idGroup: applicationState?.group?.id as unknown as string,
+      userId: applicationState?.userState?.id as unknown as string,
       setAssignments: setAssignments,
     })
   if (isLoading) {
@@ -63,7 +61,7 @@ function AssignmentsTypesPage({type}: { type: string }) {
       <ul>
         {assignments.map((assignment) => (
           <li key={assignment.id}>
-            <AssigmentListElement assignment={assignment} idGroup={idGroup}/>{" "}
+            <AssigmentListElement assignment={assignment} idGroup={applicationState?.group?.id as unknown as string}/>{" "}
           </li>
         ))}
       </ul>

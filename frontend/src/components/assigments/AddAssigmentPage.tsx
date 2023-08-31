@@ -1,17 +1,17 @@
 import {useNavigate, useParams} from "react-router-dom"
-import React, {ChangeEvent, useEffect, useState} from "react"
+import React, {ChangeEvent, useContext, useEffect, useState} from "react"
 import {createAssignmentWithUserAndGroupPostgresService} from "../../services/postgresDatabaseServices"
 import ReactDatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import {AssigmentAddFile} from "./AssigmentAddFile"
 import {AssignmentToSendInterface} from "../../types/AssignmentToSendInterface";
 import {getUser} from "../../services/otherServices";
+import ApplicationStateContext from "../../contexts/ApplicationStateContext";
 
 
 function AddAssigmentPage() {
   const navigate = useNavigate()
-  const userState = getUser()
-  const {idGroup} = useParams()
+
   const [assignment, setAssignment] = useState<AssignmentToSendInterface>({
     title: "",
     completionDatetime: new Date(),
@@ -22,14 +22,15 @@ function AddAssigmentPage() {
   const [toSend, setToSend] = useState<boolean>(false)
   const [idAssigment, setIdAssignment] = useState<number>()
   const [toNavigate, setToNavigate] = useState<boolean>(false)
+  const {applicationState} = useContext(ApplicationStateContext)
 
   useEffect(() => {
     if (toNavigate) {
-      navigate(`/group/${idGroup}/assignments/`)
+      navigate(`/group/${applicationState?.group}/assignments/`)
     }
   }, [toNavigate])
 
-  if (userState === undefined) {
+  if (applicationState?.userState === undefined) {
     navigate("/")
   }
   const handleTextChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -65,10 +66,10 @@ function AddAssigmentPage() {
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
-    if (userState === undefined) {
+    if (applicationState?.userState === undefined) {
       navigate("/")
     } else {
-      createAssignmentWithUserAndGroupPostgresService(userState.id.toString(), idGroup as string, assignment)
+      createAssignmentWithUserAndGroupPostgresService(applicationState?.userState.id.toString(), applicationState.group?.id as unknown as string, assignment)
         .catch(error => console.log(error))
         .then(response => {
           if (response !== (null || undefined)) {
