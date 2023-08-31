@@ -4,10 +4,11 @@ import {postGroupWithTeacherPostgresService} from "../../services/postgresDataba
 import HomePageContext from "../../contexts/HomePageContext"
 import {GroupCreateInterface} from "../../types/GroupCreateInterface";
 import {getUser} from "../../services/otherServices";
+import ApplicationStateContext from "../../contexts/ApplicationStateContext";
 
 
 function GroupCreatePage() {
-  const userState = getUser()
+  const {applicationState} = useContext(ApplicationStateContext)
   const [group, setGroup] = useState<GroupCreateInterface>({
     name: "",
     description: "",
@@ -20,7 +21,7 @@ function GroupCreatePage() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     try {
-      await postGroupWithTeacherPostgresService(userState?.id as unknown as string, group)
+      await postGroupWithTeacherPostgresService(applicationState?.userState?.id as unknown as string, group)
       navigate("/")
     } catch (e) {
       console.log(e)

@@ -1,5 +1,5 @@
 import GroupUsersSettingsListElement from "./GroupUsersSettingsListElement";
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {
   getUserGetStudentsByGroupPostgresService,
   getUserGetTeachersByGroupPostgresService
@@ -7,12 +7,13 @@ import {
 import {useParams} from "react-router-dom";
 import {UserInterface} from "../../types/UserInterface";
 import {getUser} from "../../services/otherServices";
+import ApplicationStateContext from "../../contexts/ApplicationStateContext";
 
 export default function GroupUsersSettings() {
   const [teachers, setTeachers] = useState<UserInterface[]>()
   const [students, setStudents] = useState<UserInterface[]>([])
   const {idGroup} = useParams<{ idGroup: string }>()
-  const userState = getUser()
+  const {applicationState} = useContext(ApplicationStateContext)
 
 
   useEffect(() => {
@@ -58,14 +59,14 @@ export default function GroupUsersSettings() {
     <dl>
       <dt className='font-semibold'>Nauczyciele</dt>
       <dd>
-        <ul>{teachers?.map((teacher) => ((teacher.id !== userState?.id as number) ?
+        <ul>{teachers?.map((teacher) => ((teacher.id !== applicationState?.userState?.id as number) ?
           <GroupUsersSettingsListElement makeTeacher={makeTeacher} deleteUser={deleteTeacherFromList}
                                          groupId={idGroup as string} isStudent={false} userToShow={teacher}
                                          key={teacher.id}/> : ""))}</ul>
       </dd>
       <dt className='font-semibold'>Studenci</dt>
       <dd>
-        <ul>{students?.map((student) => ((student.id !== userState?.id as number) ?
+        <ul>{students?.map((student) => ((student.id !== applicationState?.userState?.id as number) ?
           <GroupUsersSettingsListElement makeTeacher={makeTeacher} deleteUser={deleteStudentFromList}
                                          groupId={idGroup as string} isStudent={true} userToShow={student}
                                          key={student.id}/> : ""))}</ul>

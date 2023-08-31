@@ -1,5 +1,7 @@
 import {colorsArray} from "../../assets/colors";
 import {GroupListElementPropsInterface} from "../../types/GroupListElementPropsInterface";
+import {useContext} from "react";
+import ApplicationStateContext from "../../contexts/ApplicationStateContext";
 
 function GroupListElement({group}: GroupListElementPropsInterface) {
   return (

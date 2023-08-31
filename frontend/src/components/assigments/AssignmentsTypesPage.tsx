@@ -3,7 +3,7 @@ import {assigmentFilterStudent} from "../../filter/AssigmentFilterStudent"
 import {useNavigate, useParams} from "react-router-dom"
 import AssigmentListElement from "./AssigmentListElement"
 import Loading from "../animations/Loading"
-import groupRoleContext from "../../contexts/GroupRoleContext"
+import groupRoleContext from "../../contexts/ApplicationStateContext"
 import {AssignmentInterface} from "../../types/AssignmentInterface";
 import {getUser} from "../../services/otherServices";
 
@@ -12,7 +12,7 @@ function AssignmentsTypesPage({type}: { type: string }) {
   const [assignments, setAssignments] = useState<AssignmentInterface[]>([])
   const {idGroup = ""} = useParams()
   const userState = getUser()
-  const {role} = useContext(groupRoleContext)
+  const {applicationState} = useContext(groupRoleContext)
   const navigate = useNavigate()
 
 
@@ -36,7 +36,7 @@ function AssignmentsTypesPage({type}: { type: string }) {
       }
     }
 
-    if (role === "Student") {
+    if (applicationState?.role === "Student") {
       typeOfAssigment()
     } else {
       navigate(`-/group/${idGroup}`)

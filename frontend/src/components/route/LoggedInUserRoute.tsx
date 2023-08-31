@@ -1,13 +1,14 @@
 import {getUser} from "../../services/otherServices";
-import React from "react";
+import React, {useContext} from "react";
 
 import {Navigate, Outlet, Route, Routes, RoutesProps} from "react-router-dom";
 import HeaderLoggedInState from "../header/HeaderLoggedInState";
+import ApplicationStateContext from "../../contexts/ApplicationStateContext";
 
 
 export const LoggedInUserRoute = () => {
-  const userState = getUser()
-  if (userState === undefined) {
+  const {applicationState} = useContext(ApplicationStateContext)
+  if (applicationState?.userState === undefined) {
     return (
       <Navigate to={"/home"} replace/>
     )

@@ -1,20 +1,22 @@
 import GroupAppearanceSettings from "./GroupAppearanceSettings";
 import GroupUsersSettings from "./GroupUsersSettings";
 import GroupGeneralSettings from "./GroupGeneralSettings";
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import Loading from "../animations/Loading";
 import {getUser} from "../../services/otherServices";
 import {useNavigate} from "react-router-dom";
+import ApplicationStateContext from "../../contexts/ApplicationStateContext";
 
 export default function GroupSettingsPage() {
-  const userState = getUser()
+  const {applicationState} = useContext(ApplicationStateContext)
+
   const [loading, setLoading] = useState<boolean>(false)
   const navigate = useNavigate()
 
   if (loading) {
     return <Loading></Loading>
   }
-  if (userState === undefined) {
+  if (applicationState?.userState === undefined) {
     navigate("/")
   }
   return (

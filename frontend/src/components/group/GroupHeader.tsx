@@ -1,13 +1,13 @@
 import {Link, useLocation} from "react-router-dom"
 import {useContext} from "react"
-import GroupContext from "../../contexts/GroupRoleContext"
+import GroupContext from "../../contexts/ApplicationStateContext"
 import {colorsArray} from "../../assets/colors";
 import {GroupListElementPropsInterface} from "../../types/GroupListElementPropsInterface";
 
 //import {theme.colors.colorsArray: string[]} = require("../../../tailwind.config")
 
 function GroupHeader({group}: GroupListElementPropsInterface) {
-  const {role} = useContext(GroupContext)
+  const {applicationState} = useContext(GroupContext)
   const location = useLocation();
   const locationSplit = location.pathname.split("/");
 
@@ -40,22 +40,22 @@ function GroupHeader({group}: GroupListElementPropsInterface) {
           </ul>
         </div>
         <div className='relative float-right flex h-16 items-center gap-5 '>
-          {role === "Student" ? (
+          {applicationState?.role === "Student" ? (
             <Link to="assignments/todo" className=''>Do wykonania</Link>
           ) : (
             <Link to="solutions/uncheck">Do sprawdzenia</Link>
           )}
-          {role === "Student" ? (
+          {applicationState?.role === "Student" ? (
             <Link to="assignments/done">Zrobione</Link>
           ) : (
             <Link to="solutions/check">Sprawdzone</Link>
           )}
-          {role === "Student" ? (
+          {applicationState?.role === "Student" ? (
             <Link to="assignments/expired">Zaległe</Link>
           ) : (
             <Link to="solutions/late">Spóźnione</Link>
           )}
-          {role === "Teacher" && <Link to="settings">Ustawienia</Link>}
+          {applicationState?.role === "Teacher" && <Link to="settings">Ustawienia</Link>}
         </div>
       </header>
     </div>

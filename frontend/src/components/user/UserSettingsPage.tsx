@@ -3,9 +3,14 @@ import React, {useContext, useEffect, useState} from "react"
 import Loading from "../animations/Loading"
 import HomePageContext from "../../contexts/HomePageContext"
 import {getUser} from "../../services/otherServices";
+import UserGeneralSettingsPage from "./UserGeneralSettingsPage";
+import UserSecuritySettingsPage from "./UserSecuritySettingsPage";
+import UserAppearanceSettingsPage from "./UserAppearanceSettingsPage";
+import UserMarkingTablesSettingsPage from "./UserMarkingTablesSettingsPage";
+import ApplicationStateContext from "../../contexts/ApplicationStateContext";
 
 export default function UserSettingsPage(): JSX.Element {
-  const userState = getUser()
+  const {applicationState} = useContext(ApplicationStateContext)
   const navigate = useNavigate()
   const [loading, setLoading] = useState<boolean>(false)
   const {setHomePageIn} = useContext(HomePageContext)
@@ -15,7 +20,7 @@ export default function UserSettingsPage(): JSX.Element {
   if (loading) {
     return <Loading></Loading>
   }
-  if (userState === undefined) {
+  if (applicationState?.userState === undefined) {
     navigate("/")
   }
   return (
@@ -24,17 +29,29 @@ export default function UserSettingsPage(): JSX.Element {
         <p className='text-lg font-semibold'>Ustawienia</p>
         <ul>
           <li>
-            <Link to={"/settings/general"}>
-              Ogólne
-            </Link>
+            <p>
+              Ogólne <br/>
+              <UserGeneralSettingsPage/>
+            </p>
           </li>
-          <li><Link to={"/settings/appearance"}>Wygląd</Link></li>
           <li>
-            <Link to={"/settings/security"}>
-              Bezpieczeństwo
-            </Link>
+            <p>
+              Wygląd <br/>
+              <UserAppearanceSettingsPage/>
+            </p>
           </li>
-          <li><Link to={"/settings/markingTables"}>Moje tabele ocen</Link></li>
+          <li>
+            <p>
+              Bezpieczeństwo <br/>
+              <UserSecuritySettingsPage/>
+            </p>
+          </li>
+          <li>
+            <p>
+              Moje tabele ocen <br/>
+              <UserMarkingTablesSettingsPage/>
+            </p>
+          </li>
         </ul>
       </div>
     </div>

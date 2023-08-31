@@ -5,6 +5,7 @@ import login_left_circle from './login_left_circle.svg';
 import login_right_circle from './login_right_circle.svg';
 import {LoginUserInterface} from "../../types/LoginUserInterface";
 import {login} from "../../services/otherServices";
+import ApplicationStateContext from "../../contexts/ApplicationStateContext";
 
 
 const LoginPage = () => {
@@ -15,11 +16,13 @@ const LoginPage = () => {
 
   const {setHomePageIn} = useContext(HomePageContext)
   const navigate = useNavigate()
+  const {setApplicationState} = useContext(ApplicationStateContext)
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
     try {
-      await login(user)
+      await login(user, setApplicationState)
       navigate("/")
       setHomePageIn(true)
     } catch (e) {

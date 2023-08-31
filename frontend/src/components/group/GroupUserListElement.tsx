@@ -1,5 +1,5 @@
 import {useContext} from "react";
-import GroupRoleContext from "../../contexts/GroupRoleContext";
+import ApplicationStateContext from "../../contexts/ApplicationStateContext";
 
 interface GroupUserListElementProps {
   userToShow: { firstname: string, lastname: string, id: number }
@@ -7,9 +7,9 @@ interface GroupUserListElementProps {
 }
 
 function GroupUserListElement({userToShow, isTeacher}: GroupUserListElementProps) {
-  const {role} = useContext(GroupRoleContext)
+  const {applicationState} = useContext(ApplicationStateContext)
 
-  if (!isTeacher && role === "Teacher") {
+  if (!isTeacher && applicationState?.role === "Teacher") {
     return (
       <li className="px-1 after:content-[','] last:after:content-['']">
         <a href={"userProfileInGroup/" + userToShow.id}>

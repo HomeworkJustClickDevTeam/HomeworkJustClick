@@ -1,4 +1,8 @@
+import {UserInterface} from "./UserInterface";
+import {GroupInterface} from "./GroupInterface";
+
 export interface ApplicationStateInterface {
-  loggedIn: boolean
-  homePageIn: boolean
+  userState?: UserInterface
+  role?: string
+  group?: GroupInterface
 }

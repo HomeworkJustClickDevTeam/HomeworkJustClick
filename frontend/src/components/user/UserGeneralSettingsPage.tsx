@@ -1,30 +1,31 @@
-import React, {useEffect, useState} from "react"
+import React, {useContext, useEffect, useState} from "react"
 import {getUserPostgresService, putUserIndexPostgresService} from "../../services/postgresDatabaseServices"
 import {AxiosError} from "axios"
 import {getUser} from "../../services/otherServices";
 import {useNavigate} from "react-router-dom";
+import ApplicationStateContext from "../../contexts/ApplicationStateContext";
 
 export default function UserGeneralSettingsPage() {
-  const userState = getUser()
+  const {applicationState} = useContext(ApplicationStateContext)
   const [index, setIndex] = useState<number | undefined>(undefined)
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (userState !== undefined) {
-      getUserPostgresService(userState.id.toString())
+    if (applicationState?.userState !== undefined) {
+      getUserPostgresService(applicationState?.userState.id.toString())
         .then((response) => setIndex(response.data.index))
         .catch(() => setIndex(undefined))
     }
-  }, [userState?.id])
+  }, [applicationState?.userState?.id])
 
 
-  if (userState === undefined) {
+  if (applicationState?.userState === undefined) {
     navigate("/")
   }
   const handleIndexSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    if (userState !== undefined) {
+    if (applicationState?.userState !== undefined) {
       event.preventDefault()
-      await putUserIndexPostgresService(userState.id.toString(), index as number)
+      await putUserIndexPostgresService(applicationState?.userState.id.toString(), index as number)
         .catch((error: AxiosError) => {
           console.log(error)
         })

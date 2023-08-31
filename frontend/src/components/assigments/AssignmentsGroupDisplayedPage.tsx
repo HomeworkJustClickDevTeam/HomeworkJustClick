@@ -3,7 +3,7 @@ import {useContext, useEffect, useState} from "react"
 import {getAssignmentsByGroupPostgresService} from "../../services/postgresDatabaseServices"
 import AssigmentListElement from "./AssigmentListElement"
 import Loading from "../animations/Loading"
-import GroupRoleContext from "../../contexts/GroupRoleContext"
+import ApplicationStateContext from "../../contexts/ApplicationStateContext"
 import {AxiosError} from "axios";
 import {AssignmentInterface} from "../../types/AssignmentInterface";
 
@@ -11,12 +11,12 @@ function AssignmentsGroupDisplayedPage() {
   const [assignments, setAssignments] = useState<AssignmentInterface[]>([])
   const {idGroup = ""} = useParams<string>()
   const [isLoading, setIsLoading] = useState<boolean>(true)
-  const {role} = useContext(GroupRoleContext)
+  const {applicationState} = useContext(ApplicationStateContext)
 
   useEffect(() => {
     getAssignmentsByGroupPostgresService(idGroup).then((response) => {
       const assigmentFromServer = response.data as AssignmentInterface[]
-      if (role === "Teacher") {
+      if (applicationState?.role === "Teacher") {
         setAssignments(assigmentFromServer)
       } else {
         setAssignments(
@@ -33,7 +33,7 @@ function AssignmentsGroupDisplayedPage() {
   }
   return (
     <div className='relative h-[420px]'>
-      {role === "Teacher" && (
+      {applicationState?.role === "Teacher" && (
         <Link to={`/group/${idGroup}/assignments/add`}>
           <button
             className='absolute right-[7.5%] bottom-0 bg-main_blue text-white px-8 py-2 rounded-md text-lg hover:bg-hover_blue hover:shadow-md active:shadow-none'>Nowe

@@ -7,7 +7,7 @@ import {
 } from "../../services/postgresDatabaseServices"
 import {parseISO} from "date-fns"
 
-import GroupRoleContext from "../../contexts/GroupRoleContext"
+import ApplicationStateContext from "../../contexts/ApplicationStateContext"
 import AssigmentModify from "./AssigmentModify"
 
 import AddSolution from "../solution/AddSolution"
@@ -26,7 +26,7 @@ function AssigmentSpecPage() {
   const navigate = useNavigate()
   const optionalUserId: string | null = location.state
   const userState = getUser()
-  const {role} = useContext(GroupRoleContext)
+  const {applicationState} = useContext(ApplicationStateContext)
   const [isSolutionChecked, setIsSolutionChecked] = useState<boolean | undefined>(undefined)
   const [solution, setSolution] = useState<SolutionInterface | undefined>(undefined)
   const [assignment, setAssignment] = useState<AssignmentInterface | undefined>(undefined)
@@ -87,7 +87,7 @@ function AssigmentSpecPage() {
   }
   return (
     <div>
-      {((role === "Teacher") && (userId === null)) ? (
+      {((applicationState?.role === "Teacher") && (userId === null)) ? (
         <AssigmentModify assignment={assignment} setAssigment={setAssignment}/>
       ) : ((solution === undefined) && (userId === null)) ? (
         <AddSolution assignment={assignment}/>

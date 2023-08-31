@@ -1,4 +1,4 @@
-import React, {useState} from "react"
+import React, {useReducer, useState} from "react"
 
 import './App.css'
 // import "./assets/App.css"
@@ -15,8 +15,7 @@ import AssigmentSpecPage from "./components/assigments/AssigmentSpecPage"
 import HomePageContext from "./contexts/HomePageContext"
 import GroupUsersPage from "./components/group/GroupUsersPage"
 import NotFoundPage from "./components/errors/NotFoundPage"
-import GroupRoleContext from "./contexts/GroupRoleContext"
-import GroupSetRoleContext from "./contexts/GroupSetRoleContext"
+import ApplicationStateContext from "./contexts/ApplicationStateContext"
 import AssignmentsTypesPage from "./components/assigments/AssignmentsTypesPage"
 import AssignmentsStudentDisplayedPage from "./components/assigments/AssignmentsStudentDisplayedPage"
 import SolutionsTypesPage from "./components/solution/SolutionsTypesPage"
@@ -32,14 +31,34 @@ import HardCodedExamplePage from "./components/solution/HardCodedExamplePage";
 import {LoggedInUserRoute} from "./components/route/LoggedInUserRoute";
 import HeaderLoggedInState from "./components/header/HeaderLoggedInState";
 import {LoggedOutUserRoute} from "./components/route/LoggedOutUserRoute";
+import {ApplicationStateInterface} from "./types/ApplicationStateInterface";
+import {ActionTypes} from "./types/ActionTypes";
 
 function App() {
-  const [role, setRole] = useState<string>("")
   const [homePageIn, setHomePageIn] = useState<boolean>(true)
+  const initialUserState = {
+    userState: undefined,
+    role: undefined,
+    group: undefined
+  }
+  function reducer(state: ApplicationStateInterface, action: ActionTypes): ApplicationStateInterface{
+    switch (action.type){
+      case "logOut":
+        return {userState: undefined, role: undefined, group:undefined}
+      case "logIn":
+        return {userState: action.userState, role: undefined, group: undefined}
+      case "setGroupView":
+        return {group: action.group}
+      case "setGroupViewRole":
+        return {role: action.role}
+    }
+  }
+
+  const [applicationState, setApplicationState] = useReducer(reducer, initialUserState)
+
   return (
     <HomePageContext.Provider value={{setHomePageIn, homePageIn}}>
-      <GroupRoleContext.Provider value={{role}}>
-        <GroupSetRoleContext.Provider value={{setRole}}>
+      <ApplicationStateContext.Provider value={{applicationState, setApplicationState}}>
           <BrowserRouter>
             <Routes>
               <Route element={<LoggedOutUserRoute/>}>
@@ -60,22 +79,6 @@ function App() {
                   element={<AssignmentsStudentDisplayedPage/>}
                 />
                 <Route path="/settings" element={<UserSettingsPage/>}/>
-                <Route
-                  path="/settings/general"
-                  element={<UserGeneralSettingsPage/>}
-                />
-                <Route
-                  path="/settings/security"
-                  element={<UserSecuritySettingsPage/>}
-                />
-                <Route
-                  path="/settings/appearance"
-                  element={<UserAppearanceSettingsPage/>}
-                />
-                <Route
-                  path="/settings/markingTables"
-                  element={<UserMarkingTablesSettingsPage/>}
-                />
                 <Route path="/create/group" element={<GroupCreatePage/>}/>
                 <Route path="/group/:idGroup" element={<GroupPage/>}>
                   <Route path="settings" element={<GroupSettingsPage/>}/>
@@ -127,8 +130,7 @@ function App() {
               <Route path="*" element={<NotFoundPage/>}/>
             </Routes>
           </BrowserRouter>
-        </GroupSetRoleContext.Provider>
-      </GroupRoleContext.Provider>
+      </ApplicationStateContext.Provider>
     </HomePageContext.Provider>
   )
 }

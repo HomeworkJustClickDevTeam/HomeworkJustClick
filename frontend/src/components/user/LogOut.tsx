@@ -1,10 +1,14 @@
 import {useNavigate} from "react-router-dom"
 import {logout} from "../../services/otherServices";
+import ApplicationStateContext from "../../contexts/ApplicationStateContext";
+import {useContext} from "react";
 
 function LogOut() {
   const navigate = useNavigate()
+  const {setApplicationState} = useContext(ApplicationStateContext)
+
   const handleLogout = () => {
-    logout()
+    logout(setApplicationState)
     navigate("/home")
   }
 

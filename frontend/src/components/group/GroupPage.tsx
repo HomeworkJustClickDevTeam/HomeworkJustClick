@@ -8,20 +8,15 @@ import {
 
 import HomePageContext from "../../contexts/HomePageContext"
 import GroupHeader from "./GroupHeader"
-
-import GroupSetRoleContext from "../../contexts/GroupSetRoleContext"
-import GroupRoleContext from "../../contexts/GroupRoleContext"
+import ApplicationStateContext from "../../contexts/ApplicationStateContext"
 import Loading from "../animations/Loading"
 import {GroupInterface} from "../../types/GroupInterface";
 import {getUser} from "../../services/otherServices";
 
 function GroupPage() {
   const {idGroup = ""} = useParams<{ idGroup: string }>()
-  const userState = getUser()
   const {setHomePageIn} = useContext(HomePageContext)
-  const {setRole} = useContext(GroupSetRoleContext)
-  const {role} = useContext(GroupRoleContext)
-  const [group, setGroup] = useState<GroupInterface | undefined>(undefined);
+  const {applicationState, setApplicationState} = useContext(ApplicationStateContext)
 
   useEffect(() => {
     setHomePageIn(false)
@@ -29,30 +24,30 @@ function GroupPage() {
     getNameAndDesc();
   }, [])
 
-  if (group === undefined || group === null) {
+  if (applicationState?.group === undefined || applicationState?.group === null) {
     return <Loading/>
   }
 
   function checkRole() {
-    getGroupUserCheckWithRolePostgresService(userState?.id as unknown as string, idGroup)
-      .then((r) => setRole(r.data))
-      .catch(() => setRole("User not in group"))
+    getGroupUserCheckWithRolePostgresService(applicationState?.userState?.id as unknown as string, idGroup)
+      .then((r) => setApplicationState({type: "setGroupViewRole",role: r.data}))
+      .catch(() => setApplicationState({type: "setGroupViewRole", role:"User not in group"}))
   }
 
 
   function getNameAndDesc() {
     getGroupPostgresService(idGroup)
-      .then((r) => setGroup(r.data))
+      .then((r) => setApplicationState({type: "setGroupView", group: r.data as GroupInterface}))
   }
 
 
   async function addToGroup() {
-    await postGroupAddStudentPostgresService(userState?.id as unknown as string, idGroup)
+    await postGroupAddStudentPostgresService(applicationState?.userState?.id as unknown as string, idGroup)
     checkRole()
   }
 
 
-  if (role === "User not in group") {
+  if (applicationState?.role === "User not in group") {
     return (
       <>
         User not in group
@@ -64,7 +59,7 @@ function GroupPage() {
 
   return (
     <div>
-      <GroupHeader group={group} key={group.id}/>
+      <GroupHeader group={applicationState.group} key={applicationState.group.id}/>
       <Outlet/>
     </div>
   )

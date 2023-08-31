@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react"
+import React, {useContext, useEffect, useState} from "react"
 import GroupListElement from "../group/GroupListElement"
 import {Link, Outlet} from "react-router-dom"
 import {groupFilter} from "../../filter/GroupFilter"
@@ -7,14 +7,16 @@ import {FaCaretDown} from 'react-icons/fa';
 import {GroupInterface} from "../../types/GroupInterface";
 import {getUser} from "../../services/otherServices";
 import HeaderLoggedInState from "../header/HeaderLoggedInState";
+import ApplicationStateContext from "../../contexts/ApplicationStateContext";
 
 function HomePage() {
   const [groups, setGroups] = useState<GroupInterface[] | undefined>(undefined)
   const [isLoading, setIsLoading] = useState<boolean>()
   const [isOpen, setIsOpen] = useState(false)
   const [btnName, setBtnName] = useState('Wszystkie grupy')
+  const {setApplicationState, applicationState} = useContext(ApplicationStateContext)
 
-  const userState = getUser()
+
 
   let teacherUserGroups = () => {
   }
@@ -23,15 +25,16 @@ function HomePage() {
   let allUserGroups = () => {
   }
 
-  if (userState !== undefined) {
-    ({teacherUserGroups, studentsUserGroups, allUserGroups} = groupFilter({
-      setGroups,
-      setIsLoading,
-      userId: userState.id.toString()
-    }))
-  }
+
   useEffect(() => {
-    allUserGroups()
+    setApplicationState({type:"setGroupView", group:undefined})
+    if (applicationState?.userState !== undefined) {
+      ({teacherUserGroups, studentsUserGroups, allUserGroups} = groupFilter({
+        setGroups,
+        setIsLoading,
+        userId: applicationState.userState.id.toString()
+      }))
+    }
   }, [])
 
   if (groups === undefined || groups === null) {

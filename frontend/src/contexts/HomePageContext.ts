@@ -7,8 +7,7 @@ interface HomePageContextInterface {
 
 
 const HomePageContext = createContext<HomePageContextInterface>({
-  homePageIn: true, setHomePageIn: () => {
-  }
+  homePageIn: true, setHomePageIn: () => {}
 })
 
 export default HomePageContext

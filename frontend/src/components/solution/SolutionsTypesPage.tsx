@@ -1,11 +1,13 @@
 import {useContext, useEffect, useState} from "react"
 import {Link, useParams} from "react-router-dom"
 
-import groupRoleContext from "../../contexts/GroupRoleContext"
+import groupRoleContext from "../../contexts/ApplicationStateContext"
 import NotFoundPage from "../errors/NotFoundPage"
 import Loading from "../animations/Loading"
 import {solutionFilter} from "../../filter/SolutionFilter"
 import {SolutionExtendedInterface} from "../../types/SolutionExtendedInterface";
+import ApplicationStateContext from "../../contexts/ApplicationStateContext";
+import {ApplicationStateInterface} from "../../types/ApplicationStateInterface";
 
 function SolutionsTypesPage({type}: { type: string }) {
   const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -13,7 +15,7 @@ function SolutionsTypesPage({type}: { type: string }) {
     SolutionExtendedInterface[]
   >([])
   const {idGroup = ""} = useParams()
-  const {role} = useContext(groupRoleContext)
+  const {applicationState} = useContext(ApplicationStateContext)
   const {checkSolutions, uncheckedSolutions, lateSolutions} = solutionFilter({
     setSolutionsExtended,
     idGroup: idGroup,
@@ -44,7 +46,7 @@ function SolutionsTypesPage({type}: { type: string }) {
     setSolutionsExtended([])
     typeOfSolutions()
   }, [type])
-  if (role !== "Teacher") {
+  if (applicationState?.role !== "Teacher") {
     return <NotFoundPage/>
   }
   if (isLoading) {
