@@ -13,7 +13,7 @@ function GroupTeacherDisplayer({groupId}: { groupId: string }) {
         setTeachers(teacher)
       })
       .catch((e) => console.log(e))
-  },)
+  },[])
   return (
     <div className='flex inline-block mt-4 border-b-2 border-b-light_gray w-fit'>
       <h1 className='font-bold text-2xl align-text-bottom mr-3'>Prowadzący: </h1>
