@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from "react"
 import {useNavigate} from "react-router-dom"
-import {postGroupWithTeacherPostgresService} from "../../services/postgresDatabaseServices"
+import {createGroupWithTeacherPostgresService} from "../../services/postgresDatabaseServices"
 import {GroupCreateInterface} from "../../types/GroupCreateInterface";
 import {getUser} from "../../services/otherServices";
 import ApplicationStateContext from "../../contexts/ApplicationStateContext";
@@ -19,7 +19,7 @@ function GroupCreatePage() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     try {
-      await postGroupWithTeacherPostgresService(applicationState?.userState?.id as unknown as string, group)
+      await createGroupWithTeacherPostgresService(applicationState?.userState?.id as unknown as string, group)
       navigate("/")
     } catch (e) {
       console.log(e)

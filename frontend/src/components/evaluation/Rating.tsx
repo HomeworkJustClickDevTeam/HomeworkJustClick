@@ -1,5 +1,5 @@
 import React, {useContext, useState} from "react"
-import {postEvaluationWithUserAndSolution} from "../../services/postgresDatabaseServices"
+import {createEvaluationWithUserAndSolution} from "../../services/postgresDatabaseServices"
 import {useNavigate} from "react-router-dom"
 import {getUser} from "../../services/otherServices";
 import ApplicationStateContext from "../../contexts/ApplicationStateContext";
@@ -28,7 +28,7 @@ export function Rating({
   }
   const handleMark = () => {
     const body = {result: points, grade: 0}
-    postEvaluationWithUserAndSolution(applicationState?.userState?.id as unknown as string, solutionId.toString(), body)
+    createEvaluationWithUserAndSolution(applicationState?.userState?.id as unknown as string, solutionId.toString(), body)
       .then(() => navigate(`/group/${groupId}`))
       .catch((e) => console.log(e))
   }

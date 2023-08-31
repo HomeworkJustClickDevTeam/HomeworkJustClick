@@ -1,8 +1,8 @@
 import GroupUsersSettingsListElement from "./GroupUsersSettingsListElement";
 import React, {useContext, useEffect, useState} from "react";
 import {
-  getUserGetStudentsByGroupPostgresService,
-  getUserGetTeachersByGroupPostgresService
+  getStudentsByGroupPostgresService,
+  getTeachersByGroupPostgresService
 } from "../../services/postgresDatabaseServices";
 import {useParams} from "react-router-dom";
 import {UserInterface} from "../../types/UserInterface";
@@ -16,14 +16,14 @@ export default function GroupUsersSettings() {
 
 
   useEffect(() => {
-    getUserGetTeachersByGroupPostgresService(applicationState?.group?.id as unknown as string)
+    getTeachersByGroupPostgresService(applicationState?.group?.id as unknown as string)
       .then((response) => {
         const teachers: UserInterface[] = response.data
         setTeachers(teachers)
       })
       .catch((e) => console.log(e))
 
-    getUserGetStudentsByGroupPostgresService(applicationState?.group?.id as unknown as string)
+    getStudentsByGroupPostgresService(applicationState?.group?.id as unknown as string)
       .then((response) => {
         const students: UserInterface[] = response.data
         setStudents(students)

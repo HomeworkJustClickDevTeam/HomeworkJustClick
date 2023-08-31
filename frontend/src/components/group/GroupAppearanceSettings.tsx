@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from "react";
-import {getGroupPostgresService, putGroupColorPostgresService} from "../../services/postgresDatabaseServices";
+import {getGroupPostgresService, changeGroupColorPostgresService} from "../../services/postgresDatabaseServices";
 import {AxiosError} from "axios";
 import {useParams} from "react-router-dom";
 import {colorsArray} from "../../assets/colors";
@@ -14,7 +14,7 @@ export default function GroupAppearanceSettings() {
         group.color = +event.target.value
         setApplicationState({type:"setGroupView", group})
       }
-      await putGroupColorPostgresService(applicationState?.group?.id as unknown as string, +event.target.value).catch((error: AxiosError) => {
+      await changeGroupColorPostgresService(applicationState?.group?.id as unknown as string, +event.target.value).catch((error: AxiosError) => {
         console.log("AXIOS ERROR: ", error)
       })
     } catch (e) {

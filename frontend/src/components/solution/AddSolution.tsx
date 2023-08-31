@@ -3,8 +3,8 @@ import {postFileMongoService} from "../../services/mongoDatabaseServices"
 import {useNavigate, useParams} from "react-router-dom"
 import {
   getFilesByAssignmentPostgresService,
-  postFileWithSolutionPostgresService,
-  postSolutionWithUserAndAssignmentPostgresService
+  createFileWithSolutionPostgresService,
+  createSolutionWithUserAndAssignmentPostgresService
 } from "../../services/postgresDatabaseServices"
 import {AssigmentFile} from "../assigments/AssigmentFile"
 import {format} from "date-fns";
@@ -50,7 +50,7 @@ function AddSolution({assignment}: AssigmentPropsInterface) {
   useEffect(() => {
 
     if (solutionFromServer?.id && response.id) {
-      postFileWithSolutionPostgresService(
+      createFileWithSolutionPostgresService(
         response.id,
         response.format,
         response.name,
@@ -84,7 +84,7 @@ function AddSolution({assignment}: AssigmentPropsInterface) {
           setResponse(r.data)
         })
         .catch()
-      postSolutionWithUserAndAssignmentPostgresService(applicationState?.userState.id.toString(), idAssigment as string, solution)
+      createSolutionWithUserAndAssignmentPostgresService(applicationState?.userState.id.toString(), idAssigment as string, solution)
         .then((r) => {
           console.log(r)
           setSolutionFromServer(r.data)

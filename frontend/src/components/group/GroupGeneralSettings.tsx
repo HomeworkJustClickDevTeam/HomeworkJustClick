@@ -2,10 +2,10 @@ import {useNavigate, useParams} from "react-router-dom"
 import {
   deleteGroupPostgresService,
   getGroupPostgresService,
-  putGroupArchivePostgresService,
-  putGroupDescriptionPostgresService,
-  putGroupNamePostgresService,
-  putGroupUnarchivePostgresService
+  archiveGroupPostgresService,
+  changeGroupDescriptionPostgresService,
+  changeGroupNamePostgresService,
+  unarchiveGroupPostgresService
 } from "../../services/postgresDatabaseServices"
 import {AxiosError} from "axios"
 import React, {useContext, useEffect, useState} from "react"
@@ -25,7 +25,7 @@ export default function GroupGeneralSettings() {
   }
   const archivizationHandler = async () => {
     applicationState?.group?.archived
-      ? await putGroupUnarchivePostgresService(applicationState?.group?.id as unknown as string)
+      ? await unarchiveGroupPostgresService(applicationState?.group?.id as unknown as string)
         .catch((error: AxiosError) => console.log(error))
         .then(() =>{
           let group = applicationState?.group
@@ -34,7 +34,7 @@ export default function GroupGeneralSettings() {
             setApplicationState({type:"setGroupView", group: group})
           }
         })
-      : await putGroupArchivePostgresService(applicationState?.group?.id as unknown as string)
+      : await archiveGroupPostgresService(applicationState?.group?.id as unknown as string)
         .catch((error: AxiosError) => console.log(error))
         .then(() =>{
           let group = applicationState?.group
@@ -48,7 +48,7 @@ export default function GroupGeneralSettings() {
   const setGroupName = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     if(applicationState?.group !== undefined) {
-      await putGroupNamePostgresService(applicationState?.group?.id as unknown as string, applicationState?.group?.name)
+      await changeGroupNamePostgresService(applicationState?.group?.id as unknown as string, applicationState?.group?.name)
         .catch((error: AxiosError) => console.log(error))
     }
   }
@@ -57,7 +57,7 @@ export default function GroupGeneralSettings() {
   ) => {
     event.preventDefault()
     if(applicationState?.group !== undefined) {
-      await putGroupDescriptionPostgresService(applicationState?.group?.id as unknown as string, applicationState?.group?.description)
+      await changeGroupDescriptionPostgresService(applicationState?.group?.id as unknown as string, applicationState?.group?.description)
         .catch((error: AxiosError) => console.log(error))
     }
   }

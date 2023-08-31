@@ -1,6 +1,6 @@
 import {ChangeEvent, useEffect, useState} from "react"
 import {postFileMongoService} from "../../services/mongoDatabaseServices"
-import {postFileWithAssignmentPostgresService} from "../../services/postgresDatabaseServices"
+import {createFileWithAssignmentPostgresService} from "../../services/postgresDatabaseServices"
 import {AssignmentAddFilePropsInterface} from "../../types/AssignmentAddFilePropsInterface";
 
 export function AssigmentAddFile(props: AssignmentAddFilePropsInterface) {
@@ -12,7 +12,7 @@ export function AssigmentAddFile(props: AssignmentAddFilePropsInterface) {
         const formData = new FormData()
         formData.append("file", file)
         postFileMongoService(formData)
-          .then((response) => postFileWithAssignmentPostgresService(`${response.data.id}`, response.data.format, response.data.name, `${props.idAssigment}`))
+          .then((response) => createFileWithAssignmentPostgresService(`${response.data.id}`, response.data.format, response.data.name, `${props.idAssigment}`))
           .catch()
       } else {
         props.setToNavigate(true)

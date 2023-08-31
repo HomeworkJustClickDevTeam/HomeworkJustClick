@@ -2,7 +2,7 @@ import {ChangeEvent, useEffect, useState} from "react"
 import {
   deleteFilePostgresService,
   getFilesByAssignmentPostgresService,
-  postFileWithAssignmentPostgresService
+  createFileWithAssignmentPostgresService
 } from "../../services/postgresDatabaseServices"
 import {getFileMongoService, postFileMongoService} from "../../services/mongoDatabaseServices"
 import {FileFromPostInterface} from "../../types/FileFromPostInterface";
@@ -36,7 +36,7 @@ export function AssigmentModifyFile(props: {
           .then(() => {
             postFileMongoService(formData)
               .then((response) => {
-                postFileWithAssignmentPostgresService(`${response.data.id}`, response.data.format, response.data.name, `${props.assignmentId}`)
+                createFileWithAssignmentPostgresService(`${response.data.id}`, response.data.format, response.data.name, `${props.assignmentId}`)
                   .then(() => props.setToNavigate(true))
               })
               .catch(error => console.log(error))

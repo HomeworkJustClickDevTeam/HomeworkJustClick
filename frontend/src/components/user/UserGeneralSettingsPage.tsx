@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from "react"
-import {getUserPostgresService, putUserIndexPostgresService} from "../../services/postgresDatabaseServices"
+import {getUserPostgresService, changeUserIndexPostgresService} from "../../services/postgresDatabaseServices"
 import {AxiosError} from "axios"
 import {getUser} from "../../services/otherServices";
 import {useNavigate} from "react-router-dom";
@@ -25,7 +25,7 @@ export default function UserGeneralSettingsPage() {
   const handleIndexSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     if (applicationState?.userState !== undefined) {
       event.preventDefault()
-      await putUserIndexPostgresService(applicationState?.userState.id.toString(), index as number)
+      await changeUserIndexPostgresService(applicationState?.userState.id.toString(), index as number)
         .catch((error: AxiosError) => {
           console.log(error)
         })

@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react"
-import {getUserGetTeachersByGroupPostgresService} from "../../services/postgresDatabaseServices"
+import {getTeachersByGroupPostgresService} from "../../services/postgresDatabaseServices"
 import GroupUserListElement from "./GroupUserListElement"
 import {UserInterface} from "../../types/UserInterface";
 
@@ -7,7 +7,7 @@ function GroupTeacherDisplayer({groupId}: { groupId: string }) {
   const [teachers, setTeachers] = useState<UserInterface[]>()
 
   useEffect(() => {
-    getUserGetTeachersByGroupPostgresService(groupId)
+    getTeachersByGroupPostgresService(groupId)
       .then((response) => {
         const teacher: UserInterface[] = response.data
         setTeachers(teacher)

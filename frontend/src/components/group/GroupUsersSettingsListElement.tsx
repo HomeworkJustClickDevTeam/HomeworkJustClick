@@ -1,8 +1,8 @@
 import React, {useContext, useState} from "react";
 import {
-  deleteGroupDeleteStudentPostgresService,
-  deleteGroupDeleteTeacherPostgresService,
-  postGroupAddTeacherPostgresService
+  deleteStudentInGroupPostgresService,
+  deleteTeacherInGroupPostgresService,
+  addTeacherToGroupPostgresService
 } from "../../services/postgresDatabaseServices";
 import {AxiosError} from "axios";
 import ApplicationStateContext from "../../contexts/ApplicationStateContext";
@@ -23,19 +23,19 @@ export default function GroupUsersSettingsListElement(props: GroupUsersSettingsL
   const {applicationState} = useContext(ApplicationStateContext)
   const handleUserDeletion = async () => {
     props.isStudent ?
-      (await deleteGroupDeleteStudentPostgresService(props.userToShow.id.toString(), props.groupId)
+      (await deleteStudentInGroupPostgresService(props.userToShow.id.toString(), props.groupId)
         .catch((error: AxiosError) => console.log(error))
         .then(() => props.deleteUser(props.userToShow)))
-      : (await deleteGroupDeleteTeacherPostgresService(props.userToShow.id.toString(), props.groupId)
+      : (await deleteTeacherInGroupPostgresService(props.userToShow.id.toString(), props.groupId)
         .catch((error: AxiosError) => console.log(error))
         .then(() => props.deleteUser(props.userToShow)))
   }
 
   const handlePermissionsChange = async () => {
-    await deleteGroupDeleteStudentPostgresService(props.userToShow.id.toString(), props.groupId)
+    await deleteStudentInGroupPostgresService(props.userToShow.id.toString(), props.groupId)
       .catch((error: AxiosError) => console.log(error))
       .then(() => {
-        postGroupAddTeacherPostgresService(props.userToShow.id.toString(), props.groupId)
+        addTeacherToGroupPostgresService(props.userToShow.id.toString(), props.groupId)
           .catch((error: AxiosError) => console.log(error))
           .then(() => props.makeTeacher(props.userToShow))
       })

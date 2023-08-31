@@ -1,6 +1,6 @@
 import {useNavigate, useParams} from "react-router-dom"
 import React, {ChangeEvent, useContext, useEffect, useState} from "react"
-import {deleteAssignmentPostgresService, putAssignmentPostgresService} from "../../services/postgresDatabaseServices"
+import {deleteAssignmentPostgresService, changeAssignmentPostgresService} from "../../services/postgresDatabaseServices"
 import ReactDatePicker from "react-datepicker"
 
 import {AssigmentModifyFile} from "./AssigmentModifyFile"
@@ -56,7 +56,7 @@ function AssigmentModify({assignment, setAssigment}: AssigmentModifyPropsInterfa
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
-    putAssignmentPostgresService(assignment)
+    changeAssignmentPostgresService(assignment)
       .then(() => setToSend(true))
       .catch((e) => console.log(e))
   }

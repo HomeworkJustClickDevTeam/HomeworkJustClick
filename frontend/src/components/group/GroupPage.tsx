@@ -2,8 +2,8 @@ import {Outlet, useParams} from "react-router-dom"
 import React, {useContext, useEffect, useState} from "react"
 import {
   getGroupPostgresService,
-  getGroupUserCheckWithRolePostgresService,
-  postGroupAddStudentPostgresService
+  getUserRoleInGroupPostgresService,
+  addStudentToGroupPostgresService
 } from "../../services/postgresDatabaseServices"
 import GroupHeader from "./GroupHeader"
 import ApplicationStateContext from "../../contexts/ApplicationStateContext"
@@ -24,7 +24,7 @@ function GroupPage() {
      getGroupPostgresService(idGroup as string)
       .then((r) => {
         setApplicationState({type: "setGroupView", group: r.data})
-        getGroupUserCheckWithRolePostgresService(applicationState?.userState?.id as unknown as string, r.data.id)
+        getUserRoleInGroupPostgresService(applicationState?.userState?.id as unknown as string, r.data.id)
           .then((r) => setApplicationState({type: "setGroupViewRole", role: r.data}))
           .catch(() => setApplicationState({type: "setGroupViewRole", role:"User not in group"}))
       })
@@ -37,8 +37,8 @@ function GroupPage() {
 
 
   async function addToGroup() {
-    await postGroupAddStudentPostgresService(applicationState?.userState?.id as unknown as string, applicationState?.group?.id as unknown as string)
-    getGroupUserCheckWithRolePostgresService(applicationState?.userState?.id as unknown as string, applicationState?.group?.id as unknown as string)
+    await addStudentToGroupPostgresService(applicationState?.userState?.id as unknown as string, applicationState?.group?.id as unknown as string)
+    getUserRoleInGroupPostgresService(applicationState?.userState?.id as unknown as string, applicationState?.group?.id as unknown as string)
       .then((r) => setApplicationState({type: "setGroupViewRole", role: r.data}))
       .catch(() => setApplicationState({type: "setGroupViewRole", role:"User not in group"}))
   }
