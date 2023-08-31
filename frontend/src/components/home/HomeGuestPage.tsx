@@ -6,7 +6,6 @@ import HeaderLoggedOutState from "../header/HeaderLoggedOutState";
 function HomeGuestPage() {
   return (
     <div className='flex w-screen flex-col items-center text-center font-lato font-normal select-none'>
-      <HeaderLoggedOutState/>
       <img className="fixed left-[12%]  bottom-[15%] scale-50 xl:scale-100 -z-50 " src={left_circle}
            alt="Kółko po lewej stronie"></img>
       <img className="fixed right-0 top-[12%] scale-50 translate-x-[25%] xl:transform-none -z-50 " src={right_circle}

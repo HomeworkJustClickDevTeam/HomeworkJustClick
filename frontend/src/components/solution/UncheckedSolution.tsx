@@ -13,7 +13,7 @@ export default function UncheckedSolution(props: {
       <p><span className='font-semibold'>Opis zadania: </span>{props.assignment.taskDescription}</p>
       <div>
         <p className="font-semibold">Przesłane pliki: </p>
-        <SolutionFile solutionId={props.solution.id}/>
+        {props.solution ? <SolutionFile solutionId={props.solution.id}/> : <p>Brak</p>}
       </div>
       <br/>
       <div className="absolute bottom-0 left-0 mb-6 ml-4">

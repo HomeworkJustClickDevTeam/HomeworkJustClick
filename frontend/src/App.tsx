@@ -29,7 +29,9 @@ import UserMarkingTablesSettingsPage from "./components/user/UserMarkingTablesSe
 import GroupSettingsPage from "./components/group/GroupSettingsPage"
 import GroupUserProfilePage from "./components/group/GroupUserProfilePage"
 import HardCodedExamplePage from "./components/solution/HardCodedExamplePage";
-import {ProtectedRoutes} from "./components/ProtectedRoutes";
+import {LoggedInUserRoute} from "./components/route/LoggedInUserRoute";
+import HeaderLoggedInState from "./components/header/HeaderLoggedInState";
+import {LoggedOutUserRoute} from "./components/route/LoggedOutUserRoute";
 
 function App() {
   const [role, setRole] = useState<string>("")
@@ -40,91 +42,88 @@ function App() {
         <GroupSetRoleContext.Provider value={{setRole}}>
           <BrowserRouter>
             <Routes>
-              <Route
-                path="/home"
-                element={<HomeGuestPage/>}
-              />
-              <Route
-                path={"/*"}
-                element={
-                  <ProtectedRoutes>
-                    <Route
-                      path="/"
-                      element={<HomePage/>}
-                    />
-                    <Route
-                      path="/:id/assignments"
-                      element={<AssignmentsStudentDisplayedPage/>}
-                    />
-                    <Route path="/settings" element={<UserSettingsPage/>}/>
-                    <Route
-                      path="/settings/general"
-                      element={<UserGeneralSettingsPage/>}
-                    />
-                    <Route
-                      path="/settings/security"
-                      element={<UserSecuritySettingsPage/>}
-                    />
-                    <Route
-                      path="/settings/appearance"
-                      element={<UserAppearanceSettingsPage/>}
-                    />
-                    <Route
-                      path="/settings/markingTables"
-                      element={<UserMarkingTablesSettingsPage/>}
-                    />
-                    <Route path="/create/group" element={<GroupCreatePage/>}/>
-                    <Route path="/group/:idGroup" element={<GroupPage/>}>
-                      <Route path="settings" element={<GroupSettingsPage/>}/>
-                      <Route path="users" element={<GroupUsersPage/>}/>
-                      <Route
-                        path="userProfileInGroup/:userProfileId"
-                        element={<GroupUserProfilePage/>}
-                      />
-                      <Route
-                        path="assignments"
-                        element={<AssignmentsGroupDisplayedPage/>}
-                      />
-                      <Route
-                        path="assignments/done"
-                        element={<AssignmentsTypesPage type={"done"}/>}
-                      />
-                      <Route
-                        path="assignments/expired"
-                        element={<AssignmentsTypesPage type={"expired"}/>}
-                      />
-                      <Route
-                        path="assignments/todo"
-                        element={<AssignmentsTypesPage type={"todo"}/>}
-                      />
-                      <Route path="assignments/add" element={<AddAssigmentPage/>}/>
-                      <Route
-                        path="assigment/:idAssigment"
-                        element={<AssigmentSpecPage/>}
-                      />
-                      <Route
-                        path="solution/:idUser/:idAssigment"
-                        element={<SolutionPage/>}/>
-                      <Route
-                        path="solutions/uncheck"
-                        element={<SolutionsTypesPage type={"uncheck"}/>}
-                      />
-                      <Route
-                        path="solutions/late"
-                        element={<SolutionsTypesPage type={"late"}/>}
-                      />
-                      <Route
-                        path="solutions/check"
-                        element={<SolutionsTypesPage type={"check"}/>}
-                      />
-                      <Route path="*" element={<NotFoundPage/>}/>
-                    </Route>
-                    <Route path="/group/:id/solution/:idUser/:idAssigment/example" element={<HardCodedExamplePage/>}/>
-                  </ProtectedRoutes>
-                }
-              />
-              <Route path="/login" element={<LoginPage/>}/>
-              <Route path="/register" element={<RegisterPage/>}/>
+              <Route element={<LoggedOutUserRoute/>}>
+                <Route
+                  path="/home"
+                  element={<HomeGuestPage/>}
+                />
+                <Route path="/login" element={<LoginPage/>}/>
+                <Route path="/register" element={<RegisterPage/>}/>
+              </Route>
+              <Route element={<LoggedInUserRoute/>}>
+                <Route
+                  path="/"
+                  element={<HomePage/>}
+                />
+                <Route
+                  path="/:id/assignments"
+                  element={<AssignmentsStudentDisplayedPage/>}
+                />
+                <Route path="/settings" element={<UserSettingsPage/>}/>
+                <Route
+                  path="/settings/general"
+                  element={<UserGeneralSettingsPage/>}
+                />
+                <Route
+                  path="/settings/security"
+                  element={<UserSecuritySettingsPage/>}
+                />
+                <Route
+                  path="/settings/appearance"
+                  element={<UserAppearanceSettingsPage/>}
+                />
+                <Route
+                  path="/settings/markingTables"
+                  element={<UserMarkingTablesSettingsPage/>}
+                />
+                <Route path="/create/group" element={<GroupCreatePage/>}/>
+                <Route path="/group/:idGroup" element={<GroupPage/>}>
+                  <Route path="settings" element={<GroupSettingsPage/>}/>
+                  <Route path="users" element={<GroupUsersPage/>}/>
+                  <Route
+                    path="userProfileInGroup/:userProfileId"
+                    element={<GroupUserProfilePage/>}
+                  />
+                  <Route
+                    path="assignments"
+                    element={<AssignmentsGroupDisplayedPage/>}
+                  />
+                  <Route
+                    path="assignments/done"
+                    element={<AssignmentsTypesPage type={"done"}/>}
+                  />
+                  <Route
+                    path="assignments/expired"
+                    element={<AssignmentsTypesPage type={"expired"}/>}
+                  />
+                  <Route
+                    path="assignments/todo"
+                    element={<AssignmentsTypesPage type={"todo"}/>}
+                  />
+                  <Route path="assignments/add" element={<AddAssigmentPage/>}/>
+                  <Route
+                    path="assigment/:idAssigment"
+                    element={<AssigmentSpecPage/>}
+                  />
+                  <Route
+                    path="solution/:idUser/:idAssigment"
+                    element={<SolutionPage/>}/>
+                  <Route
+                    path="solutions/uncheck"
+                    element={<SolutionsTypesPage type={"uncheck"}/>}
+                  />
+                  <Route
+                    path="solutions/late"
+                    element={<SolutionsTypesPage type={"late"}/>}
+                  />
+                  <Route
+                    path="solutions/check"
+                    element={<SolutionsTypesPage type={"check"}/>}
+                  />
+                  <Route path="*" element={<NotFoundPage/>}/>
+                </Route>
+                <Route path="/group/:id/solution/:idUser/:idAssigment/example" element={<HardCodedExamplePage/>}/>
+              </Route>
               <Route path="*" element={<NotFoundPage/>}/>
             </Routes>
           </BrowserRouter>

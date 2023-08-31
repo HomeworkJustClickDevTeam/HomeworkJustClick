@@ -29,7 +29,7 @@ export default function CheckedSolution(props: {
       <p><span className='font-semibold'>Zadanie: </span>{props.assignment.title} </p>
       <p><span className='font-semibold'>Opis zadania: </span>{props.assignment.taskDescription}</p>
       <p className="font-semibold">Przesłane pliki: </p>
-      <SolutionFile solutionId={props.solution.id}/>
+        {props.solution ? <SolutionFile solutionId={props.solution.id}/> : <p>Brak</p>}
       <br/>
       <div className="absolute bottom-0 left-0 mb-6 ml-4">
         <p>Wynik: </p>

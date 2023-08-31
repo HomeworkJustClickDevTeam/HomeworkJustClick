@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react"
 import GroupListElement from "../group/GroupListElement"
-import {Link} from "react-router-dom"
+import {Link, Outlet} from "react-router-dom"
 import {groupFilter} from "../../filter/GroupFilter"
 import Loading from "../animations/Loading"
 import {FaCaretDown} from 'react-icons/fa';
@@ -40,7 +40,6 @@ function HomePage() {
   return (
 
     <div className='pl-6 pr-8'>
-      <HeaderLoggedInState/>
       <div className='flex inline-block mb-4 mt-4 pl-5'>
         <p className='pr-8 text-2xl'>Moje grupy</p>
         <Link to="/create/group" className=''>

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {getGroupPostgresService, putGroupColorPostgresService} from "../../services/postgresDatabaseServices";
-import {AxiosError} from "axios/index";
+import {AxiosError} from "axios";
 import {useParams} from "react-router-dom";
 import {colorsArray} from "../../assets/colors";
 
