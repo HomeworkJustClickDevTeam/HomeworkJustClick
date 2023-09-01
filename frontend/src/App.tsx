@@ -128,7 +128,6 @@ function App() {
                   path="solutions/check"
                   element={<SolutionsTypesPage type={"check"}/>}
                 />
-                <Route path="*" element={<NotFoundPage/>}/>
               </Route>
               <Route path="/group/:id/solution/:idUser/:idAssigment/example" element={<HardCodedExamplePage/>}/>
             </Route>

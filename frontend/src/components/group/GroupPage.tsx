@@ -17,6 +17,7 @@ function GroupPage() {
 
   useEffect(() => {
     getGroup()
+    setApplicationState({type:"setHomePageIn", homePageIn:false})
   }, []);
 
 

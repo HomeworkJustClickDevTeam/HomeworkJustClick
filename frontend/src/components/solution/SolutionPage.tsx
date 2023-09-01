@@ -40,7 +40,7 @@ function SolutionPage() {
       </div>
       <div className="flex ">
         <p className="mr-2">Przesłane pliki: </p>
-        <SolutionFile solutionId={solutionExtended.id}/>
+        {solutionExtended.id ? <SolutionFile solutionId={solutionExtended.id}/> : <p>Brak</p>}
       </div>
       {!isCheck ? (
         <div>

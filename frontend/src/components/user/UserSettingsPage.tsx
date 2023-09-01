@@ -12,9 +12,6 @@ export default function UserSettingsPage(): JSX.Element {
   const {applicationState, setApplicationState} = useContext(ApplicationStateContext)
   const navigate = useNavigate()
   const [loading, setLoading] = useState<boolean>(false)
-  useEffect(() => {
-    setApplicationState({type:"setHomePageIn", homePageIn: false})
-  }, [])
   if (loading) {
     return <Loading></Loading>
   }

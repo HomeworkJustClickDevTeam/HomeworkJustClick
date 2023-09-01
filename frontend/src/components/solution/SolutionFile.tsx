@@ -4,9 +4,9 @@ import {getFileMongoService} from "../../services/mongoDatabaseServices"
 import {FileFromPostInterface} from "../../types/FileFromPostInterface";
 
 export function SolutionFile(props: { solutionId: number }) {
-  const [databaseFile, setDatabaseFile] = useState<FileFromPostInterface[]>([])
-  const [file, setFile] = useState<Blob | null>(null)
-  const [fileName, setFileName] = useState<string>("")
+  const [databaseFile, setDatabaseFile] = useState<FileFromPostInterface[] | undefined>(undefined)
+  const [file, setFile] = useState<Blob | undefined>(undefined)
+  const [fileName, setFileName] = useState<string | undefined>(undefined)
   const [isLoading, setIsLoading] = useState<boolean>(true)
   useEffect(() => {
     const fetchData = async () => {
@@ -26,7 +26,7 @@ export function SolutionFile(props: { solutionId: number }) {
           const response = await getFileMongoService(databaseFile[0]?.mongo_id)
           const fileData = response.data
           const type = fileData.file.type
-          const decodedData = atob(fileData.file.data)
+          const decodedData = window.atob(fileData.file.data)
           const byteArray = new Uint8Array(decodedData.length)
           for (let i = 0; i < decodedData.length; i++) {
             byteArray[i] = decodedData.charCodeAt(i)
@@ -57,11 +57,17 @@ export function SolutionFile(props: { solutionId: number }) {
   if (isLoading) {
     // return <Loading />
   }
-  return (
-    <>
-      <div>
-        <button onClick={handleDownload}>{fileName}</button>
-      </div>
-    </>
-  )
+  console.log(databaseFile, file, fileName)
+  if(databaseFile !== undefined && file !== undefined && fileName !== undefined) {
+    return (
+      <>
+        <div>
+          <button onClick={handleDownload}>{fileName}</button>
+        </div>
+      </>
+    )
+  }
+  else {
+    return <></>
+  }
 }

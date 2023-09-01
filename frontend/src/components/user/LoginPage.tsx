@@ -20,9 +20,7 @@ const LoginPage = () => {
 
     try {
       await login(user, setApplicationState)
-
       navigate("/")
-      setApplicationState({type:"setHomePageIn", homePageIn:true})
     } catch (e) {
       console.log(e)
     }
