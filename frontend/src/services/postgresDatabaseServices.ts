@@ -32,31 +32,31 @@ postgresqlDatabase.interceptors.request.use(async (config) => {
   })
 
 
-export const createAssignmentWithUserAndGroupPostgresService = (
+export const createAssignmentWithUserAndGroupPostgresService = async (
   userId: string,
   groupId: string,
   assignment: AssignmentToSendInterface) => {
-  return postgresqlDatabase
+  return await postgresqlDatabase
     .post(
       `/assignment/withUserAndGroup/${userId}/${groupId}`,
       assignment)
 }
 
-export const loginPostgresService = (user: LoginUserInterface) => {
-  return postgresqlDatabase.post("/auth/authenticate", user)
+export const loginPostgresService = async (user: LoginUserInterface) => {
+  return await postgresqlDatabase.post("/auth/authenticate", user)
 }
 
-export const registerPostgresService = (user: UserRegisterInterface) => {
-  return postgresqlDatabase.post("/auth/register", user)
+export const registerPostgresService = async (user: UserRegisterInterface) => {
+  return await postgresqlDatabase.post("/auth/register", user)
 }
 
-export const createFileWithAssignmentPostgresService = (
+export const createFileWithAssignmentPostgresService = async (
   mongoId: string,
   format: any,
   name: string,
   assignmentId: string
 ) => {
-  return postgresqlDatabase
+  return await postgresqlDatabase
     .post(`file/withAssignment/${assignmentId}`, {
       mongo_id: mongoId,
       format: format,
@@ -64,13 +64,13 @@ export const createFileWithAssignmentPostgresService = (
     })
 }
 
-export const createFileWithSolutionPostgresService = (
+export const createFileWithSolutionPostgresService = async (
   mongoId: string,
   format: any,
   name: string,
   solutionId: string | number
 ) => {
-  return postgresqlDatabase
+  return await postgresqlDatabase
     .post(`/file/withSolution/${solutionId}`, {
       mongo_id: mongoId,
       format: format,
@@ -78,183 +78,183 @@ export const createFileWithSolutionPostgresService = (
     })
 }
 
-export const createEvaluationWithUserAndSolution = (userId: string, solutionId: string, evaluation: EvaluationInterface) => {
-  return postgresqlDatabase.post(`/evaluation/withUserAndSolution/${userId}/${solutionId}`, evaluation)
+export const createEvaluationWithUserAndSolution = async (userId: string, solutionId: string, evaluation: EvaluationInterface) => {
+  return await postgresqlDatabase.post(`/evaluation/withUserAndSolution/${userId}/${solutionId}`, evaluation)
 }
 
-export const addTeacherToGroupPostgresService = (userId: string, groupId: string) => {
-  return postgresqlDatabase
+export const addTeacherToGroupPostgresService = async (userId: string, groupId: string) => {
+  return await postgresqlDatabase
     .post(`/group/addTeacher/${userId}/${groupId}`)
 }
-export const createGroupWithTeacherPostgresService = (userId: string, group: GroupCreateInterface) => {
-  return postgresqlDatabase.post("/group/withTeacher/" + userId, group)
+export const createGroupWithTeacherPostgresService = async (userId: string, group: GroupCreateInterface) => {
+  return await postgresqlDatabase.post("/group/withTeacher/" + userId, group)
 }
 
-export const changePasswordPostgresService = (newCredentials: CredentialsInterface) => {
-  return postgresqlDatabase
+export const changePasswordPostgresService = async (newCredentials: CredentialsInterface) => {
+  return await postgresqlDatabase
     .post("/changePassword", newCredentials)
 }
 
-export const addStudentToGroupPostgresService = (userId: string, groupId: string) => {
-  return postgresqlDatabase.post(`/group/addStudent/${userId}/${groupId}`)
+export const addStudentToGroupPostgresService = async (userId: string, groupId: string) => {
+  return await postgresqlDatabase.post(`/group/addStudent/${userId}/${groupId}`)
 }
 
-export const createSolutionWithUserAndAssignmentPostgresService = (userId: string, assignmentId: string, solution: SolutionToSendInterface) => {
-  return postgresqlDatabase
+export const createSolutionWithUserAndAssignmentPostgresService = async (userId: string, assignmentId: string, solution: SolutionToSendInterface) => {
+  return await postgresqlDatabase
     .post(
       `/solution/withUserAndAssignment/${userId}/${assignmentId}`,
       solution
     )
 }
 
-export const getFilesByAssignmentPostgresService = (assigmentId: string | number) => {
-  return postgresqlDatabase
+export const  getFilesByAssignmentPostgresService = async (assigmentId: string | number) => {
+  return await postgresqlDatabase
     .get(`/files/byAssignment/${assigmentId}`)
 }
 
-export const getFilesBySolutionPostgresService = (solutionId: string | number) => {
-  return postgresqlDatabase.get(
+export const getFilesBySolutionPostgresService = async (solutionId: string | number) => {
+  return await postgresqlDatabase.get(
     `/files/bySolution/${solutionId}`
   )
 }
 
-export const getUserPostgresService = (userId: string) => {
-  return postgresqlDatabase.get(`/user/` + userId)
+export const getUserPostgresService = async (userId: string) => {
+  return await postgresqlDatabase.get(`/user/` + userId)
 }
 
-export const getGroupsByTeacherPostgresService = (userId: string) => {
-  return postgresqlDatabase
+export const getGroupsByTeacherPostgresService = async (userId: string) => {
+  return await postgresqlDatabase
     .get("/groups/byTeacher/" + userId)
 }
 
 
-export const getGroupsByStudentPostgresService = (userId: string) => {
-  return postgresqlDatabase
+export const getGroupsByStudentPostgresService = async (userId: string) => {
+  return await postgresqlDatabase
     .get("/groups/byStudent/" + userId)
 }
 
-export const getGroupsByUserPostgresService = (userId: string) => {
-  return postgresqlDatabase
+export const getGroupsByUserPostgresService = async (userId: string) => {
+  return await postgresqlDatabase
     .get("/groups/byUser/" + userId)
 }
 
-export const getUncheckedSolutionByUserAssignmentGroupPostgresService = (userId: string, assignmentId: string, groupId: string) => {
-  return postgresqlDatabase
+export const getUncheckedSolutionByUserAssignmentGroupPostgresService = async (userId: string, assignmentId: string, groupId: string) => {
+  return await postgresqlDatabase
     .get(`/solution/getUncheckedSolutionByUserAssignmentGroup/${userId}/${assignmentId}/${groupId}`)
 }
 
-export const getCheckedSolutionByUserAssignmentGroupPostgresService = (userId: string, assignmentId: string, groupId: string) => {
-  return postgresqlDatabase
+export const getCheckedSolutionByUserAssignmentGroupPostgresService = async (userId: string, assignmentId: string, groupId: string) => {
+  return await postgresqlDatabase
     .get(`/solution/getCheckedSolutionByUserAssignmentGroup/${userId}/${assignmentId}/${groupId}`)
 }
 
-export const getAssignmentPostgresService = (assignmentId: string) => {
-  return postgresqlDatabase
+export const getAssignmentPostgresService = async (assignmentId: string) => {
+  return await postgresqlDatabase
     .get(`/assignment/${assignmentId}`)
 
 }
 
-export const getEvaluationBySolutionPostgresService = (solutionId: string | number) => {
-  return postgresqlDatabase
+export const getEvaluationBySolutionPostgresService = async (solutionId: string | number) => {
+  return await postgresqlDatabase
     .get(`/evaluation/bySolution/${solutionId}`)
 }
 
-export const getExtendedSolutionsLateByGroupPostgresService = (groupId: string) => {
-  return postgresqlDatabase
+export const getExtendedSolutionsLateByGroupPostgresService = async (groupId: string) => {
+  return await postgresqlDatabase
     .get(`/extended/solutions/lateByGroup/${groupId}`)
 }
 
-export const getExtendedSolutionsUncheckedByGroupPostgresService = (groupId: string) => {
-  return postgresqlDatabase
+export const getExtendedSolutionsUncheckedByGroupPostgresService = async (groupId: string) => {
+  return await postgresqlDatabase
     .get(`/extended/solutions/uncheckedByGroup/${groupId}`)
 }
 
-export const getExtendedSolutionsCheckedByGroupPostgresService = (groupId: string) => {
-  return postgresqlDatabase
+export const getExtendedSolutionsCheckedByGroupPostgresService = async (groupId: string) => {
+  return await postgresqlDatabase
     .get(`/extended/solutions/checkedByGroup/${groupId}`)
 }
 
-export const getAssignmentsByStudentPostgresService = (userId: string) => {
-  return postgresqlDatabase.get("/assignments/byStudent/" + userId)
+export const getAssignmentsByStudentPostgresService = async (userId: string) => {
+  return await postgresqlDatabase.get("/assignments/byStudent/" + userId)
 }
 
-export const getAssignmentsDoneByGroupAndStudentPostgresService = (groupId: string, userId: string) => {
-  return postgresqlDatabase.get(`/assignments/doneByGroupAndStudent/${groupId}/${userId}`)
+export const getAssignmentsDoneByGroupAndStudentPostgresService = async (groupId: string, userId: string) => {
+  return await postgresqlDatabase.get(`/assignments/doneByGroupAndStudent/${groupId}/${userId}`)
 }
 
-export const getAssignmentsExpiredUndoneByGroupAndStudentPostgresService = (groupId: string, userId: string) => {
-  return postgresqlDatabase.get(`/assignments/expiredUndoneByGroupAndStudent/${groupId}/${userId}`)
+export const getAssignmentsExpiredUndoneByGroupAndStudentPostgresService = async (groupId: string, userId: string) => {
+  return await postgresqlDatabase.get(`/assignments/expiredUndoneByGroupAndStudent/${groupId}/${userId}`)
 }
 
-export const getAssignmentsUndoneByGroupAndStudentPostgresService = (groupId: string, userId: string) => {
-  return postgresqlDatabase.get(`/assignments/undoneByGroupAndStudent/${groupId}/${userId}`)
+export const getAssignmentsUndoneByGroupAndStudentPostgresService = async (groupId: string, userId: string) => {
+  return await postgresqlDatabase.get(`/assignments/undoneByGroupAndStudent/${groupId}/${userId}`)
 }
 
-export const getStudentsByGroupPostgresService = (groupId: string) => {
-  return postgresqlDatabase
+export const getStudentsByGroupPostgresService = async (groupId: string) => {
+  return await postgresqlDatabase
     .get("/user/getStudentsByGroup/" + groupId)
 }
 
-export const getTeachersByGroupPostgresService = (groupId: string) => {
-  return postgresqlDatabase
+export const getTeachersByGroupPostgresService = async (groupId: string) => {
+  return await postgresqlDatabase
     .get("/user/getTeachersByGroup/" + groupId)
 }
 
-export const getGroupPostgresService = (groupId: string) => {
-  return postgresqlDatabase.get("/group/" + groupId)
+export const getGroupPostgresService = async (groupId: string) => {
+  return await postgresqlDatabase.get("/group/" + groupId)
 }
 
-export const getAssignmentsByGroupPostgresService = (groupId: string) => {
-  return postgresqlDatabase.get("/assignments/byGroupId/" + groupId)
+export const getAssignmentsByGroupPostgresService = async (groupId: string) => {
+  return await postgresqlDatabase.get("/assignments/byGroupId/" + groupId)
 }
 
-export const getUserRoleInGroupPostgresService = (userId: string, groupId: string) => {
-  return postgresqlDatabase
+export const getUserRoleInGroupPostgresService = async (userId: string, groupId: string) => {
+  return await postgresqlDatabase
     .get(`/group/userCheckWithRole/${userId}/${groupId}`)
 }
 
 
-export const changeAssignmentPostgresService = (assignment: AssignmentInterface) => {
-  return postgresqlDatabase
+export const changeAssignmentPostgresService = async (assignment: AssignmentInterface) => {
+  return await postgresqlDatabase
     .put(`/assignment/${assignment.id}`, assignment)
 }
 
-export const unarchiveGroupPostgresService = (groupId: string) => {
-  return postgresqlDatabase.put("/group/unarchive/" + groupId)
+export const unarchiveGroupPostgresService = async (groupId: string) => {
+  return await postgresqlDatabase.put("/group/unarchive/" + groupId)
 }
 
-export const archiveGroupPostgresService = (groupId: string) => {
-  return postgresqlDatabase.put("/group/archive/" + groupId)
+export const archiveGroupPostgresService = async (groupId: string) => {
+  return await postgresqlDatabase.put("/group/archive/" + groupId)
 }
 
 export const changeGroupColorPostgresService = (groupId: string, color: number) => {
   return postgresqlDatabase.put("/group/color/" + groupId, color)
 }
 
-export const changeUserColorPostgresService = (userId: string, color: number) => {
-  return postgresqlDatabase
+export const changeUserColorPostgresService = async (userId: string, color: number) => {
+  return await postgresqlDatabase
     .put(`/user/color/${userId}`, color)
 }
 
-export const changeUserIndexPostgresService = (userId: string, index: number) => {
-  return postgresqlDatabase
+export const changeUserIndexPostgresService = async (userId: string, index: number) => {
+  return await postgresqlDatabase
     .put(`/user/index/${userId}`, index)
 }
 
-export const changeGroupNamePostgresService = (groupId: string, name: string) => {
-  postgresqlDatabase.interceptors.request.use(config => {
+export const changeGroupNamePostgresService = async (groupId: string, name: string) => {
+  postgresqlDatabase.interceptors.request.use(async config => {
     config.headers["Content-Type"] = "text/plain"
     return config
   })
-  return postgresqlDatabase.put(`/group/name/${groupId}`, name)
+  return await postgresqlDatabase.put(`/group/name/${groupId}`, name)
 }
 
-export const changeGroupDescriptionPostgresService = (groupId: string, description: string) => {
-  postgresqlDatabase.interceptors.request.use(config => {
+export const changeGroupDescriptionPostgresService = async (groupId: string, description: string) => {
+  postgresqlDatabase.interceptors.request.use(async config => {
     config.headers["Content-Type"] = "text/plain"
     return config
   })
-  return postgresqlDatabase.put(`/group/description/${groupId}`, description)
+  return await postgresqlDatabase.put(`/group/description/${groupId}`, description)
 }
 
 export const deleteAssignmentPostgresService = (assignmentId: string) => {
@@ -262,21 +262,21 @@ export const deleteAssignmentPostgresService = (assignmentId: string) => {
     .delete(`/assignment/${assignmentId}`)
 }
 
-export const deleteFilePostgresService = (fileId: string) => {
-  return postgresqlDatabase.delete(`file/${fileId}`)
+export const deleteFilePostgresService = async (fileId: string) => {
+  return await postgresqlDatabase.delete(`file/${fileId}`)
 }
 
-export const deleteGroupPostgresService = (groupId: string) => {
-  return postgresqlDatabase.delete("/group/" + groupId)
+export const deleteGroupPostgresService = async (groupId: string) => {
+  return await postgresqlDatabase.delete("/group/" + groupId)
 }
 
-export const deleteStudentInGroupPostgresService = (userId: string, groupId: string) => {
-  return postgresqlDatabase
+export const deleteStudentInGroupPostgresService = async (userId: string, groupId: string) => {
+  return await postgresqlDatabase
     .delete(`/group/deleteStudent/${userId}/${groupId}`)
 }
 
-export const deleteTeacherInGroupPostgresService = (userId: string, groupId: string) => {
-  return postgresqlDatabase
+export const deleteTeacherInGroupPostgresService = async (userId: string, groupId: string) => {
+  return await postgresqlDatabase
     .delete(`/group/deleteTeacher/${userId}/${groupId}`)
 }
 

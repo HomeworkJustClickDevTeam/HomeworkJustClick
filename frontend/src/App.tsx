@@ -1,4 +1,4 @@
-import React, {useEffect, useReducer, useState} from "react"
+import React, {useEffect, useReducer, useRef, useState} from "react"
 
 import './App.css'
 // import "./assets/App.css"
@@ -32,15 +32,20 @@ import HeaderLoggedInState from "./components/header/HeaderLoggedInState";
 import {LoggedOutUserRoute} from "./components/route/LoggedOutUserRoute";
 import {ApplicationStateInterface} from "./types/ApplicationStateInterface";
 import {ActionTypes} from "./types/ActionTypes";
-import {getUser} from "./services/otherServices";
+import {checkToken, getUser} from "./services/otherServices";
+import {UserInterface} from "./types/UserInterface";
 
 function App() {
-  const initialApplicationState = {
+
+  const initialApplicationState:ApplicationStateInterface = {
     userState: getUser(),
     role: undefined,
     group: undefined,
     homePageIn: true
   }
+
+
+
   function reducer(state: ApplicationStateInterface, action: ActionTypes): ApplicationStateInterface{
     switch (action.type){
       case "logOut":
@@ -57,6 +62,13 @@ function App() {
   }
 
   const [applicationState, setApplicationState] = useReducer(reducer, initialApplicationState)
+
+  useEffect(() => {
+    if(checkToken() === undefined){
+      setApplicationState({type:"logOut"})
+      localStorage.removeItem("user")
+    }
+  }, []);
 
   useEffect(() => {
     console.log("APP STATE:", applicationState)

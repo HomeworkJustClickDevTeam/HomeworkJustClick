@@ -1,6 +1,6 @@
 import {UserInterface} from "../types/UserInterface";
 import {LoginUserInterface} from "../types/LoginUserInterface";
-import {loginPostgresService} from "./postgresDatabaseServices";
+import {getUserPostgresService, loginPostgresService} from "./postgresDatabaseServices";
 import {Dispatch} from "react";
 import {ActionTypes} from "../types/ActionTypes";
 
@@ -26,4 +26,20 @@ export const login = async (user: LoginUserInterface, setApplicationState: Dispa
 export const logout = (setApplicationState: Dispatch<ActionTypes>) => {
   setApplicationState({type:"logOut"})
   localStorage.removeItem("user")
+}
+
+export const checkToken = () => {
+  let userState = getUser()
+  if(userState !== undefined){
+    getUserPostgresService(userState.id as unknown as string)
+      .catch((error)=>{
+        if(error){
+          localStorage.removeItem("user")
+          userState = undefined
+        }
+      })
+    return userState
+
+  }
+  else return undefined
 }
