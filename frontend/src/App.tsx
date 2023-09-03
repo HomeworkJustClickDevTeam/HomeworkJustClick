@@ -1,178 +1,152 @@
-import React, { useEffect, useState } from "react"
+import React, {useEffect, useReducer, useRef, useState} from "react"
 
 import './App.css'
 // import "./assets/App.css"
-import Register from "./components/user/Register"
-import Login from "./components/user/logging/Login"
-import Home from "./components/home/Home"
-import { BrowserRouter, Route, Routes } from "react-router-dom"
-import HomeGuest from "./components/home/HomeGuest"
-import CreateGroup from "./components/group/CreateGroup"
-import Group from "./components/group/Group"
-import UserContext from "./UserContext"
-import AssignmentsGroupDisplayed from "./components/assigments/assigmentDisplayer/AssignmentsGroupDisplayed"
-import AddAssigment from "./components/assigments/AddAssigment"
-import AssigmentSpec from "./components/assigments/AssigmentSpec"
-import { Action, ApplicationState } from "./types/types"
-import { useImmerReducer } from "use-immer"
-import DispatchContext from "./DispatchContext"
-import Header from "./components/header/Header"
-import Users from "./components/group/users/Users"
-import NotFound from "./components/errors/NotFound"
-import GroupRoleContext from "./GroupRoleContext"
-import GroupSetRoleContext from "./GroupSetRoleContext"
-import AssignmentsTypes from "./components/assigments/AssignmentsTypes"
-import AssignmentsStudentDisplayed from "./components/assigments/assigmentDisplayer/AssignmentsStudentDisplayed"
-import SolutionsTypes from "./components/solution/SolutionsTypes"
-import Solution from "./components/solution/Solution"
-import UserSettings from "./components/user/settings/UserSettings"
-import UserGeneralSettings from "./components/user/settings/UserGeneralSettings"
-import UserSecuritySettings from "./components/user/settings/UserSecuritySettings"
-import UserAppearanceSettings from "./components/user/settings/UserAppearanceSettings"
-import UserMarkingTablesSettings from "./components/user/settings/UserMarkingTablesSettings"
-import GroupSettings from "./components/group/settings/GroupSettings"
-import UserProfileInGroup from "./components/group/users/UserProfileInGroup"
-import HardCodedExample from "./components/solution/HardCodedExample";
+import RegisterPage from "./components/user/RegisterPage"
+import LoginPage from "./components/user/LoginPage"
+import HomePage from "./components/home/HomePage"
+import {BrowserRouter, Route, Routes} from "react-router-dom"
+import HomeGuestPage from "./components/home/HomeGuestPage"
+import GroupCreatePage from "./components/group/GroupCreatePage"
+import GroupPage from "./components/group/GroupPage"
+import AssignmentsGroupDisplayedPage from "./components/assigments/AssignmentsGroupDisplayedPage"
+import AddAssigmentPage from "./components/assigments/AddAssigmentPage"
+import AssigmentSpecPage from "./components/assigments/AssigmentSpecPage"
+import GroupUsersPage from "./components/group/GroupUsersPage"
+import NotFoundPage from "./components/errors/NotFoundPage"
+import ApplicationStateContext from "./contexts/ApplicationStateContext"
+import AssignmentsTypesPage from "./components/assigments/AssignmentsTypesPage"
+import AssignmentsStudentDisplayedPage from "./components/assigments/AssignmentsStudentDisplayedPage"
+import SolutionsTypesPage from "./components/solution/SolutionsTypesPage"
+import SolutionPage from "./components/solution/SolutionPage"
+import UserSettingsPage from "./components/user/UserSettingsPage"
+import UserGeneralSettingsPage from "./components/user/UserGeneralSettingsPage"
+import UserSecuritySettingsPage from "./components/user/UserSecuritySettingsPage"
+import UserAppearanceSettingsPage from "./components/user/UserAppearanceSettingsPage"
+import UserMarkingTablesSettingsPage from "./components/user/UserMarkingTablesSettingsPage"
+import GroupSettingsPage from "./components/group/GroupSettingsPage"
+import GroupUserProfilePage from "./components/group/GroupUserProfilePage"
+import HardCodedExamplePage from "./components/solution/HardCodedExamplePage";
+import {LoggedInUserRoute} from "./components/route/LoggedInUserRoute";
+import HeaderLoggedInState from "./components/header/HeaderLoggedInState";
+import {LoggedOutUserRoute} from "./components/route/LoggedOutUserRoute";
+import {ApplicationStateInterface} from "./types/ApplicationStateInterface";
+import {ActionTypes} from "./types/ActionTypes";
+import {checkToken, getUser} from "./services/otherServices";
+import {UserInterface} from "./types/UserInterface";
 
 function App() {
-  useEffect(() => {
-    if (localStorage.getItem("token") && localStorage.getItem("id")) {
-      localStorage.removeItem("token")
-      localStorage.removeItem("id")
-    }
-  }, [])
-  const initialState: ApplicationState = {
-    loggedIn: Boolean(localStorage.getItem("token")),
-    homePageIn: true,
-    userState: {
-      token: localStorage.getItem("token")!,
-      userId: localStorage.getItem("id")!,
-    },
+
+  const initialApplicationState:ApplicationStateInterface = {
+    userState: getUser(),
+    role: undefined,
+    group: undefined,
+    homePageIn: true
   }
-  const [role, setRole] = useState<string>("")
-  function ourReducer(draft: ApplicationState, action: Action) {
-    switch (action.type) {
-      case "login":
-        draft.loggedIn = true
-        draft.userState = action.data
-        break
-      case "logout":
-        draft.loggedIn = false
-        break
-      case "homePageIn":
-        draft.homePageIn = true
-        break
-      case "homePageOut":
-        draft.homePageIn = false
-        break
+
+
+
+  function reducer(state: ApplicationStateInterface, action: ActionTypes): ApplicationStateInterface{
+    switch (action.type){
+      case "logOut":
+        return {userState: undefined, role: undefined, group:undefined, homePageIn:state.homePageIn}
+      case "logIn":
+        return {userState: action.userState, role: undefined, group: undefined, homePageIn:state.homePageIn}
+      case "setGroupView":
+        return {group: action.group, role: state.role, userState: state.userState, homePageIn:state.homePageIn}
+      case "setGroupViewRole":
+        return {role: action.role, userState: state.userState, group: state.group, homePageIn:state.homePageIn}
+      case "setHomePageIn":
+        return {role: state.role, userState: state.userState, group: state.group, homePageIn: action.homePageIn}
     }
   }
-  const [state, dispatch] = useImmerReducer<ApplicationState, Action>(
-    ourReducer,
-    initialState
-  )
+
+  const [applicationState, setApplicationState] = useReducer(reducer, initialApplicationState)
 
   useEffect(() => {
-    if (state.loggedIn) {
-      localStorage.setItem("token", state.userState.token)
-      localStorage.setItem("id", state.userState.userId)
-    } else {
-      localStorage.removeItem("token")
-      localStorage.removeItem("id")
+    if(checkToken() === undefined){
+      setApplicationState({type:"logOut"})
+      localStorage.removeItem("user")
     }
-  }, [state])
+  }, []);
+
+  useEffect(() => {
+    console.log("APP STATE:", applicationState)
+  }, [applicationState]);
 
   return (
-    <UserContext.Provider value={state}>
-      <DispatchContext.Provider value={dispatch}>
-        <GroupRoleContext.Provider value={{ role }}>
-          <GroupSetRoleContext.Provider value={{ setRole }}>
-            <BrowserRouter>
-              <Header />
-              <Routes>
+    <ApplicationStateContext.Provider value={{applicationState, setApplicationState}}>
+        <BrowserRouter>
+          <Routes>
+            <Route element={<LoggedOutUserRoute/>}>
+              <Route
+                path="/home"
+                element={<HomeGuestPage/>}
+              />
+              <Route path="/login" element={<LoginPage/>}/>
+              <Route path="/register" element={<RegisterPage/>}/>
+            </Route>
+            <Route element={<LoggedInUserRoute/>}>
+              <Route
+                path="/"
+                element={<HomePage/>}
+              />
+              <Route
+                path="/:id/assignments"
+                element={<AssignmentsStudentDisplayedPage/>}
+              />
+              <Route path="/settings" element={<UserSettingsPage/>}/>
+              <Route path="/create/group" element={<GroupCreatePage/>}/>
+              <Route path="/group/:idGroup" element={<GroupPage/>}>
+                <Route path="settings" element={<GroupSettingsPage/>}/>
+                <Route path="users" element={<GroupUsersPage/>}/>
                 <Route
-                  path="/"
-                  element={state.loggedIn ? <Home /> : <HomeGuest />}
+                  path="userProfileInGroup/:userProfileId"
+                  element={<GroupUserProfilePage/>}
                 />
                 <Route
-                  path="/:id/assignments"
-                  element={<AssignmentsStudentDisplayed />}
-                />
-                <Route path="/settings" element={<UserSettings />} />
-                <Route
-                  path="/settings/general"
-                  element={<UserGeneralSettings />}
+                  path="assignments"
+                  element={<AssignmentsGroupDisplayedPage/>}
                 />
                 <Route
-                  path="/settings/security"
-                  element={<UserSecuritySettings />}
+                  path="assignments/done"
+                  element={<AssignmentsTypesPage type={"done"}/>}
                 />
                 <Route
-                  path="/settings/appearance"
-                  element={<UserAppearanceSettings />}
+                  path="assignments/expired"
+                  element={<AssignmentsTypesPage type={"expired"}/>}
                 />
                 <Route
-                  path="/settings/markingTables"
-                  element={<UserMarkingTablesSettings />}
+                  path="assignments/todo"
+                  element={<AssignmentsTypesPage type={"todo"}/>}
                 />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/create/group" element={<CreateGroup />} />
-                <Route path="/group/:id" element={<Group />}>
-                  <Route path="settings" element={<GroupSettings />} />
-                  <Route path="users" element={<Users />} />
-                  <Route
-                    path="userProfileInGroup/:userProfileId"
-                    element={<UserProfileInGroup />}
-                  />
-                  <Route
-                    path="assignments"
-                    element={<AssignmentsGroupDisplayed />}
-                  />
-                  <Route
-                    path="assignments/done"
-                    element={<AssignmentsTypes type={"done"} />}
-                  />
-                  <Route
-                    path="assignments/expired"
-                    element={<AssignmentsTypes type={"expired"} />}
-                  />
-                  <Route
-                    path="assignments/todo"
-                    element={<AssignmentsTypes type={"todo"} />}
-                  />
-                  <Route path="assignments/add" element={<AddAssigment />} />
-                  <Route
-                    path="assigment/:idAssigment"
-                    element={<AssigmentSpec />}
-                  />
-                  <Route
-                    path="solution/:idUser/:idAssigment"
-                    element={<Solution />}/>
-                  <Route
-                    path="solutions/uncheck"
-                    element={<SolutionsTypes type={"uncheck"} />}
-                  />
-                  <Route
-                    path="solutions/late"
-                    element={<SolutionsTypes type={"late"} />}
-                  />
-                  <Route
-                    path="solutions/check"
-                    element={<SolutionsTypes type={"check"} />}
-                  />
-
-
-                  <Route path="*" element={<NotFound />} />
-                </Route>
-                <Route path="/group/:id/solution/:idUser/:idAssigment/example" element={<HardCodedExample/>}/>
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </BrowserRouter>
-          </GroupSetRoleContext.Provider>
-        </GroupRoleContext.Provider>
-      </DispatchContext.Provider>
-    </UserContext.Provider>
+                <Route path="assignments/add" element={<AddAssigmentPage/>}/>
+                <Route
+                  path="assigment/:idAssigment"
+                  element={<AssigmentSpecPage/>}
+                />
+                <Route
+                  path="solution/:idUser/:idAssigment"
+                  element={<SolutionPage/>}/>
+                <Route
+                  path="solutions/uncheck"
+                  element={<SolutionsTypesPage type={"uncheck"}/>}
+                />
+                <Route
+                  path="solutions/late"
+                  element={<SolutionsTypesPage type={"late"}/>}
+                />
+                <Route
+                  path="solutions/check"
+                  element={<SolutionsTypesPage type={"check"}/>}
+                />
+              </Route>
+              <Route path="/group/:id/solution/:idUser/:idAssigment/example" element={<HardCodedExamplePage/>}/>
+            </Route>
+            <Route path="*" element={<NotFoundPage/>}/>
+          </Routes>
+        </BrowserRouter>
+    </ApplicationStateContext.Provider>
   )
 }
 

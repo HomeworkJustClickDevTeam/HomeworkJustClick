@@ -1,28 +1,34 @@
-import {useContext, useState} from "react"
-import { RatingProps } from "../../types/types"
-import postgresqlDatabase from "../../services/postgresDatabase"
-import userContext from "../../UserContext"
-import { useNavigate } from "react-router-dom"
+import React, {useContext, useState} from "react"
+import {createEvaluationWithUserAndSolution} from "../../services/postgresDatabaseServices"
+import {useNavigate} from "react-router-dom"
+import {getUser} from "../../services/otherServices";
+import ApplicationStateContext from "../../contexts/ApplicationStateContext";
+
+interface RatingPropsInterface {
+  maxPoints: number
+  points: number | undefined
+  setPoints: (arg0: number) => void
+  solutionId: number
+  groupId: number
+}
 
 export function Rating({
-  maxPoints,
-  points,
-  setPoints,
-  solutionId,
-  groupId,
-}: RatingProps) {
+                         maxPoints,
+                         points,
+                         setPoints,
+                         solutionId,
+                         groupId,
+                       }: RatingPropsInterface) {
   const [active, setActive] = useState<number>()
-  const { userState } = useContext(userContext)
   const navigate = useNavigate()
+  const {applicationState} = useContext(ApplicationStateContext)
+
+  if (applicationState?.userState === undefined) {
+    navigate("/")
+  }
   const handleMark = () => {
-    const body = { result: points, grade: 0 }
-    console.log(userState.userId)
-    console.log(solutionId)
-    postgresqlDatabase
-      .post(
-        `/evaluation/withUserAndSolution/${userState.userId}/${solutionId}`,
-        body
-      )
+    const body = {result: points, grade: 0}
+    createEvaluationWithUserAndSolution(applicationState?.userState?.id as unknown as string, solutionId.toString(), body)
       .then(() => navigate(`/group/${groupId}`))
       .catch((e) => console.log(e))
   }
@@ -31,7 +37,10 @@ export function Rating({
     const buttons = []
     for (let i = 0; i <= maxPoints; i++) {
       buttons.push(
-        <button key={i} onClick={() => {setPoints(i); setActive(i)}} className={`border border-black w-20 h-6 text-center rounded-md hover:bg-lilly-bg focus:bg-hover_blue`}>
+        <button key={i} onClick={() => {
+          setPoints(i);
+          setActive(i)
+        }} className={`border border-black w-20 h-6 text-center rounded-md hover:bg-lilly-bg focus:bg-hover_blue`}>
           {i}
         </button>
       )

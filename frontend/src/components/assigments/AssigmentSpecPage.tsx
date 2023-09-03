@@ -1,0 +1,103 @@
+import {useLocation, useNavigate, useParams} from "react-router-dom"
+import React, {useContext, useEffect, useState} from "react"
+import {
+  getAssignmentPostgresService,
+  getCheckedSolutionByUserAssignmentGroupPostgresService,
+  getUncheckedSolutionByUserAssignmentGroupPostgresService
+} from "../../services/postgresDatabaseServices"
+import {parseISO} from "date-fns"
+
+import ApplicationStateContext from "../../contexts/ApplicationStateContext"
+import AssigmentModify from "./AssigmentModify"
+
+import AddSolution from "../solution/AddSolution"
+import Loading from "../animations/Loading"
+import {AxiosError} from "axios"
+
+import CheckedSolution from "../solution/CheckedSolution"
+import UncheckedSolution from "../solution/UncheckedSolution"
+import {AssignmentInterface} from "../../types/AssignmentInterface";
+import {SolutionInterface} from "../../types/SolutionInterface";
+import {getUser} from "../../services/otherServices";
+
+function AssigmentSpecPage() {
+  const {idAssigment} = useParams()
+  const location = useLocation()
+  const navigate = useNavigate()
+  const optionalUserId: string | null = location.state
+  const {applicationState} = useContext(ApplicationStateContext)
+  const [isSolutionChecked, setIsSolutionChecked] = useState<boolean | undefined>(undefined)
+  const [solution, setSolution] = useState<SolutionInterface | undefined>(undefined)
+  const [assignment, setAssignment] = useState<AssignmentInterface | undefined>(undefined)
+  let userId: null | string = null
+
+  useEffect(() => {
+    if (applicationState?.userState !== undefined) {
+      getUncheckedSolutionByUserAssignmentGroupPostgresService(applicationState?.userState.id.toString(), idAssigment as string, applicationState?.group?.id as unknown as string)
+        .then((response) => {
+          if (response.data.id !== null) {
+            setIsSolutionChecked(false)
+            setSolution(response.data)
+          }
+        })
+        .catch((error: AxiosError) => {
+          if (error.response?.status === 404) {
+            getCheckedSolutionByUserAssignmentGroupPostgresService(applicationState?.userState?.id as unknown as string, idAssigment as string, applicationState?.group?.id as unknown as string)
+              .then((response) => {
+                if (response.data.id !== null) {
+                  setIsSolutionChecked(true)
+                  setSolution(response.data)
+                }
+              })
+              .catch((error: AxiosError) => console.log(error))
+          } else {
+            console.log(error)
+          }
+        })
+        .finally(() => {
+          getAssignmentPostgresService(idAssigment as string)
+            .then((response) => {
+              const responseData = response.data
+              const parsedDate = parseISO(responseData.completionDatetime)
+              setAssignment({
+                ...responseData,
+                completionDatetime: parsedDate,
+              })
+            })
+            .catch((error) => {
+              console.log("Error fetching assignment:", error)
+            })
+        })
+    }
+  }, [])
+
+  if (applicationState?.userState === undefined) {
+    navigate("/")
+  }
+  if (assignment === undefined) {
+    return (<Loading/>)
+  }
+  if (optionalUserId !== null) {
+    userId = optionalUserId
+  } else {
+    if (applicationState?.userState !== undefined) {
+      userId = applicationState?.userState.id.toString()
+    }
+  }
+  return (
+    <div>
+      {((applicationState?.role === "Teacher") && (userId === null)) ? (
+        <AssigmentModify assignment={assignment} setAssigment={setAssignment}/>
+      ) : ((solution === undefined) && (userId === null)) ? (
+        <AddSolution assignment={assignment}/>
+      ) : isSolutionChecked ? (
+
+        <CheckedSolution assignment={assignment} solution={solution as SolutionInterface}/>
+      ) : (
+        <UncheckedSolution assignment={assignment} solution={solution as SolutionInterface}/>
+      )}
+    </div>
+  )
+}
+
+export default AssigmentSpecPage
