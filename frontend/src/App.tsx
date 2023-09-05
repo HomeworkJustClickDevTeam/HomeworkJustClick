@@ -26,7 +26,7 @@ import UserAppearanceSettingsPage from "./components/user/UserAppearanceSettings
 import UserMarkingTablesSettingsPage from "./components/user/UserMarkingTablesSettingsPage"
 import GroupSettingsPage from "./components/group/GroupSettingsPage"
 import GroupUserProfilePage from "./components/group/GroupUserProfilePage"
-import HardCodedExamplePage from "./components/solution/HardCodedExamplePage";
+import AdvancedEvaluationPage from "./components/evaluation/AdvancedEvaluationPage";
 import {LoggedInUserRoute} from "./components/route/LoggedInUserRoute";
 import HeaderLoggedInState from "./components/header/HeaderLoggedInState";
 import {LoggedOutUserRoute} from "./components/route/LoggedOutUserRoute";
@@ -141,7 +141,7 @@ function App() {
                   element={<SolutionsTypesPage type={"check"}/>}
                 />
               </Route>
-              <Route path="/group/:id/solution/:idUser/:idAssignment/example" element={<HardCodedExamplePage/>}/>
+              <Route path="/group/:id/solution/:idUser/:idAssignment/advancedEvaluation" element={<AdvancedEvaluationPage/>}/>
             </Route>
             <Route path="*" element={<NotFoundPage/>}/>
           </Routes>
