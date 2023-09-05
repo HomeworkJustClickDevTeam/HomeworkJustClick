@@ -2,30 +2,23 @@ package pl.HomeworkJustClick.Backend.Controllers;
 
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import pl.HomeworkJustClick.Backend.Auth.ChangePasswordRequest;
-import pl.HomeworkJustClick.Backend.Entities.Group;
 import pl.HomeworkJustClick.Backend.Entities.User;
 import pl.HomeworkJustClick.Backend.Responses.AuthenticationResponse;
 import pl.HomeworkJustClick.Backend.Services.AuthenticationService;
-import pl.HomeworkJustClick.Backend.Services.GroupTeacherService;
 import pl.HomeworkJustClick.Backend.Services.UserService;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -299,4 +292,21 @@ public class UserController {
         };
     }
 
+    @PostMapping("/refreshToken/{user_id}")
+    @Operation(
+            summary = "Allows user to refresh his token",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Token is refreshed.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = AuthenticationResponse.class)
+                            )
+                    )
+            }
+    )
+    public ResponseEntity<AuthenticationResponse> refreshToken(@PathVariable int user_id) {
+        return new ResponseEntity<>(authenticationService.refreshToken(user_id), HttpStatus.OK);
+    }
 }

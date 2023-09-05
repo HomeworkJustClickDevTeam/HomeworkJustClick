@@ -8,12 +8,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.HomeworkJustClick.Backend.Auth.AuthenticationRequest;
 import pl.HomeworkJustClick.Backend.Auth.ChangePasswordRequest;
-import pl.HomeworkJustClick.Backend.Responses.AuthenticationResponse;
 import pl.HomeworkJustClick.Backend.Auth.RegisterRequest;
 import pl.HomeworkJustClick.Backend.Config.JwtService;
 import pl.HomeworkJustClick.Backend.Entities.User;
 import pl.HomeworkJustClick.Backend.Enums.Role;
 import pl.HomeworkJustClick.Backend.Repositories.UserRepository;
+import pl.HomeworkJustClick.Backend.Responses.AuthenticationResponse;
 
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -122,6 +122,12 @@ public class AuthenticationServiceImplement implements AuthenticationService{
         var jwtToken = jwtService.generateToken(user);
         var id = user.getId();
         return AuthenticationResponse.builder().token(jwtToken).id(id).role(user.getRole()).message("ok").color(user.getColor()).name(user.getFirstname()).lastname(user.getLastname()).index(user.getIndex()).build();
+    }
+
+    public AuthenticationResponse refreshToken(int id) {
+        var user = userRepository.findById(id).orElseThrow();
+        var jwtToken = jwtService.generateToken(user);
+        return AuthenticationResponse.builder().token(jwtToken).id(user.getId()).role(user.getRole()).message("ok").color(user.getColor()).name(user.getFirstname()).lastname(user.getLastname()).index(user.getIndex()).build();
     }
 
     private Boolean emailCheck(String email) {
