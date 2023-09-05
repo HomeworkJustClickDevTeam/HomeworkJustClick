@@ -8,7 +8,7 @@ import {
 } from "../../services/postgresDatabaseServices";
 import {AxiosError} from "axios";
 import Loading from "../animations/Loading";
-import AssigmentListElement from "../assigments/AssigmentListElement";
+import AssignmentListElement from "../assignments/AssignmentListElement";
 import {UserInterface} from "../../types/UserInterface";
 import {AssignmentInterface} from "../../types/AssignmentInterface";
 import ApplicationStateContext from "../../contexts/ApplicationStateContext";
@@ -53,9 +53,9 @@ export default function GroupUserProfilePage() {
             <dd>
               <ul>
                 {doneAssignments?.map((assignment) => {
-                  return (<li key={assignment.id}><AssigmentListElement optionalUserId={userProfile?.id?.toString()}
-                                                                        assignment={assignment}
-                                                                        idGroup={applicationState?.group?.id as unknown as string}/></li>)
+                  return (<li key={assignment.id}><AssignmentListElement optionalUserId={userProfile?.id?.toString()}
+                                                                         assignment={assignment}
+                                                                         idGroup={applicationState?.group?.id as unknown as string}/></li>)
                 })}
               </ul>
             </dd>
@@ -64,8 +64,8 @@ export default function GroupUserProfilePage() {
             <dd>
               <ul>
                 {undoneAssignments?.map((assignment) => {
-                  return (<li><AssigmentListElement optionalUserId={userProfile?.id?.toString()} assignment={assignment}
-                                                    idGroup={applicationState?.group?.id as unknown as string}/></li>)
+                  return (<li><AssignmentListElement optionalUserId={userProfile?.id?.toString()} assignment={assignment}
+                                                     idGroup={applicationState?.group?.id as unknown as string}/></li>)
                 })}
               </ul>
             </dd>
@@ -74,8 +74,8 @@ export default function GroupUserProfilePage() {
             <dd>
               <ul>
                 {expiredUndoneAssignments?.map((assignment) => {
-                  return (<li><AssigmentListElement optionalUserId={userProfile?.id?.toString()} assignment={assignment}
-                                                    idGroup={applicationState?.group?.id as unknown as string}/></li>)
+                  return (<li><AssignmentListElement optionalUserId={userProfile?.id?.toString()} assignment={assignment}
+                                                     idGroup={applicationState?.group?.id as unknown as string}/></li>)
                 })}
               </ul>
             </dd>

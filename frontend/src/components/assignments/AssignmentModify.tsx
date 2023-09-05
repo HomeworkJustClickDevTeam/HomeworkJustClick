@@ -3,15 +3,15 @@ import React, {ChangeEvent, useContext, useEffect, useState} from "react"
 import {deleteAssignmentPostgresService, changeAssignmentPostgresService} from "../../services/postgresDatabaseServices"
 import ReactDatePicker from "react-datepicker"
 
-import {AssigmentModifyFile} from "./AssigmentModifyFile"
-import {AssigmentPropsInterface} from "../../types/AssigmentPropsInterface";
+import {AssignmentModifyFile} from "./AssignmentModifyFile"
+import {AssignmentPropsInterface} from "../../types/AssignmentPropsInterface";
 import ApplicationStateContext from "../../contexts/ApplicationStateContext";
 
-interface AssigmentModifyPropsInterface extends AssigmentPropsInterface {
-  setAssigment: (assignment: (prevState: any) => any) => void
+interface AssignmentModifyPropsInterface extends AssignmentPropsInterface {
+  setAssignment: (assignment: (prevState: any) => any) => void
 }
 
-function AssigmentModify({assignment, setAssigment}: AssigmentModifyPropsInterface) {
+function AssignmentModify({assignment, setAssignment}: AssignmentModifyPropsInterface) {
   const navigate = useNavigate()
   const [toSend, setToSend] = useState<boolean>(false)
   const [toNavigate, setToNavigate] = useState<boolean>(false)
@@ -25,7 +25,7 @@ function AssigmentModify({assignment, setAssigment}: AssigmentModifyPropsInterfa
 
   const handleTextChange = (event: ChangeEvent<HTMLInputElement>) => {
     const {name, value} = event.target
-    setAssigment((prevState) => ({
+    setAssignment((prevState) => ({
       ...prevState,
       [name]: value,
     }))
@@ -33,7 +33,7 @@ function AssigmentModify({assignment, setAssigment}: AssigmentModifyPropsInterfa
 
   const handleNumberChange = (event: ChangeEvent<HTMLInputElement>) => {
     const {name, value} = event.target
-    setAssigment((prevState) => ({
+    setAssignment((prevState) => ({
       ...prevState,
       [name]: value,
     }))
@@ -41,14 +41,14 @@ function AssigmentModify({assignment, setAssigment}: AssigmentModifyPropsInterfa
 
   const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
     const {name, checked} = event.target
-    setAssigment((prevState) => ({
+    setAssignment((prevState) => ({
       ...prevState,
       [name]: checked,
     }))
   }
 
   const handleDateChange = (date: Date) => {
-    setAssigment((prevState) => ({
+    setAssignment((prevState) => ({
       ...prevState,
       completionDatetime: date,
     }))
@@ -130,7 +130,7 @@ function AssigmentModify({assignment, setAssigment}: AssigmentModifyPropsInterfa
         </button>
       </form>
       <p className='mt-4 mb-2'>Dodaj pliki: </p>
-      <AssigmentModifyFile
+      <AssignmentModifyFile
         toSend={toSend}
         assignmentId={assignment.id}
         setToNavigate={setToNavigate}
@@ -143,4 +143,4 @@ function AssigmentModify({assignment, setAssigment}: AssigmentModifyPropsInterfa
   )
 }
 
-export default AssigmentModify
+export default AssignmentModify

@@ -3,16 +3,16 @@ import {postFileMongoService} from "../../services/mongoDatabaseServices"
 import {createFileWithAssignmentPostgresService} from "../../services/postgresDatabaseServices"
 import {AssignmentAddFilePropsInterface} from "../../types/AssignmentAddFilePropsInterface";
 
-export function AssigmentAddFile(props: AssignmentAddFilePropsInterface) {
+export function AssignmentAddFile(props: AssignmentAddFilePropsInterface) {
   const [file, setFile] = useState<File>()
 
   useEffect(() => {
-    if (props.toSend && props.idAssigment) {
+    if (props.toSend && props.idAssignment) {
       if (file) {
         const formData = new FormData()
         formData.append("file", file)
         postFileMongoService(formData)
-          .then((response) => createFileWithAssignmentPostgresService(`${response.data.id}`, response.data.format, response.data.name, `${props.idAssigment}`))
+          .then((response) => createFileWithAssignmentPostgresService(`${response.data.id}`, response.data.format, response.data.name, `${props.idAssignment}`))
           .catch()
       } else {
         props.setToNavigate(true)

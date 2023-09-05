@@ -7,7 +7,7 @@ import {
 import {getFileMongoService, postFileMongoService} from "../../services/mongoDatabaseServices"
 import {FileFromPostInterface} from "../../types/FileFromPostInterface";
 
-export function AssigmentModifyFile(props: {
+export function AssignmentModifyFile(props: {
   assignmentId: number
   setToNavigate: (navigate: boolean) => void
   toSend: boolean

@@ -6,13 +6,14 @@ import {
   createFileWithSolutionPostgresService,
   createSolutionWithUserAndAssignmentPostgresService
 } from "../../services/postgresDatabaseServices"
-import {AssigmentFile} from "../assigments/AssigmentFile"
+import {AssignmentFile} from "../assignments/AssignmentFile"
 import {format} from "date-fns";
-import {AssigmentPropsInterface} from "../../types/AssigmentPropsInterface";
+import {AssignmentPropsInterface} from "../../types/AssignmentPropsInterface";
 import {SolutionInterface} from "../../types/SolutionInterface";
 import {SolutionToSendInterface} from "../../types/SolutionToSendInterface";
 import {getUser} from "../../services/otherServices";
 import ApplicationStateContext from "../../contexts/ApplicationStateContext";
+import Loading from "../animations/Loading";
 
 
 interface FileRespondMongoInterface {
@@ -21,9 +22,10 @@ interface FileRespondMongoInterface {
   format: string
 }
 
-function AddSolution({assignment}: AssigmentPropsInterface) {
+function SolutionAdd({assignment}: AssignmentPropsInterface) {
   const navigate = useNavigate()
-  const {idAssigment} = useParams()
+  const [loading, setLoading] = useState<boolean>(true)
+  const {idAssignment} = useParams()
   const {applicationState} = useContext(ApplicationStateContext)
   const [file, setFile] = useState<File>()
   const [response, setResponse] = useState<FileRespondMongoInterface>({
@@ -42,24 +44,43 @@ function AddSolution({assignment}: AssigmentPropsInterface) {
 
 
   useEffect(() => {
-    getFilesByAssignmentPostgresService(idAssigment as string)
-      .then(() => setIsFile(true))
+    setLoading(true)
+    let ignore = false
+    getFilesByAssignmentPostgresService(idAssignment as string)
+      .then(() =>{
+        if(!ignore){
+          setIsFile(true)
+          setLoading(false)
+        }
+
+      } )
       .catch(() => setIsFile(false))
+    return () => {
+      ignore = true
+    }
   }, [])
 
   useEffect(() => {
 
     if (solutionFromServer?.id && response.id) {
+      setLoading(true)
+      let ignore = false
       createFileWithSolutionPostgresService(
         response.id,
         response.format,
         response.name,
         solutionFromServer.id)
         .then((r) => {
-          navigate(-1)
-          console.log(r)
+          if(!ignore){
+            navigate(-1)
+            setLoading(false)
+            console.log(r)
+          }
         })
         .catch((e) => console.log(e))
+      return () =>{
+        ignore = true
+      }
     }
   }, [solutionFromServer, response])
 
@@ -84,13 +105,17 @@ function AddSolution({assignment}: AssigmentPropsInterface) {
           setResponse(r.data)
         })
         .catch()
-      createSolutionWithUserAndAssignmentPostgresService(applicationState?.userState.id.toString(), idAssigment as string, solution)
+      createSolutionWithUserAndAssignmentPostgresService(applicationState?.userState.id.toString(), idAssignment as string, solution)
         .then((r) => {
           console.log(r)
           setSolutionFromServer(r.data)
         })
         .catch()
     }
+  }
+
+  if(loading){
+    return <Loading></Loading>
   }
 
   return (
@@ -100,7 +125,7 @@ function AddSolution({assignment}: AssigmentPropsInterface) {
       <div><span
         className='font-semibold'>Data ukończenia: </span>{format(assignment.completionDatetime, "dd.MM.yyyy, HH:mm")}
       </div>
-      {isFile && <AssigmentFile assigmentId={assignment.id}/>}
+      {isFile && <AssignmentFile assignmentId={assignment.id}/>}
       <input type="file" onChange={handleChangeFile}/>
       <div> {file && `${file.name} - ${file.type}`}</div>
       <button onClick={handleUploadClick}
@@ -111,4 +136,4 @@ function AddSolution({assignment}: AssigmentPropsInterface) {
   )
 }
 
-export default AddSolution
+export default SolutionAdd

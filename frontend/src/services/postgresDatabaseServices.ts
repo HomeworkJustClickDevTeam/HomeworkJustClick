@@ -107,9 +107,9 @@ export const createSolutionWithUserAndAssignmentPostgresService = async (userId:
     )
 }
 
-export const  getFilesByAssignmentPostgresService = async (assigmentId: string | number) => {
+export const  getFilesByAssignmentPostgresService = async (assignmentId: string | number) => {
   return await postgresqlDatabase
-    .get(`/files/byAssignment/${assigmentId}`)
+    .get(`/files/byAssignment/${assignmentId}`)
 }
 
 export const getFilesBySolutionPostgresService = async (solutionId: string | number) => {

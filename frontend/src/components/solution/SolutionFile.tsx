@@ -57,7 +57,6 @@ export function SolutionFile(props: { solutionId: number }) {
   if (isLoading) {
     // return <Loading />
   }
-  console.log(databaseFile, file, fileName)
   if(databaseFile !== undefined && file !== undefined && fileName !== undefined) {
     return (
       <>

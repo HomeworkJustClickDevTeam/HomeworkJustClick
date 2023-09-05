@@ -3,16 +3,16 @@ import {getFilesByAssignmentPostgresService} from "../../services/postgresDataba
 import {getFileMongoService} from "../../services/mongoDatabaseServices"
 import {FileFromPostInterface} from "../../types/FileFromPostInterface";
 
-export function AssigmentFile(props: { assigmentId: number }) {
+export function AssignmentFile(props: { assignmentId: number }) {
   const [databaseFile, setDatabaseFile] = useState<FileFromPostInterface[]>([])
   const [file, setFile] = useState<Blob | null>(null)
   const [fileName, setFileName] = useState<string>("")
   const [isLoading, setIsLoading] = useState<boolean>(true)
   useEffect(() => {
     const fetchData = async () => {
-      if (props.assigmentId) {
+      if (props.assignmentId) {
         try {
-          let response = await getFilesByAssignmentPostgresService(props.assigmentId)
+          let response = await getFilesByAssignmentPostgresService(props.assignmentId)
           console.log(response.data)
           setDatabaseFile(response.data)
         } catch (e) {
@@ -21,7 +21,7 @@ export function AssigmentFile(props: { assigmentId: number }) {
       }
     }
     fetchData()
-  }, [props.assigmentId])
+  }, [props.assignmentId])
   console.log(databaseFile)
   useEffect(() => {
     const fetchFileData = async () => {
