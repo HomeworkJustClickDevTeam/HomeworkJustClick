@@ -74,7 +74,6 @@ function SolutionAdd({assignment}: AssignmentPropsInterface) {
           if(!ignore){
             navigate(-1)
             setLoading(false)
-            console.log(r)
           }
         })
         .catch((e) => console.log(e))
@@ -112,10 +111,6 @@ function SolutionAdd({assignment}: AssignmentPropsInterface) {
         })
         .catch()
     }
-  }
-
-  if(loading){
-    return <Loading></Loading>
   }
 
   return (

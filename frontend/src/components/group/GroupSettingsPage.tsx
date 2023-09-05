@@ -6,16 +6,12 @@ import Loading from "../animations/Loading";
 import {getUser} from "../../services/otherServices";
 import {useNavigate} from "react-router-dom";
 import ApplicationStateContext from "../../contexts/ApplicationStateContext";
+import {LoadingContext} from "../../contexts/LoadingContext";
 
 export default function GroupSettingsPage() {
   const {applicationState} = useContext(ApplicationStateContext)
-
-  const [loading, setLoading] = useState<boolean>(false)
   const navigate = useNavigate()
 
-  if (loading) {
-    return <Loading></Loading>
-  }
   if (applicationState?.userState === undefined) {
     navigate("/")
   }

@@ -72,8 +72,6 @@ export function AssignmentModifyFile(props: {
       setIsChange(true)
     }
   }
-
-  console.log(isChange)
   return (
     <>
       <>

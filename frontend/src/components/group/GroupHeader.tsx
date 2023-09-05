@@ -13,7 +13,6 @@ function GroupHeader({group}: GroupListElementPropsInterface) {
   const locationSplit = location.pathname.split("/");
 
   useEffect(() => {
-    console.log("COLOR")
   }, [applicationState?.group?.color]);
 
   if(applicationState?.group?.color !== undefined) {

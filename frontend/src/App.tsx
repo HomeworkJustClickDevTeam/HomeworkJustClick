@@ -1,4 +1,4 @@
-import React, {useEffect, useReducer, useRef, useState} from "react"
+import React, {useContext, useEffect, useReducer, useRef, useState} from "react"
 
 import './App.css'
 // import "./assets/App.css"
@@ -34,8 +34,10 @@ import {ApplicationStateInterface} from "./types/ApplicationStateInterface";
 import {ActionTypes} from "./types/ActionTypes";
 import {checkToken, getUser} from "./services/otherServices";
 import {UserInterface} from "./types/UserInterface";
+import {LoadingContext} from "./contexts/LoadingContext";
 
 function App() {
+  const [isLoading, setIsLoading] = useState(false)
 
   const initialApplicationState:ApplicationStateInterface = {
     userState: checkToken(),
@@ -76,6 +78,7 @@ function App() {
 
   return (
     <ApplicationStateContext.Provider value={{applicationState, setApplicationState}}>
+      <LoadingContext.Provider value={{isLoading, setIsLoading}}>
         <BrowserRouter>
           <Routes>
             <Route element={<LoggedOutUserRoute/>}>
@@ -146,6 +149,7 @@ function App() {
             <Route path="*" element={<NotFoundPage/>}/>
           </Routes>
         </BrowserRouter>
+      </LoadingContext.Provider>
     </ApplicationStateContext.Provider>
   )
 }

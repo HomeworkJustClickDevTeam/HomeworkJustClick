@@ -11,10 +11,6 @@ import ApplicationStateContext from "../../contexts/ApplicationStateContext";
 export default function UserSettingsPage(): JSX.Element {
   const {applicationState, setApplicationState} = useContext(ApplicationStateContext)
   const navigate = useNavigate()
-  const [loading, setLoading] = useState<boolean>(false)
-  if (loading) {
-    return <Loading></Loading>
-  }
   if (applicationState?.userState === undefined) {
     navigate("/")
   }

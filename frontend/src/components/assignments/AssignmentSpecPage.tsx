@@ -11,18 +11,18 @@ import ApplicationStateContext from "../../contexts/ApplicationStateContext"
 import AssignmentModify from "./AssignmentModify"
 
 import SolutionAdd from "../solution/SolutionAdd"
-import Loading from "../animations/Loading"
 import {AxiosError} from "axios"
 
 import SolutionChecked from "../solution/SolutionChecked"
 import SolutionUnchecked from "../solution/SolutionUnchecked"
 import {AssignmentInterface} from "../../types/AssignmentInterface";
 import {SolutionInterface} from "../../types/SolutionInterface";
-import {getUser} from "../../services/otherServices";
+import {LoadingContext} from "../../contexts/LoadingContext";
+import Loading from "../animations/Loading";
 
 function AssignmentSpecPage() {
   const {idAssignment} = useParams()
-  const [isLoading, setIsLoading] = useState(true)
+  const {setIsLoading} = useContext(LoadingContext)
   const location = useLocation()
   const navigate = useNavigate()
   const optionalUserId: string | null = location.state
@@ -90,11 +90,9 @@ function AssignmentSpecPage() {
   if (applicationState?.userState === undefined) {
     navigate("/")
   }
-  console.log(isLoading)
-  if (isLoading) {
-    return (<Loading/>)
+  if(assignment === undefined){
+    return <Loading></Loading>
   }
-
   return (
     <div>
       {((applicationState?.role === "Teacher") ? (
