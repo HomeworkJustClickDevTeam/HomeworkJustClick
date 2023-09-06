@@ -34,13 +34,13 @@ import {ApplicationStateInterface} from "./types/ApplicationStateInterface";
 import {ActionTypes} from "./types/ActionTypes";
 import {LoadingContext} from "./contexts/LoadingContext";
 import {getUser} from "./services/otherServices";
+import {ApplicationProvider} from "./components/ApplicationProvider";
 function App() {
   const [isLoading, setIsLoading] = useState(false)
 
   return (
-    <AuthenctiationProvider>
+    <ApplicationProvider>
       <LoadingContext.Provider value={{isLoading, setIsLoading}}>
-        <BrowserRouter>
           <Routes>
             <Route element={<LoggedOutUserRoute/>}>
               <Route
@@ -109,9 +109,8 @@ function App() {
             </Route>
             <Route path="*" element={<NotFoundPage/>}/>
           </Routes>
-        </BrowserRouter>
       </LoadingContext.Provider>
-    </AuthenctiationProvider>
+    </ApplicationProvider>
   )
 }
 

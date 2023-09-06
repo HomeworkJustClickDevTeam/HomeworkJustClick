@@ -9,7 +9,6 @@ function LogOut() {
 
   const handleLogout = () => {
     logout(setApplicationState)
-    navigate("/home")
   }
 
   return <button onClick={handleLogout}>Wyloguj się</button>

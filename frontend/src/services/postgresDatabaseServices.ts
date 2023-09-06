@@ -39,6 +39,7 @@ postgresqlDatabase.interceptors.response.use((response)=> {
   if(error.response.status === 403 && !originalRequest._retry){
     originalRequest._retry = true
     localStorage.removeItem("user")
+    window.dispatchEvent(new Event('storage'))
   }
   return Promise.reject(error)
 })

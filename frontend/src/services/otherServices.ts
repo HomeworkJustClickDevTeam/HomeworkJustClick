@@ -20,10 +20,11 @@ export const getUser = (): (UserInterface | undefined) => {
 
 export const login = async (user: LoginUserInterface, setApplicationState: Dispatch<ActionTypes>) => {
   await loginPostgresService(user)
-    .then((response) => {
+    .then(async (response) => {
       if (response?.data.token) {
-        setApplicationState({type:"setUser", userState:response.data})
-        localStorage.setItem("user", JSON.stringify(response.data))
+        setApplicationState({type: "setUser", userState: response.data})
+        await localStorage.setItem("user", JSON.stringify(response.data))
+        window.dispatchEvent(new Event('storage'))
       } else {
         console.log("Zle haslo / uzytkownik")
       }
@@ -31,7 +32,8 @@ export const login = async (user: LoginUserInterface, setApplicationState: Dispa
     .catch((error) => console.log(error))
 }
 
-export const logout = (setApplicationState: Dispatch<ActionTypes>) => {
+export const logout = async (setApplicationState: Dispatch<ActionTypes>) => {
   setApplicationState({type:"logOut"})
-  localStorage.removeItem("user")
+  await localStorage.removeItem("user")
+  window.dispatchEvent(new Event('storage'))
 }
