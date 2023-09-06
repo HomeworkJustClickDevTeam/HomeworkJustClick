@@ -21,7 +21,6 @@ function SolutionPage() {
         if(!ignore){
           setPoints(r.data.result)
           setIsCheck(true)
-
         }
       })
       .finally(() => setIsLoading(false))

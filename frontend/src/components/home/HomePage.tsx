@@ -36,7 +36,7 @@ function HomePage() {
   useEffect(() => {
     setApplicationState({type:"setGroupView", group:undefined})
     setApplicationState({type:"setHomePageIn", homePageIn:true})
-
+    setApplicationState({type: "setGroupViewRole", role: undefined})
     allUserGroups()
   }, [])
 

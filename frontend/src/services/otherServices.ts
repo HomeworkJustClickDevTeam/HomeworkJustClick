@@ -4,6 +4,14 @@ import {getUserPostgresService, loginPostgresService} from "./postgresDatabaseSe
 import {Dispatch} from "react";
 import {ActionTypes} from "../types/ActionTypes";
 
+
+export const parseJwt = (token:string):any => {
+  try{
+    return JSON.parse((window.atob(token.split('.')[1])))
+  }catch (error){
+    return null
+  }
+}
 export const getUser = (): (UserInterface | undefined) => {
   const userString = localStorage.getItem("user")
   if (userString !== null) return JSON.parse(userString)
@@ -14,7 +22,7 @@ export const login = async (user: LoginUserInterface, setApplicationState: Dispa
   await loginPostgresService(user)
     .then((response) => {
       if (response?.data.token) {
-        setApplicationState({type:"logIn", userState:response.data})
+        setApplicationState({type:"setUser", userState:response.data})
         localStorage.setItem("user", JSON.stringify(response.data))
       } else {
         console.log("Zle haslo / uzytkownik")
@@ -26,20 +34,4 @@ export const login = async (user: LoginUserInterface, setApplicationState: Dispa
 export const logout = (setApplicationState: Dispatch<ActionTypes>) => {
   setApplicationState({type:"logOut"})
   localStorage.removeItem("user")
-}
-
-export const checkToken = () => {
-  let userState = getUser()
-  if(userState !== undefined){
-    getUserPostgresService(userState.id as unknown as string)
-      .catch((error)=>{
-        if(error){
-          localStorage.removeItem("user")
-          userState = undefined
-        }
-      })
-    return userState
-
-  }
-  else return undefined
 }

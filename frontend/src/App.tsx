@@ -32,52 +32,13 @@ import HeaderLoggedInState from "./components/header/HeaderLoggedInState";
 import {LoggedOutUserRoute} from "./components/route/LoggedOutUserRoute";
 import {ApplicationStateInterface} from "./types/ApplicationStateInterface";
 import {ActionTypes} from "./types/ActionTypes";
-import {checkToken, getUser} from "./services/otherServices";
-import {UserInterface} from "./types/UserInterface";
 import {LoadingContext} from "./contexts/LoadingContext";
-
+import {getUser} from "./services/otherServices";
 function App() {
   const [isLoading, setIsLoading] = useState(false)
 
-  const initialApplicationState:ApplicationStateInterface = {
-    userState: checkToken(),
-    role: undefined,
-    group: undefined,
-    homePageIn: true
-  }
-
-
-
-  function reducer(state: ApplicationStateInterface, action: ActionTypes): ApplicationStateInterface{
-    switch (action.type){
-      case "logOut":
-        return {userState: undefined, role: undefined, group:undefined, homePageIn:state.homePageIn}
-      case "logIn":
-        return {userState: action.userState, role: undefined, group: undefined, homePageIn:state.homePageIn}
-      case "setGroupView":
-        return {group: action.group, role: state.role, userState: state.userState, homePageIn:state.homePageIn}
-      case "setGroupViewRole":
-        return {role: action.role, userState: state.userState, group: state.group, homePageIn:state.homePageIn}
-      case "setHomePageIn":
-        return {role: state.role, userState: state.userState, group: state.group, homePageIn: action.homePageIn}
-    }
-  }
-
-  const [applicationState, setApplicationState] = useReducer(reducer, initialApplicationState)
-
-  useEffect(() => {
-    if(checkToken() === undefined){
-      setApplicationState({type:"logOut"})
-      localStorage.removeItem("user")
-    }
-  }, []);
-
-  useEffect(() => {
-    console.log("APP STATE:", applicationState)
-  }, [applicationState]);
-
   return (
-    <ApplicationStateContext.Provider value={{applicationState, setApplicationState}}>
+    <AuthenctiationProvider>
       <LoadingContext.Provider value={{isLoading, setIsLoading}}>
         <BrowserRouter>
           <Routes>
@@ -150,7 +111,7 @@ function App() {
           </Routes>
         </BrowserRouter>
       </LoadingContext.Provider>
-    </ApplicationStateContext.Provider>
+    </AuthenctiationProvider>
   )
 }
 

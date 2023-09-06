@@ -7,7 +7,8 @@ import {SolutionToSendInterface} from "../types/SolutionToSendInterface";
 import {LoginUserInterface} from "../types/LoginUserInterface";
 import {UserRegisterInterface} from "../types/UserRegisterInterface";
 import {CredentialsInterface} from "../types/CredentialsInterface";
-import {getUser} from "./otherServices";
+import {getUser, parseJwt} from "./otherServices";
+import {UserInterface} from "../types/UserInterface";
 
 const postgresqlDatabase = axios.create({
   baseURL: "http://localhost:8080/api",
@@ -31,6 +32,17 @@ postgresqlDatabase.interceptors.request.use(async (config) => {
     return Promise.reject(error)
   })
 
+postgresqlDatabase.interceptors.response.use((response)=> {
+  return response
+}, async (error)=>{
+  const originalRequest = error.config
+  if(error.response.status === 403 && !originalRequest._retry){
+    originalRequest._retry = true
+    localStorage.removeItem("user")
+  }
+  return Promise.reject(error)
+})
+
 
 export const createAssignmentWithUserAndGroupPostgresService = async (
   userId: string,
@@ -42,6 +54,10 @@ export const createAssignmentWithUserAndGroupPostgresService = async (
       assignment)
 }
 
+
+export const refreshToken = async (userId: number) => {
+  return await postgresqlDatabase.post(`/refreshToken/${userId}`)
+}
 export const loginPostgresService = async (user: LoginUserInterface) => {
   return await postgresqlDatabase.post("/auth/authenticate", user)
 }
