@@ -12,7 +12,7 @@ interface AssignmentFilterStudentProps {
   idGroup: string
 }
 
-export const assigmentFilterStudent = ({
+export const assignmentFilterStudent = ({
                                          setAssignments,
                                          idGroup,
                                          userId,

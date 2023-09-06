@@ -1,14 +1,11 @@
-import {useContext, useEffect, useState} from "react"
-import {getFilesBySolutionPostgresService} from "../../services/postgresDatabaseServices"
+import {useEffect, useState} from "react"
+import {getFilesByAssignmentPostgresService} from "../../services/postgresDatabaseServices"
 import {getFileMongoService} from "../../services/mongoDatabaseServices"
 import {FileFromPostInterface} from "../../types/FileFromPostInterface";
 import {useGetFiles} from "../customHooks/useGetFiles";
-import Loading from "../animations/Loading";
-import {LoadingContext} from "../../contexts/LoadingContext";
 
-export function SolutionFile(props: { solutionId: number }) {
-  const files = useGetFiles(props.solutionId, "solution")
-  console.log(files)
+export function AssignmentFile(props: { assignmentId: number }) {
+  const files = useGetFiles(props.assignmentId, "assignment")
   const handleDownload = () => {
     if (files) {
       const fileUrl = URL.createObjectURL(files[0].fileData)
@@ -18,11 +15,13 @@ export function SolutionFile(props: { solutionId: number }) {
       link.click()
     }
   }
-    return (
+  return (
       <>
         {files.map((file) => {
-              <button key={file.fileName} onClick={handleDownload}>{file.fileName}</button>
+          <button key={file.fileName} onClick={handleDownload}>{file.fileName}</button>
         })}
       </>
     )
+
+
 }

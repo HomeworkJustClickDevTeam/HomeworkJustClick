@@ -1,17 +1,17 @@
 import {Link} from "react-router-dom"
 import {format} from "date-fns"
-import {AssigmentPropsInterface} from "../../types/AssigmentPropsInterface";
+import {AssignmentPropsInterface} from "../../types/AssignmentPropsInterface";
 
-interface AssigmentItemPropsInterface extends AssigmentPropsInterface {
+interface AssignmentItemPropsInterface extends AssignmentPropsInterface {
   idGroup: string
   optionalUserId?: string
 }
 
-function AssigmentListElement({assignment, idGroup, optionalUserId}: AssigmentItemPropsInterface) {
+function AssignmentListElement({assignment, idGroup, optionalUserId}: AssignmentItemPropsInterface) {
   const completionDatetime = new Date(assignment.completionDatetime)
   return (
     <>
-      <Link to={`/group/${idGroup}/assigment/${assignment.id}`} state={optionalUserId}
+      <Link to={`/group/${idGroup}/assignment/${assignment.id}`} state={optionalUserId}
             className="flex ml-[7.5%] mt-4 border-border_gray border w-[42.5%] h-16 rounded-lg font-lato text-xl items-center justify-between">
         <div className="flex-col ml-10 ">
           <div>{assignment.title}</div>
@@ -23,4 +23,4 @@ function AssigmentListElement({assignment, idGroup, optionalUserId}: AssigmentIt
   )
 }
 
-export default AssigmentListElement
+export default AssignmentListElement

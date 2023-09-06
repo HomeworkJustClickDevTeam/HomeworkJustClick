@@ -1,4 +1,4 @@
-import React, {useEffect, useReducer, useRef, useState} from "react"
+import React, {useContext, useEffect, useReducer, useRef, useState} from "react"
 
 import './App.css'
 // import "./assets/App.css"
@@ -9,14 +9,14 @@ import {BrowserRouter, Route, Routes} from "react-router-dom"
 import HomeGuestPage from "./components/home/HomeGuestPage"
 import GroupCreatePage from "./components/group/GroupCreatePage"
 import GroupPage from "./components/group/GroupPage"
-import AssignmentsGroupDisplayedPage from "./components/assigments/AssignmentsGroupDisplayedPage"
-import AddAssigmentPage from "./components/assigments/AddAssigmentPage"
-import AssigmentSpecPage from "./components/assigments/AssigmentSpecPage"
+import AssignmentsGroupDisplayedPage from "./components/assignments/AssignmentsGroupDisplayedPage"
+import AssignmentAddPage from "./components/assignments/AssignmentAddPage"
+import AssignmentSpecPage from "./components/assignments/AssignmentSpecPage"
 import GroupUsersPage from "./components/group/GroupUsersPage"
 import NotFoundPage from "./components/errors/NotFoundPage"
 import ApplicationStateContext from "./contexts/ApplicationStateContext"
-import AssignmentsTypesPage from "./components/assigments/AssignmentsTypesPage"
-import AssignmentsStudentDisplayedPage from "./components/assigments/AssignmentsStudentDisplayedPage"
+import AssignmentsTypesPage from "./components/assignments/AssignmentsTypesPage"
+import AssignmentsStudentDisplayedPage from "./components/assignments/AssignmentsStudentDisplayedPage"
 import SolutionsTypesPage from "./components/solution/SolutionsTypesPage"
 import SolutionPage from "./components/solution/SolutionPage"
 import UserSettingsPage from "./components/user/UserSettingsPage"
@@ -26,7 +26,7 @@ import UserAppearanceSettingsPage from "./components/user/UserAppearanceSettings
 import UserMarkingTablesSettingsPage from "./components/user/UserMarkingTablesSettingsPage"
 import GroupSettingsPage from "./components/group/GroupSettingsPage"
 import GroupUserProfilePage from "./components/group/GroupUserProfilePage"
-import HardCodedExamplePage from "./components/solution/HardCodedExamplePage";
+import AdvancedEvaluationPage from "./components/evaluation/AdvancedEvaluationPage";
 import {LoggedInUserRoute} from "./components/route/LoggedInUserRoute";
 import HeaderLoggedInState from "./components/header/HeaderLoggedInState";
 import {LoggedOutUserRoute} from "./components/route/LoggedOutUserRoute";
@@ -34,11 +34,13 @@ import {ApplicationStateInterface} from "./types/ApplicationStateInterface";
 import {ActionTypes} from "./types/ActionTypes";
 import {checkToken, getUser} from "./services/otherServices";
 import {UserInterface} from "./types/UserInterface";
+import {LoadingContext} from "./contexts/LoadingContext";
 
 function App() {
+  const [isLoading, setIsLoading] = useState(false)
 
   const initialApplicationState:ApplicationStateInterface = {
-    userState: getUser(),
+    userState: checkToken(),
     role: undefined,
     group: undefined,
     homePageIn: true
@@ -76,6 +78,7 @@ function App() {
 
   return (
     <ApplicationStateContext.Provider value={{applicationState, setApplicationState}}>
+      <LoadingContext.Provider value={{isLoading, setIsLoading}}>
         <BrowserRouter>
           <Routes>
             <Route element={<LoggedOutUserRoute/>}>
@@ -120,13 +123,13 @@ function App() {
                   path="assignments/todo"
                   element={<AssignmentsTypesPage type={"todo"}/>}
                 />
-                <Route path="assignments/add" element={<AddAssigmentPage/>}/>
+                <Route path="assignments/add" element={<AssignmentAddPage/>}/>
                 <Route
-                  path="assigment/:idAssigment"
-                  element={<AssigmentSpecPage/>}
+                  path="assignment/:idAssignment"
+                  element={<AssignmentSpecPage/>}
                 />
                 <Route
-                  path="solution/:idUser/:idAssigment"
+                  path="solution/:idUser/:idAssignment"
                   element={<SolutionPage/>}/>
                 <Route
                   path="solutions/uncheck"
@@ -141,11 +144,12 @@ function App() {
                   element={<SolutionsTypesPage type={"check"}/>}
                 />
               </Route>
-              <Route path="/group/:id/solution/:idUser/:idAssigment/example" element={<HardCodedExamplePage/>}/>
+              <Route path="/group/:id/solution/:idUser/:idAssignment/advancedEvaluation" element={<AdvancedEvaluationPage/>}/>
             </Route>
             <Route path="*" element={<NotFoundPage/>}/>
           </Routes>
         </BrowserRouter>
+      </LoadingContext.Provider>
     </ApplicationStateContext.Provider>
   )
 }

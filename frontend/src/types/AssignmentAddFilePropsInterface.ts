@@ -1,5 +1,5 @@
 export interface AssignmentAddFilePropsInterface {
   toSend: boolean
-  idAssigment: number | undefined
+  idAssignment: number | undefined
   setToNavigate: (navigate: boolean) => void
 }

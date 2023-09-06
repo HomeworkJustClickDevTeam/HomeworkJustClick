@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from "react"
-import {assigmentFilterStudent} from "../../filter/AssigmentFilterStudent"
+import {assignmentFilterStudent} from "../../filter/AssignmentFilterStudent"
 import {useNavigate, useParams} from "react-router-dom"
-import AssigmentListElement from "./AssigmentListElement"
+import AssignmentListElement from "./AssignmentListElement"
 import Loading from "../animations/Loading"
 import groupRoleContext from "../../contexts/ApplicationStateContext"
 import {AssignmentInterface} from "../../types/AssignmentInterface";
@@ -15,7 +15,7 @@ function AssignmentsTypesPage({type}: { type: string }) {
 
 
   useEffect(() => {
-    function typeOfAssigment() {
+    function typeOfAssignment() {
       switch (type) {
         case "expired":
           expiredAssignments()
@@ -35,7 +35,7 @@ function AssignmentsTypesPage({type}: { type: string }) {
     }
 
     if (applicationState?.role === "Student") {
-      typeOfAssigment()
+      typeOfAssignment()
     } else {
       navigate(`-/group/${applicationState?.group?.id}`)
     }
@@ -44,7 +44,7 @@ function AssignmentsTypesPage({type}: { type: string }) {
     navigate("/")
   }
   const {doneAssignments, expiredAssignments, noneExpiredAssignments} =
-    assigmentFilterStudent({
+    assignmentFilterStudent({
       idGroup: applicationState?.group?.id as unknown as string,
       userId: applicationState?.userState?.id as unknown as string,
       setAssignments: setAssignments,
@@ -61,7 +61,7 @@ function AssignmentsTypesPage({type}: { type: string }) {
       <ul>
         {assignments.map((assignment) => (
           <li key={assignment.id}>
-            <AssigmentListElement assignment={assignment} idGroup={applicationState?.group?.id as unknown as string}/>{" "}
+            <AssignmentListElement assignment={assignment} idGroup={applicationState?.group?.id as unknown as string}/>{" "}
           </li>
         ))}
       </ul>

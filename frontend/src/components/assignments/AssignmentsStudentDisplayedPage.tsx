@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from "react"
 import {getAssignmentsByStudentPostgresService} from "../../services/postgresDatabaseServices"
-import AssigmentListElement from "./AssigmentListElement"
+import AssignmentListElement from "./AssignmentListElement"
 import {AssignmentInterface} from "../../types/AssignmentInterface";
 import {getUser} from "../../services/otherServices";
 import {useNavigate} from "react-router-dom";
@@ -15,8 +15,8 @@ export default function AssignmentsStudentDisplayedPage() {
     if (applicationState?.userState !== undefined) {
       getAssignmentsByStudentPostgresService(applicationState.userState.id.toString())
         .then((response) => {
-          const assigmentFromServer = response.data as AssignmentInterface[]
-          setAssignments(assigmentFromServer)
+          const assignmentFromServer = response.data as AssignmentInterface[]
+          setAssignments(assignmentFromServer)
         })
     }
   }, [])
@@ -26,11 +26,11 @@ export default function AssignmentsStudentDisplayedPage() {
   return (
     <div>
       <ul>
-        {assignments.map((assigment) => (
-          <li key={assigment.id}>
-            <AssigmentListElement
-              assignment={assigment}
-              idGroup={`${assigment.groupId}`}
+        {assignments.map((assignment) => (
+          <li key={assignment.id}>
+            <AssignmentListElement
+              assignment={assignment}
+              idGroup={`${assignment.groupId}`}
             />
           </li>
         ))}

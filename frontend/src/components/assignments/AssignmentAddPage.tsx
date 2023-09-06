@@ -3,13 +3,13 @@ import React, {ChangeEvent, useContext, useEffect, useState} from "react"
 import {createAssignmentWithUserAndGroupPostgresService} from "../../services/postgresDatabaseServices"
 import ReactDatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
-import {AssigmentAddFile} from "./AssigmentAddFile"
+import {AssignmentAddFile} from "./AssignmentAddFile"
 import {AssignmentToSendInterface} from "../../types/AssignmentToSendInterface";
 import {getUser} from "../../services/otherServices";
 import ApplicationStateContext from "../../contexts/ApplicationStateContext";
 
 
-function AddAssigmentPage() {
+function AssignmentAddPage() {
   const navigate = useNavigate()
 
   const [assignment, setAssignment] = useState<AssignmentToSendInterface>({
@@ -20,13 +20,13 @@ function AddAssigmentPage() {
     max_points: 1,
   })
   const [toSend, setToSend] = useState<boolean>(false)
-  const [idAssigment, setIdAssignment] = useState<number>()
+  const [idAssignment, setIdAssignment] = useState<number>()
   const [toNavigate, setToNavigate] = useState<boolean>(false)
   const {applicationState} = useContext(ApplicationStateContext)
 
   useEffect(() => {
     if (toNavigate) {
-      navigate(`/group/${applicationState?.group}/assignments/`)
+      navigate(`/group/${applicationState?.group?.id}/assignments/`)
     }
   }, [toNavigate])
 
@@ -139,13 +139,13 @@ function AddAssigmentPage() {
         </button>
       </form>
       <p className='mt-4 mb-2'>Dodaj pliki: </p>
-      <AssigmentAddFile
+      <AssignmentAddFile
         toSend={toSend}
-        idAssigment={idAssigment}
+        idAssignment={idAssignment}
         setToNavigate={setToNavigate}
       />
     </div>
   )
 }
 
-export default AddAssigmentPage
+export default AssignmentAddPage

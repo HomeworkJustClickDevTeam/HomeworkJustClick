@@ -6,7 +6,7 @@ import {SolutionFile} from "./SolutionFile"
 import {AssignmentInterface} from "../../types/AssignmentInterface";
 import {SolutionInterface} from "../../types/SolutionInterface";
 
-export default function CheckedSolution(props: {
+export default function SolutionChecked(props: {
   solution: SolutionInterface
   assignment: AssignmentInterface
 }) {

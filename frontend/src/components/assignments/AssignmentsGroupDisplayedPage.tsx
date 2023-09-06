@@ -1,7 +1,7 @@
 import {Link, useParams} from "react-router-dom"
 import {useContext, useEffect, useState} from "react"
 import {getAssignmentsByGroupPostgresService} from "../../services/postgresDatabaseServices"
-import AssigmentListElement from "./AssigmentListElement"
+import AssignmentListElement from "./AssignmentListElement"
 import Loading from "../animations/Loading"
 import ApplicationStateContext from "../../contexts/ApplicationStateContext"
 import {AxiosError} from "axios";
@@ -14,12 +14,12 @@ function AssignmentsGroupDisplayedPage() {
 
   useEffect(() => {
     getAssignmentsByGroupPostgresService(applicationState?.group?.id as unknown as string).then((response) => {
-      const assigmentFromServer = response.data as AssignmentInterface[]
+      const assignmentFromServer = response.data as AssignmentInterface[]
       if (applicationState?.role === "Teacher") {
-        setAssignments(assigmentFromServer)
+        setAssignments(assignmentFromServer)
       } else {
         setAssignments(
-          assigmentFromServer.filter((assigment) => assigment.visible)
+          assignmentFromServer.filter((assignment) => assignment.visible)
         )
       }
     })
@@ -41,9 +41,9 @@ function AssignmentsGroupDisplayedPage() {
         </Link>
       )}
       <ul className="flex flex-col ">
-        {assignments.map((assigment) => (
-          <li key={assigment.id} className='flex inline-block '>
-            <AssigmentListElement assignment={assigment} idGroup={applicationState?.group?.id as unknown as string}/>{" "}
+        {assignments.map((assignment) => (
+          <li key={assignment.id} className='flex inline-block '>
+            <AssignmentListElement assignment={assignment} idGroup={applicationState?.group?.id as unknown as string}/>{" "}
           </li>
         ))}
       </ul>

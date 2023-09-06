@@ -1,23 +1,31 @@
 import {Link, useLocation} from "react-router-dom"
-import {useEffect, useState} from "react"
+import {useContext, useEffect, useState} from "react"
 import {getEvaluationBySolutionPostgresService} from "../../services/postgresDatabaseServices"
 import {Rating} from "../evaluation/Rating"
 import {SolutionFile} from "./SolutionFile"
 import {SolutionExtendedInterface} from "../../types/SolutionExtendedInterface";
+import Loading from "../animations/Loading";
+import {LoadingContext} from "../../contexts/LoadingContext";
 
 function SolutionPage() {
   let {state} = useLocation()
   const [solutionExtended] = useState<SolutionExtendedInterface>(state?.solution)
   const [points, setPoints] = useState<number>()
   const [showRating, setShowRating] = useState<boolean>(false)
+  const {setIsLoading} = useContext(LoadingContext)
   const [isCheck, setIsCheck] = useState<boolean>(false)
   useEffect(() => {
+    let ignore = false
     getEvaluationBySolutionPostgresService(solutionExtended.id)
       .then((r) => {
-        setPoints(r.data.result)
-        setIsCheck(true)
-      })
+        if(!ignore){
+          setPoints(r.data.result)
+          setIsCheck(true)
 
+        }
+      })
+      .finally(() => setIsLoading(false))
+    return () => {ignore = true}
   }, [])
 
   const handleDisableRating = () => {
@@ -44,9 +52,11 @@ function SolutionPage() {
       </div>
       {!isCheck ? (
         <div>
-          <Link
-            to={`/group/${solutionExtended.assignment.groupId}/solution/${solutionExtended.user.id}/${solutionExtended.assignment.id}/example`}
+          {solutionExtended.id &&
+            <Link
+            to={`/group/${solutionExtended.assignment.groupId}/solution/${solutionExtended.user.id}/${solutionExtended.assignment.id}/advancedEvaluation`}
             className="absolute underline font-semibold bottom-0 left-0 mb-2 ml-4">Zaawansowane Sprawdzanie</Link>
+          }
           {showRating ? (
             <div>
 

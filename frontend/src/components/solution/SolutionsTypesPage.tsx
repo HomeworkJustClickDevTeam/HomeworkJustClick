@@ -38,8 +38,6 @@ function SolutionsTypesPage({type}: { type: string }) {
         break
     }
   }
-
-  console.log(type)
   useEffect(() => {
     setIsLoading(true)
     setSolutionsExtended([])

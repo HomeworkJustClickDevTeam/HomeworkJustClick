@@ -76,9 +76,6 @@ export default function GroupGeneralSettings() {
       .catch((error: AxiosError) => console.log(error))
   }, [])
 
-  if (applicationState?.group?.archived === undefined) {
-    return <Loading/>
-  }
 
   return (
     <>

@@ -1,6 +1,6 @@
 import {AssignmentInterface} from "./AssignmentInterface";
 
 
-export interface AssigmentPropsInterface {
+export interface AssignmentPropsInterface {
   assignment: AssignmentInterface
 }
