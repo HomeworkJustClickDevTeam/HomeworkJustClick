@@ -3,9 +3,9 @@ import { Link, useNavigate } from "react-router-dom"
 import login_left_circle from "./login_left_circle.svg"
 import login_right_circle from "./login_right_circle.svg"
 import { LoginUserInterface } from "../../types/LoginUserInterface"
-import { login } from "../../services/otherServices"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "../../redux/store"
+import { loginUser } from "../../services/otherServices"
 
 
 const LoginPage = () => {
@@ -20,8 +20,7 @@ const LoginPage = () => {
     event.preventDefault()
 
     try {
-      await login(user, dispatch)
-      navigate("/")
+      dispatch(loginUser(user))
     } catch (e) {
       console.log(e)
     }

@@ -5,6 +5,7 @@ import { Dispatch } from "react"
 import { Action, AnyAction } from "redux"
 import { logOut, setUser } from "../redux/userStateSlice"
 import { AppDispatch } from "../redux/store"
+import { createAsyncThunk } from "@reduxjs/toolkit"
 
 
 export const parseJwt = (token:string):any => {
@@ -20,20 +21,13 @@ export const getUser = (): (UserInterface | null) => {
   else return null
 }
 
-export const login = async (user: LoginUserInterface, dispatch:AppDispatch) => {
-  await loginPostgresService(user)
-    .then((response) => {
-      if (response?.data.token) {
-        localStorage.setItem("user", JSON.stringify(response.data))
-        dispatch(setUser(response.data))
-      } else {
-        console.log("Zle haslo / uzytkownik")
-      }
-    })
-    .catch((error) => console.log(error))
-}
-
-export const logout = async (dispatch:AppDispatch) => {
-  localStorage.removeItem("user")
-  dispatch(logOut())
-}
+export const loginUser = createAsyncThunk(
+  "userState/login",
+  async (userData:LoginUserInterface) => {
+    try{
+      const response = await loginPostgresService(userData)
+      localStorage.setItem("user", JSON.stringify(response.data))
+      return response.data
+    }catch (error) {return error}
+  }
+)

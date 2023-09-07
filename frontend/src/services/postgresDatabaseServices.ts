@@ -39,6 +39,7 @@ postgresqlDatabase.interceptors.response.use((response)=> {
     originalRequest._retry = true
     localStorage.removeItem("user")
     window.dispatchEvent(new Event('storage'))
+    window.location.reload()
   }
   return Promise.reject(error)
 })
