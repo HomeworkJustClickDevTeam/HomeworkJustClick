@@ -1,20 +1,21 @@
-import React, {useContext, useEffect, useState} from "react";
-import {getGroupPostgresService, changeGroupColorPostgresService} from "../../services/postgresDatabaseServices";
-import {AxiosError} from "axios";
-import {useParams} from "react-router-dom";
-import {colorsArray} from "../../assets/colors";
-import ApplicationStateContext from "../../contexts/ApplicationStateContext";
+import React, { useContext } from "react"
+import { changeGroupColorPostgresService } from "../../services/postgresDatabaseServices"
+import { AxiosError } from "axios"
+import { colorsArray } from "../../assets/colors"
+import { selectGroup, setGroup } from "../../redux/groupSlice"
+import { useDispatch, useSelector } from "react-redux"
 
 export default function GroupAppearanceSettings() {
-  const {applicationState, setApplicationState} = useContext(ApplicationStateContext)
+  const dispatch = useDispatch()
+  const group= useSelector(selectGroup)
   const handleColorChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     try {
-      let group = applicationState?.group
-      if(group !== undefined){
-        group.color = +event.target.value
-        setApplicationState({type:"setGroupView", group})
+      let _group = group
+      if(_group !== null){
+        _group.color = +event.target.value
+        dispatch(setGroup(_group))
       }
-      await changeGroupColorPostgresService(applicationState?.group?.id as unknown as string, +event.target.value).catch((error: AxiosError) => {
+      await changeGroupColorPostgresService(group?.id as unknown as string, +event.target.value).catch((error: AxiosError) => {
         console.log("AXIOS ERROR: ", error)
       })
     } catch (e) {
@@ -28,7 +29,7 @@ export default function GroupAppearanceSettings() {
         return (
           <div className='flex inline-block flex-wrap w-fit'>
             <label key={i} className='flex inline-block pr-1'>
-              <input type="radio" value={i.toString()} name="index" checked={applicationState?.group?.color === i} onChange={handleColorChange}
+              <input type="radio" value={i.toString()} name="index" checked={group?.color === i} onChange={handleColorChange}
                      className='w-fit cursor-pointer'/>
               <div
                 className={`h-5 w-5 ${colorsArray[i]} border border-solid border-black items-center mt-0.5 ml-1`}></div>

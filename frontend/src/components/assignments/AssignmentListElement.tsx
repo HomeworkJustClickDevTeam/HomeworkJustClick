@@ -1,6 +1,6 @@
-import {Link} from "react-router-dom"
-import {format} from "date-fns"
-import {AssignmentPropsInterface} from "../../types/AssignmentPropsInterface";
+import { Link } from "react-router-dom"
+import { format } from "date-fns"
+import { AssignmentPropsInterface } from "../../types/AssignmentPropsInterface"
 
 interface AssignmentItemPropsInterface extends AssignmentPropsInterface {
   idGroup: string

@@ -1,18 +1,18 @@
-import {Link, useLocation} from "react-router-dom"
-import {useContext, useEffect, useState} from "react"
-import {getEvaluationBySolutionPostgresService} from "../../services/postgresDatabaseServices"
-import {Rating} from "../evaluation/Rating"
-import {SolutionFile} from "./SolutionFile"
-import {SolutionExtendedInterface} from "../../types/SolutionExtendedInterface";
-import Loading from "../animations/Loading";
-import {LoadingContext} from "../../contexts/LoadingContext";
+import { Link, useLocation } from "react-router-dom"
+import { useContext, useEffect, useState } from "react"
+import { getEvaluationBySolutionPostgresService } from "../../services/postgresDatabaseServices"
+import { Rating } from "../evaluation/Rating"
+import { SolutionFile } from "./SolutionFile"
+import { SolutionExtendedInterface } from "../../types/SolutionExtendedInterface"
+import { useDispatch, useSelector } from "react-redux"
+import { selectIsLoading, setIsLoading } from "../../redux/isLoadingSlice"
 
 function SolutionPage() {
   let {state} = useLocation()
   const [solutionExtended] = useState<SolutionExtendedInterface>(state?.solution)
   const [points, setPoints] = useState<number>()
   const [showRating, setShowRating] = useState<boolean>(false)
-  const {setIsLoading} = useContext(LoadingContext)
+  const dispatch = useDispatch()
   const [isCheck, setIsCheck] = useState<boolean>(false)
   useEffect(() => {
     let ignore = false
@@ -23,7 +23,7 @@ function SolutionPage() {
           setIsCheck(true)
         }
       })
-      .finally(() => setIsLoading(false))
+      .finally(() => dispatch(setIsLoading(false)))
     return () => {ignore = true}
   }, [])
 

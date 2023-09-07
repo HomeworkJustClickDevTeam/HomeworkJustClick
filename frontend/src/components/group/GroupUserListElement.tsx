@@ -1,5 +1,6 @@
-import {useContext} from "react";
-import ApplicationStateContext from "../../contexts/ApplicationStateContext";
+import { useContext } from "react"
+import { selectRole } from "../../redux/roleSlice"
+import { useSelector } from "react-redux"
 
 interface GroupUserListElementProps {
   userToShow: { firstname: string, lastname: string, id: number }
@@ -7,9 +8,9 @@ interface GroupUserListElementProps {
 }
 
 function GroupUserListElement({userToShow, isTeacher}: GroupUserListElementProps) {
-  const {applicationState} = useContext(ApplicationStateContext)
+  const role = useSelector(selectRole)
 
-  if (!isTeacher && applicationState?.role === "Teacher") {
+  if (!isTeacher && role === "Teacher") {
     return (
       <li className="px-1 after:content-[','] last:after:content-['']">
         <a href={"userProfileInGroup/" + userToShow.id}>

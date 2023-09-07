@@ -1,14 +1,13 @@
 import axios from "axios"
-import {AssignmentInterface} from "../types/AssignmentInterface";
-import {AssignmentToSendInterface} from "../types/AssignmentToSendInterface";
-import {EvaluationInterface} from "../types/EvaluationInterface";
-import {GroupCreateInterface} from "../types/GroupCreateInterface";
-import {SolutionToSendInterface} from "../types/SolutionToSendInterface";
-import {LoginUserInterface} from "../types/LoginUserInterface";
-import {UserRegisterInterface} from "../types/UserRegisterInterface";
-import {CredentialsInterface} from "../types/CredentialsInterface";
-import {getUser, parseJwt} from "./otherServices";
-import {UserInterface} from "../types/UserInterface";
+import { AssignmentInterface } from "../types/AssignmentInterface"
+import { AssignmentToSendInterface } from "../types/AssignmentToSendInterface"
+import { EvaluationInterface } from "../types/EvaluationInterface"
+import { GroupCreateInterface } from "../types/GroupCreateInterface"
+import { SolutionToSendInterface } from "../types/SolutionToSendInterface"
+import { LoginUserInterface } from "../types/LoginUserInterface"
+import { UserRegisterInterface } from "../types/UserRegisterInterface"
+import { CredentialsInterface } from "../types/CredentialsInterface"
+import { getUser } from "./otherServices"
 
 const postgresqlDatabase = axios.create({
   baseURL: "http://localhost:8080/api",

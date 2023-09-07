@@ -1,9 +1,7 @@
-import {colorsArray} from "../../assets/colors";
-import {GroupListElementPropsInterface} from "../../types/GroupListElementPropsInterface";
-import {useContext} from "react";
-import ApplicationStateContext from "../../contexts/ApplicationStateContext";
+import { colorsArray } from "../../assets/colors"
+import { GroupInterface } from "../../types/GroupInterface"
 
-function GroupListElement({group}: GroupListElementPropsInterface) {
+function GroupListElement({group}: {group: GroupInterface, key:number}) {
   return (
     <div className={`relative w-64 ${colorsArray[group.color]}  min-h-fit h-40 overflow-hidden rounded-md`}>
       <a className='w-full' href={"/group/" + group.id}>

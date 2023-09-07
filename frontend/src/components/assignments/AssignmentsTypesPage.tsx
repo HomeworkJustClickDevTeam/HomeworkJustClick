@@ -1,18 +1,21 @@
-import React, {useContext, useEffect, useState} from "react"
-import {assignmentFilterStudent} from "../../filter/AssignmentFilterStudent"
-import {useNavigate, useParams} from "react-router-dom"
+import React, { useContext, useEffect, useState } from "react"
+import { assignmentFilterStudent } from "../../filter/AssignmentFilterStudent"
+import { useNavigate } from "react-router-dom"
 import AssignmentListElement from "./AssignmentListElement"
 import Loading from "../animations/Loading"
-import groupRoleContext from "../../contexts/ApplicationStateContext"
-import {AssignmentInterface} from "../../types/AssignmentInterface";
-import {getUser} from "../../services/otherServices";
+import { AssignmentInterface } from "../../types/AssignmentInterface"
+import { useSelector } from "react-redux"
+import { selectGroup } from "../../redux/groupSlice"
+import { selectRole } from "../../redux/roleSlice"
+import { selectUserState } from "../../redux/userStateSlice"
 
 function AssignmentsTypesPage({type}: { type: string }) {
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [assignments, setAssignments] = useState<AssignmentInterface[]>([])
-  const {applicationState} = useContext(groupRoleContext)
   const navigate = useNavigate()
-
+  const group= useSelector(selectGroup)
+  const role = useSelector(selectRole)
+  const userState = useSelector(selectUserState)
 
   useEffect(() => {
     function typeOfAssignment() {
@@ -34,19 +37,16 @@ function AssignmentsTypesPage({type}: { type: string }) {
       }
     }
 
-    if (applicationState?.role === "Student") {
+    if (role === "Student") {
       typeOfAssignment()
     } else {
-      navigate(`-/group/${applicationState?.group?.id}`)
+      navigate(`-/group/${group?.id}`)
     }
   }, [type])
-  if (applicationState?.userState === undefined) {
-    navigate("/")
-  }
   const {doneAssignments, expiredAssignments, noneExpiredAssignments} =
     assignmentFilterStudent({
-      idGroup: applicationState?.group?.id as unknown as string,
-      userId: applicationState?.userState?.id as unknown as string,
+      idGroup: group?.id as unknown as string,
+      userId: userState?.id as unknown as string,
       setAssignments: setAssignments,
     })
   if (isLoading) {
@@ -61,7 +61,7 @@ function AssignmentsTypesPage({type}: { type: string }) {
       <ul>
         {assignments.map((assignment) => (
           <li key={assignment.id}>
-            <AssignmentListElement assignment={assignment} idGroup={applicationState?.group?.id as unknown as string}/>{" "}
+            <AssignmentListElement assignment={assignment} idGroup={group?.id as unknown as string}/>{" "}
           </li>
         ))}
       </ul>

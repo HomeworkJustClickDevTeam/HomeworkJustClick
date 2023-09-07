@@ -1,4 +1,5 @@
-import axios, {AxiosRequestConfig} from "axios"
+import axios, { AxiosRequestConfig } from "axios"
+import { getUser } from "./otherServices"
 
 const mongoDatabaseServices = axios.create({
   baseURL: "http://localhost:8082/api/",
@@ -6,8 +7,8 @@ const mongoDatabaseServices = axios.create({
   headers: {
     "Content-Type": `multipart/form-data`,
     "Access-Control-Allow-Origin": "http://localhost:3000",
-    ...(localStorage.getItem("token") && {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    ...(getUser()?.token && {
+      Authorization: `Bearer ${getUser()?.token}`,
     }),
   },
 })

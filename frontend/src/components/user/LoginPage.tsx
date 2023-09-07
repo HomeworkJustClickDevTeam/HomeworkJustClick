@@ -1,10 +1,11 @@
-import React, {ChangeEvent, useContext, useState} from "react"
-import {Link, useNavigate} from "react-router-dom"
-import login_left_circle from './login_left_circle.svg';
-import login_right_circle from './login_right_circle.svg';
-import {LoginUserInterface} from "../../types/LoginUserInterface";
-import {login} from "../../services/otherServices";
-import ApplicationStateContext from "../../contexts/ApplicationStateContext";
+import React, { ChangeEvent, useContext, useState } from "react"
+import { Link, useNavigate } from "react-router-dom"
+import login_left_circle from "./login_left_circle.svg"
+import login_right_circle from "./login_right_circle.svg"
+import { LoginUserInterface } from "../../types/LoginUserInterface"
+import { login } from "../../services/otherServices"
+import { useDispatch } from "react-redux"
+import { AppDispatch } from "../../redux/store"
 
 
 const LoginPage = () => {
@@ -13,13 +14,13 @@ const LoginPage = () => {
     password: "",
   })
   const navigate = useNavigate()
-  const {setApplicationState} = useContext(ApplicationStateContext)
+  const dispatch :AppDispatch = useDispatch()
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
     try {
-      await login(user, setApplicationState)
+      await login(user, dispatch)
       navigate("/")
     } catch (e) {
       console.log(e)

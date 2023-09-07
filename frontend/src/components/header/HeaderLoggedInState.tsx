@@ -1,16 +1,18 @@
-import {useContext} from "react"
-import {FaChevronLeft} from 'react-icons/fa';
-import {Link, useNavigate} from "react-router-dom"
+import { useContext } from "react"
+import { FaChevronLeft } from "react-icons/fa"
+import { Link, useNavigate } from "react-router-dom"
 import LogOut from "../user/LogOut"
-import {getUser} from "../../services/otherServices";
-import ApplicationStateContext from "../../contexts/ApplicationStateContext";
+import { useSelector } from "react-redux"
+import { selectHomePageIn } from "../../redux/homePageInSlice"
+import { selectUserState } from "../../redux/userStateSlice"
 
 function HeaderLoggedInState() {
   const navigate = useNavigate()
-  const {applicationState} = useContext(ApplicationStateContext)
+  const homePageIn = useSelector(selectHomePageIn)
+  const userState = useSelector(selectUserState)
   return (
     <section className='relative flex h-16 text-white font-lato font-normal bg-main_blue items-center select-none'>
-      {!applicationState?.homePageIn && (
+      {!homePageIn && (
         <Link className='absolute flex pl-[3vw] w-[9vw] hover:bg-hover_blue h-full items-center' to="#"
               onClick={() => navigate(-1)}>
           <FaChevronLeft className='pr-[calc(0.5vw)]'/>
@@ -19,7 +21,7 @@ function HeaderLoggedInState() {
       )}
 
       <Link className='flex items-center ml-[9vw] px-[3vw] hover:bg-hover_blue h-full' to="/">Moje Grupy</Link>
-      <Link className='flex items-center px-[2.5vw] hover:bg-hover_blue h-full' to={`/${applicationState?.userState?.id}/assignments`}>
+      <Link className='flex items-center px-[2.5vw] hover:bg-hover_blue h-full' to={`/${userState?.id}/assignments`}>
         Moje zadanie domowe
       </Link>
       <Link className='flex items-center px-[2.5vw] hover:bg-hover_blue h-full' to={`/settings`}>

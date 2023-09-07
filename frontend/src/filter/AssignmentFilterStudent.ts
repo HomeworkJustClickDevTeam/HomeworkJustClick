@@ -3,8 +3,8 @@ import {
   getAssignmentsExpiredUndoneByGroupAndStudentPostgresService,
   getAssignmentsUndoneByGroupAndStudentPostgresService
 } from "../services/postgresDatabaseServices"
-import {AxiosError} from "axios";
-import {AssignmentInterface} from "../types/AssignmentInterface";
+import { AxiosError } from "axios"
+import { AssignmentInterface } from "../types/AssignmentInterface"
 
 interface AssignmentFilterStudentProps {
   setAssignments: (assignments: AssignmentInterface[]) => void

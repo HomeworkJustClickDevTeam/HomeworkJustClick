@@ -1,11 +1,15 @@
-import {useNavigate, useParams} from "react-router-dom"
-import React, {ChangeEvent, useContext, useEffect, useState} from "react"
-import {deleteAssignmentPostgresService, changeAssignmentPostgresService} from "../../services/postgresDatabaseServices"
+import { useNavigate } from "react-router-dom"
+import React, { ChangeEvent, useContext, useEffect, useState } from "react"
+import {
+  changeAssignmentPostgresService,
+  deleteAssignmentPostgresService
+} from "../../services/postgresDatabaseServices"
 import ReactDatePicker from "react-datepicker"
 
-import {AssignmentModifyFile} from "./AssignmentModifyFile"
-import {AssignmentPropsInterface} from "../../types/AssignmentPropsInterface";
-import ApplicationStateContext from "../../contexts/ApplicationStateContext";
+import { AssignmentModifyFile } from "./AssignmentModifyFile"
+import { AssignmentPropsInterface } from "../../types/AssignmentPropsInterface"
+import { selectGroup } from "../../redux/groupSlice"
+import { useSelector } from "react-redux"
 
 interface AssignmentModifyPropsInterface extends AssignmentPropsInterface {
   setAssignment: (assignment: (prevState: any) => any) => void
@@ -15,11 +19,11 @@ function AssignmentModify({assignment, setAssignment}: AssignmentModifyPropsInte
   const navigate = useNavigate()
   const [toSend, setToSend] = useState<boolean>(false)
   const [toNavigate, setToNavigate] = useState<boolean>(false)
-  const {applicationState} = useContext(ApplicationStateContext)
+  const group= useSelector(selectGroup)
 
   useEffect(() => {
     if (toNavigate) {
-      navigate(`/group/${applicationState?.group?.id}/assignments/`)
+      navigate(`/group/${group?.id}/assignments/`)
     }
   }, [toNavigate])
 
@@ -63,7 +67,7 @@ function AssignmentModify({assignment, setAssignment}: AssignmentModifyPropsInte
 
   function handleDelete() {
     deleteAssignmentPostgresService('assignment.id')
-      .then(() => navigate(`/group/${applicationState?.group?.id}/assignments/`))
+      .then(() => navigate(`/group/${group?.id}/assignments/`))
       .catch((e) => console.log(e))
   }
 

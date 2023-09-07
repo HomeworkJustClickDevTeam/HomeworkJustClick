@@ -1,24 +1,21 @@
-import React, {useContext, useEffect, useState} from "react"
-import {getUserPostgresService, changeUserColorPostgresService} from "../../services/postgresDatabaseServices"
-import {AxiosError} from "axios"
-import {useNavigate} from "react-router-dom";
-import {getUser} from "../../services/otherServices";
-import ApplicationStateContext from "../../contexts/ApplicationStateContext";
+import React, { useContext, useEffect, useState } from "react"
+import { changeUserColorPostgresService, getUserPostgresService } from "../../services/postgresDatabaseServices"
+import { AxiosError } from "axios"
+import { useNavigate } from "react-router-dom"
+import { useSelector } from "react-redux"
+import { selectUserState } from "../../redux/userStateSlice"
 
 export default function UserAppearanceSettingsPage() {
   const [color, setColor] = useState<number | undefined>(undefined)
-  const {applicationState} = useContext(ApplicationStateContext)
-
-  const navigate = useNavigate()
-
+  const userState = useSelector(selectUserState)
 
   const handleColorChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setColor(+event.target.value)
     try {
-      if (applicationState?.userState !== undefined) {
-        await changeUserColorPostgresService(applicationState?.userState.id.toString(), +event.target.value)
+      if (userState !== null) {
+        await changeUserColorPostgresService(userState.id.toString(), +event.target.value)
           .catch((error: AxiosError) => {
             console.log("AXIOS ERROR: ", error)
           })
@@ -28,12 +25,12 @@ export default function UserAppearanceSettingsPage() {
     }
   }
   useEffect(() => {
-    if (applicationState?.userState !== undefined) {
-      getUserPostgresService(applicationState?.userState.id.toString())
+    if (userState !== null) {
+      getUserPostgresService(userState.id.toString())
         .then((response) => setColor(response.data.color))
         .catch(() => setColor(undefined))
     }
-  }, [applicationState?.userState?.id])
+  }, [userState?.id])
   return (
     <>
       <p>Wybierz swój kolor:</p>

@@ -1,10 +1,10 @@
-import {useEffect, useState} from "react"
-import {EvaluationInterface} from "../../types/EvaluationInterface"
-import {getEvaluationBySolutionPostgresService} from "../../services/postgresDatabaseServices"
-import {AxiosError} from "axios"
-import {SolutionFile} from "./SolutionFile"
-import {AssignmentInterface} from "../../types/AssignmentInterface";
-import {SolutionInterface} from "../../types/SolutionInterface";
+import { useEffect, useState } from "react"
+import { EvaluationInterface } from "../../types/EvaluationInterface"
+import { getEvaluationBySolutionPostgresService } from "../../services/postgresDatabaseServices"
+import { AxiosError } from "axios"
+import { SolutionFile } from "./SolutionFile"
+import { AssignmentInterface } from "../../types/AssignmentInterface"
+import { SolutionInterface } from "../../types/SolutionInterface"
 
 export default function SolutionChecked(props: {
   solution: SolutionInterface

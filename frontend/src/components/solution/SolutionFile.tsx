@@ -1,10 +1,4 @@
-import {useContext, useEffect, useState} from "react"
-import {getFilesBySolutionPostgresService} from "../../services/postgresDatabaseServices"
-import {getFileMongoService} from "../../services/mongoDatabaseServices"
-import {FileFromPostInterface} from "../../types/FileFromPostInterface";
-import {useGetFiles} from "../customHooks/useGetFiles";
-import Loading from "../animations/Loading";
-import {LoadingContext} from "../../contexts/LoadingContext";
+import { useGetFiles } from "../customHooks/useGetFiles"
 
 export function SolutionFile(props: { solutionId: number }) {
   const files = useGetFiles(props.solutionId, "solution")

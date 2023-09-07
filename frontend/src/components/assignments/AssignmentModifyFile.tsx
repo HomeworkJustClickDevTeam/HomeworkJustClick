@@ -1,11 +1,11 @@
-import {ChangeEvent, useEffect, useState} from "react"
+import { ChangeEvent, useEffect, useState } from "react"
 import {
+  createFileWithAssignmentPostgresService,
   deleteFilePostgresService,
-  getFilesByAssignmentPostgresService,
-  createFileWithAssignmentPostgresService
+  getFilesByAssignmentPostgresService
 } from "../../services/postgresDatabaseServices"
-import {getFileMongoService, postFileMongoService} from "../../services/mongoDatabaseServices"
-import {FileFromPostInterface} from "../../types/FileFromPostInterface";
+import { getFileMongoService, postFileMongoService } from "../../services/mongoDatabaseServices"
+import { FileFromPostgresInterface } from "../../types/FileFromPostgresInterface"
 
 export function AssignmentModifyFile(props: {
   assignmentId: number
@@ -13,7 +13,7 @@ export function AssignmentModifyFile(props: {
   toSend: boolean
 }) {
   const [file, setFile] = useState<File | null>(null)
-  const [databaseFile, setDatabaseFile] = useState<FileFromPostInterface[]>([])
+  const [databaseFile, setDatabaseFile] = useState<FileFromPostgresInterface[]>([])
   const [isChange, setIsChange] = useState<boolean>(false)
 
   useEffect(() => {

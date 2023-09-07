@@ -1,12 +1,13 @@
-import React, {useContext, useState} from "react";
+import React, { useContext, useState } from "react"
 import {
+  addTeacherToGroupPostgresService,
   deleteStudentInGroupPostgresService,
-  deleteTeacherInGroupPostgresService,
-  addTeacherToGroupPostgresService
-} from "../../services/postgresDatabaseServices";
-import {AxiosError} from "axios";
-import ApplicationStateContext from "../../contexts/ApplicationStateContext";
-import {UserInterface} from "../../types/UserInterface";
+  deleteTeacherInGroupPostgresService
+} from "../../services/postgresDatabaseServices"
+import { AxiosError } from "axios"
+import { UserInterface } from "../../types/UserInterface"
+import { useSelector } from "react-redux"
+import { selectRole } from "../../redux/roleSlice"
 
 interface GroupUsersSettingsListElementProps {
   makeTeacher(arg: UserInterface): void,
@@ -20,7 +21,7 @@ interface GroupUsersSettingsListElementProps {
 
 export default function GroupUsersSettingsListElement(props: GroupUsersSettingsListElementProps) {
   const [open, setOpen] = useState(false)
-  const {applicationState} = useContext(ApplicationStateContext)
+  const role = useSelector(selectRole)
   const handleUserDeletion = async () => {
     props.isStudent ?
       (await deleteStudentInGroupPostgresService(props.userToShow.id.toString(), props.groupId)
@@ -56,7 +57,7 @@ export default function GroupUsersSettingsListElement(props: GroupUsersSettingsL
   return (
     <li
       className='flex inline-block text-center items-center'><>{props.userToShow.firstname} {props.userToShow.lastname}
-      {applicationState?.role === "Teacher" ? (
+      {role === "Teacher" ? (
         <button onClick={() => setOpen(!open)} className='pb-1 pl-1 font-bold'> ... </button>) : ("")}{open &&
             <ThreeDotsSettingsButtons/>}
     </>
