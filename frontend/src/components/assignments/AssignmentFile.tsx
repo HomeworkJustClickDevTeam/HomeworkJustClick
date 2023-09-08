@@ -14,7 +14,7 @@ export function AssignmentFile(props: { assignmentId: number }) {
   return (
       <>
         {files.map((file) => {
-          <button key={file.fileName} onClick={handleDownload}>{file.fileName}</button>
+          return(<button key={file.fileName} onClick={handleDownload}>{file.fileName}</button>)
         })}
       </>
     )

@@ -11,44 +11,24 @@ import { setIsLoading } from "../../redux/isLoadingSlice"
 
 export const useGetFiles = (id: number, by:"assignment" | "solution") => {
   const [files, setFiles] = useState<FileInterface[]>([])
-  const [databaseFiles, setDatabaseFiles] = useState<FileFromPostgresInterface[] | undefined>(undefined)
   const dispatch = useDispatch()
 
   useEffect(() => {
     const fetchData = async () => {
+      let response = null
       try {
-        dispatch(setIsLoading(true))
         if(by === "solution"){
-          const response = await getFilesBySolutionPostgresService(id)
-          if(!ignore) {
-            setDatabaseFiles(response.data)
-            dispatch(setIsLoading(false))
-          }
+          response = await getFilesBySolutionPostgresService(id)
         }
         else if(by === "assignment"){
-          const response = await getFilesByAssignmentPostgresService(id)
-          if(!ignore) {
-            setDatabaseFiles(response.data)
-            dispatch(setIsLoading(false))
-          }
+          response = await getFilesByAssignmentPostgresService(id)
         }
-      } catch (e) {
-        console.log("Error retrieving database file:", e)
-      }
-    }
-    let ignore = false
-    fetchData()
-    return () => {ignore = true}
-  }, [id])
-  useEffect(() => {
-    const fetchFileData = async () => {
-      if (databaseFiles) {
-        dispatch(setIsLoading(true))
-        for (const file of databaseFiles) {
-          if(file !== undefined) {
-            try {
-              const response = await getFileMongoService(file.mongo_id)
-              const fileData = response.data
+        if(response){
+          const databaseFiles:FileFromPostgresInterface[] = response.data
+          for (const file of databaseFiles) {
+            if(file){
+              const mongoResponse = await getFileMongoService(file.mongo_id)
+              const fileData = mongoResponse.data
               const type = fileData.file.type
               const decodedData = window.atob(fileData.file.data)
               const byteArray = new Uint8Array(decodedData.length)
@@ -59,23 +39,23 @@ export const useGetFiles = (id: number, by:"assignment" | "solution") => {
               if(!ignore){
                 setFiles(files => files.concat({
                   fileData: blob,
-                  fileName: response.data.name,
+                  fileName: mongoResponse.data.name,
                   fileType: fileData.file.type
                 }))
                 dispatch(setIsLoading(false))
               }
-            } catch (error) {
-              console.error("Error retrieving file:", error)
             }
           }
         }
+      } catch (e) {
+        console.log("Error retrieving database file:", e)
       }
     }
     let ignore = false
-    fetchFileData()
-      .then()
-      .catch((e) => console.log(e))
+    dispatch(setIsLoading(true))
+    fetchData()
+    dispatch(setIsLoading(false))
     return () => {ignore = true}
-  }, [databaseFiles])
+  }, [id, by])
   return files
 }
