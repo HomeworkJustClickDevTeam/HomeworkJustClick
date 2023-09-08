@@ -1,7 +1,7 @@
-import {useState} from "react";
-import {changePasswordPostgresService} from "../../services/postgresDatabaseServices";
-import {AxiosError} from "axios";
-import {CredentialsInterface} from "../../types/CredentialsInterface";
+import { useState } from "react"
+import { changePasswordPostgresService } from "../../services/postgresDatabaseServices"
+import { AxiosError } from "axios"
+import { CredentialsInterface } from "../../types/CredentialsInterface"
 
 
 export default function UserSecuritySettingsPage(): JSX.Element {

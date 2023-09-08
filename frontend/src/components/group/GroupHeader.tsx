@@ -1,25 +1,27 @@
-import {Link, useLocation} from "react-router-dom"
-import {useContext, useEffect} from "react"
-import GroupContext from "../../contexts/ApplicationStateContext"
-import {colorsArray} from "../../assets/colors";
-import {GroupListElementPropsInterface} from "../../types/GroupListElementPropsInterface";
-import Loading from "../animations/Loading";
+import { Link, useLocation } from "react-router-dom"
+import { useContext, useEffect } from "react"
+import { colorsArray } from "../../assets/colors"
+import Loading from "../animations/Loading"
+import { selectGroup } from "../../redux/groupSlice"
+import { useSelector } from "react-redux"
+import { selectRole } from "../../redux/roleSlice"
 
 //import {theme.colors.colorsArray: string[]} = require("../../../tailwind.config")
 
-function GroupHeader({group}: GroupListElementPropsInterface) {
-  const {applicationState} = useContext(GroupContext)
+function GroupHeader({}:{key:number}) {
   const location = useLocation();
   const locationSplit = location.pathname.split("/");
+  const group= useSelector(selectGroup)
+  const role = useSelector(selectRole)
 
   useEffect(() => {
-  }, [applicationState?.group?.color]);
+  }, [group]);
 
-  if(applicationState?.group?.color !== undefined) {
+  if(group !== null) {
     return (
       <div>
         <div className='relative flex text-white justify-center select-none'>
-          <div className={`select-none w-[85%] mt-8 h-36 rounded-xl ${colorsArray[applicationState?.group?.color]}`}>
+          <div className={`select-none w-[85%] mt-8 h-36 rounded-xl ${colorsArray[group?.color]}`}>
             {/* <div className='w-[85%] mt-8 h-36 rounded-xl bg-[#59007f] bg-[#006400] bg-[#800000] bg-[#9A6324] bg-[#469990] bg-[#000075] bg-[#f58231] bg-[#546A7B] bg-[#000000] bg-[#BB9F06] bg-[#3F2A2B] bg-[#565656] bg-[#99621E] bg-[#739E82] bg-[#550C18] bg-[#136F63] bg-[#EF7A85] bg-[#D664BE] bg-[#642CA9] bg-[#03312E]'> */}
             <article className='absolute bottom-0 mb-6 ml-4'>
               <p className='text-3xl'>{group.name}</p>
@@ -45,22 +47,22 @@ function GroupHeader({group}: GroupListElementPropsInterface) {
             </ul>
           </div>
           <div className='relative float-right flex h-16 items-center gap-5 '>
-            {applicationState?.role === "Student" ? (
+            {role === "Student" ? (
               <Link to="assignments/todo" className=''>Do wykonania</Link>
             ) : (
               <Link to="solutions/uncheck">Do sprawdzenia</Link>
             )}
-            {applicationState?.role === "Student" ? (
+            {role === "Student" ? (
               <Link to="assignments/done">Zrobione</Link>
             ) : (
               <Link to="solutions/check">Sprawdzone</Link>
             )}
-            {applicationState?.role === "Student" ? (
+            {role === "Student" ? (
               <Link to="assignments/expired">Zaległe</Link>
             ) : (
               <Link to="solutions/late">Spóźnione</Link>
             )}
-            {applicationState?.role === "Teacher" && <Link to="settings">Ustawienia</Link>}
+            {role === "Teacher" && <Link to="settings">Ustawienia</Link>}
           </div>
         </header>
       </div>

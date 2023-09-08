@@ -1,31 +1,25 @@
-import React, {useContext, useEffect, useState} from "react"
-import {getUserPostgresService, changeUserIndexPostgresService} from "../../services/postgresDatabaseServices"
-import {AxiosError} from "axios"
-import {getUser} from "../../services/otherServices";
-import {useNavigate} from "react-router-dom";
-import ApplicationStateContext from "../../contexts/ApplicationStateContext";
+import React, { useContext, useEffect, useState } from "react"
+import { changeUserIndexPostgresService, getUserPostgresService } from "../../services/postgresDatabaseServices"
+import { AxiosError } from "axios"
+import { useNavigate } from "react-router-dom"
+import { useSelector } from "react-redux"
+import { selectUserState } from "../../redux/userStateSlice"
 
 export default function UserGeneralSettingsPage() {
-  const {applicationState} = useContext(ApplicationStateContext)
+  const userState = useSelector(selectUserState)
   const [index, setIndex] = useState<number | undefined>(undefined)
-  const navigate = useNavigate()
 
   useEffect(() => {
-    if (applicationState?.userState !== undefined) {
-      getUserPostgresService(applicationState?.userState.id.toString())
+    if (userState !== null) {
+      getUserPostgresService(userState.id.toString())
         .then((response) => setIndex(response.data.index))
         .catch(() => setIndex(undefined))
     }
-  }, [applicationState?.userState?.id])
-
-
-  if (applicationState?.userState === undefined) {
-    navigate("/")
-  }
+  }, [userState?.id])
   const handleIndexSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    if (applicationState?.userState !== undefined) {
+    if (userState !== null) {
       event.preventDefault()
-      await changeUserIndexPostgresService(applicationState?.userState.id.toString(), index as number)
+      await changeUserIndexPostgresService(userState.id.toString(), index as number)
         .catch((error: AxiosError) => {
           console.log(error)
         })

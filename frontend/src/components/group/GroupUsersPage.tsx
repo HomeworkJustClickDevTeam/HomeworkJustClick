@@ -1,13 +1,13 @@
 import GroupUsersDisplayer from "./GroupUsersDisplayer"
-import {useParams} from "react-router-dom"
-import {useContext} from "react";
-import ApplicationStateContext from "../../contexts/ApplicationStateContext";
+import { useContext } from "react"
+import { selectGroup } from "../../redux/groupSlice"
+import { useSelector } from "react-redux"
 
 function GroupUsersPage() {
-  const {applicationState} = useContext(ApplicationStateContext)
+  const group= useSelector(selectGroup)
   return (
     <>
-      <GroupUsersDisplayer groupId={applicationState?.group?.id as unknown as string}/>
+      <GroupUsersDisplayer groupId={group?.id as unknown as string}/>
     </>
   )
 }

@@ -1,7 +1,7 @@
-import {useEffect, useState} from "react"
-import {getStudentsByGroupPostgresService} from "../../services/postgresDatabaseServices"
+import { useEffect, useState } from "react"
+import { getStudentsByGroupPostgresService } from "../../services/postgresDatabaseServices"
 import GroupUserListElement from "./GroupUserListElement"
-import {UserInterface} from "../../types/UserInterface";
+import { UserInterface } from "../../types/UserInterface"
 
 function GroupStudentsDisplayer({groupId}: { groupId: string }) {
   const [students, setStudents] = useState<UserInterface[]>()

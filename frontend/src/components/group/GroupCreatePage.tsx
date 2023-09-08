@@ -1,25 +1,27 @@
-import React, {useContext, useEffect, useState} from "react"
-import {useNavigate} from "react-router-dom"
-import {createGroupWithTeacherPostgresService} from "../../services/postgresDatabaseServices"
-import {GroupCreateInterface} from "../../types/GroupCreateInterface";
-import {getUser} from "../../services/otherServices";
-import ApplicationStateContext from "../../contexts/ApplicationStateContext";
+import React, { useContext, useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { createGroupWithTeacherPostgresService } from "../../services/postgresDatabaseServices"
+import { GroupCreateInterface } from "../../types/GroupCreateInterface"
+import { useDispatch, useSelector } from "react-redux"
+import { selectUserState } from "../../redux/userStateSlice"
+import { setHomePageIn } from "../../redux/homePageInSlice"
 
 
 function GroupCreatePage() {
-  const {applicationState, setApplicationState} = useContext(ApplicationStateContext)
   const [group, setGroup] = useState<GroupCreateInterface>({
     name: "",
     description: "",
   })
+  const dispatch = useDispatch()
+  const userState = useSelector(selectUserState)
   const navigate = useNavigate()
   useEffect(() => {
-    setApplicationState({type:"setHomePageIn", homePageIn: false})
+    dispatch(setHomePageIn(false))
   }, [])
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     try {
-      await createGroupWithTeacherPostgresService(applicationState?.userState?.id as unknown as string, group)
+      await createGroupWithTeacherPostgresService(userState?.id as unknown as string, group)
       navigate("/")
     } catch (e) {
       console.log(e)

@@ -1,22 +1,23 @@
-import React, {useContext, useEffect, useState} from "react"
+import React, { useContext, useEffect, useState } from "react"
 import GroupListElement from "../group/GroupListElement"
-import {Link, Outlet} from "react-router-dom"
-import {groupFilter} from "../../filter/GroupFilter"
+import { Link } from "react-router-dom"
+import { groupFilter } from "../../filter/GroupFilter"
 import Loading from "../animations/Loading"
-import {FaCaretDown} from 'react-icons/fa';
-import {GroupInterface} from "../../types/GroupInterface";
-import {getUser} from "../../services/otherServices";
-import HeaderLoggedInState from "../header/HeaderLoggedInState";
-import ApplicationStateContext from "../../contexts/ApplicationStateContext";
+import { FaCaretDown } from "react-icons/fa"
+import { GroupInterface } from "../../types/GroupInterface"
+import { useDispatch, useSelector } from "react-redux"
+import { selectUserState } from "../../redux/userStateSlice"
+import { setGroup } from "../../redux/groupSlice"
+import { setHomePageIn } from "../../redux/homePageInSlice"
+import { setRole } from "../../redux/roleSlice"
 
 function HomePage() {
   const [groups, setGroups] = useState<GroupInterface[] | undefined>(undefined)
   const [isLoading, setIsLoading] = useState<boolean>()
   const [isOpen, setIsOpen] = useState(false)
   const [btnName, setBtnName] = useState('Wszystkie grupy')
-  const {setApplicationState, applicationState} = useContext(ApplicationStateContext)
-
-
+  const userState = useSelector(selectUserState)
+  const dispatch = useDispatch()
   let teacherUserGroups = () => {
   }
   let studentsUserGroups = () => {
@@ -24,19 +25,19 @@ function HomePage() {
   let allUserGroups = () => {
   }
 
-  if (applicationState?.userState !== undefined) {
+  if (userState !== null) {
     ({teacherUserGroups, studentsUserGroups, allUserGroups} = groupFilter({
       setGroups,
       setIsLoading,
-      userId: applicationState.userState.id.toString()
+      userId: userState.id.toString()
     }))
   }
 
 
   useEffect(() => {
-    setApplicationState({type:"setGroupView", group:undefined})
-    setApplicationState({type:"setHomePageIn", homePageIn:true})
-
+    dispatch(setGroup(null))
+    dispatch(setHomePageIn(true))
+    dispatch(setRole(null))
     allUserGroups()
   }, [])
 
@@ -86,15 +87,12 @@ function HomePage() {
 
         </div>
       </div>
-      {isLoading ? (
-        <Loading/>
-      ) : (
+
         <div className='relative flex flex-wrap gap-x-5 gap-y-2 bg-light_gray px-8 py-6 bg-lilly-bg rounded-md'>
           {groups?.map((group) =>
             groups?.length > 0 ? <GroupListElement group={group} key={group.id}/> : <div>Dodaj nową grupę!</div>
           )}
         </div>
-      )}
 
     </div>
   )

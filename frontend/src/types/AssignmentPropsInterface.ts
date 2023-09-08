@@ -1,4 +1,4 @@
-import {AssignmentInterface} from "./AssignmentInterface";
+import { AssignmentInterface } from "./AssignmentInterface"
 
 
 export interface AssignmentPropsInterface {

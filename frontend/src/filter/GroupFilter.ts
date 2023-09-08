@@ -3,7 +3,7 @@ import {
   getGroupsByTeacherPostgresService,
   getGroupsByUserPostgresService
 } from "../services/postgresDatabaseServices"
-import {GroupInterface} from "../types/GroupInterface";
+import { GroupInterface } from "../types/GroupInterface"
 
 interface GroupFilterProps {
   setGroups: (groups: GroupInterface[] | undefined) => void

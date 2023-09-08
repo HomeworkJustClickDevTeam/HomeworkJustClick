@@ -1,9 +1,8 @@
-import React, {useContext, useState} from "react"
-import {createEvaluationWithUserAndSolution} from "../../services/postgresDatabaseServices"
-import {useNavigate} from "react-router-dom"
-import {getUser} from "../../services/otherServices";
-import ApplicationStateContext from "../../contexts/ApplicationStateContext";
-
+import React, { useContext, useState } from "react"
+import { createEvaluationWithUserAndSolution } from "../../services/postgresDatabaseServices"
+import { useNavigate } from "react-router-dom"
+import { selectUserState } from "../../redux/userStateSlice"
+import { useSelector } from "react-redux"
 interface RatingPropsInterface {
   maxPoints: number
   points: number | undefined
@@ -21,14 +20,10 @@ export function Rating({
                        }: RatingPropsInterface) {
   const [active, setActive] = useState<number>()
   const navigate = useNavigate()
-  const {applicationState} = useContext(ApplicationStateContext)
-
-  if (applicationState?.userState === undefined) {
-    navigate("/")
-  }
+  const userState = useSelector(selectUserState)
   const handleMark = () => {
     const body = {result: points, grade: 0}
-    createEvaluationWithUserAndSolution(applicationState?.userState?.id as unknown as string, solutionId.toString(), body)
+    createEvaluationWithUserAndSolution(userState?.id as unknown as string, solutionId.toString(), body)
       .then(() => navigate(`/group/${groupId}`))
       .catch((e) => console.log(e))
   }
