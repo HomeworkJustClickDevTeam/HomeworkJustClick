@@ -1,5 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit"
-import { RootState } from "./store"
+import { createDraftSafeSelector, createSlice } from "@reduxjs/toolkit"
+import { AppDispatch, RootState } from "./store"
 
 const initialState: boolean = false
 
@@ -7,10 +7,16 @@ export const isLoadingSlice = createSlice({
   name: 'isLoading',
   initialState,
   reducers:{
-    setIsLoading: (state, action) => state = action.payload
+    setIsLoading: (_, action) => action.payload
   }
 })
 
 export const {setIsLoading} = isLoadingSlice.actions
-export const selectIsLoading = (state:RootState) => state.isLoading
+
+export const setIsLoadingInReducer = (newState:boolean) => {
+  return (dispatch:AppDispatch) => {
+    dispatch(setIsLoading(newState))
+  }
+}
+export const selectIsLoading = (state:RootState):boolean => state.isLoading //Use when you want to obtain the state of isLoading
 export default isLoadingSlice.reducer

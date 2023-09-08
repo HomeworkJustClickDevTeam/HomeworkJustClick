@@ -11,6 +11,7 @@ import { AxiosError } from "axios"
 import React, { useContext, useEffect } from "react"
 import { selectGroup, setGroup } from "../../redux/groupSlice"
 import { useDispatch, useSelector } from "react-redux"
+import { GroupInterface } from "../../types/GroupInterface"
 
 export default function GroupGeneralSettings() {
   const navigate = useNavigate()
@@ -38,10 +39,10 @@ export default function GroupGeneralSettings() {
       : await archiveGroupPostgresService(group?.id as unknown as string)
         .catch((error: AxiosError) => console.log(error))
         .then(() =>{
-          let _group = group
+          let _group = {...group}
           if(_group !== null){
-            _group.archived = !_group?.archived
-            dispatch(setGroup(_group))
+            _group.archived = !_group?.archived as boolean
+            dispatch(setGroup(_group as GroupInterface))
           }
         })
   }
@@ -90,10 +91,10 @@ export default function GroupGeneralSettings() {
                 name="groupName"
                 defaultValue={group?.name}
                 onChange={(event) =>{
-                  let _group = group
+                  let _group = {...group}
                   if(_group !== null){
                     _group.name = event.target.value
-                    dispatch(setGroup(_group))
+                    dispatch(setGroup(_group as GroupInterface))
                   }}
                 }
                 className='border-b-2 border-b-light_gray mx-2 mr-8'
@@ -111,10 +112,10 @@ export default function GroupGeneralSettings() {
                 name="groupDescription"
                 defaultValue={group?.description}
                 onChange={(event) =>{
-                    let _group = group
+                    let _group = {...group}
                     if(_group !== null){
-                      _group.name = event.target.value
-                      dispatch(setGroup(_group))
+                      _group.description = event.target.value
+                      dispatch(setGroup(_group as GroupInterface))
                     }
                 }
                }
