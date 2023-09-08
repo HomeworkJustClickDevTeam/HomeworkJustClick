@@ -1,8 +1,4 @@
-import {useEffect, useState} from "react"
-import {getFilesByAssignmentPostgresService} from "../../services/postgresDatabaseServices"
-import {getFileMongoService} from "../../services/mongoDatabaseServices"
-import {FileFromPostInterface} from "../../types/FileFromPostInterface";
-import {useGetFiles} from "../customHooks/useGetFiles";
+import { useGetFiles } from "../customHooks/useGetFiles"
 
 export function AssignmentFile(props: { assignmentId: number }) {
   const files = useGetFiles(props.assignmentId, "assignment")

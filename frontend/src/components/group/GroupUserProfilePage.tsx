@@ -1,21 +1,21 @@
-import {useParams} from "react-router-dom";
-import {useContext, useEffect, useState} from "react";
+import { useParams } from "react-router-dom"
+import { useContext, useEffect, useState } from "react"
 import {
   getAssignmentsDoneByGroupAndStudentPostgresService,
   getAssignmentsExpiredUndoneByGroupAndStudentPostgresService,
   getAssignmentsUndoneByGroupAndStudentPostgresService,
   getUserPostgresService
-} from "../../services/postgresDatabaseServices";
-import {AxiosError} from "axios";
-import Loading from "../animations/Loading";
-import AssignmentListElement from "../assignments/AssignmentListElement";
-import {UserInterface} from "../../types/UserInterface";
-import {AssignmentInterface} from "../../types/AssignmentInterface";
-import ApplicationStateContext from "../../contexts/ApplicationStateContext";
-
+} from "../../services/postgresDatabaseServices"
+import { AxiosError } from "axios"
+import Loading from "../animations/Loading"
+import AssignmentListElement from "../assignments/AssignmentListElement"
+import { UserInterface } from "../../types/UserInterface"
+import { AssignmentInterface } from "../../types/AssignmentInterface"
+import { useSelector } from "react-redux"
+import { selectGroup } from "../../redux/groupSlice"
 export default function GroupUserProfilePage() {
   const {userProfileId} = useParams()
-  const {applicationState} = useContext(ApplicationStateContext)
+  const group= useSelector(selectGroup)
   const [userProfile, setUserProfile] = useState<UserInterface | undefined>(undefined)
   const [doneAssignments, setDoneAssignments] = useState<AssignmentInterface[] | undefined>(undefined)
   const [expiredUndoneAssignments, setExpiredUndoneAssignments] = useState<AssignmentInterface[] | undefined>(undefined)
@@ -26,15 +26,15 @@ export default function GroupUserProfilePage() {
       .then((response) => setUserProfile(response.data))
       .catch((error: AxiosError) => console.log(error))
 
-    getAssignmentsDoneByGroupAndStudentPostgresService(applicationState?.group?.id as unknown as string, userProfileId as string)
+    getAssignmentsDoneByGroupAndStudentPostgresService(group?.id as unknown as string, userProfileId as string)
       .then((r) => setDoneAssignments(r.data))
       .catch((e: AxiosError) => (e.response?.status === 404) ? setDoneAssignments([]) : console.log(e))
 
-    getAssignmentsExpiredUndoneByGroupAndStudentPostgresService(applicationState?.group?.id as unknown as string, userProfileId as string)
+    getAssignmentsExpiredUndoneByGroupAndStudentPostgresService(group?.id as unknown as string, userProfileId as string)
       .then((r) => setExpiredUndoneAssignments(r.data))
       .catch((e: AxiosError) => (e.response?.status === 404) ? setExpiredUndoneAssignments([]) : console.log(e))
 
-    getAssignmentsUndoneByGroupAndStudentPostgresService(applicationState?.group?.id as unknown as string, userProfileId as string)
+    getAssignmentsUndoneByGroupAndStudentPostgresService(group?.id as unknown as string, userProfileId as string)
       .then((r) => setUndoneAssignments(r.data))
       .catch((e: AxiosError) => (e.response?.status === 404) ? setUndoneAssignments([]) : console.log(e))
   }, [])
@@ -55,7 +55,7 @@ export default function GroupUserProfilePage() {
                 {doneAssignments?.map((assignment) => {
                   return (<li key={assignment.id}><AssignmentListElement optionalUserId={userProfile?.id?.toString()}
                                                                          assignment={assignment}
-                                                                         idGroup={applicationState?.group?.id as unknown as string}/></li>)
+                                                                         idGroup={group?.id as unknown as string}/></li>)
                 })}
               </ul>
             </dd>
@@ -65,7 +65,7 @@ export default function GroupUserProfilePage() {
               <ul>
                 {undoneAssignments?.map((assignment) => {
                   return (<li><AssignmentListElement optionalUserId={userProfile?.id?.toString()} assignment={assignment}
-                                                     idGroup={applicationState?.group?.id as unknown as string}/></li>)
+                                                     idGroup={group?.id as unknown as string}/></li>)
                 })}
               </ul>
             </dd>
@@ -75,7 +75,7 @@ export default function GroupUserProfilePage() {
               <ul>
                 {expiredUndoneAssignments?.map((assignment) => {
                   return (<li><AssignmentListElement optionalUserId={userProfile?.id?.toString()} assignment={assignment}
-                                                     idGroup={applicationState?.group?.id as unknown as string}/></li>)
+                                                     idGroup={group?.id as unknown as string}/></li>)
                 })}
               </ul>
             </dd>

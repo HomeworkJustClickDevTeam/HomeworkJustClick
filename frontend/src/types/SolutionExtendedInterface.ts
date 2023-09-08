@@ -1,5 +1,5 @@
-import {UserInterface} from "./UserInterface";
-import {AssignmentInterface} from "./AssignmentInterface";
+import { UserInterface } from "./UserInterface"
+import { AssignmentInterface } from "./AssignmentInterface"
 
 export interface SolutionExtendedInterface {
   id: number

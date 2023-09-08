@@ -1,21 +1,24 @@
-import {Link, useParams} from "react-router-dom"
-import {useContext, useEffect, useState} from "react"
-import {getAssignmentsByGroupPostgresService} from "../../services/postgresDatabaseServices"
+import { Link } from "react-router-dom"
+import { useContext, useEffect, useState } from "react"
+import { getAssignmentsByGroupPostgresService } from "../../services/postgresDatabaseServices"
 import AssignmentListElement from "./AssignmentListElement"
 import Loading from "../animations/Loading"
-import ApplicationStateContext from "../../contexts/ApplicationStateContext"
-import {AxiosError} from "axios";
-import {AssignmentInterface} from "../../types/AssignmentInterface";
+import { AxiosError } from "axios"
+import { AssignmentInterface } from "../../types/AssignmentInterface"
+import { selectRole } from "../../redux/roleSlice"
+import { useSelector } from "react-redux"
+import { selectGroup } from "../../redux/groupSlice"
 
 function AssignmentsGroupDisplayedPage() {
   const [assignments, setAssignments] = useState<AssignmentInterface[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
-  const {applicationState} = useContext(ApplicationStateContext)
+  const role = useSelector(selectRole)
+  const group= useSelector(selectGroup)
 
   useEffect(() => {
-    getAssignmentsByGroupPostgresService(applicationState?.group?.id as unknown as string).then((response) => {
+    getAssignmentsByGroupPostgresService(group?.id as unknown as string).then((response) => {
       const assignmentFromServer = response.data as AssignmentInterface[]
-      if (applicationState?.role === "Teacher") {
+      if (role === "Teacher") {
         setAssignments(assignmentFromServer)
       } else {
         setAssignments(
@@ -32,8 +35,8 @@ function AssignmentsGroupDisplayedPage() {
   }
   return (
     <div className='relative h-[420px]'>
-      {applicationState?.role === "Teacher" && (
-        <Link to={`/group/${applicationState?.group?.id}/assignments/add`}>
+      {role === "Teacher" && (
+        <Link to={`/group/${group?.id}/assignments/add`}>
           <button
             className='absolute right-[7.5%] bottom-0 bg-main_blue text-white px-8 py-2 rounded-md text-lg hover:bg-hover_blue hover:shadow-md active:shadow-none'>Nowe
             zadanie +
@@ -43,7 +46,7 @@ function AssignmentsGroupDisplayedPage() {
       <ul className="flex flex-col ">
         {assignments.map((assignment) => (
           <li key={assignment.id} className='flex inline-block '>
-            <AssignmentListElement assignment={assignment} idGroup={applicationState?.group?.id as unknown as string}/>{" "}
+            <AssignmentListElement assignment={assignment} idGroup={group?.id as unknown as string}/>{" "}
           </li>
         ))}
       </ul>

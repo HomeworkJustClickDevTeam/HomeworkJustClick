@@ -1,7 +1,6 @@
-import {Link} from "react-router-dom"
-import left_circle from './left_circle.svg';
-import right_circle from './right_circle.svg';
-import HeaderLoggedOutState from "../header/HeaderLoggedOutState";
+import { Link } from "react-router-dom"
+import left_circle from "./left_circle.svg"
+import right_circle from "./right_circle.svg"
 
 function HomeGuestPage() {
   return (

@@ -1,44 +1,49 @@
-import {useLocation, useNavigate, useParams} from "react-router-dom"
-import React, {useContext, useEffect, useState} from "react"
+import { useLocation, useNavigate, useParams } from "react-router-dom"
+import React, { useContext, useEffect, useState } from "react"
 import {
   getAssignmentPostgresService,
   getCheckedSolutionByUserAssignmentGroupPostgresService,
   getUncheckedSolutionByUserAssignmentGroupPostgresService
 } from "../../services/postgresDatabaseServices"
-import {parseISO} from "date-fns"
+import { parseISO } from "date-fns"
 
-import ApplicationStateContext from "../../contexts/ApplicationStateContext"
 import AssignmentModify from "./AssignmentModify"
 
 import SolutionAdd from "../solution/SolutionAdd"
-import {AxiosError} from "axios"
+import { AxiosError } from "axios"
 
 import SolutionChecked from "../solution/SolutionChecked"
 import SolutionUnchecked from "../solution/SolutionUnchecked"
-import {AssignmentInterface} from "../../types/AssignmentInterface";
-import {SolutionInterface} from "../../types/SolutionInterface";
-import {LoadingContext} from "../../contexts/LoadingContext";
-import Loading from "../animations/Loading";
+import { AssignmentInterface } from "../../types/AssignmentInterface"
+import { SolutionInterface } from "../../types/SolutionInterface"
+import Loading from "../animations/Loading"
+import { useDispatch, useSelector } from "react-redux"
+import { selectUserState } from "../../redux/userStateSlice"
+import { selectGroup } from "../../redux/groupSlice"
+import { setIsLoading } from "../../redux/isLoadingSlice"
+import { selectRole } from "../../redux/roleSlice"
 
 function AssignmentSpecPage() {
   const {idAssignment} = useParams()
-  const {setIsLoading} = useContext(LoadingContext)
   const location = useLocation()
   const navigate = useNavigate()
   const optionalUserId: string | null = location.state
-  const {applicationState} = useContext(ApplicationStateContext)
   const [isSolutionChecked, setIsSolutionChecked] = useState<boolean | undefined>(undefined)
   const [solution, setSolution] = useState<SolutionInterface | undefined>(undefined)
   const [assignment, setAssignment] = useState<AssignmentInterface | undefined>(undefined)
+  const userState = useSelector(selectUserState)
+  const group= useSelector(selectGroup)
+  const dispatch = useDispatch()
+  const role = useSelector(selectRole)
 
   useEffect(() => {
-    let userId = applicationState?.userState?.id.toString()
+    let userId = userState?.id.toString()
     if(optionalUserId !== null){
       userId = optionalUserId
     }
     if (userId !== undefined) {
       let ignore = false
-      getUncheckedSolutionByUserAssignmentGroupPostgresService(userId, idAssignment as string, applicationState?.group?.id as unknown as string)
+      getUncheckedSolutionByUserAssignmentGroupPostgresService(userId, idAssignment as string, group?.id as unknown as string)
         .then((response) => {
           if(!ignore) {
             if (response.data.id !== null) {
@@ -49,7 +54,7 @@ function AssignmentSpecPage() {
         })
         .catch((error: AxiosError) => {
           if (error.response?.status === 404) {
-            getCheckedSolutionByUserAssignmentGroupPostgresService(userId as string, idAssignment as string, applicationState?.group?.id as unknown as string)
+            getCheckedSolutionByUserAssignmentGroupPostgresService(userId as string, idAssignment as string, group?.id as unknown as string)
               .then((response) => {
                 if(!ignore) {
                   if (response.data.id !== null) {
@@ -73,7 +78,7 @@ function AssignmentSpecPage() {
                   ...responseData,
                   completionDatetime: parsedDate,
                 })
-                setIsLoading(false)
+                dispatch(setIsLoading(false))
               }
             })
             .catch((error) => {
@@ -85,19 +90,16 @@ function AssignmentSpecPage() {
       }
     }
 
-  }, [applicationState, idAssignment, optionalUserId])
+  }, [userState, idAssignment, optionalUserId])
 
-  if (applicationState?.userState === undefined) {
-    navigate("/")
-  }
   if(assignment === undefined){
     return <Loading></Loading>
   }
   return (
     <div>
-      {((applicationState?.role === "Teacher") ? (
+      {((role === "Teacher") ? (
         <AssignmentModify assignment={assignment as AssignmentInterface} setAssignment={setAssignment}/>
-      ) : ((solution === undefined) && (applicationState?.role === "Student")) ? (
+      ) : ((solution === undefined) && (role === "Student")) ? (
         <SolutionAdd assignment={assignment as AssignmentInterface}/>
       ) : isSolutionChecked ? (
         <SolutionChecked assignment={assignment as AssignmentInterface} solution={solution as SolutionInterface}/>

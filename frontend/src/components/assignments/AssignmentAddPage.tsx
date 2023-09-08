@@ -1,16 +1,18 @@
-import {useNavigate, useParams} from "react-router-dom"
-import React, {ChangeEvent, useContext, useEffect, useState} from "react"
-import {createAssignmentWithUserAndGroupPostgresService} from "../../services/postgresDatabaseServices"
+import { useNavigate } from "react-router-dom"
+import React, { ChangeEvent, useContext, useEffect, useState } from "react"
+import { createAssignmentWithUserAndGroupPostgresService } from "../../services/postgresDatabaseServices"
 import ReactDatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
-import {AssignmentAddFile} from "./AssignmentAddFile"
-import {AssignmentToSendInterface} from "../../types/AssignmentToSendInterface";
-import {getUser} from "../../services/otherServices";
-import ApplicationStateContext from "../../contexts/ApplicationStateContext";
+import { AssignmentAddFile } from "./AssignmentAddFile"
+import { AssignmentToSendInterface } from "../../types/AssignmentToSendInterface"
+import { selectGroup } from "../../redux/groupSlice"
+import { useSelector } from "react-redux"
+import { selectUserState } from "../../redux/userStateSlice"
 
 
 function AssignmentAddPage() {
   const navigate = useNavigate()
+  const userState = useSelector(selectUserState)
 
   const [assignment, setAssignment] = useState<AssignmentToSendInterface>({
     title: "",
@@ -22,17 +24,15 @@ function AssignmentAddPage() {
   const [toSend, setToSend] = useState<boolean>(false)
   const [idAssignment, setIdAssignment] = useState<number>()
   const [toNavigate, setToNavigate] = useState<boolean>(false)
-  const {applicationState} = useContext(ApplicationStateContext)
+  const group= useSelector(selectGroup)
 
   useEffect(() => {
     if (toNavigate) {
-      navigate(`/group/${applicationState?.group?.id}/assignments/`)
+      navigate(`/group/${group?.id}/assignments/`)
     }
   }, [toNavigate])
 
-  if (applicationState?.userState === undefined) {
-    navigate("/")
-  }
+
   const handleTextChange = (event: ChangeEvent<HTMLInputElement>) => {
     const {name, value} = event.target
     setAssignment((prevState) => ({
@@ -66,10 +66,8 @@ function AssignmentAddPage() {
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
-    if (applicationState?.userState === undefined) {
-      navigate("/")
-    } else {
-      createAssignmentWithUserAndGroupPostgresService(applicationState?.userState.id.toString(), applicationState.group?.id as unknown as string, assignment)
+    if(userState) {
+      createAssignmentWithUserAndGroupPostgresService(userState.id.toString(), group?.id as unknown as string, assignment)
         .catch(error => console.log(error))
         .then(response => {
           if (response !== (null || undefined)) {

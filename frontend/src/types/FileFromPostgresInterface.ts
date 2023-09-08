@@ -1,4 +1,4 @@
-export interface FileFromPostInterface {
+export interface FileFromPostgresInterface {
   mongo_id: string
   id: number
   format: string

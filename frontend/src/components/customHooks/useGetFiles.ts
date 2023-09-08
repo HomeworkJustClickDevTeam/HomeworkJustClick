@@ -1,34 +1,35 @@
-import {useContext, useEffect, useState} from "react";
-import {FileFromPostInterface} from "../../types/FileFromPostInterface";
+import { useContext, useEffect, useState } from "react"
+import { FileFromPostgresInterface } from "../../types/FileFromPostgresInterface"
 import {
   getFilesByAssignmentPostgresService,
   getFilesBySolutionPostgresService
-} from "../../services/postgresDatabaseServices";
-import {getFileMongoService} from "../../services/mongoDatabaseServices";
-import {FileInterface} from "../../types/FileInterface";
-import {LoadingContext} from "../../contexts/LoadingContext";
+} from "../../services/postgresDatabaseServices"
+import { getFileMongoService } from "../../services/mongoDatabaseServices"
+import { FileInterface } from "../../types/FileInterface"
+import { useDispatch } from "react-redux"
+import { setIsLoading } from "../../redux/isLoadingSlice"
 
 export const useGetFiles = (id: number, by:"assignment" | "solution") => {
   const [files, setFiles] = useState<FileInterface[]>([])
-  const [databaseFiles, setDatabaseFiles] = useState<FileFromPostInterface[] | undefined>(undefined)
-  const {setIsLoading} = useContext(LoadingContext)
+  const [databaseFiles, setDatabaseFiles] = useState<FileFromPostgresInterface[] | undefined>(undefined)
+  const dispatch = useDispatch()
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setIsLoading(true)
+        dispatch(setIsLoading(true))
         if(by === "solution"){
           const response = await getFilesBySolutionPostgresService(id)
           if(!ignore) {
             setDatabaseFiles(response.data)
-            setIsLoading(false)
+            dispatch(setIsLoading(false))
           }
         }
         else if(by === "assignment"){
           const response = await getFilesByAssignmentPostgresService(id)
           if(!ignore) {
             setDatabaseFiles(response.data)
-            setIsLoading(false)
+            dispatch(setIsLoading(false))
           }
         }
       } catch (e) {
@@ -42,7 +43,7 @@ export const useGetFiles = (id: number, by:"assignment" | "solution") => {
   useEffect(() => {
     const fetchFileData = async () => {
       if (databaseFiles) {
-        setIsLoading(true)
+        dispatch(setIsLoading(true))
         for (const file of databaseFiles) {
           if(file !== undefined) {
             try {
@@ -61,6 +62,7 @@ export const useGetFiles = (id: number, by:"assignment" | "solution") => {
                   fileName: response.data.name,
                   fileType: fileData.file.type
                 }))
+                dispatch(setIsLoading(false))
               }
             } catch (error) {
               console.error("Error retrieving file:", error)

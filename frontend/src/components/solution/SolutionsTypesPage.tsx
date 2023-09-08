@@ -1,53 +1,53 @@
-import {useContext, useEffect, useState} from "react"
-import {Link, useParams} from "react-router-dom"
-
-import groupRoleContext from "../../contexts/ApplicationStateContext"
+import { useContext, useEffect, useState } from "react"
+import { Link } from "react-router-dom"
 import NotFoundPage from "../errors/NotFoundPage"
 import Loading from "../animations/Loading"
-import {solutionFilter} from "../../filter/SolutionFilter"
-import {SolutionExtendedInterface} from "../../types/SolutionExtendedInterface";
-import ApplicationStateContext from "../../contexts/ApplicationStateContext";
-import {ApplicationStateInterface} from "../../types/ApplicationStateInterface";
+import { solutionFilter } from "../../filter/SolutionFilter"
+import { SolutionExtendedInterface } from "../../types/SolutionExtendedInterface"
+import { useDispatch, useSelector } from "react-redux"
+import { selectUserState } from "../../redux/userStateSlice"
+import { selectGroup } from "../../redux/groupSlice"
+import { GroupInterface } from "../../types/GroupInterface"
+import { setIsLoading } from "../../redux/isLoadingSlice"
+import { selectRole } from "../../redux/roleSlice"
 
 function SolutionsTypesPage({type}: { type: string }) {
-  const [isLoading, setIsLoading] = useState<boolean>(true)
   const [solutionsExtended, setSolutionsExtended] = useState<
     SolutionExtendedInterface[]
   >([])
-  const {applicationState} = useContext(ApplicationStateContext)
+  const group= useSelector(selectGroup)
+  const role = useSelector(selectRole)
+  const dispatch = useDispatch()
   const {checkSolutions, uncheckedSolutions, lateSolutions} = solutionFilter({
     setSolutionsExtended,
-    idGroup: applicationState?.group?.id as unknown as string,
+    idGroup: group?.id as unknown as string,
   })
 
   function typeOfSolutions() {
     switch (type) {
       case "check":
         checkSolutions()
-        setIsLoading(false)
+        dispatch(setIsLoading(false))
         break
       case "late":
         lateSolutions()
-        setIsLoading(false)
+        dispatch(setIsLoading(false))
         break
       case "uncheck":
         uncheckedSolutions()
-        setIsLoading(false)
+        dispatch(setIsLoading(false))
         break
       default:
         break
     }
   }
   useEffect(() => {
-    setIsLoading(true)
+    dispatch(setIsLoading(true))
     setSolutionsExtended([])
     typeOfSolutions()
   }, [type])
-  if (applicationState?.role !== "Teacher") {
+  if (role !== "Teacher") {
     return <NotFoundPage/>
-  }
-  if (isLoading) {
-    return <Loading/>
   }
 
   return (

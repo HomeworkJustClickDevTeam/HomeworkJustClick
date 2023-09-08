@@ -1,15 +1,15 @@
-import {useNavigate} from "react-router-dom"
-import {logout} from "../../services/otherServices";
-import ApplicationStateContext from "../../contexts/ApplicationStateContext";
-import {useContext} from "react";
+import { useNavigate } from "react-router-dom"
+import { useContext } from "react"
+import { useDispatch } from "react-redux"
+import { useAppDispatch } from "../../types/HooksRedux"
+import { AppDispatch } from "../../redux/store"
+import { logOut } from "../../redux/userStateSlice"
 
 function LogOut() {
-  const navigate = useNavigate()
-  const {setApplicationState} = useContext(ApplicationStateContext)
+  const dispatch:AppDispatch = useDispatch()
 
   const handleLogout = () => {
-    logout(setApplicationState)
-    navigate("/home")
+    dispatch(logOut())
   }
 
   return <button onClick={handleLogout}>Wyloguj się</button>

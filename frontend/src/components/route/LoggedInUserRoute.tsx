@@ -1,17 +1,17 @@
-import {getUser} from "../../services/otherServices";
-import React, {useContext} from "react";
+import React, { useContext } from "react"
 
-import {Navigate, Outlet, Route, Routes, RoutesProps} from "react-router-dom";
-import HeaderLoggedInState from "../header/HeaderLoggedInState";
-import ApplicationStateContext from "../../contexts/ApplicationStateContext";
-import {LoadingContext} from "../../contexts/LoadingContext";
-import Loading from "../animations/Loading";
+import { Navigate, Outlet } from "react-router-dom"
+import HeaderLoggedInState from "../header/HeaderLoggedInState"
+import Loading from "../animations/Loading"
+import { useSelector } from "react-redux"
+import { selectIsLoading } from "../../redux/isLoadingSlice"
+import { selectUserState } from "../../redux/userStateSlice"
 
 
 export const LoggedInUserRoute = () => {
-  const {applicationState} = useContext(ApplicationStateContext)
-  const {isLoading} = useContext(LoadingContext)
-  if (applicationState?.userState === undefined) {
+  const isLoading = useSelector(selectIsLoading)
+  const userState = useSelector(selectUserState)
+  if (userState === null) {
     return (
       <Navigate to={"/home"} replace/>
     )

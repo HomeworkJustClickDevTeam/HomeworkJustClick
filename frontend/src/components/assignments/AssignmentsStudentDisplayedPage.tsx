@@ -1,28 +1,26 @@
-import React, {useContext, useEffect, useState} from "react"
-import {getAssignmentsByStudentPostgresService} from "../../services/postgresDatabaseServices"
+import React, { useContext, useEffect, useState } from "react"
+import { getAssignmentsByStudentPostgresService } from "../../services/postgresDatabaseServices"
 import AssignmentListElement from "./AssignmentListElement"
-import {AssignmentInterface} from "../../types/AssignmentInterface";
-import {getUser} from "../../services/otherServices";
-import {useNavigate} from "react-router-dom";
-import ApplicationStateContext from "../../contexts/ApplicationStateContext";
+import { AssignmentInterface } from "../../types/AssignmentInterface"
+import { useNavigate } from "react-router-dom"
+import { selectUserState } from "../../redux/userStateSlice"
+import { useSelector } from "react-redux"
 
 export default function AssignmentsStudentDisplayedPage() {
   const [assignments, setAssignments] = useState<AssignmentInterface[]>([])
-  const {applicationState} = useContext(ApplicationStateContext)
   const navigate = useNavigate()
+  const userState = useSelector(selectUserState)
 
   useEffect(() => {
-    if (applicationState?.userState !== undefined) {
-      getAssignmentsByStudentPostgresService(applicationState.userState.id.toString())
+    if (userState !== null) {
+      getAssignmentsByStudentPostgresService(userState.id.toString())
         .then((response) => {
           const assignmentFromServer = response.data as AssignmentInterface[]
           setAssignments(assignmentFromServer)
         })
     }
   }, [])
-  if (applicationState?.userState === undefined) {
-    navigate("/")
-  }
+
   return (
     <div>
       <ul>

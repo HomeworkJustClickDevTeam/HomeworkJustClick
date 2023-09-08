@@ -3,7 +3,7 @@ import {
   getExtendedSolutionsLateByGroupPostgresService,
   getExtendedSolutionsUncheckedByGroupPostgresService
 } from "../services/postgresDatabaseServices"
-import {SolutionExtendedInterface} from "../types/SolutionExtendedInterface";
+import { SolutionExtendedInterface } from "../types/SolutionExtendedInterface"
 
 interface SolutionTypesPropInterface {
   idGroup: string
