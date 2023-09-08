@@ -40,19 +40,6 @@ postgresqlDatabaseJSON.interceptors.request.use(async (config) => {
     return Promise.reject(error)
   })
 
-postgresqlDatabase.interceptors.response.use((response)=> {
-  return response
-}, async (error)=>{
-  const originalRequest = error.config
-  if(error.response.status === 403 && !originalRequest._retry){
-    originalRequest._retry = true
-    localStorage.removeItem("user")
-    window.dispatchEvent(new Event('storage'))
-    window.location.reload()
-  }
-  return Promise.reject(error)
-})
-
 
 postgresqlDatabaseJSON.interceptors.response.use((response)=> {
   return response
@@ -106,7 +93,7 @@ export const createAssignmentWithUserAndGroupPostgresService = async (
 
 export const refreshToken = async (userId: number) => {
   return await postgresqlDatabaseJSON.post(`/refreshToken/${userId}`)
-
+}
 export const loginPostgresService = async (user: LoginUserInterface) => {
   return await postgresqlDatabaseJSON.post("/auth/authenticate", user)
 }
