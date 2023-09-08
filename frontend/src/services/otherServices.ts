@@ -1,11 +1,11 @@
 import { UserInterface } from "../types/UserInterface"
 import { LoginUserInterface } from "../types/LoginUserInterface"
-import { loginPostgresService } from "./postgresDatabaseServices"
 import { Dispatch } from "react"
 import { Action, AnyAction } from "redux"
 import { logOut, setUser } from "../redux/userStateSlice"
 import { AppDispatch } from "../redux/store"
 import { createAsyncThunk } from "@reduxjs/toolkit"
+import { loginPostgresService } from "./postgresDatabaseServices"
 
 
 export const parseJwt = (token:string):any => {
