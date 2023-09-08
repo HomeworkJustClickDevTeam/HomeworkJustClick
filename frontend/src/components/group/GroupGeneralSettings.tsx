@@ -1,54 +1,56 @@
-import {useNavigate, useParams} from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import {
-  deleteGroupPostgresService,
-  getGroupPostgresService,
   archiveGroupPostgresService,
   changeGroupDescriptionPostgresService,
   changeGroupNamePostgresService,
+  deleteGroupPostgresService,
+  getGroupPostgresService,
   unarchiveGroupPostgresService
 } from "../../services/postgresDatabaseServices"
-import {AxiosError} from "axios"
-import React, {useContext, useEffect, useState} from "react"
-import Loading from "../animations/Loading"
-import ApplicationStateContext from "../../contexts/ApplicationStateContext";
+import { AxiosError } from "axios"
+import React, { useContext, useEffect } from "react"
+import { selectGroup, setGroup } from "../../redux/groupSlice"
+import { useDispatch, useSelector } from "react-redux"
+import { GroupInterface } from "../../types/GroupInterface"
 
 export default function GroupGeneralSettings() {
-  const {applicationState, setApplicationState} = useContext(ApplicationStateContext)
   const navigate = useNavigate()
-  const currentURL = `${window.location.origin}/group/${applicationState?.group?.id}`
+  const group= useSelector(selectGroup)
+  const currentURL = `${window.location.origin}/group/${group?.id}`
+  const dispatch = useDispatch()
 
   const groupDeletionHandler = async () => {
-    await deleteGroupPostgresService(applicationState?.group?.id as unknown as string)
+    await deleteGroupPostgresService(group?.id as unknown as string)
       .catch((error: AxiosError) => console.log(error))
-    setApplicationState({type:"setGroupView", group:undefined})
+    dispatch(setGroup(null))
     navigate("/")
   }
   const archivizationHandler = async () => {
-    applicationState?.group?.archived
-      ? await unarchiveGroupPostgresService(applicationState?.group?.id as unknown as string)
+    group?.archived
+      ? await unarchiveGroupPostgresService(group?.id as unknown as string)
         .catch((error: AxiosError) => console.log(error))
         .then(() =>{
-          let group = applicationState?.group
-          if(group !== undefined){
-            group.archived = !group?.archived
-            setApplicationState({type:"setGroupView", group: group})
+          let _group = group
+          if(_group !== undefined){
+            _group.archived = !_group?.archived
+            dispatch(setGroup(_group))
           }
         })
-      : await archiveGroupPostgresService(applicationState?.group?.id as unknown as string)
+      : await archiveGroupPostgresService(group?.id as unknown as string)
         .catch((error: AxiosError) => console.log(error))
         .then(() =>{
-          let group = applicationState?.group
-          if(group !== undefined){
-            group.archived = !group?.archived
-            setApplicationState({type:"setGroupView", group: group})
+          let _group = {...group}
+          if(_group !== null){
+            _group.archived = !_group?.archived as boolean
+            dispatch(setGroup(_group as GroupInterface))
           }
         })
   }
 
   const setGroupName = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    if(applicationState?.group !== undefined) {
-      await changeGroupNamePostgresService(applicationState?.group?.id as unknown as string, applicationState?.group?.name)
+    if(group !== null) {
+      await changeGroupNamePostgresService(group?.id as unknown as string, group?.name)
         .catch((error: AxiosError) => console.log(error))
     }
   }
@@ -56,8 +58,8 @@ export default function GroupGeneralSettings() {
     event: React.FormEvent<HTMLFormElement>
   ) => {
     event.preventDefault()
-    if(applicationState?.group !== undefined) {
-      await changeGroupDescriptionPostgresService(applicationState?.group?.id as unknown as string, applicationState?.group?.description)
+    if(group !== null) {
+      await changeGroupDescriptionPostgresService(group.id as unknown as string, group.description)
         .catch((error: AxiosError) => console.log(error))
     }
   }
@@ -69,9 +71,9 @@ export default function GroupGeneralSettings() {
     }
   }
   useEffect(() => {
-    getGroupPostgresService(applicationState?.group?.id as unknown as string)
+    getGroupPostgresService(group?.id as unknown as string)
       .then((response) => {
-        setApplicationState({type: "setGroupView", group: response.data})
+        dispatch(setGroup(response.data))
       })
       .catch((error: AxiosError) => console.log(error))
   }, [])
@@ -87,12 +89,12 @@ export default function GroupGeneralSettings() {
               <input
                 type="text"
                 name="groupName"
-                defaultValue={applicationState?.group?.name}
+                defaultValue={group?.name}
                 onChange={(event) =>{
-                  let group = applicationState?.group
-                  if(group !== undefined){
-                    group.name = event.target.value
-                    setApplicationState({type:"setGroupView", group: group})
+                  let _group = {...group}
+                  if(_group !== null){
+                    _group.name = event.target.value
+                    dispatch(setGroup(_group as GroupInterface))
                   }}
                 }
                 className='border-b-2 border-b-light_gray mx-2 mr-8'
@@ -108,12 +110,12 @@ export default function GroupGeneralSettings() {
               <input
                 type="text"
                 name="groupDescription"
-                defaultValue={applicationState?.group?.description}
+                defaultValue={group?.description}
                 onChange={(event) =>{
-                    let group = applicationState?.group
-                    if(group !== undefined){
-                      group.name = event.target.value
-                      setApplicationState({type:"setGroupView", group: group})
+                    let _group = {...group}
+                    if(_group !== null){
+                      _group.description = event.target.value
+                      dispatch(setGroup(_group as GroupInterface))
                     }
                 }
                }
@@ -130,7 +132,7 @@ export default function GroupGeneralSettings() {
               className='ml-2 cursor-pointer'
               name="archived"
               type="checkbox"
-              defaultChecked={applicationState?.group?.archived}
+              defaultChecked={group?.archived}
               onClick={archivizationHandler}
             />
             <span className="slider"></span>
