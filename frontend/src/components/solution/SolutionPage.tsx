@@ -53,7 +53,8 @@ function SolutionPage() {
         <div>
           {solutionExtended.id &&
             <Link
-            to={`/group/${solutionExtended.assignment.groupId}/solution/${solutionExtended.user.id}/${solutionExtended.assignment.id}/advancedEvaluation`}
+            to={`/advancedEvaluation`}
+            state={solutionExtended.id}
             className="absolute underline font-semibold bottom-0 left-0 mb-2 ml-4">Zaawansowane Sprawdzanie</Link>
           }
           {showRating ? (

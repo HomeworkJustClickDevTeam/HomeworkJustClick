@@ -1,12 +1,43 @@
+import { MutableRefObject, PropsWithChildren, useEffect, useRef, useState } from "react"
+import { useLocation } from "react-router-dom"
+import { FileInterface } from "../../types/FileInterface"
+import { useGetFiles } from "../customHooks/useGetFiles"
+import { te } from "date-fns/locale"
+import { AdvancedEvaluationCommentPanel } from "./AdvancedEvaluationCommentPanel"
+import { AdvancedEvaluationTextFileArea } from "./AdvancedEvaluationTextFileArea"
+import { CommentInterface } from "../../types/CommentInterface"
 
 interface advancedEvaluationPageInterface{
 
 }
 
 export default function AdvancedEvaluationPage() {
-  return (
-    <div className='h-[calc(100vh-112px)] select-none'>
+  let {state} = useLocation()
+  const file = useGetFiles(state, 'solution')[0]
+  const [fileText, setFileText] = useState("")
+  const [activeComment, setActiveComment] = useState<CommentInterface| undefined>(undefined)
 
-    </div>
+  useEffect(() => {
+    if(file){
+      file.fileData.text()
+        .then((text) => {
+          setFileText(" " + text + " ")})
+    }
+
+  }, [file, activeComment])
+
+  const handleActiveCommentChange = (comment:CommentInterface) =>{
+    setActiveComment(comment)
+  }
+
+
+
+
+  return (
+    <>
+      <AdvancedEvaluationCommentPanel handleActiveCommentChange={handleActiveCommentChange}></AdvancedEvaluationCommentPanel>
+      <br/>
+      <AdvancedEvaluationTextFileArea color={activeComment?.color} text={fileText}></AdvancedEvaluationTextFileArea>
+    </>
   )
 }

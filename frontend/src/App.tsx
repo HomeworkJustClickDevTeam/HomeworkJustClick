@@ -93,8 +93,9 @@ function App() {
             path="solutions/check"
             element={<SolutionsTypesPage type={"check"}/>}
           />
+
         </Route>
-        <Route path="/group/:id/solution/:idUser/:idAssignment/advancedEvaluation" element={<AdvancedEvaluationPage/>}/>
+        <Route path="/advancedEvaluation" element={<AdvancedEvaluationPage/>}/>
       </Route>
       <Route path="*" element={<NotFoundPage/>}/>
     </Routes>
