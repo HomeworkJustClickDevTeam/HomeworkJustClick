@@ -5,11 +5,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import pl.HomeworkJustClick.Backend.Entities.Group;
-import pl.HomeworkJustClick.Backend.Entities.GroupStudent;
-import pl.HomeworkJustClick.Backend.Entities.GroupTeacher;
-import pl.HomeworkJustClick.Backend.Entities.User;
-import pl.HomeworkJustClick.Backend.Enums.Role;
+import pl.HomeworkJustClick.Backend.group.Group;
+import pl.HomeworkJustClick.Backend.group.GroupRepository;
+import pl.HomeworkJustClick.Backend.groupstudent.GroupStudent;
+import pl.HomeworkJustClick.Backend.groupstudent.GroupStudentRepository;
+import pl.HomeworkJustClick.Backend.groupteacher.GroupTeacherRepository;
+import pl.HomeworkJustClick.Backend.infrastructure.enums.Role;
+import pl.HomeworkJustClick.Backend.user.User;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;

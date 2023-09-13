@@ -12,12 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.HomeworkJustClick.Backend.Entities.Solution;
-import pl.HomeworkJustClick.Backend.Responses.AssignmentResponse;
-import pl.HomeworkJustClick.Backend.Responses.SolutionResponse;
-import pl.HomeworkJustClick.Backend.Responses.SolutionResponseCalendar;
-import pl.HomeworkJustClick.Backend.Responses.SolutionResponseExtended;
-import pl.HomeworkJustClick.Backend.Services.SolutionService;
+import pl.HomeworkJustClick.Backend.assignment.AssignmentResponseDto;
+import pl.HomeworkJustClick.Backend.solution.*;
 
 import java.util.Comparator;
 import java.util.List;
@@ -49,14 +45,14 @@ public class SolutionController {
                             description = "List returned",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseDto.class))
                             )
                     )
             }
     )
-    public List<SolutionResponse> getAll(){
-        List<SolutionResponse> responseList = solutionService.getAll();
-        responseList.sort(Comparator.comparing(SolutionResponse::getCreationDateTime));
+    public List<SolutionResponseDto> getAll() {
+        List<SolutionResponseDto> responseList = solutionService.getAll();
+        responseList.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
         return responseList;
     }
 
@@ -69,14 +65,14 @@ public class SolutionController {
                             description = "List returned",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtended.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtendedDto.class))
                             )
                     )
             }
     )
-    public List<SolutionResponseExtended> getAllExtended(){
-        List<SolutionResponseExtended> responseList = solutionService.getAllExtended();
-        responseList.sort(Comparator.comparing(SolutionResponseExtended::getCreationDateTime));
+    public List<SolutionResponseExtendedDto> getAllExtended() {
+        List<SolutionResponseExtendedDto> responseList = solutionService.getAllExtended();
+        responseList.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
         return responseList;
     }
 
@@ -89,7 +85,7 @@ public class SolutionController {
                             description = "No solution with this id in the DB.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseDto.class))
                             )
                     ),
                     @ApiResponse(
@@ -97,13 +93,13 @@ public class SolutionController {
                             description = "OK.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = SolutionResponse.class))
+                                    schema = @Schema(implementation = SolutionResponseDto.class))
 
                     )
             }
     )
-    public ResponseEntity<SolutionResponse> getById(@PathVariable("solution_id") int id){
-        SolutionResponse solution = solutionService.getById(id);
+    public ResponseEntity<SolutionResponseDto> getById(@PathVariable("solution_id") int id) {
+        SolutionResponseDto solution = solutionService.getById(id);
         if (solution != null) {
             return new ResponseEntity<>(solution, HttpStatus.OK);
         } else {
@@ -120,7 +116,7 @@ public class SolutionController {
                             description = "No solution with this id in the DB.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtended.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtendedDto.class))
                             )
                     ),
                     @ApiResponse(
@@ -128,13 +124,13 @@ public class SolutionController {
                             description = "OK.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = SolutionResponseExtended.class))
+                                    schema = @Schema(implementation = SolutionResponseExtendedDto.class))
 
                     )
             }
     )
-    public ResponseEntity<SolutionResponseExtended> getByIdExtended(@PathVariable("solution_id") int id){
-        SolutionResponseExtended solution = solutionService.getByIdExtended(id);
+    public ResponseEntity<SolutionResponseExtendedDto> getByIdExtended(@PathVariable("solution_id") int id) {
+        SolutionResponseExtendedDto solution = solutionService.getByIdExtended(id);
         if (solution != null) {
             return new ResponseEntity<>(solution, HttpStatus.OK);
         } else {
@@ -144,8 +140,8 @@ public class SolutionController {
 
     @PostMapping("/solution")
     @Hidden
-    public ResponseEntity<SolutionResponse> add(@RequestBody Solution solution){
-        SolutionResponse response = solutionService.add(solution);
+    public ResponseEntity<SolutionResponseDto> add(@RequestBody Solution solution) {
+        SolutionResponseDto response = solutionService.add(solution);
         return ResponseEntity.ok(response);
     }
 
@@ -179,14 +175,14 @@ public class SolutionController {
                             description = "Could not find user or assignment with given id.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseDto.class))
                             )
                     ),
                     @ApiResponse(
                             responseCode = "200",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = SolutionResponse.class)
+                                    schema = @Schema(implementation = SolutionResponseDto.class)
                             )
                     ),
                     @ApiResponse(
@@ -194,16 +190,16 @@ public class SolutionController {
                             description = "This user does not have access to the assignment or solution with this user and assignment already exists.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseDto.class))
                             )
 
                     )
             }
     )
-    public ResponseEntity<SolutionResponse> addWithUserAndAssignment(
+    public ResponseEntity<SolutionResponseDto> addWithUserAndAssignment(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Fields: 'creationDatetime', 'lastModifiedDatetime', 'id' can not be changed manually but are needed in JSON. 'lastModifiedDatetime' updates by itself when the solution object changes. 'creationDatetime' is unchangeable.")
             @RequestBody Solution solution, @PathVariable("user_id") int user_id, @PathVariable("assignment_id") int assignment_id) {
-        SolutionResponse response = solutionService.addWithUserAndAssignment(solution,user_id, assignment_id);
+        SolutionResponseDto response = solutionService.addWithUserAndAssignment(solution, user_id, assignment_id);
         if(response.getId()!=0) {
             return new ResponseEntity<>(response, HttpStatus.OK);
         } else if (response.isForbidden()) {
@@ -260,7 +256,7 @@ public class SolutionController {
                             description = "Could not find solution for a group with given id.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseDto.class))
                             )
                     ),
                     @ApiResponse(
@@ -268,19 +264,19 @@ public class SolutionController {
                             description = "List returned.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseDto.class))
                             )
                     )
             }
     )
     @GetMapping("/solutions/byGroup/{group_id}")
-    public ResponseEntity<List<SolutionResponse>> getSolutionsByGroupId(@PathVariable("group_id") int id) {
+    public ResponseEntity<List<SolutionResponseDto>> getSolutionsByGroupId(@PathVariable("group_id") int id) {
         if(solutionService.getSolutionsByGroupId(id).isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
-            List<SolutionResponse> responseList = solutionService.getSolutionsByGroupId(id);
-            responseList.sort(Comparator.comparing(SolutionResponse::getCreationDateTime));
+            List<SolutionResponseDto> responseList = solutionService.getSolutionsByGroupId(id);
+            responseList.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
@@ -293,7 +289,7 @@ public class SolutionController {
                             description = "Could not find solution associated with the assignment.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseDto.class))
                             )
                     ),
                     @ApiResponse(
@@ -301,19 +297,19 @@ public class SolutionController {
                             description = "List returned.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseDto.class))
                             )
                     )
             }
     )
     @GetMapping("/solutions/byAssignment/{assignment_id}")
-    public ResponseEntity<List<SolutionResponse>> getSolutionsByAssignmentId(@PathVariable("assignment_id") int id) {
+    public ResponseEntity<List<SolutionResponseDto>> getSolutionsByAssignmentId(@PathVariable("assignment_id") int id) {
         if(solutionService.getSolutionsByAssignmentId(id).isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
-            List<SolutionResponse> responseList = solutionService.getSolutionsByAssignmentId(id);
-            responseList.sort(Comparator.comparing(SolutionResponse::getCreationDateTime));
+            List<SolutionResponseDto> responseList = solutionService.getSolutionsByAssignmentId(id);
+            responseList.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
@@ -326,7 +322,7 @@ public class SolutionController {
                             description = "Could not find solutions handed late in the group.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseDto.class))
                             )
                     ),
                     @ApiResponse(
@@ -334,19 +330,19 @@ public class SolutionController {
                             description = "List returned.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseDto.class))
                             )
                     )
             }
     )
     @GetMapping("/solutions/lateByGroup/{group_id}")
-    public ResponseEntity<List<SolutionResponse>> getLateSolutionsByGroupId(@PathVariable("group_id") int group_id) {
+    public ResponseEntity<List<SolutionResponseDto>> getLateSolutionsByGroupId(@PathVariable("group_id") int group_id) {
         if(solutionService.getLateSolutionsByGroup(group_id).isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
-            List<SolutionResponse> responseList = solutionService.getLateSolutionsByGroup(group_id);
-            responseList.sort(Comparator.comparing(SolutionResponse::getCreationDateTime));
+            List<SolutionResponseDto> responseList = solutionService.getLateSolutionsByGroup(group_id);
+            responseList.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
         }
     }
@@ -359,7 +355,7 @@ public class SolutionController {
                             description = "Could not find solutions or user in the group.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseDto.class))
                             )
                     ),
                     @ApiResponse(
@@ -367,19 +363,19 @@ public class SolutionController {
                             description = "List returned.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseDto.class))
                             )
                     )
             }
     )
     @GetMapping("/solutions/lateByGroupAndStudent/{group_id}/{student_id}")
-    public ResponseEntity<List<SolutionResponse>> getLateSolutionsByGroupIdAndStudentId(@PathVariable("group_id") int group_id, @PathVariable("student_id") int student_id) {
+    public ResponseEntity<List<SolutionResponseDto>> getLateSolutionsByGroupIdAndStudentId(@PathVariable("group_id") int group_id, @PathVariable("student_id") int student_id) {
         if(solutionService.getLateSolutionsByUserAndGroup(student_id, group_id).isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
-            List<SolutionResponse> responseList = solutionService.getLateSolutionsByUserAndGroup(student_id, group_id);
-            responseList.sort(Comparator.comparing(SolutionResponse::getCreationDateTime));
+            List<SolutionResponseDto> responseList = solutionService.getLateSolutionsByUserAndGroup(student_id, group_id);
+            responseList.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
@@ -392,7 +388,7 @@ public class SolutionController {
                             description = "Could not find solutions handed late for the assignment.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseDto.class))
                             )
                     ),
                     @ApiResponse(
@@ -400,19 +396,19 @@ public class SolutionController {
                             description = "List returned.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseDto.class))
                             )
                     )
             }
     )
     @GetMapping("/solutions/lateByAssignment/{assignment_id}")
-    public ResponseEntity<List<SolutionResponse>> getLateSolutionsByAssignmentId(@PathVariable("assignment_id") int assignment_id) {
+    public ResponseEntity<List<SolutionResponseDto>> getLateSolutionsByAssignmentId(@PathVariable("assignment_id") int assignment_id) {
         if(solutionService.getLateSolutionsByAssignment(assignment_id).isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
-            List<SolutionResponse> responseList = solutionService.getLateSolutionsByAssignment(assignment_id);
-            responseList.sort(Comparator.comparing(SolutionResponse::getCreationDateTime));
+            List<SolutionResponseDto> responseList = solutionService.getLateSolutionsByAssignment(assignment_id);
+            responseList.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
@@ -425,7 +421,7 @@ public class SolutionController {
                             description = "Could not find solutions handed late by the user.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseDto.class))
                             )
                     ),
                     @ApiResponse(
@@ -433,19 +429,19 @@ public class SolutionController {
                             description = "List returned.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseDto.class))
                             )
                     )
             }
     )
     @GetMapping("/solutions/lateByStudent/{student_id}")
-    public ResponseEntity<List<SolutionResponse>> getLateSolutionsByStudentId(@PathVariable("student_id") int student_id) {
+    public ResponseEntity<List<SolutionResponseDto>> getLateSolutionsByStudentId(@PathVariable("student_id") int student_id) {
         if(solutionService.getLateSolutionsByStudent(student_id).isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
-            List<SolutionResponse> responseList = solutionService.getLateSolutionsByStudent(student_id);
-            responseList.sort(Comparator.comparing(SolutionResponse::getCreationDateTime));
+            List<SolutionResponseDto> responseList = solutionService.getLateSolutionsByStudent(student_id);
+            responseList.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
@@ -459,7 +455,7 @@ public class SolutionController {
                             description = "Could not find any unchecked solutions in this group.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseDto.class))
                             )
                     ),
                     @ApiResponse(
@@ -467,18 +463,18 @@ public class SolutionController {
                             description = "List returned.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseDto.class))
                             )
                     )
             }
     )
-    ResponseEntity<List<SolutionResponse>> getUncheckedSolutionsByGroup(@PathVariable("group_id") int group_id){
-        List<SolutionResponse> response = solutionService.getUncheckedSolutionsByGroup(group_id);
+    ResponseEntity<List<SolutionResponseDto>> getUncheckedSolutionsByGroup(@PathVariable("group_id") int group_id) {
+        List<SolutionResponseDto> response = solutionService.getUncheckedSolutionsByGroup(group_id);
         if(response.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
-            response.sort(Comparator.comparing(SolutionResponse::getCreationDateTime));
+            response.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
@@ -492,7 +488,7 @@ public class SolutionController {
                             description = "Could not find any unchecked solutions for the student.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseDto.class))
                             )
                     ),
                     @ApiResponse(
@@ -500,18 +496,18 @@ public class SolutionController {
                             description = "List returned.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseDto.class))
                             )
                     )
             }
     )
-    ResponseEntity<List<SolutionResponse>> getUncheckedSolutionsByStudent(@PathVariable("student_id") int student_id){
-        List<SolutionResponse> response = solutionService.getUncheckedSolutionsByStudent(student_id);
+    ResponseEntity<List<SolutionResponseDto>> getUncheckedSolutionsByStudent(@PathVariable("student_id") int student_id) {
+        List<SolutionResponseDto> response = solutionService.getUncheckedSolutionsByStudent(student_id);
         if(response.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
-            response.sort(Comparator.comparing(SolutionResponse::getCreationDateTime));
+            response.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
@@ -525,7 +521,7 @@ public class SolutionController {
                             description = "Could not find any unchecked solutions for the student in the group.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseDto.class))
                             )
                     ),
                     @ApiResponse(
@@ -533,18 +529,18 @@ public class SolutionController {
                             description = "List returned.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseDto.class))
                             )
                     )
             }
     )
-    ResponseEntity<List<SolutionResponse>> getUncheckedSolutionsByStudentAndGroup(@PathVariable("student_id") int student_id, @PathVariable("group_id") int group_id){
-        List<SolutionResponse> response = solutionService.getUncheckedSolutionsByStudentAndGroup(student_id, group_id);
+    ResponseEntity<List<SolutionResponseDto>> getUncheckedSolutionsByStudentAndGroup(@PathVariable("student_id") int student_id, @PathVariable("group_id") int group_id) {
+        List<SolutionResponseDto> response = solutionService.getUncheckedSolutionsByStudentAndGroup(student_id, group_id);
         if(response.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
-            response.sort(Comparator.comparing(SolutionResponse::getCreationDateTime));
+            response.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
@@ -558,7 +554,7 @@ public class SolutionController {
                             description = "Could not find any unchecked solutions for the assignment.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseDto.class))
                             )
                     ),
                     @ApiResponse(
@@ -566,18 +562,18 @@ public class SolutionController {
                             description = "List returned.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseDto.class))
                             )
                     )
             }
     )
-    ResponseEntity<List<SolutionResponse>> getUncheckedSolutionsByAssignment(@PathVariable("assignment_id") int assignment_id){
-        List<SolutionResponse> response = solutionService.getUncheckedSolutionsByAssignment(assignment_id);
+    ResponseEntity<List<SolutionResponseDto>> getUncheckedSolutionsByAssignment(@PathVariable("assignment_id") int assignment_id) {
+        List<SolutionResponseDto> response = solutionService.getUncheckedSolutionsByAssignment(assignment_id);
         if(response.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
-            response.sort(Comparator.comparing(SolutionResponse::getCreationDateTime));
+            response.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
@@ -591,7 +587,7 @@ public class SolutionController {
                             description = "Could not find any unchecked solutions by this teacher.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseDto.class))
                             )
                     ),
                     @ApiResponse(
@@ -599,18 +595,18 @@ public class SolutionController {
                             description = "List returned.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseDto.class))
                             )
                     )
             }
     )
-    ResponseEntity<List<SolutionResponse>> getUncheckedSolutionsByTeacher(@PathVariable("teacher_id") int teacher_id){
-        List<SolutionResponse> response = solutionService.getUncheckedSolutionsByTeacher(teacher_id);
+    ResponseEntity<List<SolutionResponseDto>> getUncheckedSolutionsByTeacher(@PathVariable("teacher_id") int teacher_id) {
+        List<SolutionResponseDto> response = solutionService.getUncheckedSolutionsByTeacher(teacher_id);
         if(response.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
-            response.sort(Comparator.comparing(SolutionResponse::getCreationDateTime));
+            response.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
@@ -624,7 +620,7 @@ public class SolutionController {
                             description = "Could not find any checked solutions in this group.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseDto.class))
                             )
                     ),
                     @ApiResponse(
@@ -632,18 +628,18 @@ public class SolutionController {
                             description = "List returned.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseDto.class))
                             )
                     )
             }
     )
-    ResponseEntity<List<SolutionResponse>> getCheckedSolutionsByGroup(@PathVariable("group_id") int group_id){
-        List<SolutionResponse> response = solutionService.getCheckedSolutionsByGroup(group_id);
+    ResponseEntity<List<SolutionResponseDto>> getCheckedSolutionsByGroup(@PathVariable("group_id") int group_id) {
+        List<SolutionResponseDto> response = solutionService.getCheckedSolutionsByGroup(group_id);
         if(response.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
-            response.sort(Comparator.comparing(SolutionResponse::getCreationDateTime));
+            response.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
@@ -657,7 +653,7 @@ public class SolutionController {
                             description = "Could not find any checked solutions for the student.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseDto.class))
                             )
                     ),
                     @ApiResponse(
@@ -665,18 +661,18 @@ public class SolutionController {
                             description = "List returned.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseDto.class))
                             )
                     )
             }
     )
-    ResponseEntity<List<SolutionResponse>> getCheckedSolutionsByStudent(@PathVariable("student_id") int student_id){
-        List<SolutionResponse> response = solutionService.getCheckedSolutionsByStudent(student_id);
+    ResponseEntity<List<SolutionResponseDto>> getCheckedSolutionsByStudent(@PathVariable("student_id") int student_id) {
+        List<SolutionResponseDto> response = solutionService.getCheckedSolutionsByStudent(student_id);
         if(response.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
-            response.sort(Comparator.comparing(SolutionResponse::getCreationDateTime));
+            response.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
@@ -690,7 +686,7 @@ public class SolutionController {
                             description = "Could not find any checked solutions for the student in the group.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseDto.class))
                             )
                     ),
                     @ApiResponse(
@@ -698,18 +694,18 @@ public class SolutionController {
                             description = "List returned.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseDto.class))
                             )
                     )
             }
     )
-    ResponseEntity<List<SolutionResponse>> getCheckedSolutionsByStudentAndGroup(@PathVariable("student_id") int student_id, @PathVariable("group_id") int group_id){
-        List<SolutionResponse> response = solutionService.getCheckedSolutionsByStudentAndGroup(student_id, group_id);
+    ResponseEntity<List<SolutionResponseDto>> getCheckedSolutionsByStudentAndGroup(@PathVariable("student_id") int student_id, @PathVariable("group_id") int group_id) {
+        List<SolutionResponseDto> response = solutionService.getCheckedSolutionsByStudentAndGroup(student_id, group_id);
         if(response.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
-            response.sort(Comparator.comparing(SolutionResponse::getCreationDateTime));
+            response.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
@@ -723,7 +719,7 @@ public class SolutionController {
                             description = "Could not find any checked solutions for the assignment.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseDto.class))
                             )
                     ),
                     @ApiResponse(
@@ -731,18 +727,18 @@ public class SolutionController {
                             description = "List returned.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseDto.class))
                             )
                     )
             }
     )
-    ResponseEntity<List<SolutionResponse>> getCheckedSolutionsByAssignment(@PathVariable("assignment_id") int assignment_id){
-        List<SolutionResponse> response = solutionService.getCheckedSolutionsByAssignment(assignment_id);
+    ResponseEntity<List<SolutionResponseDto>> getCheckedSolutionsByAssignment(@PathVariable("assignment_id") int assignment_id) {
+        List<SolutionResponseDto> response = solutionService.getCheckedSolutionsByAssignment(assignment_id);
         if(response.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
-            response.sort(Comparator.comparing(SolutionResponse::getCreationDateTime));
+            response.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
@@ -756,7 +752,7 @@ public class SolutionController {
                             description = "Could not find any checked solutions by this teacher.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseDto.class))
                             )
                     ),
                     @ApiResponse(
@@ -764,18 +760,18 @@ public class SolutionController {
                             description = "List returned.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseDto.class))
                             )
                     )
             }
     )
-    ResponseEntity<List<SolutionResponse>> getCheckedSolutionsByTeacher(@PathVariable("teacher_id") int teacher_id){
-        List<SolutionResponse> response = solutionService.getCheckedSolutionsByTeacher(teacher_id);
+    ResponseEntity<List<SolutionResponseDto>> getCheckedSolutionsByTeacher(@PathVariable("teacher_id") int teacher_id) {
+        List<SolutionResponseDto> response = solutionService.getCheckedSolutionsByTeacher(teacher_id);
         if(response.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
-            response.sort(Comparator.comparing(SolutionResponse::getCreationDateTime));
+            response.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
@@ -788,7 +784,7 @@ public class SolutionController {
                             description = "Could not find solution for a group with given id.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtended.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtendedDto.class))
                             )
                     ),
                     @ApiResponse(
@@ -796,19 +792,19 @@ public class SolutionController {
                             description = "List returned.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtended.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtendedDto.class))
                             )
                     )
             }
     )
     @GetMapping("/extended/solutions/byGroup/{group_id}")
-    public ResponseEntity<List<SolutionResponseExtended>> getSolutionsByGroupIdExtended(@PathVariable("group_id") int id) {
+    public ResponseEntity<List<SolutionResponseExtendedDto>> getSolutionsByGroupIdExtended(@PathVariable("group_id") int id) {
         if(solutionService.getSolutionsByGroupIdExtended(id).isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
-            List<SolutionResponseExtended> responseList = solutionService.getSolutionsByGroupIdExtended(id);
-            responseList.sort(Comparator.comparing(SolutionResponseExtended::getCreationDateTime));
+            List<SolutionResponseExtendedDto> responseList = solutionService.getSolutionsByGroupIdExtended(id);
+            responseList.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
@@ -821,7 +817,7 @@ public class SolutionController {
                             description = "Could not find solution associated with the assignment.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtended.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtendedDto.class))
                             )
                     ),
                     @ApiResponse(
@@ -829,19 +825,19 @@ public class SolutionController {
                             description = "List returned.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtended.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtendedDto.class))
                             )
                     )
             }
     )
     @GetMapping("/extended/solutions/byAssignment/{assignment_id}")
-    public ResponseEntity<List<SolutionResponseExtended>> getSolutionsByAssignmentIdExtended(@PathVariable("assignment_id") int id) {
+    public ResponseEntity<List<SolutionResponseExtendedDto>> getSolutionsByAssignmentIdExtended(@PathVariable("assignment_id") int id) {
         if(solutionService.getSolutionsByAssignmentIdExtended(id).isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
-            List<SolutionResponseExtended> responseList = solutionService.getSolutionsByAssignmentIdExtended(id);
-            responseList.sort(Comparator.comparing(SolutionResponseExtended::getCreationDateTime));
+            List<SolutionResponseExtendedDto> responseList = solutionService.getSolutionsByAssignmentIdExtended(id);
+            responseList.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
@@ -854,7 +850,7 @@ public class SolutionController {
                             description = "Could not find solutions handed late in the group.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtended.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtendedDto.class))
                             )
                     ),
                     @ApiResponse(
@@ -862,19 +858,19 @@ public class SolutionController {
                             description = "List returned.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtended.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtendedDto.class))
                             )
                     )
             }
     )
     @GetMapping("/extended/solutions/lateByGroup/{group_id}")
-    public ResponseEntity<List<SolutionResponseExtended>> getLateSolutionsByGroupIdExtended(@PathVariable("group_id") int group_id) {
+    public ResponseEntity<List<SolutionResponseExtendedDto>> getLateSolutionsByGroupIdExtended(@PathVariable("group_id") int group_id) {
         if(solutionService.getLateSolutionsByGroupExtended(group_id).isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
-            List<SolutionResponseExtended> responseList = solutionService.getLateSolutionsByGroupExtended(group_id);
-            responseList.sort(Comparator.comparing(SolutionResponseExtended::getCreationDateTime));
+            List<SolutionResponseExtendedDto> responseList = solutionService.getLateSolutionsByGroupExtended(group_id);
+            responseList.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
         }
     }
@@ -887,7 +883,7 @@ public class SolutionController {
                             description = "Could not find solutions or user in the group.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtended.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtendedDto.class))
                             )
                     ),
                     @ApiResponse(
@@ -895,19 +891,19 @@ public class SolutionController {
                             description = "List returned.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtended.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtendedDto.class))
                             )
                     )
             }
     )
     @GetMapping("/extended/solutions/lateByGroupAndStudent/{group_id}/{student_id}")
-    public ResponseEntity<List<SolutionResponseExtended>> getLateSolutionsByGroupIdAndStudentIdExtended(@PathVariable("group_id") int group_id, @PathVariable("student_id") int student_id) {
+    public ResponseEntity<List<SolutionResponseExtendedDto>> getLateSolutionsByGroupIdAndStudentIdExtended(@PathVariable("group_id") int group_id, @PathVariable("student_id") int student_id) {
         if(solutionService.getLateSolutionsByUserAndGroupExtended(student_id, group_id).isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
-            List<SolutionResponseExtended> responseList = solutionService.getLateSolutionsByUserAndGroupExtended(student_id, group_id);
-            responseList.sort(Comparator.comparing(SolutionResponseExtended::getCreationDateTime));
+            List<SolutionResponseExtendedDto> responseList = solutionService.getLateSolutionsByUserAndGroupExtended(student_id, group_id);
+            responseList.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
@@ -920,7 +916,7 @@ public class SolutionController {
                             description = "Could not find solutions handed late for the assignment.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtended.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtendedDto.class))
                             )
                     ),
                     @ApiResponse(
@@ -928,19 +924,19 @@ public class SolutionController {
                             description = "List returned.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtended.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtendedDto.class))
                             )
                     )
             }
     )
     @GetMapping("/extended/solutions/lateByAssignment/{assignment_id}")
-    public ResponseEntity<List<SolutionResponseExtended>> getLateSolutionsByAssignmentIdExtended(@PathVariable("assignment_id") int assignment_id) {
+    public ResponseEntity<List<SolutionResponseExtendedDto>> getLateSolutionsByAssignmentIdExtended(@PathVariable("assignment_id") int assignment_id) {
         if(solutionService.getLateSolutionsByAssignmentExtended(assignment_id).isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
-            List<SolutionResponseExtended> responseList = solutionService.getLateSolutionsByAssignmentExtended(assignment_id);
-            responseList.sort(Comparator.comparing(SolutionResponseExtended::getCreationDateTime));
+            List<SolutionResponseExtendedDto> responseList = solutionService.getLateSolutionsByAssignmentExtended(assignment_id);
+            responseList.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
@@ -953,7 +949,7 @@ public class SolutionController {
                             description = "Could not find solutions handed late by the user.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtended.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtendedDto.class))
                             )
                     ),
                     @ApiResponse(
@@ -961,19 +957,19 @@ public class SolutionController {
                             description = "List returned.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtended.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtendedDto.class))
                             )
                     )
             }
     )
     @GetMapping("/extended/solutions/lateByStudent/{student_id}")
-    public ResponseEntity<List<SolutionResponseExtended>> getLateSolutionsByStudentIdExtended(@PathVariable("student_id") int student_id) {
+    public ResponseEntity<List<SolutionResponseExtendedDto>> getLateSolutionsByStudentIdExtended(@PathVariable("student_id") int student_id) {
         if(solutionService.getLateSolutionsByStudentExtended(student_id).isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
-            List<SolutionResponseExtended> responseList = solutionService.getLateSolutionsByStudentExtended(student_id);
-            responseList.sort(Comparator.comparing(SolutionResponseExtended::getCreationDateTime));
+            List<SolutionResponseExtendedDto> responseList = solutionService.getLateSolutionsByStudentExtended(student_id);
+            responseList.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
@@ -987,7 +983,7 @@ public class SolutionController {
                             description = "Could not find any unchecked solutions in this group.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtended.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtendedDto.class))
                             )
                     ),
                     @ApiResponse(
@@ -995,18 +991,18 @@ public class SolutionController {
                             description = "List returned.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtended.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtendedDto.class))
                             )
                     )
             }
     )
-    ResponseEntity<List<SolutionResponseExtended>> getUncheckedSolutionsByGroupExtended(@PathVariable("group_id") int group_id){
-        List<SolutionResponseExtended> response = solutionService.getUncheckedSolutionsByGroupExtended(group_id);
+    ResponseEntity<List<SolutionResponseExtendedDto>> getUncheckedSolutionsByGroupExtended(@PathVariable("group_id") int group_id) {
+        List<SolutionResponseExtendedDto> response = solutionService.getUncheckedSolutionsByGroupExtended(group_id);
         if(response.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
-            response.sort(Comparator.comparing(SolutionResponseExtended::getCreationDateTime));
+            response.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
@@ -1020,7 +1016,7 @@ public class SolutionController {
                             description = "Could not find any unchecked solutions for the student.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtended.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtendedDto.class))
                             )
                     ),
                     @ApiResponse(
@@ -1028,18 +1024,18 @@ public class SolutionController {
                             description = "List returned.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtended.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtendedDto.class))
                             )
                     )
             }
     )
-    ResponseEntity<List<SolutionResponseExtended>> getUncheckedSolutionsByStudentExtended(@PathVariable("student_id") int student_id){
-        List<SolutionResponseExtended> response = solutionService.getUncheckedSolutionsByStudentExtended(student_id);
+    ResponseEntity<List<SolutionResponseExtendedDto>> getUncheckedSolutionsByStudentExtended(@PathVariable("student_id") int student_id) {
+        List<SolutionResponseExtendedDto> response = solutionService.getUncheckedSolutionsByStudentExtended(student_id);
         if(response.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
-            response.sort(Comparator.comparing(SolutionResponseExtended::getCreationDateTime));
+            response.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
@@ -1053,7 +1049,7 @@ public class SolutionController {
                             description = "Could not find any unchecked solutions for the student in the group.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtended.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtendedDto.class))
                             )
                     ),
                     @ApiResponse(
@@ -1061,18 +1057,18 @@ public class SolutionController {
                             description = "List returned.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtended.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtendedDto.class))
                             )
                     )
             }
     )
-    ResponseEntity<List<SolutionResponseExtended>> getUncheckedSolutionsByStudentAndGroupExtended(@PathVariable("student_id") int student_id, @PathVariable("group_id") int group_id){
-        List<SolutionResponseExtended> response = solutionService.getUncheckedSolutionsByStudentAndGroupExtended(student_id, group_id);
+    ResponseEntity<List<SolutionResponseExtendedDto>> getUncheckedSolutionsByStudentAndGroupExtended(@PathVariable("student_id") int student_id, @PathVariable("group_id") int group_id) {
+        List<SolutionResponseExtendedDto> response = solutionService.getUncheckedSolutionsByStudentAndGroupExtended(student_id, group_id);
         if(response.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
-            response.sort(Comparator.comparing(SolutionResponseExtended::getCreationDateTime));
+            response.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
@@ -1086,7 +1082,7 @@ public class SolutionController {
                             description = "Could not find any unchecked solutions for the assignment.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtended.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtendedDto.class))
                             )
                     ),
                     @ApiResponse(
@@ -1094,18 +1090,18 @@ public class SolutionController {
                             description = "List returned.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtended.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtendedDto.class))
                             )
                     )
             }
     )
-    ResponseEntity<List<SolutionResponseExtended>> getUncheckedSolutionsByAssignmentExtended(@PathVariable("assignment_id") int assignment_id){
-        List<SolutionResponseExtended> response = solutionService.getUncheckedSolutionsByAssignmentExtended(assignment_id);
+    ResponseEntity<List<SolutionResponseExtendedDto>> getUncheckedSolutionsByAssignmentExtended(@PathVariable("assignment_id") int assignment_id) {
+        List<SolutionResponseExtendedDto> response = solutionService.getUncheckedSolutionsByAssignmentExtended(assignment_id);
         if(response.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
-            response.sort(Comparator.comparing(SolutionResponseExtended::getCreationDateTime));
+            response.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
@@ -1119,7 +1115,7 @@ public class SolutionController {
                             description = "Could not find any unchecked solutions by this teacher.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtended.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtendedDto.class))
                             )
                     ),
                     @ApiResponse(
@@ -1127,18 +1123,18 @@ public class SolutionController {
                             description = "List returned.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtended.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtendedDto.class))
                             )
                     )
             }
     )
-    ResponseEntity<List<SolutionResponseExtended>> getUncheckedSolutionsByTeacherExtended(@PathVariable("teacher_id") int teacher_id){
-        List<SolutionResponseExtended> response = solutionService.getUncheckedSolutionsByTeacherExtended(teacher_id);
+    ResponseEntity<List<SolutionResponseExtendedDto>> getUncheckedSolutionsByTeacherExtended(@PathVariable("teacher_id") int teacher_id) {
+        List<SolutionResponseExtendedDto> response = solutionService.getUncheckedSolutionsByTeacherExtended(teacher_id);
         if(response.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
-            response.sort(Comparator.comparing(SolutionResponseExtended::getCreationDateTime));
+            response.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
@@ -1152,7 +1148,7 @@ public class SolutionController {
                             description = "Could not find any checked solutions in this group.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtended.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtendedDto.class))
                             )
                     ),
                     @ApiResponse(
@@ -1160,18 +1156,18 @@ public class SolutionController {
                             description = "List returned.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtended.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtendedDto.class))
                             )
                     )
             }
     )
-    ResponseEntity<List<SolutionResponseExtended>> getCheckedSolutionsByGroupExtended(@PathVariable("group_id") int group_id){
-        List<SolutionResponseExtended> response = solutionService.getCheckedSolutionsByGroupExtended(group_id);
+    ResponseEntity<List<SolutionResponseExtendedDto>> getCheckedSolutionsByGroupExtended(@PathVariable("group_id") int group_id) {
+        List<SolutionResponseExtendedDto> response = solutionService.getCheckedSolutionsByGroupExtended(group_id);
         if(response.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
-            response.sort(Comparator.comparing(SolutionResponseExtended::getCreationDateTime));
+            response.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
@@ -1185,7 +1181,7 @@ public class SolutionController {
                             description = "Could not find any checked solutions for the student.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtended.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtendedDto.class))
                             )
                     ),
                     @ApiResponse(
@@ -1193,18 +1189,18 @@ public class SolutionController {
                             description = "List returned.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtended.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtendedDto.class))
                             )
                     )
             }
     )
-    ResponseEntity<List<SolutionResponseExtended>> getCheckedSolutionsByStudentExtended(@PathVariable("student_id") int student_id){
-        List<SolutionResponseExtended> response = solutionService.getCheckedSolutionsByStudentExtended(student_id);
+    ResponseEntity<List<SolutionResponseExtendedDto>> getCheckedSolutionsByStudentExtended(@PathVariable("student_id") int student_id) {
+        List<SolutionResponseExtendedDto> response = solutionService.getCheckedSolutionsByStudentExtended(student_id);
         if(response.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
-            response.sort(Comparator.comparing(SolutionResponseExtended::getCreationDateTime));
+            response.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
@@ -1218,7 +1214,7 @@ public class SolutionController {
                             description = "Could not find any checked solutions for the student in the group.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtended.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtendedDto.class))
                             )
                     ),
                     @ApiResponse(
@@ -1226,18 +1222,18 @@ public class SolutionController {
                             description = "List returned.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtended.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtendedDto.class))
                             )
                     )
             }
     )
-    ResponseEntity<List<SolutionResponseExtended>> getCheckedSolutionsByStudentAndGroupExtended(@PathVariable("student_id") int student_id, @PathVariable("group_id") int group_id){
-        List<SolutionResponseExtended> response = solutionService.getCheckedSolutionsByStudentAndGroupExtended(student_id, group_id);
+    ResponseEntity<List<SolutionResponseExtendedDto>> getCheckedSolutionsByStudentAndGroupExtended(@PathVariable("student_id") int student_id, @PathVariable("group_id") int group_id) {
+        List<SolutionResponseExtendedDto> response = solutionService.getCheckedSolutionsByStudentAndGroupExtended(student_id, group_id);
         if(response.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
-            response.sort(Comparator.comparing(SolutionResponseExtended::getCreationDateTime));
+            response.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
@@ -1251,7 +1247,7 @@ public class SolutionController {
                             description = "Could not find any checked solutions for the assignment.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtended.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtendedDto.class))
                             )
                     ),
                     @ApiResponse(
@@ -1259,18 +1255,18 @@ public class SolutionController {
                             description = "List returned.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtended.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtendedDto.class))
                             )
                     )
             }
     )
-    ResponseEntity<List<SolutionResponseExtended>> getCheckedSolutionsByAssignmentExtended(@PathVariable("assignment_id") int assignment_id){
-        List<SolutionResponseExtended> response = solutionService.getCheckedSolutionsByAssignmentExtended(assignment_id);
+    ResponseEntity<List<SolutionResponseExtendedDto>> getCheckedSolutionsByAssignmentExtended(@PathVariable("assignment_id") int assignment_id) {
+        List<SolutionResponseExtendedDto> response = solutionService.getCheckedSolutionsByAssignmentExtended(assignment_id);
         if(response.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
-            response.sort(Comparator.comparing(SolutionResponseExtended::getCreationDateTime));
+            response.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
@@ -1284,7 +1280,7 @@ public class SolutionController {
                             description = "Could not find any checked solutions by this teacher.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtended.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtendedDto.class))
                             )
                     ),
                     @ApiResponse(
@@ -1292,18 +1288,18 @@ public class SolutionController {
                             description = "List returned.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtended.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = SolutionResponseExtendedDto.class))
                             )
                     )
             }
     )
-    ResponseEntity<List<SolutionResponseExtended>> getCheckedSolutionsByTeacherExtended(@PathVariable("teacher_id") int teacher_id){
-        List<SolutionResponseExtended> response = solutionService.getCheckedSolutionsByTeacherExtended(teacher_id);
+    ResponseEntity<List<SolutionResponseExtendedDto>> getCheckedSolutionsByTeacherExtended(@PathVariable("teacher_id") int teacher_id) {
+        List<SolutionResponseExtendedDto> response = solutionService.getCheckedSolutionsByTeacherExtended(teacher_id);
         if(response.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
-            response.sort(Comparator.comparing(SolutionResponseExtended::getCreationDateTime));
+            response.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
@@ -1335,7 +1331,7 @@ public class SolutionController {
                             description = "OK.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = SolutionResponse.class)
+                                    schema = @Schema(implementation = SolutionResponseDto.class)
                             )
                     ),
                     @ApiResponse(
@@ -1343,7 +1339,7 @@ public class SolutionController {
                             description = "Could not find assignment/user/group.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = SolutionResponse.class)
+                                    schema = @Schema(implementation = SolutionResponseDto.class)
                             )
                     ),
                     @ApiResponse(
@@ -1351,20 +1347,20 @@ public class SolutionController {
                             description = "Could not find solution for given ids.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = SolutionResponse.class)
+                                    schema = @Schema(implementation = SolutionResponseDto.class)
                             )
                     )
             }
     )
-    public ResponseEntity<SolutionResponse> getCheckedSolutionByUserAssignmentGroup(@PathVariable("user_id") int userId, @PathVariable("assignment_id") int assignmentId, @PathVariable("group_id") int groupId){
-        SolutionResponse solutionResponse = solutionService.getCheckedSolutionByUserAssignmentGroup(userId, groupId, assignmentId);
-        if(solutionResponse.isForbidden()){
-            return new ResponseEntity<>(solutionResponse, HttpStatus.BAD_REQUEST);
-        } else if (solutionResponse.getId()!=0) {
-            return new ResponseEntity<>(solutionResponse, HttpStatus.OK);
+    public ResponseEntity<SolutionResponseDto> getCheckedSolutionByUserAssignmentGroup(@PathVariable("user_id") int userId, @PathVariable("assignment_id") int assignmentId, @PathVariable("group_id") int groupId) {
+        SolutionResponseDto solutionResponseDto = solutionService.getCheckedSolutionByUserAssignmentGroup(userId, groupId, assignmentId);
+        if (solutionResponseDto.isForbidden()) {
+            return new ResponseEntity<>(solutionResponseDto, HttpStatus.BAD_REQUEST);
+        } else if (solutionResponseDto.getId() != 0) {
+            return new ResponseEntity<>(solutionResponseDto, HttpStatus.OK);
         }
         else {
-            return new ResponseEntity<>(solutionResponse, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(solutionResponseDto, HttpStatus.NOT_FOUND);
         }
     }
 
@@ -1377,7 +1373,7 @@ public class SolutionController {
                             description = "OK.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = SolutionResponse.class)
+                                    schema = @Schema(implementation = SolutionResponseDto.class)
                             )
                     ),
                     @ApiResponse(
@@ -1385,7 +1381,7 @@ public class SolutionController {
                             description = "Could not find assignment/user/group.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = SolutionResponse.class)
+                                    schema = @Schema(implementation = SolutionResponseDto.class)
                             )
                     ),
                     @ApiResponse(
@@ -1393,20 +1389,20 @@ public class SolutionController {
                             description = "Could not find solution for given ids.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = SolutionResponse.class)
+                                    schema = @Schema(implementation = SolutionResponseDto.class)
                             )
                     )
             }
     )
-    public ResponseEntity<SolutionResponse> getUncheckedSolutionByUserAssignmentGroup(@PathVariable("user_id") int userId, @PathVariable("assignment_id") int assignmentId, @PathVariable("group_id") int groupId){
-        SolutionResponse solutionResponse = solutionService.getUncheckedSolutionByUserAssignmentGroup(userId, groupId, assignmentId);
-        if(solutionResponse.isForbidden()){
-            return new ResponseEntity<>(solutionResponse, HttpStatus.BAD_REQUEST);
-        } else if (solutionResponse.getId()!=0) {
-            return new ResponseEntity<>(solutionResponse, HttpStatus.OK);
+    public ResponseEntity<SolutionResponseDto> getUncheckedSolutionByUserAssignmentGroup(@PathVariable("user_id") int userId, @PathVariable("assignment_id") int assignmentId, @PathVariable("group_id") int groupId) {
+        SolutionResponseDto solutionResponseDto = solutionService.getUncheckedSolutionByUserAssignmentGroup(userId, groupId, assignmentId);
+        if (solutionResponseDto.isForbidden()) {
+            return new ResponseEntity<>(solutionResponseDto, HttpStatus.BAD_REQUEST);
+        } else if (solutionResponseDto.getId() != 0) {
+            return new ResponseEntity<>(solutionResponseDto, HttpStatus.OK);
         }
         else {
-            return new ResponseEntity<>(solutionResponse, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(solutionResponseDto, HttpStatus.NOT_FOUND);
         }
     }
 
@@ -1441,12 +1437,12 @@ public class SolutionController {
                             responseCode = "200",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = AssignmentResponse.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = AssignmentResponseDto.class))
                             )
                     )
             }
     )
-    public ResponseEntity<List<SolutionResponseCalendar>> getSolutionsByTeacherCalendar(@PathVariable("teacher_id") int teacher_id) {
+    public ResponseEntity<List<SolutionResponseCalendarDto>> getSolutionsByTeacherCalendar(@PathVariable("teacher_id") int teacher_id) {
         return new ResponseEntity<>(solutionService.getSolutionsByTeacherCalender(teacher_id), HttpStatus.OK);
     }
 }

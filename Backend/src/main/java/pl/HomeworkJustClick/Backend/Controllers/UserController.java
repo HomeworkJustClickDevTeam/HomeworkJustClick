@@ -12,11 +12,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.HomeworkJustClick.Backend.Auth.ChangePasswordRequest;
-import pl.HomeworkJustClick.Backend.Entities.User;
-import pl.HomeworkJustClick.Backend.Responses.AuthenticationResponse;
-import pl.HomeworkJustClick.Backend.Services.AuthenticationService;
-import pl.HomeworkJustClick.Backend.Services.UserService;
+import pl.HomeworkJustClick.Backend.infrastructure.auth.AuthenticationResponseDto;
+import pl.HomeworkJustClick.Backend.infrastructure.auth.AuthenticationService;
+import pl.HomeworkJustClick.Backend.infrastructure.auth.ChangePasswordRequest;
+import pl.HomeworkJustClick.Backend.user.User;
+import pl.HomeworkJustClick.Backend.user.UserService;
 
 import java.util.List;
 
@@ -261,7 +261,7 @@ public class UserController {
                             description = "Email not verified.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = AuthenticationResponse.class)
+                                    schema = @Schema(implementation = AuthenticationResponseDto.class)
                             )
                     ),
                     @ApiResponse(
@@ -269,7 +269,7 @@ public class UserController {
                             description = "Password incorrect.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = AuthenticationResponse.class)
+                                    schema = @Schema(implementation = AuthenticationResponseDto.class)
                             )
                     ),
                     @ApiResponse(
@@ -277,13 +277,13 @@ public class UserController {
                             description = "User with this email is missing in DB.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = AuthenticationResponse.class)
+                                    schema = @Schema(implementation = AuthenticationResponseDto.class)
                             )
                     )
             }
     )
-    public ResponseEntity<AuthenticationResponse> changePassword(@RequestBody ChangePasswordRequest request) {
-        AuthenticationResponse response = authenticationService.changePassword(request);
+    public ResponseEntity<AuthenticationResponseDto> changePassword(@RequestBody ChangePasswordRequest request) {
+        AuthenticationResponseDto response = authenticationService.changePassword(request);
         return switch (response.getMessage()) {
             case "ok" -> new ResponseEntity<>(response, HttpStatus.OK);
             case "User not found!" -> new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
@@ -301,12 +301,12 @@ public class UserController {
                             description = "Token is refreshed.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = AuthenticationResponse.class)
+                                    schema = @Schema(implementation = AuthenticationResponseDto.class)
                             )
                     )
             }
     )
-    public ResponseEntity<AuthenticationResponse> refreshToken(@PathVariable int user_id) {
+    public ResponseEntity<AuthenticationResponseDto> refreshToken(@PathVariable int user_id) {
         return new ResponseEntity<>(authenticationService.refreshToken(user_id), HttpStatus.OK);
     }
 }
