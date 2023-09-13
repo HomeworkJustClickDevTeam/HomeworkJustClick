@@ -1,7 +1,6 @@
-export interface AdvancedEvaluationCommentInterface{
-  color: string
+import { CommentInterface } from "./CommentInterface"
+
+export interface AdvancedEvaluationCommentInterface extends CommentInterface{
   highlightStart:number
   highlightEnd: number
-  id: number
-  description: string
 }
