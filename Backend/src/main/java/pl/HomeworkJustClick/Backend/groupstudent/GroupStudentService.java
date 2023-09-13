@@ -3,9 +3,9 @@ package pl.HomeworkJustClick.Backend.groupstudent;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pl.HomeworkJustClick.Backend.Repositories.UserRepository;
 import pl.HomeworkJustClick.Backend.group.GroupRepository;
 import pl.HomeworkJustClick.Backend.groupteacher.GroupTeacherRepository;
+import pl.HomeworkJustClick.Backend.user.UserRepository;
 
 import java.util.List;
 import java.util.Optional;

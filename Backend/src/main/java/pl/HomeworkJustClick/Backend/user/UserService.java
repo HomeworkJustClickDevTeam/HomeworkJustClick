@@ -2,7 +2,6 @@ package pl.HomeworkJustClick.Backend.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pl.HomeworkJustClick.Backend.Repositories.UserRepository;
 
 import java.util.List;
 import java.util.Optional;

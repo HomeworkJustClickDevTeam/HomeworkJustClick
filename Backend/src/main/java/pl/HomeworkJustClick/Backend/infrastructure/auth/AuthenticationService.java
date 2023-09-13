@@ -6,10 +6,10 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import pl.HomeworkJustClick.Backend.Repositories.UserRepository;
 import pl.HomeworkJustClick.Backend.infrastructure.config.JwtService;
 import pl.HomeworkJustClick.Backend.infrastructure.enums.Role;
 import pl.HomeworkJustClick.Backend.user.User;
+import pl.HomeworkJustClick.Backend.user.UserRepository;
 
 import java.util.Optional;
 import java.util.regex.Pattern;

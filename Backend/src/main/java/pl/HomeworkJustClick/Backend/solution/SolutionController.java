@@ -1,4 +1,4 @@
-package pl.HomeworkJustClick.Backend.Controllers;
+package pl.HomeworkJustClick.Backend.solution;
 
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.HomeworkJustClick.Backend.assignment.AssignmentResponseDto;
-import pl.HomeworkJustClick.Backend.solution.*;
 
 import java.util.Comparator;
 import java.util.List;

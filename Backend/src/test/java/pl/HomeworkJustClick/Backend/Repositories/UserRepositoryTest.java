@@ -13,6 +13,7 @@ import pl.HomeworkJustClick.Backend.groupteacher.GroupTeacher;
 import pl.HomeworkJustClick.Backend.groupteacher.GroupTeacherRepository;
 import pl.HomeworkJustClick.Backend.infrastructure.enums.Role;
 import pl.HomeworkJustClick.Backend.user.User;
+import pl.HomeworkJustClick.Backend.user.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package pl.HomeworkJustClick.Backend.Controllers;
+package pl.HomeworkJustClick.Backend.user;
 
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import pl.HomeworkJustClick.Backend.infrastructure.auth.AuthenticationResponseDto;
 import pl.HomeworkJustClick.Backend.infrastructure.auth.AuthenticationService;
 import pl.HomeworkJustClick.Backend.infrastructure.auth.ChangePasswordRequest;
-import pl.HomeworkJustClick.Backend.user.User;
-import pl.HomeworkJustClick.Backend.user.UserService;
 
 import java.util.List;
 

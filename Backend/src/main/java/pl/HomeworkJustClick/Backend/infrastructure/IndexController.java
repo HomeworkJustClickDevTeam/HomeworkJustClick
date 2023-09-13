@@ -1,4 +1,4 @@
-package pl.HomeworkJustClick.Backend.Controllers;
+package pl.HomeworkJustClick.Backend.infrastructure;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pl.HomeworkJustClick.Backend.Repositories.UserRepository;
 import pl.HomeworkJustClick.Backend.assignment.Assignment;
 import pl.HomeworkJustClick.Backend.assignment.AssignmentRepository;
 import pl.HomeworkJustClick.Backend.evaluation.Evaluation;
@@ -29,6 +28,7 @@ import pl.HomeworkJustClick.Backend.infrastructure.enums.Role;
 import pl.HomeworkJustClick.Backend.solution.Solution;
 import pl.HomeworkJustClick.Backend.solution.SolutionRepository;
 import pl.HomeworkJustClick.Backend.user.User;
+import pl.HomeworkJustClick.Backend.user.UserRepository;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;

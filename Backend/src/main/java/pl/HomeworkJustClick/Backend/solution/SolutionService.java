@@ -4,7 +4,6 @@ import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pl.HomeworkJustClick.Backend.Repositories.UserRepository;
 import pl.HomeworkJustClick.Backend.assignment.Assignment;
 import pl.HomeworkJustClick.Backend.assignment.AssignmentRepository;
 import pl.HomeworkJustClick.Backend.assignment.AssignmentResponseDto;
@@ -13,6 +12,7 @@ import pl.HomeworkJustClick.Backend.group.GroupRepository;
 import pl.HomeworkJustClick.Backend.group.GroupResponseDto;
 import pl.HomeworkJustClick.Backend.infrastructure.enums.CalendarStatus;
 import pl.HomeworkJustClick.Backend.user.User;
+import pl.HomeworkJustClick.Backend.user.UserRepository;
 import pl.HomeworkJustClick.Backend.user.UserResponseDto;
 
 import java.time.OffsetDateTime;
