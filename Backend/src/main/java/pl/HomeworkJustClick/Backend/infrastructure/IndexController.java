@@ -76,10 +76,10 @@ public class IndexController {
             }
     )
     public ResponseEntity<Void> generateModel() {
-        User user = new User("dadwa@wda.com", "$2a$10$OX66s75MRAav3e5Mcov0/e1tN9EqzkzenPBOTrnj4j1I8Fzxdv0aO", true, Role.USER, 123123, "Jan", "Kowalski", 0);
-        User user2 = new User("anna_malinowska@gmail.com", "$2a$10$b9GkDe6hi6o5SoRhsRp0PuUBo8tIWzpAJaCYeqsTHfA/90hvHDKeu", true, Role.USER, 321321, "Anna", "Malinowska", 1);
-        User user3 = new User("adam_nowak@gmail.com", "$2a$10$ktWVwnOZvlhmTSfYonNw6ur1fpDISQiwOzto9S2wJfd0oh1tJ7Wmi", true, Role.USER, 222222, "Adam", "Nowak", 2);
-        User user4 = new User("zofia_danielska@gmail.com", "$2a$10$N0zNzGXIT9u5dOJ/htLEfeFc9XruzVuEJ1qplNa9/47vEYISDdh6a", true, Role.USER, 333333, "Zofia", "Danielska", 3);
+        User user = new User("dadwa@wda.com", "$2a$10$mSFlAbacDw78pXDZ3EGT2.mcTXzU4QwRpARd4phDae.sKLfRDAwIG", true, Role.USER, 123123, "Jan", "Kowalski", 0, "IDWtpPKKvGYTPJUskaVVeDrA8yM=");
+        User user2 = new User("anna_malinowska@gmail.com", "$2a$10$lw9kNo/QvPP8sHoya5gvA.ekrTtBuDqBUkW6LutaMIxm4T2ZdfEIW", true, Role.USER, 321321, "Anna", "Malinowska", 1, "qhiS8LFQGS8OX8/i3nn/jyYx7+A=");
+        User user3 = new User("adam_nowak@gmail.com", "$2a$10$X1jXkhjnpXxQtrJPwvj0E.CcrPz/RAZke2dpmnqtUWkKUMRbDwGQ6", true, Role.USER, 222222, "Adam", "Nowak", 2, "A1yJL045DLX3Ij/N/zu/RFphs58=");
+        User user4 = new User("zofia_danielska@gmail.com", "$2a$10$E8UsApsB3RZ0qP194UIAjeJiYxHFQpQERkLidmy1E38rfGMGwZP2m", true, Role.USER, 333333, "Zofia", "Danielska", 3, "RYElQUkn1h+DN/aR2b9MHk1fZg4=");
         userRepository.save(user);
         userRepository.save(user2);
         userRepository.save(user3);

@@ -74,6 +74,9 @@ public class User implements UserDetails {
     @Min(0)
     private int color;
 
+    @Column(name = "salt")
+    private String salt;
+
     @OneToMany(
             mappedBy = "user",
             orphanRemoval = true,
@@ -158,7 +161,7 @@ public class User implements UserDetails {
         return true;
     }
 
-    public User(String email, String password, boolean isVerified, Role role, int index, String firstname, String surname, int color) {
+    public User(String email, String password, boolean isVerified, Role role, int index, String firstname, String surname, int color, String salt) {
         this.email = email;
         this.password = password;
         this.isVerified = isVerified;
@@ -167,5 +170,6 @@ public class User implements UserDetails {
         this.firstname = firstname;
         this.lastname = surname;
         this.color = color;
+        this.salt = salt;
     }
 }

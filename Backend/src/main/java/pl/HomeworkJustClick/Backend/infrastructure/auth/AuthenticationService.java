@@ -11,6 +11,8 @@ import pl.HomeworkJustClick.Backend.infrastructure.enums.Role;
 import pl.HomeworkJustClick.Backend.user.User;
 import pl.HomeworkJustClick.Backend.user.UserRepository;
 
+import java.security.SecureRandom;
+import java.util.Base64;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -30,13 +32,15 @@ public class AuthenticationService {
         if(optionalUser.isPresent()){
             return AuthenticationResponseDto.builder().token(null).id(0).role(Role.NONE).message("E-mail already taken!").build();
         } else {
+            var salt = generateRandomSalt();
             var user = User.builder()
                     .email(request.getEmail())
-                    .password(passwordEncoder.encode(request.getPassword()))
+                    .password(passwordEncoder.encode(salt + request.getPassword()))
                     .role(Role.USER)
                     .isVerified(true)
                     .firstname(request.getFirstname())
                     .lastname(request.getLastname())
+                    .salt(salt)
                     .build();
             userRepository.save(user);
             user.setColor(user.getId()%20);
@@ -54,13 +58,15 @@ public class AuthenticationService {
         if(optionalUser.isPresent()) {
             return AuthenticationResponseDto.builder().token(null).id(0).role(Role.NONE).message("E-mail already taken!").build();
         } else {
+            var salt = generateRandomSalt();
             var user = User.builder()
                     .email(request.getEmail())
-                    .password(passwordEncoder.encode(request.getPassword()))
+                    .password(salt + passwordEncoder.encode(request.getPassword()))
                     .role(Role.ADMIN)
                     .isVerified(true)
                     .firstname(request.getFirstname())
                     .lastname(request.getLastname())
+                    .salt(salt)
                     .build();
             userRepository.save(user);
             user.setColor(user.getId()%20);
@@ -71,18 +77,18 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponseDto authenticate(AuthenticationRequest request) {
-
         if(userRepository.findByEmail(request.getEmail()).isEmpty()){
             return AuthenticationResponseDto.builder().token(null).id(0).role(Role.NONE).message("User not found!").build();
         }
         var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
+        var salt = user.getSalt();
         if (!user.isVerified()) {
             return AuthenticationResponseDto.builder().token(null).id(0).role(Role.NONE).message("E-mail not verified!").build();
         }
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                     request.getEmail(),
-                    request.getPassword()
+                    salt + request.getPassword()
             ));
         } catch (BadCredentialsException e) {
             return AuthenticationResponseDto.builder().token(null).id(0).role(Role.NONE).message("Password incorrect!").build();
@@ -97,18 +103,19 @@ public class AuthenticationService {
             return AuthenticationResponseDto.builder().token(null).id(0).role(Role.NONE).message("User not found!").build();
         }
         var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
+        var salt = user.getSalt();
         if (!user.isVerified()) {
             return AuthenticationResponseDto.builder().token(null).id(0).role(Role.NONE).message("E-mail not verified!").build();
         }
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                     request.getEmail(),
-                    request.getPassword()
+                    salt + request.getPassword()
             ));
         } catch (BadCredentialsException e) {
             return AuthenticationResponseDto.builder().token(null).id(0).role(Role.NONE).message("Password incorrect!").build();
         }
-        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        user.setPassword(salt + passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
         var id = user.getId();
@@ -125,5 +132,12 @@ public class AuthenticationService {
         String pattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
         Pattern p = java.util.regex.Pattern.compile(pattern);
         return p.matcher(email).matches();
+    }
+
+    private String generateRandomSalt() {
+        SecureRandom random = new SecureRandom();
+        byte[] bytes = new byte[20];
+        random.nextBytes(bytes);
+        return Base64.getEncoder().encodeToString(bytes);
     }
 }
