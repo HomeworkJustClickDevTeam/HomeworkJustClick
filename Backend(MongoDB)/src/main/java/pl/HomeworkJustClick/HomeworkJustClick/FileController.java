@@ -1,21 +1,17 @@
 package pl.HomeworkJustClick.HomeworkJustClick;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.bson.types.Binary;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,15 +33,15 @@ public class FileController {
                             description = "File added",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = FileResponse.class))
+                                    schema = @Schema(implementation = FileResponseDto.class))
 
                     )
             }
     )
-    public ResponseEntity<FileResponse> add(@RequestParam("file")MultipartFile file) throws IOException {
+    public ResponseEntity<FileResponseDto> add(@RequestParam("file") MultipartFile file) throws IOException {
         String name = file.getOriginalFilename();
         String format = name.split("\\.")[1];
-        FileResponse response = fileService.addFile(name, format, file);
+        FileResponseDto response = fileService.addFile(name, format, file);
         return ResponseEntity.ok(response);
     }
 
@@ -58,14 +54,14 @@ public class FileController {
                             description = "Files added",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = FileResponse.class))
+                                    schema = @Schema(implementation = FileResponseDto.class))
 
                     )
             }
     )
-    public ResponseEntity<List<FileResponse>> addTwoFiles(@RequestParam("file1")MultipartFile file1, @RequestParam("file2")MultipartFile file2) throws IOException {
+    public ResponseEntity<List<FileResponseDto>> addTwoFiles(@RequestParam("file1") MultipartFile file1, @RequestParam("file2") MultipartFile file2) throws IOException {
         List<MultipartFile> fileList = List.of(file1, file2);
-        List<FileResponse> response = fileService.addFileList(fileList);
+        List<FileResponseDto> response = fileService.addFileList(fileList);
         return ResponseEntity.ok(response);
     }
 
@@ -78,14 +74,14 @@ public class FileController {
                             description = "Files added",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = FileResponse.class))
+                                    schema = @Schema(implementation = FileResponseDto.class))
 
                     )
             }
     )
-    public ResponseEntity<List<FileResponse>> addThreeFiles(@RequestParam("file1")MultipartFile file1, @RequestParam("file2")MultipartFile file2, @RequestParam("file3")MultipartFile file3) throws IOException {
+    public ResponseEntity<List<FileResponseDto>> addThreeFiles(@RequestParam("file1") MultipartFile file1, @RequestParam("file2") MultipartFile file2, @RequestParam("file3") MultipartFile file3) throws IOException {
         List<MultipartFile> fileList = List.of(file1, file2, file3);
-        List<FileResponse> response = fileService.addFileList(fileList);
+        List<FileResponseDto> response = fileService.addFileList(fileList);
         return ResponseEntity.ok(response);
     }
 
@@ -98,14 +94,14 @@ public class FileController {
                             description = "Files added",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = FileResponse.class))
+                                    schema = @Schema(implementation = FileResponseDto.class))
 
                     )
             }
     )
-    public ResponseEntity<List<FileResponse>> addFourFiles(@RequestParam("file1")MultipartFile file1, @RequestParam("file2")MultipartFile file2, @RequestParam("file3")MultipartFile file3, @RequestParam("file4")MultipartFile file4) throws IOException {
+    public ResponseEntity<List<FileResponseDto>> addFourFiles(@RequestParam("file1") MultipartFile file1, @RequestParam("file2") MultipartFile file2, @RequestParam("file3") MultipartFile file3, @RequestParam("file4") MultipartFile file4) throws IOException {
         List<MultipartFile> fileList = List.of(file1, file2, file3, file4);
-        List<FileResponse> response = fileService.addFileList(fileList);
+        List<FileResponseDto> response = fileService.addFileList(fileList);
         return ResponseEntity.ok(response);
     }
 
@@ -118,14 +114,14 @@ public class FileController {
                             description = "Files added",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = FileResponse.class))
+                                    schema = @Schema(implementation = FileResponseDto.class))
 
                     )
             }
     )
-    public ResponseEntity<List<FileResponse>> addFiveFiles(@RequestParam("file1")MultipartFile file1, @RequestParam("file2")MultipartFile file2, @RequestParam("file3")MultipartFile file3, @RequestParam("file4")MultipartFile file4, @RequestParam("file5")MultipartFile file5) throws IOException {
+    public ResponseEntity<List<FileResponseDto>> addFiveFiles(@RequestParam("file1") MultipartFile file1, @RequestParam("file2") MultipartFile file2, @RequestParam("file3") MultipartFile file3, @RequestParam("file4") MultipartFile file4, @RequestParam("file5") MultipartFile file5) throws IOException {
         List<MultipartFile> fileList = List.of(file1, file2, file3, file4, file5);
-        List<FileResponse> response = fileService.addFileList(fileList);
+        List<FileResponseDto> response = fileService.addFileList(fileList);
         return ResponseEntity.ok(response);
     }
 
@@ -138,14 +134,14 @@ public class FileController {
                             description = "Files added",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = FileResponse.class))
+                                    schema = @Schema(implementation = FileResponseDto.class))
 
                     )
             },
             deprecated = true
     )
-    public ResponseEntity<List<FileResponse>> addList(@RequestBody List<MultipartFile> fileList) throws IOException {
-        List<FileResponse> responseList = fileService.addFileList(fileList);
+    public ResponseEntity<List<FileResponseDto>> addList(@RequestBody List<MultipartFile> fileList) throws IOException {
+        List<FileResponseDto> responseList = fileService.addFileList(fileList);
         return ResponseEntity.ok(responseList);
     }
 

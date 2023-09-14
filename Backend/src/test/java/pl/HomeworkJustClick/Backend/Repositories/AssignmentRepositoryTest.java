@@ -5,15 +5,27 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import pl.HomeworkJustClick.Backend.Entities.*;
-import pl.HomeworkJustClick.Backend.Enums.Role;
+import pl.HomeworkJustClick.Backend.assignment.Assignment;
+import pl.HomeworkJustClick.Backend.assignment.AssignmentRepository;
+import pl.HomeworkJustClick.Backend.group.Group;
+import pl.HomeworkJustClick.Backend.group.GroupRepository;
+import pl.HomeworkJustClick.Backend.groupstudent.GroupStudent;
+import pl.HomeworkJustClick.Backend.groupstudent.GroupStudentRepository;
+import pl.HomeworkJustClick.Backend.groupteacher.GroupTeacher;
+import pl.HomeworkJustClick.Backend.groupteacher.GroupTeacherRepository;
+import pl.HomeworkJustClick.Backend.infrastructure.enums.Role;
+import pl.HomeworkJustClick.Backend.solution.Solution;
+import pl.HomeworkJustClick.Backend.solution.SolutionRepository;
+import pl.HomeworkJustClick.Backend.user.User;
+import pl.HomeworkJustClick.Backend.user.UserRepository;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 @DataJpaTest
 public class AssignmentRepositoryTest {
@@ -54,8 +66,8 @@ public class AssignmentRepositoryTest {
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
-        Assignment assignment = new Assignment(user,group,"opis", OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,6,15,15,0,0,0, ZoneOffset.UTC),"tytul",true,100);
-        Assignment assignment2 = new Assignment(user,group,"opis", OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,30,15,0,0,0, ZoneOffset.UTC),"tytul",true,100);
+        Assignment assignment = new Assignment(user, group, "opis", OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 6, 15, 15, 0, 0, 0, ZoneOffset.UTC), "tytul", true, 100, 50);
+        Assignment assignment2 = new Assignment(user, group, "opis", OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 30, 15, 0, 0, 0, ZoneOffset.UTC), "tytul", true, 100, 50);
         userRepository.save(user);
         userRepository.save(user2);
         groupRepository.save(group);
@@ -83,8 +95,8 @@ public class AssignmentRepositoryTest {
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
-        Assignment assignment = new Assignment(user,group,"opis", OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,6,15,15,0,0,0, ZoneOffset.UTC),"tytul",true,100);
-        Assignment assignment2 = new Assignment(user,group,"opis", OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,30,15,0,0,0, ZoneOffset.UTC),"tytul",true,100);
+        Assignment assignment = new Assignment(user, group, "opis", OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 6, 15, 15, 0, 0, 0, ZoneOffset.UTC), "tytul", true, 100, 50);
+        Assignment assignment2 = new Assignment(user, group, "opis", OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 30, 15, 0, 0, 0, ZoneOffset.UTC), "tytul", true, 100, 50);
         userRepository.save(user);
         userRepository.save(user2);
         groupRepository.save(group);
@@ -112,8 +124,8 @@ public class AssignmentRepositoryTest {
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
-        Assignment assignment = new Assignment(user,group,"opis", OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,6,15,15,0,0,0, ZoneOffset.UTC),"tytul",true,100);
-        Assignment assignment2 = new Assignment(user,group,"opis", OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,30,15,0,0,0, ZoneOffset.UTC),"tytul",true,100);
+        Assignment assignment = new Assignment(user, group, "opis", OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 6, 15, 15, 0, 0, 0, ZoneOffset.UTC), "tytul", true, 100, 50);
+        Assignment assignment2 = new Assignment(user, group, "opis", OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 30, 15, 0, 0, 0, ZoneOffset.UTC), "tytul", true, 100, 50);
         userRepository.save(user);
         userRepository.save(user2);
         groupRepository.save(group);
@@ -141,8 +153,8 @@ public class AssignmentRepositoryTest {
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
-        Assignment assignment = new Assignment(user,group,"opis", OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,6,15,15,0,0,0, ZoneOffset.UTC),"tytul",true,100);
-        Assignment assignment2 = new Assignment(user,group,"opis", OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,30,15,0,0,0, ZoneOffset.UTC),"tytul",true,100);
+        Assignment assignment = new Assignment(user, group, "opis", OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 6, 15, 15, 0, 0, 0, ZoneOffset.UTC), "tytul", true, 100, 50);
+        Assignment assignment2 = new Assignment(user, group, "opis", OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 30, 15, 0, 0, 0, ZoneOffset.UTC), "tytul", true, 100, 50);
         userRepository.save(user);
         userRepository.save(user2);
         groupRepository.save(group);
@@ -170,8 +182,8 @@ public class AssignmentRepositoryTest {
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
-        Assignment assignment = new Assignment(user,group,"opis", OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,6,15,15,0,0,0, ZoneOffset.UTC),"tytul",true,100);
-        Assignment assignment2 = new Assignment(user,group,"opis", OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,30,15,0,0,0, ZoneOffset.UTC),"tytul",true,100);
+        Assignment assignment = new Assignment(user, group, "opis", OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 6, 15, 15, 0, 0, 0, ZoneOffset.UTC), "tytul", true, 100, 50);
+        Assignment assignment2 = new Assignment(user, group, "opis", OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 30, 15, 0, 0, 0, ZoneOffset.UTC), "tytul", true, 100, 50);
         userRepository.save(user);
         userRepository.save(user2);
         groupRepository.save(group);
@@ -199,8 +211,8 @@ public class AssignmentRepositoryTest {
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
-        Assignment assignment = new Assignment(user,group,"opis", OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,6,15,15,0,0,0, ZoneOffset.UTC),"tytul",true,100);
-        Assignment assignment2 = new Assignment(user,group,"opis", OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,30,15,0,0,0, ZoneOffset.UTC),"tytul",true,100);
+        Assignment assignment = new Assignment(user, group, "opis", OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 6, 15, 15, 0, 0, 0, ZoneOffset.UTC), "tytul", true, 100, 50);
+        Assignment assignment2 = new Assignment(user, group, "opis", OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 30, 15, 0, 0, 0, ZoneOffset.UTC), "tytul", true, 100, 50);
         userRepository.save(user);
         userRepository.save(user2);
         groupRepository.save(group);
@@ -228,8 +240,8 @@ public class AssignmentRepositoryTest {
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
-        Assignment assignment = new Assignment(user,group,"opis", OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,6,15,15,0,0,0, ZoneOffset.UTC),"tytul",true,100);
-        Assignment assignment2 = new Assignment(user,group,"opis", OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,30,15,0,0,0, ZoneOffset.UTC),"tytul",true,100);
+        Assignment assignment = new Assignment(user, group, "opis", OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 6, 15, 15, 0, 0, 0, ZoneOffset.UTC), "tytul", true, 100, 50);
+        Assignment assignment2 = new Assignment(user, group, "opis", OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 30, 15, 0, 0, 0, ZoneOffset.UTC), "tytul", true, 100, 50);
         userRepository.save(user);
         userRepository.save(user2);
         groupRepository.save(group);
@@ -257,8 +269,8 @@ public class AssignmentRepositoryTest {
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
-        Assignment assignment = new Assignment(user,group,"opis", OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,6,15,15,0,0,0, ZoneOffset.UTC),"tytul",true,100);
-        Assignment assignment2 = new Assignment(user,group,"opis", OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,30,15,0,0,0, ZoneOffset.UTC),"tytul",true,100);
+        Assignment assignment = new Assignment(user, group, "opis", OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 6, 15, 15, 0, 0, 0, ZoneOffset.UTC), "tytul", true, 100, 50);
+        Assignment assignment2 = new Assignment(user, group, "opis", OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 30, 15, 0, 0, 0, ZoneOffset.UTC), "tytul", true, 100, 50);
         Solution solution = new Solution(user2, assignment2, group, OffsetDateTime.of(2023,5,16,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,16,15,0,0,0, ZoneOffset.UTC), "");
         userRepository.save(user);
         userRepository.save(user2);
@@ -288,8 +300,8 @@ public class AssignmentRepositoryTest {
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
-        Assignment assignment = new Assignment(user,group,"opis", OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,6,15,15,0,0,0, ZoneOffset.UTC),"tytul",true,100);
-        Assignment assignment2 = new Assignment(user,group,"opis", OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,30,15,0,0,0, ZoneOffset.UTC),"tytul",true,100);
+        Assignment assignment = new Assignment(user, group, "opis", OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 6, 15, 15, 0, 0, 0, ZoneOffset.UTC), "tytul", true, 100, 50);
+        Assignment assignment2 = new Assignment(user, group, "opis", OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 30, 15, 0, 0, 0, ZoneOffset.UTC), "tytul", true, 100, 50);
         Solution solution = new Solution(user2, assignment2, group, OffsetDateTime.of(2023,5,16,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,16,15,0,0,0, ZoneOffset.UTC), "");
         Solution solution2 = new Solution(user2, assignment, group, OffsetDateTime.of(2023,6,16,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,6,16,15,0,0,0, ZoneOffset.UTC), "");
         userRepository.save(user);
@@ -320,8 +332,8 @@ public class AssignmentRepositoryTest {
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
-        Assignment assignment = new Assignment(user,group,"opis", OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,6,15,15,0,0,0, ZoneOffset.UTC),"tytul",true,100);
-        Assignment assignment2 = new Assignment(user,group,"opis", OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,30,15,0,0,0, ZoneOffset.UTC),"tytul",true,100);
+        Assignment assignment = new Assignment(user, group, "opis", OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 6, 15, 15, 0, 0, 0, ZoneOffset.UTC), "tytul", true, 100, 50);
+        Assignment assignment2 = new Assignment(user, group, "opis", OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 30, 15, 0, 0, 0, ZoneOffset.UTC), "tytul", true, 100, 50);
         userRepository.save(user);
         userRepository.save(user2);
         groupRepository.save(group);
@@ -349,8 +361,8 @@ public class AssignmentRepositoryTest {
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
-        Assignment assignment = new Assignment(user,group,"opis", OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,6,15,15,0,0,0, ZoneOffset.UTC),"tytul",true,100);
-        Assignment assignment2 = new Assignment(user,group,"opis", OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,30,15,0,0,0, ZoneOffset.UTC),"tytul",true,100);
+        Assignment assignment = new Assignment(user, group, "opis", OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 6, 15, 15, 0, 0, 0, ZoneOffset.UTC), "tytul", true, 100, 50);
+        Assignment assignment2 = new Assignment(user, group, "opis", OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 30, 15, 0, 0, 0, ZoneOffset.UTC), "tytul", true, 100, 50);
         Solution solution = new Solution(user2, assignment2, group, OffsetDateTime.of(2023,5,16,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,16,15,0,0,0, ZoneOffset.UTC), "");
         userRepository.save(user);
         userRepository.save(user2);
@@ -380,8 +392,8 @@ public class AssignmentRepositoryTest {
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
-        Assignment assignment = new Assignment(user,group,"opis", OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,6,15,15,0,0,0, ZoneOffset.UTC),"tytul",true,100);
-        Assignment assignment2 = new Assignment(user,group,"opis", OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,30,15,0,0,0, ZoneOffset.UTC),"tytul",true,100);
+        Assignment assignment = new Assignment(user, group, "opis", OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 6, 15, 15, 0, 0, 0, ZoneOffset.UTC), "tytul", true, 100, 50);
+        Assignment assignment2 = new Assignment(user, group, "opis", OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 30, 15, 0, 0, 0, ZoneOffset.UTC), "tytul", true, 100, 50);
         Solution solution = new Solution(user2, assignment2, group, OffsetDateTime.of(2023,5,16,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,16,15,0,0,0, ZoneOffset.UTC), "");
         Solution solution2 = new Solution(user2, assignment, group, OffsetDateTime.of(2023,6,16,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,6,16,15,0,0,0, ZoneOffset.UTC), "");
         userRepository.save(user);
@@ -412,8 +424,8 @@ public class AssignmentRepositoryTest {
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
-        Assignment assignment = new Assignment(user,group,"opis", OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,6,15,15,0,0,0, ZoneOffset.UTC),"tytul",true,100);
-        Assignment assignment2 = new Assignment(user,group,"opis", OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,30,15,0,0,0, ZoneOffset.UTC),"tytul",true,100);
+        Assignment assignment = new Assignment(user, group, "opis", OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 6, 15, 15, 0, 0, 0, ZoneOffset.UTC), "tytul", true, 100, 50);
+        Assignment assignment2 = new Assignment(user, group, "opis", OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 30, 15, 0, 0, 0, ZoneOffset.UTC), "tytul", true, 100, 50);
         Solution solution = new Solution(user2, assignment, group, OffsetDateTime.of(2023,5,16,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,16,15,0,0,0, ZoneOffset.UTC), "");
         userRepository.save(user);
         userRepository.save(user2);
@@ -442,8 +454,8 @@ public class AssignmentRepositoryTest {
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
-        Assignment assignment = new Assignment(user,group,"opis", OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,6,15,15,0,0,0, ZoneOffset.UTC),"tytul",true,100);
-        Assignment assignment2 = new Assignment(user,group,"opis", OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,30,15,0,0,0, ZoneOffset.UTC),"tytul",true,100);
+        Assignment assignment = new Assignment(user, group, "opis", OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 6, 15, 15, 0, 0, 0, ZoneOffset.UTC), "tytul", true, 100, 50);
+        Assignment assignment2 = new Assignment(user, group, "opis", OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 30, 15, 0, 0, 0, ZoneOffset.UTC), "tytul", true, 100, 50);
         Solution solution = new Solution(user2, assignment, group, OffsetDateTime.of(2023,5,16,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,16,15,0,0,0, ZoneOffset.UTC), "");
         userRepository.save(user);
         userRepository.save(user2);
@@ -472,8 +484,8 @@ public class AssignmentRepositoryTest {
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
-        Assignment assignment = new Assignment(user,group,"opis", OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,6,15,15,0,0,0, ZoneOffset.UTC),"tytul",true,100);
-        Assignment assignment2 = new Assignment(user,group,"opis", OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,30,15,0,0,0, ZoneOffset.UTC),"tytul",true,100);
+        Assignment assignment = new Assignment(user, group, "opis", OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 6, 15, 15, 0, 0, 0, ZoneOffset.UTC), "tytul", true, 100, 50);
+        Assignment assignment2 = new Assignment(user, group, "opis", OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 30, 15, 0, 0, 0, ZoneOffset.UTC), "tytul", true, 100, 50);
         Solution solution = new Solution(user2, assignment, group, OffsetDateTime.of(2023,5,16,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,16,15,0,0,0, ZoneOffset.UTC), "");
         userRepository.save(user);
         userRepository.save(user2);
@@ -497,8 +509,8 @@ public class AssignmentRepositoryTest {
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
-        Assignment assignment = new Assignment(user,group,"opis", OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,6,15,15,0,0,0, ZoneOffset.UTC),"tytul",true,100);
-        Assignment assignment2 = new Assignment(user,group,"opis", OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,15,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,30,15,0,0,0, ZoneOffset.UTC),"tytul",true,100);
+        Assignment assignment = new Assignment(user, group, "opis", OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 6, 15, 15, 0, 0, 0, ZoneOffset.UTC), "tytul", true, 100, 50);
+        Assignment assignment2 = new Assignment(user, group, "opis", OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 15, 15, 0, 0, 0, ZoneOffset.UTC), OffsetDateTime.of(2023, 5, 30, 15, 0, 0, 0, ZoneOffset.UTC), "tytul", true, 100, 50);
         Solution solution = new Solution(user2, assignment, group, OffsetDateTime.of(2023,5,16,15,0,0,0, ZoneOffset.UTC),OffsetDateTime.of(2023,5,16,15,0,0,0, ZoneOffset.UTC), "");
         userRepository.save(user);
         userRepository.save(user2);

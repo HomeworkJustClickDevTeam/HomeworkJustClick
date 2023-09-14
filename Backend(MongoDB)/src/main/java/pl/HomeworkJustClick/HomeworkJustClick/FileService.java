@@ -17,15 +17,15 @@ public class FileService {
     @Autowired
     FileRepository fileRepository;
 
-    public FileResponse addFile(String title, String format, MultipartFile file) throws IOException {
+    public FileResponseDto addFile(String title, String format, MultipartFile file) throws IOException {
         File _file = new File(title, format);
         _file.setFile(new Binary(BsonBinarySubType.BINARY, file.getBytes()));
         _file = fileRepository.insert(_file);
-        return FileResponse.builder().id(_file.getId()).name(_file.getName()).format(_file.getFormat()).build();
+        return FileResponseDto.builder().id(_file.getId()).name(_file.getName()).format(_file.getFormat()).build();
     }
 
-    public List<FileResponse> addFileList(List<MultipartFile> fileList) throws IOException {
-        List<FileResponse> responseList = new ArrayList<>();
+    public List<FileResponseDto> addFileList(List<MultipartFile> fileList) throws IOException {
+        List<FileResponseDto> responseList = new ArrayList<>();
         fileList.forEach(file -> {
             String title = file.getOriginalFilename();
             String format = title.split("\\.")[1];
@@ -36,7 +36,7 @@ public class FileService {
                 throw new RuntimeException(e);
             }
             _file = fileRepository.insert(_file);
-            responseList.add(FileResponse.builder().id(_file.getId()).name(_file.getName()).format(_file.getFormat()).build());
+            responseList.add(FileResponseDto.builder().id(_file.getId()).name(_file.getName()).format(_file.getFormat()).build());
         });
         return responseList;
     }
@@ -53,5 +53,4 @@ public class FileService {
             return false;
         }
     }
-
 }
