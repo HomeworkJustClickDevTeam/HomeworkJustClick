@@ -3,6 +3,7 @@ package pl.HomeworkJustClick.Backend.commentevaluation;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import pl.HomeworkJustClick.Backend.comment.Comment;
 import pl.HomeworkJustClick.Backend.evaluation.Evaluation;
@@ -36,6 +37,7 @@ public class CommentEvaluation {
 
     @Column(name = "description")
     @Schema(example = "Example desc")
+    @Size(max = 255)
     private String description;
 
     public CommentEvaluation(Evaluation evaluation, Comment comment, String description) {

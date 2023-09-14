@@ -3,6 +3,7 @@ package pl.HomeworkJustClick.Backend.groupstudent;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import pl.HomeworkJustClick.Backend.group.Group;
 import pl.HomeworkJustClick.Backend.user.User;
@@ -35,6 +36,7 @@ public class GroupStudent {
 
     @Column
     @Schema(example = "Example desc")
+    @Size(max = 255)
     private String description;
 
     public GroupStudent(Group group, User user, String description) {

@@ -3,6 +3,7 @@ package pl.HomeworkJustClick.Backend.assignment;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -51,6 +52,7 @@ public class Assignment {
 
     @Column(name = "taskDescription")
     @Schema(example = "Example desc")
+    @Size(max = 255)
     private String taskDescription;
 
     @Column(name = "creationDatetime", updatable = false, nullable = false)
@@ -66,6 +68,7 @@ public class Assignment {
 
     @Column(name = "title")
     @Schema(example = "Example title")
+    @Size(max = 255)
     private String title;
 
     @Column(name = "visible", columnDefinition = "boolean default false", nullable = false)

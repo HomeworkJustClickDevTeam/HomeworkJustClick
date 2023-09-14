@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import pl.HomeworkJustClick.Backend.assignment.Assignment;
 import pl.HomeworkJustClick.Backend.groupstudent.GroupStudent;
@@ -32,10 +33,12 @@ public class Group {
 
     @Schema(example = "Example Group")
     @Column(name="name")
+    @Size(max = 255)
     private String name;
 
     @Schema(example = "Example desc")
     @Column(name="description")
+    @Size(max = 255)
     private String description;
 
     @Schema(example = "0")

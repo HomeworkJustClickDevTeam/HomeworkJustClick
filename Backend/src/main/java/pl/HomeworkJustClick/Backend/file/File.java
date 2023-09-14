@@ -3,6 +3,7 @@ package pl.HomeworkJustClick.Backend.file;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import pl.HomeworkJustClick.Backend.assignment.Assignment;
 import pl.HomeworkJustClick.Backend.solution.Solution;
@@ -26,14 +27,17 @@ public class File {
 
     @Column(name="name")
     @Schema(example = "Example file")
+    @Size(max = 255)
     private String name;
 
     @Column(name="format")
     @Schema(example = ".txt")
+    @Size(max = 255)
     private String format;
 
     @Column(name="mongo_id")
     @Schema(example = "0")
+    @Size(max = 255)
     private String mongo_id;
 
     @ManyToOne
