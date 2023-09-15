@@ -2,33 +2,38 @@ import { MutableRefObject, PropsWithChildren, useEffect, useRef, useState } from
 import { useLocation } from "react-router-dom"
 import { FileInterface } from "../../types/FileInterface"
 import { useGetFiles } from "../customHooks/useGetFiles"
-import { te } from "date-fns/locale"
 import { AdvancedEvaluationCommentPanel } from "./AdvancedEvaluationCommentPanel"
 import { AdvancedEvaluationTextFileArea } from "./AdvancedEvaluationTextFileArea"
 import { CommentInterface } from "../../types/CommentInterface"
 import { AdvancedEvaluationCommentInterface } from "../../types/AdvancedEvaluationCommentInterface"
 
-interface advancedEvaluationPageInterface{
-
-}
-
 export default function AdvancedEvaluationPage() {
   let {state} = useLocation()
   const file = useGetFiles(state, 'solution')[0]
   const [fileText, setFileText] = useState("")
-  const [commentsList, setCommentsList] = useState<AdvancedEvaluationCommentInterface[]>([])
+  const [comments, setComments] = useState<AdvancedEvaluationCommentInterface[]>([])
   const [letterColor, setLetterColor] = useState<(string|undefined)[]>([undefined])
 
+  const checkNewRanges = (updatedComment:AdvancedEvaluationCommentInterface, selectedComment:AdvancedEvaluationCommentInterface):AdvancedEvaluationCommentInterface[] => {
+    if(updatedComment.highlightStart<=updatedComment.highlightEnd){
+      return [updatedComment, selectedComment]
+    }
+    else{
+      return [selectedComment]
+    }
+  }
+
+  const toLetterArray = (commentsList:AdvancedEvaluationCommentInterface[]):(string|undefined)[] => {
+    let newArray = Array<undefined|string>(fileText.length)
+    newArray.fill(undefined, 0, fileText.length)
+    commentsList.forEach((comment)=>{
+      newArray.fill(comment.color, comment.highlightStart, comment.highlightEnd+1)
+    })
+    return newArray
+  }
 
   useEffect(() => {
-    if(fileText){
-      let newArray = Array<undefined|string>(fileText.length)
-      newArray.fill(undefined, 0, fileText.length)
-      commentsList.forEach((comment)=>{
-        newArray.fill(comment.color, comment.highlightStart, comment.highlightEnd)
-      })
-      setLetterColor(newArray)
-    }
+    setLetterColor(toLetterArray(comments))
   }, [fileText])
 
   useEffect(() => {
@@ -51,31 +56,74 @@ export default function AdvancedEvaluationPage() {
         highlightEnd: Math.max(selection.getRangeAt(0).endContainer.parentElement?.id as unknown as number, selection.getRangeAt(0).startContainer.parentElement?.id as unknown as number)
       }
       let newComments:AdvancedEvaluationCommentInterface[] = []
-      commentsList.forEach((oldComment)=> {
-      if(oldComment.highlightEnd > selectedComment.highlightStart && oldComment.highlightStart < selectedComment.highlightStart){
-        let updatedComment = {...oldComment, highlightEnd: oldComment.highlightEnd-selectedComment.highlightStart}
-        newComments.push(updatedComment, selectedComment)
+      if(comments.length === 0){
+        newComments.push(selectedComment)
       }
-      else if (oldComment.highlightStart < selectedComment.highlightEnd && selectedComment.highlightStart < oldComment.highlightStart){
-        let updatedComment = {...oldComment, highlightStart: oldComment.highlightStart+selectedComment.highlightEnd}
-        newComments.push(updatedComment, selectedComment)
+      else{
+        comments.forEach((oldComment)=> {
+          console.log("SELECTED START:", selectedComment.highlightStart, "SELECTED END:", selectedComment.highlightEnd, "OLD START:", oldComment.highlightStart, "OLD END:", oldComment.highlightEnd)
+          if (oldComment.highlightStart < selectedComment.highlightStart && oldComment.highlightStart < selectedComment.highlightEnd && oldComment.highlightEnd > selectedComment.highlightStart && oldComment.highlightEnd < selectedComment.highlightEnd) {
+            let updatedComment = { ...oldComment, highlightEnd: selectedComment.highlightStart-1}
+            newComments = newComments.concat(checkNewRanges(updatedComment, selectedComment))
+          }
+          else if (oldComment.highlightStart > selectedComment.highlightStart && oldComment.highlightStart < selectedComment.highlightEnd && oldComment.highlightEnd > selectedComment.highlightStart && oldComment.highlightEnd > selectedComment.highlightEnd) {
+            let updatedComment = {
+              ...oldComment,
+              highlightStart: selectedComment.highlightEnd+1
+            }
+            newComments = newComments.concat(checkNewRanges(updatedComment, selectedComment))
+          } else if (oldComment.highlightStart > selectedComment.highlightStart && oldComment.highlightStart < selectedComment.highlightEnd && oldComment.highlightEnd > selectedComment.highlightStart && oldComment.highlightEnd < selectedComment.highlightEnd) {
+            newComments.push(selectedComment)
+          } else if (oldComment.highlightStart < selectedComment.highlightStart && oldComment.highlightStart < selectedComment.highlightEnd && oldComment.highlightEnd > selectedComment.highlightStart && oldComment.highlightEnd > selectedComment.highlightEnd) {
+            newComments.push(selectedComment)
+          } else if (oldComment.highlightStart < selectedComment.highlightStart && oldComment.highlightStart < selectedComment.highlightEnd && oldComment.highlightEnd === selectedComment.highlightStart && oldComment.highlightEnd < selectedComment.highlightEnd) {
+            let updatedComment = { ...oldComment, highlightEnd: oldComment.highlightEnd - 1 }
+            newComments.concat(checkNewRanges(updatedComment, selectedComment))
+          } else if (oldComment.highlightStart > selectedComment.highlightStart && oldComment.highlightStart === selectedComment.highlightEnd && oldComment.highlightEnd > selectedComment.highlightStart && oldComment.highlightEnd > selectedComment.highlightEnd) {
+            let updatedComment = { ...oldComment, highlightStart: oldComment.highlightStart + 1 }
+            newComments.concat(checkNewRanges(updatedComment, selectedComment))
+          } else if (oldComment.highlightStart < selectedComment.highlightStart && oldComment.highlightStart < selectedComment.highlightEnd && oldComment.highlightEnd > selectedComment.highlightStart && oldComment.highlightEnd === selectedComment.highlightEnd) {
+            let updatedComment = {
+              ...oldComment,
+              highlightEnd: selectedComment.highlightStart-1
+            }
+            newComments = newComments.concat(checkNewRanges(updatedComment, selectedComment))
+          }
+          else if (oldComment.highlightStart === selectedComment.highlightStart && oldComment.highlightStart < selectedComment.highlightEnd && oldComment.highlightEnd > selectedComment.highlightStart && oldComment.highlightEnd > selectedComment.highlightEnd) {
+            let updatedComment = {
+              ...oldComment,
+              highlightStart: selectedComment.highlightEnd+1
+            }
+            newComments = newComments.concat(checkNewRanges(updatedComment, selectedComment))
+          }
+          else if (oldComment.highlightStart > selectedComment.highlightStart && oldComment.highlightStart === selectedComment.highlightEnd && oldComment.highlightEnd > selectedComment.highlightStart && oldComment.highlightEnd > selectedComment.highlightEnd) {
+            let updatedComment = {
+              ...oldComment,
+              highlightStart: selectedComment.highlightEnd+1
+            }
+            newComments = newComments.concat(checkNewRanges(updatedComment, selectedComment))
+          }
+          else if (oldComment.highlightStart > selectedComment.highlightStart && oldComment.highlightStart === selectedComment.highlightEnd && oldComment.highlightEnd > selectedComment.highlightStart && oldComment.highlightEnd > selectedComment.highlightEnd) {
+            let updatedComment = {
+              ...oldComment,
+              highlightStart: selectedComment.highlightEnd+1
+            }
+            newComments = newComments.concat(checkNewRanges(updatedComment, selectedComment))
+          }
+          else if (oldComment.highlightStart === selectedComment.highlightStart && oldComment.highlightStart === selectedComment.highlightEnd && oldComment.highlightEnd === selectedComment.highlightStart && oldComment.highlightEnd === selectedComment.highlightEnd) {
+            newComments.push(selectedComment)
+          }
+          else{
+            newComments.push(selectedComment)
+          }
+        })
       }
-      else if(){
-
-      }
-    })
-    setCommentsList(
-      [...commentsList, {...selectedComment}]
-    )
-    let newArray = letterColor
-    newArray.fill(selectedComment.color, selectedComment.highlightStart, selectedComment.highlightEnd+1)
-    setLetterColor(newArray)
-    selection.removeAllRanges()
+      setComments(newComments)
+      setLetterColor(toLetterArray(newComments))
+      selection?.removeAllRanges()
+      console.log("COMMENTS:", newComments, "COLOR", toLetterArray(newComments))
+    }
   }
-
-  }
-
-
 
 
 
