@@ -9,8 +9,8 @@ import { selectUserState } from "../../redux/userStateSlice"
 
 
 export const LoggedInUserRoute = () => {
-  const isLoading = useSelector(selectIsLoading)
-  const userState = useSelector(selectUserState)
+  const isLoading = useAppSelector(selectIsLoading)
+  const userState = useAppSelector(selectUserState)
   if (userState === null) {
     return (
       <Navigate to={"/home"} replace/>

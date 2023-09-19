@@ -20,7 +20,7 @@ export function Rating({
                        }: RatingPropsInterface) {
   const [active, setActive] = useState<number>()
   const navigate = useNavigate()
-  const userState = useSelector(selectUserState)
+  const userState = useAppSelector(selectUserState)
   const handleMark = () => {
     const body = {result: points, grade: 0}
     createEvaluationWithUserAndSolution(userState?.id as unknown as string, solutionId.toString(), body)

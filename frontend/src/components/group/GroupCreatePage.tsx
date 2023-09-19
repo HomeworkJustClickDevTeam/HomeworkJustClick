@@ -13,7 +13,7 @@ function GroupCreatePage() {
     description: "",
   })
   const dispatch = useDispatch()
-  const userState = useSelector(selectUserState)
+  const userState = useAppSelector(selectUserState)
   const navigate = useNavigate()
   useEffect(() => {
     dispatch(setHomePageIn(false))

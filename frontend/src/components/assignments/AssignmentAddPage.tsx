@@ -12,7 +12,7 @@ import { selectUserState } from "../../redux/userStateSlice"
 
 function AssignmentAddPage() {
   const navigate = useNavigate()
-  const userState = useSelector(selectUserState)
+  const userState = useAppSelector(selectUserState)
 
   const [assignment, setAssignment] = useState<AssignmentToSendInterface>({
     title: "",

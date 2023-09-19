@@ -21,7 +21,7 @@ interface GroupUsersSettingsListElementProps {
 
 export default function GroupUsersSettingsListElement(props: GroupUsersSettingsListElementProps) {
   const [open, setOpen] = useState(false)
-  const role = useSelector(selectRole)
+  const role = useAppSelector(selectRole)
   const handleUserDeletion = async () => {
     props.isStudent ?
       (await deleteStudentInGroupPostgresService(props.userToShow.id.toString(), props.groupId)

@@ -8,7 +8,7 @@ interface GroupUserListElementProps {
 }
 
 function GroupUserListElement({userToShow, isTeacher}: GroupUserListElementProps) {
-  const role = useSelector(selectRole)
+  const role = useAppSelector(selectRole)
 
   if (!isTeacher && role === "Teacher") {
     return (

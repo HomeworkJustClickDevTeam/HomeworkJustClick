@@ -10,27 +10,23 @@ import { selectUserState } from "../../redux/userStateSlice"
 import { setGroup } from "../../redux/groupSlice"
 import { setHomePageIn } from "../../redux/homePageInSlice"
 import { setRole } from "../../redux/roleSlice"
+import { useAppDispatch, useAppSelector } from "../../types/HooksRedux"
+import { useGetTeacherUserGroups } from "../customHooks/useGetTeacherUserGroups"
 
 function HomePage() {
   const [groups, setGroups] = useState<GroupInterface[] | undefined>(undefined)
-  const [isLoading, setIsLoading] = useState<boolean>()
   const [isOpen, setIsOpen] = useState(false)
   const [btnName, setBtnName] = useState('Wszystkie grupy')
-  const userState = useSelector(selectUserState)
-  const dispatch = useDispatch()
-  let teacherUserGroups = () => {
-  }
-  let studentsUserGroups = () => {
-  }
+  const userState = useAppSelector(selectUserState)
+  const dispatch = useAppDispatch()
+  let teacherUserGroups: GroupInterface[] = []
+  let studentsUserGroups = []
   let allUserGroups = () => {
   }
 
   if (userState !== null) {
-    ({teacherUserGroups, studentsUserGroups, allUserGroups} = groupFilter({
-      setGroups,
-      setIsLoading,
-      userId: userState.id.toString()
-    }))
+    teacherUserGroups = useGetTeacherUserGroups(userState.id)
+
   }
 
 

@@ -15,7 +15,7 @@ import { useSelector } from "react-redux"
 import { selectGroup } from "../../redux/groupSlice"
 export default function GroupUserProfilePage() {
   const {userProfileId} = useParams()
-  const group= useSelector(selectGroup)
+  const group= useAppSelector(selectGroup)
   const [userProfile, setUserProfile] = useState<UserInterface | undefined>(undefined)
   const [doneAssignments, setDoneAssignments] = useState<AssignmentInterface[] | undefined>(undefined)
   const [expiredUndoneAssignments, setExpiredUndoneAssignments] = useState<AssignmentInterface[] | undefined>(undefined)

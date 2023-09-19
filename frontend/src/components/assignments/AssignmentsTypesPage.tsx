@@ -13,9 +13,9 @@ function AssignmentsTypesPage({type}: { type: string }) {
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [assignments, setAssignments] = useState<AssignmentInterface[]>([])
   const navigate = useNavigate()
-  const group= useSelector(selectGroup)
-  const role = useSelector(selectRole)
-  const userState = useSelector(selectUserState)
+  const group= useAppSelector(selectGroup)
+  const role = useAppSelector(selectRole)
+  const userState = useAppSelector(selectUserState)
 
   useEffect(() => {
     function typeOfAssignment() {

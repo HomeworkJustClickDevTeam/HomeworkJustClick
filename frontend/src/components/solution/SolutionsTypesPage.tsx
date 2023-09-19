@@ -10,14 +10,15 @@ import { selectGroup } from "../../redux/groupSlice"
 import { GroupInterface } from "../../types/GroupInterface"
 import { setIsLoading } from "../../redux/isLoadingSlice"
 import { selectRole } from "../../redux/roleSlice"
+import { useAppDispatch } from "../../types/HooksRedux"
 
 function SolutionsTypesPage({type}: { type: string }) {
   const [solutionsExtended, setSolutionsExtended] = useState<
     SolutionExtendedInterface[]
   >([])
-  const group= useSelector(selectGroup)
-  const role = useSelector(selectRole)
-  const dispatch = useDispatch()
+  const group= useAppSelector(selectGroup)
+  const role = useAppSelector(selectRole)
+  const dispatch = useAppDispatch()
   const {checkSolutions, uncheckedSolutions, lateSolutions} = solutionFilter({
     setSolutionsExtended,
     idGroup: group?.id as unknown as string,

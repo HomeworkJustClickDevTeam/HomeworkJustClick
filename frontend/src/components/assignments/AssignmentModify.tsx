@@ -19,7 +19,7 @@ function AssignmentModify({assignment, setAssignment}: AssignmentModifyPropsInte
   const navigate = useNavigate()
   const [toSend, setToSend] = useState<boolean>(false)
   const [toNavigate, setToNavigate] = useState<boolean>(false)
-  const group= useSelector(selectGroup)
+  const group= useAppSelector(selectGroup)
 
   useEffect(() => {
     if (toNavigate) {

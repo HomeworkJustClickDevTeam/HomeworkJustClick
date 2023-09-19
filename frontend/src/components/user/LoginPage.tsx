@@ -6,6 +6,7 @@ import { LoginUserInterface } from "../../types/LoginUserInterface"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "../../redux/store"
 import { loginUser } from "../../services/otherServices"
+import { useAppDispatch } from "../../types/HooksRedux"
 
 
 const LoginPage = () => {
@@ -14,7 +15,7 @@ const LoginPage = () => {
     password: "",
   })
   const navigate = useNavigate()
-  const dispatch :AppDispatch = useDispatch()
+  const dispatch :AppDispatch = useAppDispatch()
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()

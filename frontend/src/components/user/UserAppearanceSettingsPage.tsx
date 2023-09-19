@@ -7,7 +7,7 @@ import { selectUserState } from "../../redux/userStateSlice"
 
 export default function UserAppearanceSettingsPage() {
   const [color, setColor] = useState<number | undefined>(undefined)
-  const userState = useSelector(selectUserState)
+  const userState = useAppSelector(selectUserState)
 
   const handleColorChange = async (
     event: React.ChangeEvent<HTMLInputElement>

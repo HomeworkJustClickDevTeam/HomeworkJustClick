@@ -6,7 +6,7 @@ import { useSelector } from "react-redux"
 import { selectUserState } from "../../redux/userStateSlice"
 
 export default function UserGeneralSettingsPage() {
-  const userState = useSelector(selectUserState)
+  const userState = useAppSelector(selectUserState)
   const [index, setIndex] = useState<number | undefined>(undefined)
 
   useEffect(() => {

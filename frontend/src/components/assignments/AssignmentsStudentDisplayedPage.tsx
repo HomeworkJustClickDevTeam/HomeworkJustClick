@@ -9,7 +9,7 @@ import { useSelector } from "react-redux"
 export default function AssignmentsStudentDisplayedPage() {
   const [assignments, setAssignments] = useState<AssignmentInterface[]>([])
   const navigate = useNavigate()
-  const userState = useSelector(selectUserState)
+  const userState = useAppSelector(selectUserState)
 
   useEffect(() => {
     if (userState !== null) {

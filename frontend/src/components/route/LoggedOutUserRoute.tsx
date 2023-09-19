@@ -7,7 +7,7 @@ import { useSelector } from "react-redux"
 
 
 export const LoggedOutUserRoute = () => {
-  const userState = useSelector(selectUserState)
+  const userState = useAppSelector(selectUserState)
   if (userState !== null) {
     return (
       <Navigate to={"/"} replace/>

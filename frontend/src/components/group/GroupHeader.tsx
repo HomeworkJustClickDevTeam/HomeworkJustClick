@@ -11,8 +11,8 @@ import { selectRole } from "../../redux/roleSlice"
 function GroupHeader({}:{key:number}) {
   const location = useLocation();
   const locationSplit = location.pathname.split("/");
-  const group= useSelector(selectGroup)
-  const role = useSelector(selectRole)
+  const group= useAppSelector(selectGroup)
+  const role = useAppSelector(selectRole)
 
   useEffect(() => {
   }, [group]);
