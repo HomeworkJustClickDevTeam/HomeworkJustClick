@@ -15,16 +15,16 @@ function SolutionPage() {
   const dispatch = useDispatch()
   const [isCheck, setIsCheck] = useState<boolean>(false)
   useEffect(() => {
-    let ignore = false
+    let mounted = true
     getEvaluationBySolutionPostgresService(solutionExtended.id)
       .then((r) => {
-        if(!ignore){
+        if(mounted){
           setPoints(r.data.result)
           setIsCheck(true)
         }
       })
-      .finally(() => dispatch(setIsLoading(false)))
-    return () => {ignore = true}
+      dispatch(setIsLoading(false))
+    return () => {mounted = false}
   }, [])
 
   const handleDisableRating = () => {
