@@ -6,16 +6,19 @@ import Loading from "../animations/Loading"
 import { AxiosError } from "axios"
 import { AssignmentInterface } from "../../types/AssignmentInterface"
 import { selectRole } from "../../redux/roleSlice"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { selectGroup } from "../../redux/groupSlice"
+import { setIsLoading } from "../../redux/isLoadingSlice"
+import { useAppDispatch, useAppSelector } from "../../types/HooksRedux"
 
 function AssignmentsGroupDisplayedPage() {
   const [assignments, setAssignments] = useState<AssignmentInterface[]>([])
-  const [isLoading, setIsLoading] = useState<boolean>(true)
-  const role = useSelector(selectRole)
-  const group= useSelector(selectGroup)
+  const role = useAppSelector(selectRole)
+  const group= useAppSelector(selectGroup)
+  const dispatch = useAppDispatch()
 
   useEffect(() => {
+    dispatch(setIsLoading(true))
     getAssignmentsByGroupPostgresService(group?.id as unknown as string).then((response) => {
       const assignmentFromServer = response.data as AssignmentInterface[]
       if (role === "Teacher") {
@@ -27,12 +30,9 @@ function AssignmentsGroupDisplayedPage() {
       }
     })
       .catch((error: AxiosError) => console.log(error))
-    setIsLoading(false)
+    dispatch(setIsLoading(false))
   }, [])
 
-  if (isLoading) {
-    return <Loading/>
-  }
   return (
     <div className='relative h-[420px]'>
       {role === "Teacher" && (

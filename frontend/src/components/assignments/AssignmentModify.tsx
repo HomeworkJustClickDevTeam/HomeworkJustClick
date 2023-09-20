@@ -10,6 +10,7 @@ import { AssignmentModifyFile } from "./AssignmentModifyFile"
 import { AssignmentPropsInterface } from "../../types/AssignmentPropsInterface"
 import { selectGroup } from "../../redux/groupSlice"
 import { useSelector } from "react-redux"
+import { useAppSelector } from "../../types/HooksRedux"
 
 interface AssignmentModifyPropsInterface extends AssignmentPropsInterface {
   setAssignment: (assignment: (prevState: any) => any) => void
@@ -19,7 +20,7 @@ function AssignmentModify({assignment, setAssignment}: AssignmentModifyPropsInte
   const navigate = useNavigate()
   const [toSend, setToSend] = useState<boolean>(false)
   const [toNavigate, setToNavigate] = useState<boolean>(false)
-  const group= useSelector(selectGroup)
+  const group= useAppSelector(selectGroup)
 
   useEffect(() => {
     if (toNavigate) {

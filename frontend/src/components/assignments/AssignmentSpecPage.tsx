@@ -22,6 +22,7 @@ import { selectUserState } from "../../redux/userStateSlice"
 import { selectGroup } from "../../redux/groupSlice"
 import { setIsLoading } from "../../redux/isLoadingSlice"
 import { selectRole } from "../../redux/roleSlice"
+import { useAppDispatch, useAppSelector } from "../../types/HooksRedux"
 
 function AssignmentSpecPage() {
   const {idAssignment} = useParams()
@@ -31,10 +32,10 @@ function AssignmentSpecPage() {
   const [isSolutionChecked, setIsSolutionChecked] = useState<boolean | undefined>(undefined)
   const [solution, setSolution] = useState<SolutionInterface | undefined>(undefined)
   const [assignment, setAssignment] = useState<AssignmentInterface | undefined>(undefined)
-  const userState = useSelector(selectUserState)
-  const group= useSelector(selectGroup)
-  const dispatch = useDispatch()
-  const role = useSelector(selectRole)
+  const userState = useAppSelector(selectUserState)
+  const group= useAppSelector(selectGroup)
+  const dispatch = useAppDispatch()
+  const role = useAppSelector(selectRole)
 
   useEffect(() => {
     let userId = userState?.id.toString()
@@ -42,10 +43,11 @@ function AssignmentSpecPage() {
       userId = optionalUserId
     }
     if (userId !== undefined) {
-      let ignore = false
+      dispatch(setIsLoading(true))
+      let mounted =true
       getUncheckedSolutionByUserAssignmentGroupPostgresService(userId, idAssignment as string, group?.id as unknown as string)
         .then((response) => {
-          if(!ignore) {
+          if(mounted) {
             if (response.data.id !== null) {
               setIsSolutionChecked(false)
               setSolution(response.data)
@@ -56,7 +58,7 @@ function AssignmentSpecPage() {
           if (error.response?.status === 404) {
             getCheckedSolutionByUserAssignmentGroupPostgresService(userId as string, idAssignment as string, group?.id as unknown as string)
               .then((response) => {
-                if(!ignore) {
+                if(mounted) {
                   if (response.data.id !== null) {
                     setIsSolutionChecked(true)
                     setSolution(response.data)
@@ -71,7 +73,7 @@ function AssignmentSpecPage() {
         .finally(() => {
           getAssignmentPostgresService(idAssignment as string)
             .then((response) => {
-              if(!ignore) {
+              if(mounted) {
                 const responseData = response.data
                 const parsedDate = parseISO(responseData.completionDatetime)
                 setAssignment({
@@ -86,7 +88,7 @@ function AssignmentSpecPage() {
             })
         })
       return () => {
-        ignore = true
+        mounted = true
       }
     }
 

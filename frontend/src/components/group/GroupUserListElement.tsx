@@ -1,6 +1,7 @@
 import { useContext } from "react"
 import { selectRole } from "../../redux/roleSlice"
 import { useSelector } from "react-redux"
+import { useAppSelector } from "../../types/HooksRedux"
 
 interface GroupUserListElementProps {
   userToShow: { firstname: string, lastname: string, id: number }
@@ -8,7 +9,7 @@ interface GroupUserListElementProps {
 }
 
 function GroupUserListElement({userToShow, isTeacher}: GroupUserListElementProps) {
-  const role = useSelector(selectRole)
+  const role = useAppSelector(selectRole)
 
   if (!isTeacher && role === "Teacher") {
     return (

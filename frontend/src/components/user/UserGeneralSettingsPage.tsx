@@ -4,9 +4,10 @@ import { AxiosError } from "axios"
 import { useNavigate } from "react-router-dom"
 import { useSelector } from "react-redux"
 import { selectUserState } from "../../redux/userStateSlice"
+import { useAppSelector } from "../../types/HooksRedux"
 
 export default function UserGeneralSettingsPage() {
-  const userState = useSelector(selectUserState)
+  const userState = useAppSelector(selectUserState)
   const [index, setIndex] = useState<number | undefined>(undefined)
 
   useEffect(() => {

@@ -8,14 +8,15 @@ import { useSelector } from "react-redux"
 import { selectGroup } from "../../redux/groupSlice"
 import { selectRole } from "../../redux/roleSlice"
 import { selectUserState } from "../../redux/userStateSlice"
+import { useAppSelector } from "../../types/HooksRedux"
 
 function AssignmentsTypesPage({type}: { type: string }) {
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [assignments, setAssignments] = useState<AssignmentInterface[]>([])
   const navigate = useNavigate()
-  const group= useSelector(selectGroup)
-  const role = useSelector(selectRole)
-  const userState = useSelector(selectUserState)
+  const group= useAppSelector(selectGroup)
+  const role = useAppSelector(selectRole)
+  const userState = useAppSelector(selectUserState)
 
   useEffect(() => {
     function typeOfAssignment() {

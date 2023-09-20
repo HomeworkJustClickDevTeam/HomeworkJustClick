@@ -6,11 +6,12 @@ import Loading from "../animations/Loading"
 import { useSelector } from "react-redux"
 import { selectIsLoading } from "../../redux/isLoadingSlice"
 import { selectUserState } from "../../redux/userStateSlice"
+import { useAppSelector } from "../../types/HooksRedux"
 
 
 export const LoggedInUserRoute = () => {
-  const isLoading = useSelector(selectIsLoading)
-  const userState = useSelector(selectUserState)
+  const isLoading = useAppSelector(selectIsLoading)
+  const userState = useAppSelector(selectUserState)
   if (userState === null) {
     return (
       <Navigate to={"/home"} replace/>

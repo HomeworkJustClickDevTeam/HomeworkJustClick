@@ -12,12 +12,13 @@ import React, { useContext, useEffect } from "react"
 import { selectGroup, setGroup } from "../../redux/groupSlice"
 import { useDispatch, useSelector } from "react-redux"
 import { GroupInterface } from "../../types/GroupInterface"
+import { useAppDispatch, useAppSelector } from "../../types/HooksRedux"
 
 export default function GroupGeneralSettings() {
   const navigate = useNavigate()
-  const group= useSelector(selectGroup)
+  const group= useAppSelector(selectGroup)
   const currentURL = `${window.location.origin}/group/${group?.id}`
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
   const groupDeletionHandler = async () => {
     await deleteGroupPostgresService(group?.id as unknown as string)

@@ -5,11 +5,12 @@ import LogOut from "../user/LogOut"
 import { useSelector } from "react-redux"
 import { selectHomePageIn } from "../../redux/homePageInSlice"
 import { selectUserState } from "../../redux/userStateSlice"
+import { useAppSelector } from "../../types/HooksRedux"
 
 function HeaderLoggedInState() {
   const navigate = useNavigate()
-  const homePageIn = useSelector(selectHomePageIn)
-  const userState = useSelector(selectUserState)
+  const homePageIn = useAppSelector(selectHomePageIn)
+  const userState = useAppSelector(selectUserState)
   return (
     <section className='relative flex h-16 text-white font-lato font-normal bg-main_blue items-center select-none'>
       {!homePageIn && (

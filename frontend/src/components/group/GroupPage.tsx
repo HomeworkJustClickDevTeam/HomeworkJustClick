@@ -12,17 +12,26 @@ import { selectUserState } from "../../redux/userStateSlice"
 import { selectHomePageIn, setHomePageIn } from "../../redux/homePageInSlice"
 import { selectGroup, setGroup } from "../../redux/groupSlice"
 import { selectRole, setRole } from "../../redux/roleSlice"
+import { setIsLoading } from "../../redux/isLoadingSlice"
+import { useAppDispatch, useAppSelector } from "../../types/HooksRedux"
 
 function GroupPage() {
   const {idGroup} = useParams()
-  const userState = useSelector(selectUserState)
-  const group= useSelector(selectGroup)
-  const dispatch = useDispatch()
-  const role = useSelector(selectRole)
+  const userState = useAppSelector(selectUserState)
+  const group= useAppSelector(selectGroup)
+  const dispatch = useAppDispatch()
+  const role = useAppSelector(selectRole)
 
   useEffect(() => {
-    getGroup()
+    let mounted = true
+
+    if(mounted){
+      dispatch(setIsLoading(true))
+      getGroup()
+    }
+    dispatch(setIsLoading(false))
     dispatch(setHomePageIn(false))
+    return () => {mounted = false}
   }, []);
 
 

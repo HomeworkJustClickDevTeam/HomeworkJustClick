@@ -6,13 +6,14 @@ import { SolutionFile } from "./SolutionFile"
 import { SolutionExtendedInterface } from "../../types/SolutionExtendedInterface"
 import { useDispatch, useSelector } from "react-redux"
 import { selectIsLoading, setIsLoading } from "../../redux/isLoadingSlice"
+import { useAppDispatch } from "../../types/HooksRedux"
 
 function SolutionPage() {
   let {state} = useLocation()
   const [solutionExtended] = useState<SolutionExtendedInterface>(state?.solution)
   const [points, setPoints] = useState<number>()
   const [showRating, setShowRating] = useState<boolean>(false)
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const [isCheck, setIsCheck] = useState<boolean>(false)
   useEffect(() => {
     let mounted = true
@@ -53,7 +54,8 @@ function SolutionPage() {
         <div>
           {solutionExtended.id &&
             <Link
-            to={`/group/${solutionExtended.assignment.groupId}/solution/${solutionExtended.user.id}/${solutionExtended.assignment.id}/advancedEvaluation`}
+            to={`/advancedEvaluation`}
+            state={solutionExtended.id}
             className="absolute underline font-semibold bottom-0 left-0 mb-2 ml-4">Zaawansowane Sprawdzanie</Link>
           }
           {showRating ? (
