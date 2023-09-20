@@ -43,7 +43,6 @@ export const useGetFiles = (id: number, by:"assignment" | "solution") => {
                   fileName: mongoResponse.data.name,
                   fileType: fileData.file.type
                 }))
-                dispatch(setIsLoading(false))
               }
             }
           }
@@ -56,6 +55,7 @@ export const useGetFiles = (id: number, by:"assignment" | "solution") => {
     dispatch(setIsLoading(true))
     fetchData()
     dispatch(setIsLoading(false))
+
     return () => {mounted = false}
   }, [id, by])
   return files

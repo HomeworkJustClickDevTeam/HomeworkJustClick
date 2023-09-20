@@ -12,7 +12,7 @@ import React, { useContext, useEffect } from "react"
 import { selectGroup, setGroup } from "../../redux/groupSlice"
 import { useDispatch, useSelector } from "react-redux"
 import { GroupInterface } from "../../types/GroupInterface"
-import { useAppDispatch } from "../../types/HooksRedux"
+import { useAppDispatch, useAppSelector } from "../../types/HooksRedux"
 
 export default function GroupGeneralSettings() {
   const navigate = useNavigate()

@@ -5,6 +5,7 @@ import LogOut from "../user/LogOut"
 import { useSelector } from "react-redux"
 import { selectHomePageIn } from "../../redux/homePageInSlice"
 import { selectUserState } from "../../redux/userStateSlice"
+import { useAppSelector } from "../../types/HooksRedux"
 
 function HeaderLoggedInState() {
   const navigate = useNavigate()

@@ -8,6 +8,7 @@ import { useSelector } from "react-redux"
 import { selectGroup } from "../../redux/groupSlice"
 import { selectRole } from "../../redux/roleSlice"
 import { selectUserState } from "../../redux/userStateSlice"
+import { useAppSelector } from "../../types/HooksRedux"
 
 function AssignmentsTypesPage({type}: { type: string }) {
   const [isLoading, setIsLoading] = useState<boolean>(true)

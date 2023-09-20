@@ -9,7 +9,7 @@ import { selectRole } from "../../redux/roleSlice"
 import { useDispatch, useSelector } from "react-redux"
 import { selectGroup } from "../../redux/groupSlice"
 import { setIsLoading } from "../../redux/isLoadingSlice"
-import { useAppDispatch } from "../../types/HooksRedux"
+import { useAppDispatch, useAppSelector } from "../../types/HooksRedux"
 
 function AssignmentsGroupDisplayedPage() {
   const [assignments, setAssignments] = useState<AssignmentInterface[]>([])

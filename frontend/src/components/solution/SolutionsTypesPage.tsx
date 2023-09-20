@@ -10,7 +10,7 @@ import { selectGroup } from "../../redux/groupSlice"
 import { GroupInterface } from "../../types/GroupInterface"
 import { setIsLoading } from "../../redux/isLoadingSlice"
 import { selectRole } from "../../redux/roleSlice"
-import { useAppDispatch } from "../../types/HooksRedux"
+import { useAppDispatch, useAppSelector } from "../../types/HooksRedux"
 
 function SolutionsTypesPage({type}: { type: string }) {
   const [solutionsExtended, setSolutionsExtended] = useState<

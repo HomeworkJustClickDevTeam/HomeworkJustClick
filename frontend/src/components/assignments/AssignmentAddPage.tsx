@@ -8,6 +8,7 @@ import { AssignmentToSendInterface } from "../../types/AssignmentToSendInterface
 import { selectGroup } from "../../redux/groupSlice"
 import { useSelector } from "react-redux"
 import { selectUserState } from "../../redux/userStateSlice"
+import { useAppSelector } from "../../types/HooksRedux"
 
 
 function AssignmentAddPage() {

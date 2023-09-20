@@ -4,6 +4,7 @@ import { Navigate, Outlet } from "react-router-dom"
 import HeaderLoggedOutState from "../header/HeaderLoggedOutState"
 import { selectUserState } from "../../redux/userStateSlice"
 import { useSelector } from "react-redux"
+import { useAppSelector } from "../../types/HooksRedux"
 
 
 export const LoggedOutUserRoute = () => {

@@ -13,6 +13,7 @@ import { UserInterface } from "../../types/UserInterface"
 import { AssignmentInterface } from "../../types/AssignmentInterface"
 import { useSelector } from "react-redux"
 import { selectGroup } from "../../redux/groupSlice"
+import { useAppSelector } from "../../types/HooksRedux"
 export default function GroupUserProfilePage() {
   const {userProfileId} = useParams()
   const group= useAppSelector(selectGroup)

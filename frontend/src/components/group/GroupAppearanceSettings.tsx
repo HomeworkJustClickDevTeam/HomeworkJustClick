@@ -5,7 +5,7 @@ import { colorsArray } from "../../assets/colors"
 import { selectGroup, setGroup } from "../../redux/groupSlice"
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch } from "../../redux/store"
-import { useAppDispatch } from "../../types/HooksRedux"
+import { useAppDispatch, useAppSelector } from "../../types/HooksRedux"
 
 export default function GroupAppearanceSettings() {
   const dispatch:AppDispatch = useAppDispatch()

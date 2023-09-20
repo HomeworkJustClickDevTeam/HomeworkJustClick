@@ -13,7 +13,7 @@ import { selectHomePageIn, setHomePageIn } from "../../redux/homePageInSlice"
 import { selectGroup, setGroup } from "../../redux/groupSlice"
 import { selectRole, setRole } from "../../redux/roleSlice"
 import { setIsLoading } from "../../redux/isLoadingSlice"
-import { useAppDispatch } from "../../types/HooksRedux"
+import { useAppDispatch, useAppSelector } from "../../types/HooksRedux"
 
 function GroupPage() {
   const {idGroup} = useParams()

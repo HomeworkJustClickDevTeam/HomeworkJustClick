@@ -8,6 +8,7 @@ import { AxiosError } from "axios"
 import { UserInterface } from "../../types/UserInterface"
 import { useSelector } from "react-redux"
 import { selectRole } from "../../redux/roleSlice"
+import { useAppSelector } from "../../types/HooksRedux"
 
 interface GroupUsersSettingsListElementProps {
   makeTeacher(arg: UserInterface): void,

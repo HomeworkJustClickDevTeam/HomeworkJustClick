@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { selectIsLoading, setIsLoading } from "../../redux/isLoadingSlice"
 import { selectUserState } from "../../redux/userStateSlice"
 import loading from "../animations/Loading"
-import { useAppDispatch } from "../../types/HooksRedux"
+import { useAppDispatch, useAppSelector } from "../../types/HooksRedux"
 
 
 interface FileRespondMongoInterface {
@@ -68,6 +68,7 @@ function SolutionAdd({assignment}: AssignmentPropsInterface) {
         }
       })
       .catch(() => setIsFile(false))
+    dispatch(setIsLoading(false))
     return () => {
       mounted = false
     }

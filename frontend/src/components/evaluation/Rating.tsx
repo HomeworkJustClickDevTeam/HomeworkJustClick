@@ -3,6 +3,7 @@ import { createEvaluationWithUserAndSolution } from "../../services/postgresData
 import { useNavigate } from "react-router-dom"
 import { selectUserState } from "../../redux/userStateSlice"
 import { useSelector } from "react-redux"
+import { useAppSelector } from "../../types/HooksRedux"
 interface RatingPropsInterface {
   maxPoints: number
   points: number | undefined

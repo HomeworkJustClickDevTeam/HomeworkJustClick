@@ -6,6 +6,7 @@ import Loading from "../animations/Loading"
 import { useSelector } from "react-redux"
 import { selectIsLoading } from "../../redux/isLoadingSlice"
 import { selectUserState } from "../../redux/userStateSlice"
+import { useAppSelector } from "../../types/HooksRedux"
 
 
 export const LoggedInUserRoute = () => {

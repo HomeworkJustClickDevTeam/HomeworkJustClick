@@ -22,7 +22,7 @@ import { selectUserState } from "../../redux/userStateSlice"
 import { selectGroup } from "../../redux/groupSlice"
 import { setIsLoading } from "../../redux/isLoadingSlice"
 import { selectRole } from "../../redux/roleSlice"
-import { useAppDispatch } from "../../types/HooksRedux"
+import { useAppDispatch, useAppSelector } from "../../types/HooksRedux"
 
 function AssignmentSpecPage() {
   const {idAssignment} = useParams()
