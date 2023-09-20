@@ -8,12 +8,13 @@ import { UserInterface } from "../../types/UserInterface"
 import { useSelector } from "react-redux"
 import { selectGroup } from "../../redux/groupSlice"
 import { selectUserState } from "../../redux/userStateSlice"
+import { useAppSelector } from "../../types/HooksRedux"
 
 export default function GroupUsersSettings() {
   const [teachers, setTeachers] = useState<UserInterface[]>()
   const [students, setStudents] = useState<UserInterface[]>([])
-  const group= useSelector(selectGroup)
-  const userState = useSelector(selectUserState)
+  const group= useAppSelector(selectGroup)
+  const userState = useAppSelector(selectUserState)
 
   useEffect(() => {
     getTeachersByGroupPostgresService(group?.id as unknown as string)

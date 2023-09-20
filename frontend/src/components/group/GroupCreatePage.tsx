@@ -5,6 +5,7 @@ import { GroupCreateInterface } from "../../types/GroupCreateInterface"
 import { useDispatch, useSelector } from "react-redux"
 import { selectUserState } from "../../redux/userStateSlice"
 import { setHomePageIn } from "../../redux/homePageInSlice"
+import { useAppDispatch, useAppSelector } from "../../types/HooksRedux"
 
 
 function GroupCreatePage() {
@@ -12,8 +13,8 @@ function GroupCreatePage() {
     name: "",
     description: "",
   })
-  const dispatch = useDispatch()
-  const userState = useSelector(selectUserState)
+  const dispatch = useAppDispatch()
+  const userState = useAppSelector(selectUserState)
   const navigate = useNavigate()
   useEffect(() => {
     dispatch(setHomePageIn(false))

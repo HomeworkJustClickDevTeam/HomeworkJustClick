@@ -4,10 +4,11 @@ import { AxiosError } from "axios"
 import { useNavigate } from "react-router-dom"
 import { useSelector } from "react-redux"
 import { selectUserState } from "../../redux/userStateSlice"
+import { useAppSelector } from "../../types/HooksRedux"
 
 export default function UserAppearanceSettingsPage() {
   const [color, setColor] = useState<number | undefined>(undefined)
-  const userState = useSelector(selectUserState)
+  const userState = useAppSelector(selectUserState)
 
   const handleColorChange = async (
     event: React.ChangeEvent<HTMLInputElement>

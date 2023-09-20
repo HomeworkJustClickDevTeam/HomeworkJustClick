@@ -8,10 +8,11 @@ import { getFileMongoService } from "../../services/mongoDatabaseServices"
 import { FileInterface } from "../../types/FileInterface"
 import { useDispatch } from "react-redux"
 import { setIsLoading } from "../../redux/isLoadingSlice"
+import { useAppDispatch } from "../../types/HooksRedux"
 
 export const useGetFiles = (id: number, by:"assignment" | "solution") => {
   const [files, setFiles] = useState<FileInterface[]>([])
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,13 +37,12 @@ export const useGetFiles = (id: number, by:"assignment" | "solution") => {
                 byteArray[i] = decodedData.charCodeAt(i)
               }
               const blob = new Blob([byteArray], {type})
-              if(!ignore){
+              if(mounted){
                 setFiles(files => files.concat({
                   fileData: blob,
                   fileName: mongoResponse.data.name,
                   fileType: fileData.file.type
                 }))
-                dispatch(setIsLoading(false))
               }
             }
           }
@@ -51,11 +51,12 @@ export const useGetFiles = (id: number, by:"assignment" | "solution") => {
         console.log("Error retrieving database file:", e)
       }
     }
-    let ignore = false
+    let mounted = true
     dispatch(setIsLoading(true))
     fetchData()
     dispatch(setIsLoading(false))
-    return () => {ignore = true}
+
+    return () => {mounted = false}
   }, [id, by])
   return files
 }

@@ -6,25 +6,26 @@ import { SolutionFile } from "./SolutionFile"
 import { SolutionExtendedInterface } from "../../types/SolutionExtendedInterface"
 import { useDispatch, useSelector } from "react-redux"
 import { selectIsLoading, setIsLoading } from "../../redux/isLoadingSlice"
+import { useAppDispatch } from "../../types/HooksRedux"
 
 function SolutionPage() {
   let {state} = useLocation()
   const [solutionExtended] = useState<SolutionExtendedInterface>(state?.solution)
   const [points, setPoints] = useState<number>()
   const [showRating, setShowRating] = useState<boolean>(false)
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const [isCheck, setIsCheck] = useState<boolean>(false)
   useEffect(() => {
-    let ignore = false
+    let mounted = true
     getEvaluationBySolutionPostgresService(solutionExtended.id)
       .then((r) => {
-        if(!ignore){
+        if(mounted){
           setPoints(r.data.result)
           setIsCheck(true)
         }
       })
       .finally(() => dispatch(setIsLoading(false)))
-    return () => {ignore = true}
+    return () => {mounted = false}
   }, [])
 
   const handleDisableRating = () => {

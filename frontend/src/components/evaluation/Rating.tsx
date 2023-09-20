@@ -3,6 +3,7 @@ import { createEvaluationWithUserAndSolution } from "../../services/postgresData
 import { useNavigate } from "react-router-dom"
 import { selectUserState } from "../../redux/userStateSlice"
 import { useSelector } from "react-redux"
+import { useAppSelector } from "../../types/HooksRedux"
 interface RatingPropsInterface {
   maxPoints: number
   points: number | undefined
@@ -20,7 +21,7 @@ export function Rating({
                        }: RatingPropsInterface) {
   const [active, setActive] = useState<number>()
   const navigate = useNavigate()
-  const userState = useSelector(selectUserState)
+  const userState = useAppSelector(selectUserState)
   const handleMark = () => {
     const body = {result: points, grade: 0}
     createEvaluationWithUserAndSolution(userState?.id as unknown as string, solutionId.toString(), body)
