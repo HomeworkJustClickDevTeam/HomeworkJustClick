@@ -45,7 +45,7 @@ postgresqlDatabaseJSON.interceptors.response.use((response)=> {
   return response
 }, async (error)=>{
   const originalRequest = error.config
-  if(error.response.status === 403 && !originalRequest._retry){
+  if(error !== undefined && error.response.status === 403 && !originalRequest._retry){
     originalRequest._retry = true
     localStorage.removeItem("user")
     window.dispatchEvent(new Event('storage'))

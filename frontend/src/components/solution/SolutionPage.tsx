@@ -24,7 +24,7 @@ function SolutionPage() {
           setIsCheck(true)
         }
       })
-      .finally(() => dispatch(setIsLoading(false)))
+      dispatch(setIsLoading(false))
     return () => {mounted = false}
   }, [])
 

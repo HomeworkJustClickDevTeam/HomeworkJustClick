@@ -16,6 +16,7 @@ import { selectIsLoading, setIsLoading } from "../../redux/isLoadingSlice"
 import { selectUserState } from "../../redux/userStateSlice"
 import loading from "../animations/Loading"
 import { useAppDispatch, useAppSelector } from "../../types/HooksRedux"
+import { useGetFiles } from "../customHooks/useGetFiles"
 
 
 interface FileRespondMongoInterface {
@@ -27,14 +28,10 @@ interface FileRespondMongoInterface {
 function SolutionAdd({assignment}: AssignmentPropsInterface) {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
-  const isLoading = useAppSelector(selectIsLoading)
   const userState = useAppSelector(selectUserState)
   const [file, setFile] = useState<File>()
-  const [response, setResponse] = useState<FileRespondMongoInterface>({
-    format: "",
-    id: "",
-    name: "",
-  })
+  const [response, setResponse] = useState<FileRespondMongoInterface | undefined>(undefined)
+  const files = useGetFiles(assignment.id, 'assignment')
   const [solution] = useState<SolutionToSendInterface>({
     creationDatetime: new Date().toISOString(),
     comment: "",
@@ -42,37 +39,31 @@ function SolutionAdd({assignment}: AssignmentPropsInterface) {
   })
 
   const [solutionFromServer, setSolutionFromServer] = useState<SolutionInterface | undefined>(undefined)
-  const [isFile, setIsFile] = useState<boolean>()
 
 
   useEffect(() => {
     dispatch(setIsLoading(true))
     let mounted = true
-    getFilesByAssignmentPostgresService(assignment.id as unknown as string)
-      .then(async () => {
-        if (mounted) {
-          if (solutionFromServer?.id && response.id) {
-            setIsFile(true)
-            await createFileWithSolutionPostgresService(
-              response.id,
-              response.format,
-              response.name,
-              solutionFromServer.id)
-              .then((r) => {
-                if (mounted) {
-                  navigate(-1)
-                }
-              })
-              .catch((e) => console.log(e))
-          }
-        }
-      })
-      .catch(() => setIsFile(false))
+    if (mounted) {
+      if((response && solutionFromServer) !== undefined) {
+        createFileWithSolutionPostgresService(
+          response?.id as string,
+          response?.format as string,
+          response?.name as string,
+          solutionFromServer?.id as number)
+          .then((r) => {
+            if (mounted) {
+              navigate(-1)
+            }
+          })
+          .catch((e) => console.log(e))
+      }
+    }
     dispatch(setIsLoading(false))
     return () => {
       mounted = false
     }
-  }, [])
+  }, [solutionFromServer?.id, response?.id])
 
 
   function handleChangeFile(e: ChangeEvent<HTMLInputElement>) {
@@ -92,13 +83,11 @@ function SolutionAdd({assignment}: AssignmentPropsInterface) {
         formData.append("file", file)
         postFileMongoService(formData)
           .then((r) => {
-            console.log(r.data)
             setResponse(r.data)
           })
           .catch((e) => console.log(e))
         createSolutionWithUserAndAssignmentPostgresService(userState?.id.toString(), assignment.id.toString(), solution)
           .then((r) => {
-            console.log(r)
             setSolutionFromServer(r.data)
           })
           .catch((e) => console.log(e))
@@ -114,7 +103,7 @@ function SolutionAdd({assignment}: AssignmentPropsInterface) {
       <div><span
         className='font-semibold'>Data ukończenia: </span>{format(assignment.completionDatetime, "dd.MM.yyyy, HH:mm")}
       </div>
-      {isFile && <AssignmentFile assignmentId={assignment.id} />}
+      {files.length > 0 && <AssignmentFile assignmentId={assignment.id} />}
       <input type="file" onChange={(e)=>handleChangeFile(e)} />
       <div> {file && `${file.name} - ${file.type}`}</div>
       <button type={"submit"} onClick={(e) => handleUploadClick(e)}

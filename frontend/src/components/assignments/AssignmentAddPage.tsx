@@ -21,6 +21,7 @@ function AssignmentAddPage() {
     taskDescription: "",
     visible: false,
     max_points: 1,
+    auto_penalty: 50
   })
   const [toSend, setToSend] = useState<boolean>(false)
   const [idAssignment, setIdAssignment] = useState<number>()
