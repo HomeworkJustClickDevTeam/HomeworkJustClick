@@ -38,7 +38,7 @@ export default function AdvancedEvaluationPage() {
 
   useEffect(() => {
     if(file){
-      file.fileData.text()
+      file.data.text()
         .then((text) => {
           setFileText(text)})
     }

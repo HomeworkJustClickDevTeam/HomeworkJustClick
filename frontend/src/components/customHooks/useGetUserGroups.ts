@@ -12,7 +12,7 @@ export const useGetUserGroups = (userId:number|undefined, byRole: 'student'|'tea
   const dispatch = useAppDispatch()
   useEffect(() => {
     let mounted = true
-    if(userId !== undefined){
+    if(userId !== undefined && userId !== null){
       if(byRole==="teacher"){
         dispatch(setIsLoading(true))
         getGroupsByTeacherPostgresService(userId.toString())

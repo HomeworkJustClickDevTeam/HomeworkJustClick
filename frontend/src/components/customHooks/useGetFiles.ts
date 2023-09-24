@@ -24,27 +24,33 @@ export const useGetFiles = (id: number, by:"assignment" | "solution") => {
         else if(by === "assignment"){
           response = await getFilesByAssignmentPostgresService(id)
         }
-        if(response){
+        if(response !== null && response !== undefined){
           const databaseFiles:FileFromPostgresInterface[] = response.data
+          let updatedFiles:FileInterface[] = []
           for (const file of databaseFiles) {
             if(file){
               const mongoResponse = await getFileMongoService(file.mongo_id)
-              const fileData = mongoResponse.data
-              const type = fileData.file.type
-              const decodedData = window.atob(fileData.file.data)
-              const byteArray = new Uint8Array(decodedData.length)
-              for (let i = 0; i < decodedData.length; i++) {
-                byteArray[i] = decodedData.charCodeAt(i)
-              }
-              const blob = new Blob([byteArray], {type})
-              if(mounted){
-                setFiles(files => files.concat({
-                  fileData: blob,
-                  fileName: mongoResponse.data.name,
-                  fileType: fileData.file.type
-                }))
+              if(mongoResponse !== undefined && mongoResponse!==null){
+                const fileData = mongoResponse.data
+                const type = fileData.file.type
+                const decodedData = window.atob(fileData.file.data)
+                const byteArray = new Uint8Array(decodedData.length)
+                for (let i = 0; i < decodedData.length; i++) {
+                  byteArray[i] = decodedData.charCodeAt(i)
+                }
+                const blob = new Blob([byteArray], {type})
+                updatedFiles.push({
+                  data: blob,
+                  name: mongoResponse.data.name,
+                  type: fileData.file.type,
+                  mongoId: file.mongo_id,
+                  postgresId: file.id
+                })
               }
             }
+          }
+          if(mounted){
+            setFiles(updatedFiles)
           }
         }
       } catch (e) {
@@ -52,10 +58,11 @@ export const useGetFiles = (id: number, by:"assignment" | "solution") => {
       }
     }
     let mounted = true
-    dispatch(setIsLoading(true))
-    fetchData()
-    dispatch(setIsLoading(false))
-
+    if(id !== undefined && id !== null) {
+      dispatch(setIsLoading(true))
+      fetchData()
+      dispatch(setIsLoading(false))
+    }
     return () => {mounted = false}
   }, [id, by])
   return files
