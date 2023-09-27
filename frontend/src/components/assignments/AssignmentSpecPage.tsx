@@ -22,90 +22,30 @@ import { selectGroup } from "../../redux/groupSlice"
 import { setIsLoading } from "../../redux/isLoadingSlice"
 import { selectRole } from "../../redux/roleSlice"
 import { useAppDispatch, useAppSelector } from "../../types/HooksRedux"
+import { useGetSolutionByUserAssignmentGroup } from "../customHooks/useGetSolutionByUserAssignmentGroup"
+import { useGetAssignment } from "../customHooks/useGetAssignment"
 
 function AssignmentSpecPage() {
   const {idAssignment} = useParams()
   const location = useLocation()
-  const navigate = useNavigate()
-  const optionalUserId: string | null = location.state
-  const [isSolutionChecked, setIsSolutionChecked] = useState<boolean | undefined>(undefined)
-  const [solution, setSolution] = useState<SolutionInterface | undefined>(undefined)
-  const [assignment, setAssignment] = useState<AssignmentInterface | undefined>(undefined)
+  let userId: number | undefined = location.state
+  const {assignment, setAssignment}= useGetAssignment(idAssignment as unknown as number)
   const userState = useAppSelector(selectUserState)
   const group= useAppSelector(selectGroup)
-  const dispatch = useAppDispatch()
   const role = useAppSelector(selectRole)
+  const checkedSolution = useGetSolutionByUserAssignmentGroup(userId !== undefined? userId : userState?.id, idAssignment as unknown as number, group?.id, "checked")
+  const uncheckedSolution = useGetSolutionByUserAssignmentGroup(userId !== undefined? userId : userState?.id, idAssignment as unknown as number, group?.id, "unchecked")
 
-  useEffect(() => {
-    let userId = userState?.id.toString()
-    if(optionalUserId !== null){
-      userId = optionalUserId
-    }
-    if (userId !== undefined) {
-      dispatch(setIsLoading(true))
-      let mounted =true
-      getUncheckedSolutionByUserAssignmentGroupPostgresService(userId, idAssignment as string, group?.id as unknown as string)
-        .then((response) => {
-          if(mounted) {
-            if (response.data.id !== null) {
-              setIsSolutionChecked(false)
-              setSolution(response.data)
-            }
-          }
-        })
-        .catch((error: AxiosError) => {
-          if (error.response?.status === 404) {
-            getCheckedSolutionByUserAssignmentGroupPostgresService(userId as string, idAssignment as string, group?.id as unknown as string)
-              .then((response) => {
-                if(mounted) {
-                  if (response.data.id !== null) {
-                    setIsSolutionChecked(true)
-                    setSolution(response.data)
-                  }
-                }
-              })
-              .catch((error: AxiosError) => console.log(error))
-          } else {
-            console.log(error)
-          }
-        })
-        .finally(() => {
-          getAssignmentPostgresService(idAssignment as string)
-            .then((response) => {
-              if(mounted) {
-                const responseData = response.data
-                const parsedDate = parseISO(responseData.completionDatetime)
-                setAssignment({
-                  ...responseData,
-                  completionDatetime: parsedDate,
-                })
-                dispatch(setIsLoading(false))
-              }
-            })
-            .catch((error) => {
-              console.log("Error fetching assignment:", error)
-            })
-        })
-      return () => {
-        mounted = true
-      }
-    }
-
-  }, [userState, idAssignment, optionalUserId])
-
-  if(assignment === undefined){
-    return <Loading></Loading>
-  }
   return (
     <div>
       {((role === "Teacher") ? (
         <AssignmentModify assignment={assignment as AssignmentInterface} setAssignment={setAssignment}/>
-      ) : ((solution === undefined) && (role === "Student")) ? (
+      ) : (checkedSolution === undefined && uncheckedSolution === undefined && role === "Student") ? (
         <SolutionAdd assignment={assignment as AssignmentInterface}/>
-      ) : isSolutionChecked ? (
-        <SolutionChecked assignment={assignment as AssignmentInterface} solution={solution as SolutionInterface}/>
+      ) : (uncheckedSolution === undefined) ? (
+        <SolutionChecked assignment={assignment as AssignmentInterface} solution={checkedSolution as SolutionInterface}/>
       ) : (
-        <SolutionUnchecked assignment={assignment as AssignmentInterface} solution={solution as SolutionInterface}/>
+        <SolutionUnchecked assignment={assignment as AssignmentInterface} solution={uncheckedSolution as SolutionInterface}/>
       ))}
     </div>
   )

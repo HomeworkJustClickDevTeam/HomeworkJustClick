@@ -23,8 +23,8 @@ export const useGetUser = (id: number|undefined) => {
           }
         })
         .catch((error: AxiosError) => console.log(error))
+      dispatch(setIsLoading(false))
     }
-    dispatch(setIsLoading(false))
     return () => {mounted = false}
 
   }, [id])
