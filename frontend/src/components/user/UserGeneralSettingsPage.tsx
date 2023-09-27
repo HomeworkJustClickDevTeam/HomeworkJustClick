@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react"
-import { changeUserIndexPostgresService} from "../../services/postgresDatabaseServices"
+import React, { useState } from "react"
+import { changeUserIndexPostgresService } from "../../services/postgresDatabaseServices"
 import { AxiosError } from "axios"
 import { selectUserState } from "../../redux/userStateSlice"
 import { useAppSelector } from "../../types/HooksRedux"

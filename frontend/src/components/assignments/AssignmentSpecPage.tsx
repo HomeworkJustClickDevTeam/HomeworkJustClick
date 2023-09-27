@@ -1,27 +1,18 @@
-import { useLocation, useNavigate, useParams } from "react-router-dom"
-import React, { useEffect, useState } from "react"
-import {
-  getAssignmentPostgresService,
-  getCheckedSolutionByUserAssignmentGroupPostgresService,
-  getUncheckedSolutionByUserAssignmentGroupPostgresService
-} from "../../services/postgresDatabaseServices"
-import { parseISO } from "date-fns"
+import { useLocation, useParams } from "react-router-dom"
+import React from "react"
 
 import AssignmentModify from "./AssignmentModify"
 
 import SolutionAdd from "../solution/SolutionAdd"
-import { AxiosError } from "axios"
 
 import SolutionChecked from "../solution/SolutionChecked"
 import SolutionUnchecked from "../solution/SolutionUnchecked"
 import { AssignmentInterface } from "../../types/AssignmentInterface"
 import { SolutionInterface } from "../../types/SolutionInterface"
-import Loading from "../animations/Loading"
 import { selectUserState } from "../../redux/userStateSlice"
 import { selectGroup } from "../../redux/groupSlice"
-import { setIsLoading } from "../../redux/isLoadingSlice"
 import { selectRole } from "../../redux/roleSlice"
-import { useAppDispatch, useAppSelector } from "../../types/HooksRedux"
+import { useAppSelector } from "../../types/HooksRedux"
 import { useGetSolutionByUserAssignmentGroup } from "../customHooks/useGetSolutionByUserAssignmentGroup"
 import { useGetAssignment } from "../customHooks/useGetAssignment"
 

@@ -1,4 +1,4 @@
-import React, { useEffect} from "react"
+import React, { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import AssignmentListElement from "./AssignmentListElement"
 import { selectGroup } from "../../redux/groupSlice"
