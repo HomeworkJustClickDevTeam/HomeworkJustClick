@@ -24,6 +24,7 @@ import GroupUserProfilePage from "./components/group/GroupUserProfilePage"
 import AdvancedEvaluationPage from "./components/evaluation/AdvancedEvaluationPage"
 import { LoggedInUserRoute } from "./components/route/LoggedInUserRoute"
 import { LoggedOutUserRoute } from "./components/route/LoggedOutUserRoute"
+import { AssignmentsType } from "./types/AssignmentsType"
 
 function App() {
 
@@ -61,15 +62,15 @@ function App() {
           />
           <Route
             path="assignments/done"
-            element={<AssignmentsTypesPage type={"done"}/>}
+            element={<AssignmentsTypesPage type={"done" as AssignmentsType}/>}
           />
           <Route
             path="assignments/expired"
-            element={<AssignmentsTypesPage type={"expired"}/>}
+            element={<AssignmentsTypesPage type={"expiredUndone" as AssignmentsType}/>}
           />
           <Route
             path="assignments/todo"
-            element={<AssignmentsTypesPage type={"todo"}/>}
+            element={<AssignmentsTypesPage type={"undone" as AssignmentsType}/>}
           />
           <Route path="assignments/add" element={<AssignmentAddPage/>}/>
           <Route

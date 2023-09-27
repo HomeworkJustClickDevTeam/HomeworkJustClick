@@ -7,8 +7,9 @@ import {
 } from "../../services/postgresDatabaseServices"
 import { useAppDispatch } from "../../types/HooksRedux"
 import { setIsLoading } from "../../redux/isLoadingSlice"
+import { AssignmentsType } from "../../types/AssignmentsType"
 
-export const useGetAssignmentsByGroupAndStudent = (groupId: number|undefined, userId: number|undefined, type:"done"|"expiredUndone"|"undone") => {
+export const useGetAssignmentsByGroupAndStudent = (groupId: number|undefined, userId: number|undefined, type:AssignmentsType) => {
   const dispatch = useAppDispatch()
   const [assignments, setAssignments] = useState<AssignmentInterface[]>([])
 

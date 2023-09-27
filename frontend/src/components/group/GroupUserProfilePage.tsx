@@ -3,7 +3,7 @@ import AssignmentListElement from "../assignments/AssignmentListElement"
 import { selectGroup } from "../../redux/groupSlice"
 import { useAppSelector } from "../../types/HooksRedux"
 import { useGetUser } from "../customHooks/useGetUser"
-import { useGetAssignmentsByGroupAndStudent } from "../customHooks/useGetAssignmentsDoneByGroupAndStudent"
+import { useGetAssignmentsByGroupAndStudent } from "../customHooks/useGetAssignmentsByGroupAndStudent"
 
 export default function GroupUserProfilePage() {
   const {userProfileId} = useParams()
