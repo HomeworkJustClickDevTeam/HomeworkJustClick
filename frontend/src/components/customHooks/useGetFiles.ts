@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { FileFromPostgresInterface } from "../../types/FileFromPostgresInterface"
 import {
   getFilesByAssignmentPostgresService,
@@ -6,7 +6,6 @@ import {
 } from "../../services/postgresDatabaseServices"
 import { getFileMongoService } from "../../services/mongoDatabaseServices"
 import { FileInterface } from "../../types/FileInterface"
-import { useDispatch } from "react-redux"
 import { setIsLoading } from "../../redux/isLoadingSlice"
 import { useAppDispatch } from "../../types/HooksRedux"
 

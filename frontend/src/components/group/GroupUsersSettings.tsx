@@ -1,11 +1,10 @@
 import GroupUsersSettingsListElement from "./GroupUsersSettingsListElement"
-import React, { useContext, useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import {
   getStudentsByGroupPostgresService,
   getTeachersByGroupPostgresService
 } from "../../services/postgresDatabaseServices"
 import { UserInterface } from "../../types/UserInterface"
-import { useSelector } from "react-redux"
 import { selectGroup } from "../../redux/groupSlice"
 import { selectUserState } from "../../redux/userStateSlice"
 import { useAppSelector } from "../../types/HooksRedux"

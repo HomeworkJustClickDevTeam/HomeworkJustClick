@@ -1,9 +1,8 @@
-import React, { useContext } from "react"
+import React from "react"
 
 import { Navigate, Outlet } from "react-router-dom"
 import HeaderLoggedInState from "../header/HeaderLoggedInState"
 import Loading from "../animations/Loading"
-import { useSelector } from "react-redux"
 import { selectIsLoading } from "../../redux/isLoadingSlice"
 import { selectUserState } from "../../redux/userStateSlice"
 import { useAppSelector } from "../../types/HooksRedux"

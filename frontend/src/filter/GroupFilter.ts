@@ -1,10 +1,4 @@
-import {
-  getGroupsByStudentPostgresService,
-  getGroupsByTeacherPostgresService,
-  getGroupsByUserPostgresService
-} from "../services/postgresDatabaseServices"
 import { GroupInterface } from "../types/GroupInterface"
-import { AppDispatch } from "../redux/store"
 
 interface GroupFilterProps {
   setGroups: (groups: GroupInterface[] | undefined) => void

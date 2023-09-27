@@ -1,9 +1,9 @@
-import React, { useContext, useState } from "react"
+import React, { useState } from "react"
 import { createEvaluationWithUserAndSolution } from "../../services/postgresDatabaseServices"
 import { useNavigate } from "react-router-dom"
 import { selectUserState } from "../../redux/userStateSlice"
-import { useSelector } from "react-redux"
 import { useAppSelector } from "../../types/HooksRedux"
+
 interface RatingPropsInterface {
   maxPoints: number
   points: number | undefined

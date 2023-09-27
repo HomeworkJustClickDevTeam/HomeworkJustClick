@@ -1,8 +1,6 @@
-import React, { useContext, useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { changeUserIndexPostgresService, getUserPostgresService } from "../../services/postgresDatabaseServices"
 import { AxiosError } from "axios"
-import { useNavigate } from "react-router-dom"
-import { useSelector } from "react-redux"
 import { selectUserState } from "../../redux/userStateSlice"
 import { useAppSelector } from "../../types/HooksRedux"
 

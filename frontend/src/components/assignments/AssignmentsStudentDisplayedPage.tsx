@@ -1,10 +1,9 @@
-import React, { useContext, useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { getAssignmentsByStudentPostgresService } from "../../services/postgresDatabaseServices"
 import AssignmentListElement from "./AssignmentListElement"
 import { AssignmentInterface } from "../../types/AssignmentInterface"
 import { useNavigate } from "react-router-dom"
 import { selectUserState } from "../../redux/userStateSlice"
-import { useSelector } from "react-redux"
 import { useAppSelector } from "../../types/HooksRedux"
 
 export default function AssignmentsStudentDisplayedPage() {

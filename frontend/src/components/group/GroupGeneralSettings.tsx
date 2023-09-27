@@ -8,9 +8,8 @@ import {
   unarchiveGroupPostgresService
 } from "../../services/postgresDatabaseServices"
 import { AxiosError } from "axios"
-import React, { useContext, useEffect } from "react"
+import React, { useEffect } from "react"
 import { selectGroup, setGroup } from "../../redux/groupSlice"
-import { useDispatch, useSelector } from "react-redux"
 import { GroupInterface } from "../../types/GroupInterface"
 import { useAppDispatch, useAppSelector } from "../../types/HooksRedux"
 

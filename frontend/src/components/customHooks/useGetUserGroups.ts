@@ -2,7 +2,8 @@ import { useEffect, useState } from "react"
 import { GroupInterface } from "../../types/GroupInterface"
 import {
   getGroupsByStudentPostgresService,
-  getGroupsByTeacherPostgresService, getGroupsByUserPostgresService
+  getGroupsByTeacherPostgresService,
+  getGroupsByUserPostgresService
 } from "../../services/postgresDatabaseServices"
 import { useAppDispatch } from "../../types/HooksRedux"
 import { setIsLoading } from "../../redux/isLoadingSlice"

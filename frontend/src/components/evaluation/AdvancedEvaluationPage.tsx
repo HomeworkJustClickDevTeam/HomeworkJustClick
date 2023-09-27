@@ -1,6 +1,5 @@
-import { MutableRefObject, PropsWithChildren, useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { useLocation } from "react-router-dom"
-import { FileInterface } from "../../types/FileInterface"
 import { useGetFiles } from "../customHooks/useGetFiles"
 import { AdvancedEvaluationCommentPanel } from "./AdvancedEvaluationCommentPanel"
 import { AdvancedEvaluationTextFileArea } from "./AdvancedEvaluationTextFileArea"

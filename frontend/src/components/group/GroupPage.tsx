@@ -1,5 +1,5 @@
 import { Outlet, useParams } from "react-router-dom"
-import React, { useContext, useEffect } from "react"
+import React, { useEffect } from "react"
 import {
   addStudentToGroupPostgresService,
   getGroupPostgresService,
@@ -7,9 +7,8 @@ import {
 } from "../../services/postgresDatabaseServices"
 import GroupHeader from "./GroupHeader"
 import Loading from "../animations/Loading"
-import { useDispatch, useSelector } from "react-redux"
 import { selectUserState } from "../../redux/userStateSlice"
-import { selectHomePageIn, setHomePageIn } from "../../redux/homePageInSlice"
+import { setHomePageIn } from "../../redux/homePageInSlice"
 import { selectGroup, setGroup } from "../../redux/groupSlice"
 import { selectRole, setRole } from "../../redux/roleSlice"
 import { setIsLoading } from "../../redux/isLoadingSlice"

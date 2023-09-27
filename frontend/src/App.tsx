@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React from "react"
 
 import "./App.css"
 // import "./assets/App.css"
@@ -24,8 +24,6 @@ import GroupUserProfilePage from "./components/group/GroupUserProfilePage"
 import AdvancedEvaluationPage from "./components/evaluation/AdvancedEvaluationPage"
 import { LoggedInUserRoute } from "./components/route/LoggedInUserRoute"
 import { LoggedOutUserRoute } from "./components/route/LoggedOutUserRoute"
-import { logOut, setUser } from "./redux/userStateSlice"
-import { useDispatch } from "react-redux"
 
 function App() {
 

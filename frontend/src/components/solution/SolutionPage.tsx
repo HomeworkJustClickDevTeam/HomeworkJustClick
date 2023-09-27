@@ -1,11 +1,10 @@
 import { Link, useLocation } from "react-router-dom"
-import { useContext, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { getEvaluationBySolutionPostgresService } from "../../services/postgresDatabaseServices"
 import { Rating } from "../evaluation/Rating"
 import { SolutionFile } from "./SolutionFile"
 import { SolutionExtendedInterface } from "../../types/SolutionExtendedInterface"
-import { useDispatch, useSelector } from "react-redux"
-import { selectIsLoading, setIsLoading } from "../../redux/isLoadingSlice"
+import { setIsLoading } from "../../redux/isLoadingSlice"
 import { useAppDispatch } from "../../types/HooksRedux"
 
 function SolutionPage() {

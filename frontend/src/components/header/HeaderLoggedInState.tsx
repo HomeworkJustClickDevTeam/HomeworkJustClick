@@ -1,8 +1,6 @@
-import { useContext } from "react"
 import { FaChevronLeft } from "react-icons/fa"
 import { Link, useNavigate } from "react-router-dom"
 import LogOut from "../user/LogOut"
-import { useSelector } from "react-redux"
 import { selectHomePageIn } from "../../redux/homePageInSlice"
 import { selectUserState } from "../../redux/userStateSlice"
 import { useAppSelector } from "../../types/HooksRedux"

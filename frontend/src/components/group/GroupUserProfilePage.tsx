@@ -1,21 +1,10 @@
 import { useParams } from "react-router-dom"
-import { useContext, useEffect, useState } from "react"
-import {
-  getAssignmentsDoneByGroupAndStudentPostgresService,
-  getAssignmentsExpiredUndoneByGroupAndStudentPostgresService,
-  getAssignmentsUndoneByGroupAndStudentPostgresService,
-  getUserPostgresService
-} from "../../services/postgresDatabaseServices"
-import { AxiosError } from "axios"
-import Loading from "../animations/Loading"
 import AssignmentListElement from "../assignments/AssignmentListElement"
-import { UserInterface } from "../../types/UserInterface"
-import { AssignmentInterface } from "../../types/AssignmentInterface"
-import { useSelector } from "react-redux"
 import { selectGroup } from "../../redux/groupSlice"
 import { useAppSelector } from "../../types/HooksRedux"
 import { useGetUser } from "../customHooks/useGetUser"
 import { useGetAssignmentsByGroupAndStudent } from "../customHooks/useGetAssignmentsDoneByGroupAndStudent"
+
 export default function GroupUserProfilePage() {
   const {userProfileId} = useParams()
   const group= useAppSelector(selectGroup)

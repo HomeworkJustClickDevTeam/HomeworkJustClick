@@ -1,4 +1,3 @@
-import { AdvancedEvaluationCommentInterface } from "../../types/AdvancedEvaluationCommentInterface"
 import { CommentInterface } from "../../types/CommentInterface"
 
 export const AdvancedEvaluationCommentPanel = (
