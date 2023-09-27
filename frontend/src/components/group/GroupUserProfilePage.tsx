@@ -15,34 +15,15 @@ import { useSelector } from "react-redux"
 import { selectGroup } from "../../redux/groupSlice"
 import { useAppSelector } from "../../types/HooksRedux"
 import { useGetUser } from "../customHooks/useGetUser"
+import { useGetAssignmentsByGroupAndStudent } from "../customHooks/useGetAssignmentsDoneByGroupAndStudent"
 export default function GroupUserProfilePage() {
   const {userProfileId} = useParams()
   const group= useAppSelector(selectGroup)
   const userProfile = useGetUser(userProfileId as unknown as number)
-  const [doneAssignments, setDoneAssignments] = useState<AssignmentInterface[] | undefined>(undefined)
-  const [expiredUndoneAssignments, setExpiredUndoneAssignments] = useState<AssignmentInterface[] | undefined>(undefined)
-  const [undoneAssignments, setUndoneAssignments] = useState<AssignmentInterface[] | undefined>(undefined)
+  const doneAssignments = useGetAssignmentsByGroupAndStudent(group?.id, userProfileId as unknown as number, "done")
+  const expiredUndoneAssignments = useGetAssignmentsByGroupAndStudent(group?.id, userProfileId as unknown as number, "expiredUndone")
+  const undoneAssignments = useGetAssignmentsByGroupAndStudent(group?.id, userProfileId as unknown as number, "undone")
 
-  useEffect(() => {
-
-
-    getAssignmentsDoneByGroupAndStudentPostgresService(group?.id as unknown as string, userProfileId as string)
-      .then((r) => setDoneAssignments(r.data))
-      .catch((e: AxiosError) => (e.response?.status === 404) ? setDoneAssignments([]) : console.log(e))
-
-    getAssignmentsExpiredUndoneByGroupAndStudentPostgresService(group?.id as unknown as string, userProfileId as string)
-      .then((r) => setExpiredUndoneAssignments(r.data))
-      .catch((e: AxiosError) => (e.response?.status === 404) ? setExpiredUndoneAssignments([]) : console.log(e))
-
-    getAssignmentsUndoneByGroupAndStudentPostgresService(group?.id as unknown as string, userProfileId as string)
-      .then((r) => setUndoneAssignments(r.data))
-      .catch((e: AxiosError) => (e.response?.status === 404) ? setUndoneAssignments([]) : console.log(e))
-  }, [])
-
-
-  if ((userProfile || doneAssignments || expiredUndoneAssignments || undoneAssignments) === undefined) {
-    return <Loading/>
-  }
   return (
     <ul>
       <li>Imię i nazwisko: {userProfile?.firstname} {userProfile?.lastname}</li>
