@@ -14,18 +14,17 @@ import { AssignmentInterface } from "../../types/AssignmentInterface"
 import { useSelector } from "react-redux"
 import { selectGroup } from "../../redux/groupSlice"
 import { useAppSelector } from "../../types/HooksRedux"
+import { useGetUser } from "../customHooks/useGetUser"
 export default function GroupUserProfilePage() {
   const {userProfileId} = useParams()
   const group= useAppSelector(selectGroup)
-  const [userProfile, setUserProfile] = useState<UserInterface | undefined>(undefined)
+  const userProfile = useGetUser(userProfileId as unknown as number)
   const [doneAssignments, setDoneAssignments] = useState<AssignmentInterface[] | undefined>(undefined)
   const [expiredUndoneAssignments, setExpiredUndoneAssignments] = useState<AssignmentInterface[] | undefined>(undefined)
   const [undoneAssignments, setUndoneAssignments] = useState<AssignmentInterface[] | undefined>(undefined)
 
   useEffect(() => {
-    getUserPostgresService(userProfileId as string)
-      .then((response) => setUserProfile(response.data))
-      .catch((error: AxiosError) => console.log(error))
+
 
     getAssignmentsDoneByGroupAndStudentPostgresService(group?.id as unknown as string, userProfileId as string)
       .then((r) => setDoneAssignments(r.data))
@@ -65,7 +64,7 @@ export default function GroupUserProfilePage() {
             <dd>
               <ul>
                 {undoneAssignments?.map((assignment) => {
-                  return (<li><AssignmentListElement optionalUserId={userProfile?.id?.toString()} assignment={assignment}
+                  return (<li key={assignment.id}><AssignmentListElement optionalUserId={userProfile?.id?.toString()} assignment={assignment}
                                                      idGroup={group?.id as unknown as string}/></li>)
                 })}
               </ul>
@@ -75,7 +74,7 @@ export default function GroupUserProfilePage() {
             <dd>
               <ul>
                 {expiredUndoneAssignments?.map((assignment) => {
-                  return (<li><AssignmentListElement optionalUserId={userProfile?.id?.toString()} assignment={assignment}
+                  return (<li key={assignment.id}><AssignmentListElement optionalUserId={userProfile?.id?.toString()} assignment={assignment}
                                                      idGroup={group?.id as unknown as string}/></li>)
                 })}
               </ul>

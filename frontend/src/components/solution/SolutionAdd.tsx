@@ -3,8 +3,7 @@ import { postFileMongoService } from "../../services/mongoDatabaseServices"
 import { useNavigate, useParams } from "react-router-dom"
 import {
   createFileWithSolutionPostgresService,
-  createSolutionWithUserAndAssignmentPostgresService,
-  getFilesByAssignmentPostgresService
+  createSolutionWithUserAndAssignmentPostgresService
 } from "../../services/postgresDatabaseServices"
 import { AssignmentFile } from "../assignments/AssignmentFile"
 import { format } from "date-fns"
