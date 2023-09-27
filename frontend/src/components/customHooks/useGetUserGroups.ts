@@ -8,13 +8,13 @@ import {
 import { useAppDispatch } from "../../types/HooksRedux"
 import { setIsLoading } from "../../redux/isLoadingSlice"
 
-export const useGetUserGroups = (userId:number|undefined, byRole: 'student'|'teacher'|'all') => {
+export const useGetUserGroups = (userId:number|undefined, filter: 'student'|'teacher'|'all') => {
   const [groups, setGroups] = useState<GroupInterface[]>([])
   const dispatch = useAppDispatch()
   useEffect(() => {
     let mounted = true
     if(userId !== undefined && userId !== null){
-      if(byRole==="teacher"){
+      if(filter==="teacher"){
         dispatch(setIsLoading(true))
         getGroupsByTeacherPostgresService(userId.toString())
           .then((response) => {
@@ -26,7 +26,7 @@ export const useGetUserGroups = (userId:number|undefined, byRole: 'student'|'tea
           .catch(() => setGroups([]))
         dispatch(setIsLoading(false))
       }
-      else if (byRole === 'student'){
+      else if (filter === 'student'){
         dispatch(setIsLoading(true))
         getGroupsByStudentPostgresService(userId.toString())
           .then((response) => {
@@ -38,7 +38,7 @@ export const useGetUserGroups = (userId:number|undefined, byRole: 'student'|'tea
           .catch(() => setGroups([]))
         dispatch(setIsLoading(false))
       }
-      else if(byRole==='all'){
+      else if(filter==='all'){
         dispatch(setIsLoading(true))
         getGroupsByUserPostgresService(userId.toString())
           .then((response) => {
@@ -53,7 +53,7 @@ export const useGetUserGroups = (userId:number|undefined, byRole: 'student'|'tea
     }
 
     return () => {mounted = false}
-  }, [userId, byRole])
+  }, [userId, filter])
 
   return groups
 }

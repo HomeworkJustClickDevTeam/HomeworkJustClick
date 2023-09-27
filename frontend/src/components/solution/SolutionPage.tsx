@@ -1,31 +1,16 @@
 import { Link, useLocation } from "react-router-dom"
-import { useEffect, useState } from "react"
-import { getEvaluationBySolutionPostgresService } from "../../services/postgresDatabaseServices"
+import { useState } from "react"
 import { Rating } from "../evaluation/Rating"
 import { SolutionFile } from "./SolutionFile"
 import { SolutionExtendedInterface } from "../../types/SolutionExtendedInterface"
-import { setIsLoading } from "../../redux/isLoadingSlice"
-import { useAppDispatch } from "../../types/HooksRedux"
+import { useGetEvaluationBySolution } from "../customHooks/useGetEvaluationBySolution"
 
 function SolutionPage() {
   let {state} = useLocation()
   const [solutionExtended] = useState<SolutionExtendedInterface>(state?.solution)
   const [points, setPoints] = useState<number>()
   const [showRating, setShowRating] = useState<boolean>(false)
-  const dispatch = useAppDispatch()
-  const [isCheck, setIsCheck] = useState<boolean>(false)
-  useEffect(() => {
-    let mounted = true
-    getEvaluationBySolutionPostgresService(solutionExtended.id)
-      .then((r) => {
-        if(mounted){
-          setPoints(r.data.result)
-          setIsCheck(true)
-        }
-      })
-      dispatch(setIsLoading(false))
-    return () => {mounted = false}
-  }, [])
+  const evaluation = useGetEvaluationBySolution(solutionExtended.id)
 
   const handleDisableRating = () => {
     setShowRating(false)
@@ -49,7 +34,7 @@ function SolutionPage() {
         <p className="mr-2">Przesłane pliki: </p>
         {solutionExtended.id ? <SolutionFile solutionId={solutionExtended.id}/> : <p>Brak</p>}
       </div>
-      {!isCheck ? (
+      {(evaluation===undefined) ? (
         <div>
           {solutionExtended.id &&
             <Link

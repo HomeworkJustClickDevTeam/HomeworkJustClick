@@ -9,7 +9,7 @@ import { useAppDispatch } from "../../types/HooksRedux"
 import { setIsLoading } from "../../redux/isLoadingSlice"
 import { AssignmentsType } from "../../types/AssignmentsType"
 
-export const useGetAssignmentsByGroupAndStudent = (groupId: number|undefined, userId: number|undefined, type:AssignmentsType) => {
+export const useGetAssignmentsByGroupAndStudent = (groupId: number|undefined, userId: number|undefined, filter:AssignmentsType) => {
   const dispatch = useAppDispatch()
   const [assignments, setAssignments] = useState<AssignmentInterface[]>([])
 
@@ -19,13 +19,13 @@ export const useGetAssignmentsByGroupAndStudent = (groupId: number|undefined, us
       if(groupId !==undefined && userId !== undefined){
         dispatch(setIsLoading(true))
         try{
-          if(type==='done'){
+          if(filter==='done'){
             response = await getAssignmentsDoneByGroupAndStudentPostgresService(groupId.toString(), userId.toString())
           }
-          else if(type==="expiredUndone"){
+          else if(filter==="expiredUndone"){
             response = await getAssignmentsExpiredUndoneByGroupAndStudentPostgresService(groupId.toString(), userId.toString())
           }
-          else if(type==="undone"){
+          else if(filter==="undone"){
             response = await getAssignmentsUndoneByGroupAndStudentPostgresService(groupId.toString(), userId.toString())
           }
           if(response !== undefined && response!==null){
@@ -35,14 +35,15 @@ export const useGetAssignmentsByGroupAndStudent = (groupId: number|undefined, us
           }
         }
         catch (e) {console.log(e)}
+        dispatch(setIsLoading(false))
       }
     }
     let mounted = true
     fetchData()
-    dispatch(setIsLoading(false))
+
     return () => {mounted = false}
 
-  }, [userId,groupId,type])
+  }, [userId,groupId,filter])
 
   return assignments
 }

@@ -19,7 +19,7 @@ function AssignmentsTypesPage({type}: { type: AssignmentsType }) {
     if (role !== "Student") {
       navigate(`-/group/${group?.id}`)
     }
-  }, [type])
+  }, [type, role])
   return (
     <div>
       <ul>

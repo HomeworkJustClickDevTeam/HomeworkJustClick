@@ -1,24 +1,25 @@
 import { useEffect, useState } from "react"
 import { UserInterface } from "../../types/UserInterface"
-import { getUserPostgresService } from "../../services/postgresDatabaseServices"
-import { AxiosError } from "axios/index"
 import { useAppDispatch } from "../../types/HooksRedux"
 import { setIsLoading } from "../../redux/isLoadingSlice"
+import { getEvaluationBySolutionPostgresService, getUserPostgresService } from "../../services/postgresDatabaseServices"
+import { AxiosError } from "axios"
+import { EvaluationInterface } from "../../types/EvaluationInterface"
 
-export const useGetUser = (userId: number|undefined) => {
-  const [user, setUser] = useState<UserInterface|undefined>(undefined)
+export const useGetEvaluationBySolution = (solutionId: number|undefined)=>{
+  const [evaluation, setEvaluation] = useState<EvaluationInterface|undefined>(undefined)
   const dispatch = useAppDispatch()
 
   useEffect(() => {
     let mounted = true
-    if(userId!== undefined){
+    if(solutionId!== undefined){
       dispatch(setIsLoading(true))
-      getUserPostgresService(userId.toString())
+      getEvaluationBySolutionPostgresService(solutionId.toString())
         .then((response) =>
         {
           if(response !== null && response !== undefined){
             if(mounted){
-              setUser(response.data)
+              setEvaluation(response.data)
             }
           }
         })
@@ -27,7 +28,7 @@ export const useGetUser = (userId: number|undefined) => {
     }
     return () => {mounted = false}
 
-  }, [userId])
+  }, [solutionId])
 
-  return user
+  return evaluation
 }

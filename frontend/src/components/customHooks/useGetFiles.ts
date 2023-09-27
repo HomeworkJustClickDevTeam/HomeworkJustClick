@@ -9,60 +9,60 @@ import { FileInterface } from "../../types/FileInterface"
 import { setIsLoading } from "../../redux/isLoadingSlice"
 import { useAppDispatch } from "../../types/HooksRedux"
 
-export const useGetFiles = (id: number, by:"assignment" | "solution") => {
+export const useGetFiles = (filterId: number|undefined, filter:"assignment" | "solution") => {
   const [files, setFiles] = useState<FileInterface[]>([])
   const dispatch = useAppDispatch()
 
   useEffect(() => {
     const fetchData = async () => {
       let response = null
-      try {
-        if(by === "solution"){
-          response = await getFilesBySolutionPostgresService(id)
-        }
-        else if(by === "assignment"){
-          response = await getFilesByAssignmentPostgresService(id)
-        }
-        if(response !== null && response !== undefined){
-          const databaseFiles:FileFromPostgresInterface[] = response.data
-          let updatedFiles:FileInterface[] = []
-          for (const file of databaseFiles) {
-            if(file){
-              const mongoResponse = await getFileMongoService(file.mongo_id)
-              if(mongoResponse !== undefined && mongoResponse!==null){
-                const fileData = mongoResponse.data
-                const type = fileData.file.type
-                const decodedData = window.atob(fileData.file.data)
-                const byteArray = new Uint8Array(decodedData.length)
-                for (let i = 0; i < decodedData.length; i++) {
-                  byteArray[i] = decodedData.charCodeAt(i)
+      if(filterId !== undefined && filterId !== null) {
+        dispatch(setIsLoading(true))
+        try {
+          if(filter === "solution"){
+            response = await getFilesBySolutionPostgresService(filterId)
+          }
+          else if(filter === "assignment"){
+            response = await getFilesByAssignmentPostgresService(filterId)
+          }
+          if(response !== null && response !== undefined){
+            const databaseFiles:FileFromPostgresInterface[] = response.data
+            let updatedFiles:FileInterface[] = []
+            for (const file of databaseFiles) {
+              if(file){
+                const mongoResponse = await getFileMongoService(file.mongo_id)
+                if(mongoResponse !== undefined && mongoResponse!==null){
+                  const fileData = mongoResponse.data
+                  const type = fileData.file.type
+                  const decodedData = window.atob(fileData.file.data)
+                  const byteArray = new Uint8Array(decodedData.length)
+                  for (let i = 0; i < decodedData.length; i++) {
+                    byteArray[i] = decodedData.charCodeAt(i)
+                  }
+                  const blob = new Blob([byteArray], {type})
+                  updatedFiles.push({
+                    data: blob,
+                    name: mongoResponse.data.name,
+                    type: fileData.file.type,
+                    mongoId: file.mongo_id,
+                    postgresId: file.id
+                  })
                 }
-                const blob = new Blob([byteArray], {type})
-                updatedFiles.push({
-                  data: blob,
-                  name: mongoResponse.data.name,
-                  type: fileData.file.type,
-                  mongoId: file.mongo_id,
-                  postgresId: file.id
-                })
               }
             }
+            if(mounted){
+              setFiles(updatedFiles)
+            }
           }
-          if(mounted){
-            setFiles(updatedFiles)
-          }
+        } catch (e) {
+          console.log("Error retrieving database file:", e)
         }
-      } catch (e) {
-        console.log("Error retrieving database file:", e)
+        dispatch(setIsLoading(false))
       }
     }
     let mounted = true
-    if(id !== undefined && id !== null) {
-      dispatch(setIsLoading(true))
-      fetchData()
-      dispatch(setIsLoading(false))
-    }
+    fetchData()
     return () => {mounted = false}
-  }, [id, by])
+  }, [filterId, filter])
   return files
 }

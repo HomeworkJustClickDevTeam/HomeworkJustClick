@@ -1,28 +1,13 @@
-import { useEffect, useState } from "react"
-import { EvaluationInterface } from "../../types/EvaluationInterface"
-import { getEvaluationBySolutionPostgresService } from "../../services/postgresDatabaseServices"
-import { AxiosError } from "axios"
 import { SolutionFile } from "./SolutionFile"
 import { AssignmentInterface } from "../../types/AssignmentInterface"
 import { SolutionInterface } from "../../types/SolutionInterface"
+import { useGetEvaluationBySolution } from "../customHooks/useGetEvaluationBySolution"
 
 export default function SolutionChecked(props: {
   solution: SolutionInterface
   assignment: AssignmentInterface
 }) {
-  const [evaluation, setEvaluation] = useState<EvaluationInterface | undefined>(
-    undefined
-  )
-
-  useEffect(() => {
-    getEvaluationBySolutionPostgresService(props.solution?.id)
-      .then((response) => setEvaluation(response.data))
-      .catch((error: AxiosError) => console.log(error))
-  }, [])
-
-  if (evaluation === undefined) {
-    // return <Loading />
-  }
+  const evaluation= useGetEvaluationBySolution(props.solution.id)
   return (
     <div
       className='relative flex flex-col mx-[7.5%] mt-4 border border-border_gray border-1 rounded-md pt-4 px-4 h-80 gap-2'>

@@ -5,15 +5,15 @@ import { getAssignmentPostgresService } from "../../services/postgresDatabaseSer
 import { setIsLoading } from "../../redux/isLoadingSlice"
 import { parseISO } from "date-fns"
 
-export const useGetAssignment = (id:number|undefined) => {
+export const useGetAssignment = (assignmentId:number|undefined) => {
   const [assignment, setAssignment] = useState<AssignmentInterface|undefined>(undefined)
   const dispatch = useAppDispatch()
 
   useEffect(() => {
     let mounted = true
-    if(id!== undefined) {
+    if(assignmentId!== undefined) {
       dispatch(setIsLoading(true))
-      getAssignmentPostgresService(id.toString())
+      getAssignmentPostgresService(assignmentId.toString())
         .then((response) => {
           if(response !== null && response !== undefined) {
             if(mounted){
@@ -34,6 +34,6 @@ export const useGetAssignment = (id:number|undefined) => {
     }
     return () => {mounted = false}
 
-  }, [id])
+  }, [assignmentId])
   return { assignment, setAssignment}
 }
