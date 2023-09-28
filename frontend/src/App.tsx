@@ -25,6 +25,7 @@ import AdvancedEvaluationPage from "./components/evaluation/AdvancedEvaluationPa
 import { LoggedInUserRoute } from "./components/route/LoggedInUserRoute"
 import { LoggedOutUserRoute } from "./components/route/LoggedOutUserRoute"
 import { AssignmentsType } from "./types/AssignmentsType"
+import { ExtendedSolutionType } from "./types/ExtendedSolutionType"
 
 function App() {
 
@@ -82,15 +83,15 @@ function App() {
             element={<SolutionPage/>}/>
           <Route
             path="solutions/uncheck"
-            element={<SolutionsTypesPage type={"uncheck"}/>}
+            element={<SolutionsTypesPage type={"unchecked" as ExtendedSolutionType}/>}
           />
           <Route
             path="solutions/late"
-            element={<SolutionsTypesPage type={"late"}/>}
+            element={<SolutionsTypesPage type={"late" as ExtendedSolutionType}/>}
           />
           <Route
             path="solutions/check"
-            element={<SolutionsTypesPage type={"check"}/>}
+            element={<SolutionsTypesPage type={"checked" as ExtendedSolutionType}/>}
           />
 
         </Route>

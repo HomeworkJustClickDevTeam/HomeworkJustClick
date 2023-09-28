@@ -7,42 +7,14 @@ import { selectGroup } from "../../redux/groupSlice"
 import { setIsLoading } from "../../redux/isLoadingSlice"
 import { selectRole } from "../../redux/roleSlice"
 import { useAppDispatch, useAppSelector } from "../../types/HooksRedux"
+import { useGetExtendedSolutionsByGroup } from "../customHooks/useGetExtendedSolutionsByGroup"
+import { ExtendedSolutionType } from "../../types/ExtendedSolutionType"
 
-function SolutionsTypesPage({type}: { type: string }) {
-  const [solutionsExtended, setSolutionsExtended] = useState<
-    SolutionExtendedInterface[]
-  >([])
+function SolutionsTypesPage({type}: { type: ExtendedSolutionType }) {
   const group= useAppSelector(selectGroup)
   const role = useAppSelector(selectRole)
-  const dispatch = useAppDispatch()
-  const {checkSolutions, uncheckedSolutions, lateSolutions} = solutionFilter({
-    setSolutionsExtended,
-    idGroup: group?.id as unknown as string,
-  })
+  const solutionsExtended = useGetExtendedSolutionsByGroup(group?.id, type)
 
-  function typeOfSolutions() {
-    switch (type) {
-      case "check":
-        checkSolutions()
-        dispatch(setIsLoading(false))
-        break
-      case "late":
-        lateSolutions()
-        dispatch(setIsLoading(false))
-        break
-      case "uncheck":
-        uncheckedSolutions()
-        dispatch(setIsLoading(false))
-        break
-      default:
-        break
-    }
-  }
-  useEffect(() => {
-    dispatch(setIsLoading(true))
-    setSolutionsExtended([])
-    typeOfSolutions()
-  }, [type])
   if (role !== "Teacher") {
     return <NotFoundPage/>
   }
