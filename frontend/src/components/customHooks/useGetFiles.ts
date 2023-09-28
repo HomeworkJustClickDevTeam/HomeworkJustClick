@@ -56,7 +56,7 @@ export const useGetFiles = (filterId: number|undefined|null, filter:"assignment"
           }
         }catch (error:any) {
           if(error !== null && error!== undefined && error.response.status === 404){
-            setFiles([])
+            if(mounted){setFiles([])}
           }
           else{
             console.log("Error retrieving database file:", error)

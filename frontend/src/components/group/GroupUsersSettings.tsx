@@ -1,35 +1,17 @@
 import GroupUsersSettingsListElement from "./GroupUsersSettingsListElement"
-import React, { useEffect, useState } from "react"
-import {
-  getStudentsByGroupPostgresService,
-  getTeachersByGroupPostgresService
-} from "../../services/postgresDatabaseServices"
+import React from "react"
 import { UserInterface } from "../../types/UserInterface"
 import { selectGroup } from "../../redux/groupSlice"
 import { selectUserState } from "../../redux/userStateSlice"
 import { useAppSelector } from "../../types/HooksRedux"
+import { useGetUsersByGroup } from "../customHooks/useGetUsersByGroup"
 
 export default function GroupUsersSettings() {
-  const [teachers, setTeachers] = useState<UserInterface[]>()
-  const [students, setStudents] = useState<UserInterface[]>([])
   const group= useAppSelector(selectGroup)
   const userState = useAppSelector(selectUserState)
+  const {users: teachers, setUsers: setTeachers} = useGetUsersByGroup(group?.id, "teachers")
+  const {users: students, setUsers: setStudents} = useGetUsersByGroup(group?.id, "students")
 
-  useEffect(() => {
-    getTeachersByGroupPostgresService(group?.id as unknown as string)
-      .then((response) => {
-        const teachers: UserInterface[] = response.data
-        setTeachers(teachers)
-      })
-      .catch((e) => console.log(e))
-
-    getStudentsByGroupPostgresService(group?.id as unknown as string)
-      .then((response) => {
-        const students: UserInterface[] = response.data
-        setStudents(students)
-      })
-      .catch((e) => console.log(e))
-  }, [])
 
   const deleteTeacherFromList = (teacher: UserInterface) => {
     setTeachers((prevState) => (

@@ -2,7 +2,6 @@ import { useEffect, useState } from "react"
 import { useAppDispatch } from "../../types/HooksRedux"
 import { setIsLoading } from "../../redux/isLoadingSlice"
 import { getEvaluationBySolutionPostgresService } from "../../services/postgresDatabaseServices"
-import { AxiosError } from "axios"
 import { EvaluationInterface } from "../../types/EvaluationInterface"
 
 export const useGetEvaluationBySolution = (solutionId: number|undefined|null)=>{
@@ -23,7 +22,7 @@ export const useGetEvaluationBySolution = (solutionId: number|undefined|null)=>{
         })
         .catch((error) => {
           if (error !== null && error !== undefined && error.response.status === 404) {
-            setEvaluation(undefined)
+            if(mounted){setEvaluation(undefined)}
           } else {
             console.log("Error fetching evaluation:", error)
           }

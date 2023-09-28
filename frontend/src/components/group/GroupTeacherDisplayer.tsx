@@ -1,19 +1,8 @@
-import { useEffect, useState } from "react"
-import { getTeachersByGroupPostgresService } from "../../services/postgresDatabaseServices"
 import GroupUserListElement from "./GroupUserListElement"
-import { UserInterface } from "../../types/UserInterface"
+import { useGetUsersByGroup } from "../customHooks/useGetUsersByGroup"
 
 function GroupTeacherDisplayer({groupId}: { groupId: string }) {
-  const [teachers, setTeachers] = useState<UserInterface[]>()
-
-  useEffect(() => {
-    getTeachersByGroupPostgresService(groupId)
-      .then((response) => {
-        const teacher: UserInterface[] = response.data
-        setTeachers(teacher)
-      })
-      .catch((e) => console.log(e))
-  },[])
+  const {users:teachers} = useGetUsersByGroup(groupId as unknown as number, "teachers")
   return (
     <div className='flex inline-block mt-4 border-b-2 border-b-light_gray w-fit'>
       <h1 className='font-bold text-2xl align-text-bottom mr-3'>Prowadzący: </h1>

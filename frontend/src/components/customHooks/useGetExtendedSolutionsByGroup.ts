@@ -33,7 +33,7 @@ export const useGetExtendedSolutionsByGroup = (groupId: number|undefined|null, f
           }
         }catch (error:any) {
           if(error !== null && error!== undefined && error.response.status === 404){
-            setSolutions([])
+            if(mounted){setSolutions([])}
           }
           else{
             console.log(error)

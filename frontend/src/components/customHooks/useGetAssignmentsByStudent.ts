@@ -16,11 +16,11 @@ export const useGetAssignmentsByStudent = (studentId:number|undefined|null) => {
         try {
           const response = await getAssignmentsByStudentPostgresService(studentId.toString())
           if(response !== null && response !== undefined){
-            setAssignments(response.data)
+            if(mounted){setAssignments(response.data)}
           }
         }catch (error:any) {
           if(error !== null && error!== undefined && error.response.status === 404){
-            setAssignments([])
+            if(mounted){setAssignments([])}
           }
           else{
             console.log(error)

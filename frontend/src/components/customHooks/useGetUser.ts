@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react"
 import { UserInterface } from "../../types/UserInterface"
 import { getUserPostgresService } from "../../services/postgresDatabaseServices"
-import { AxiosError } from "axios/index"
 import { useAppDispatch } from "../../types/HooksRedux"
 import { setIsLoading } from "../../redux/isLoadingSlice"
 
@@ -24,7 +23,7 @@ export const useGetUser = (userId: number|undefined|null) => {
         })
         .catch((error) => {
           if(error !== null && error !== undefined && error.response.status === 404){
-            setUser(undefined)
+            if(mounted){setUser(undefined)}
           }
           else{
             console.log("Error fetching user:", error)

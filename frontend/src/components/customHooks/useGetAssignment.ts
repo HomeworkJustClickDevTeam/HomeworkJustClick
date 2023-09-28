@@ -28,7 +28,7 @@ export const useGetAssignment = (assignmentId:number|undefined|null) => {
         })
         .catch((error) => {
           if(error !== null && error !== undefined && error.response.status === 404){
-            setAssignment(undefined)
+            if(mounted){setAssignment(undefined)}
           }
           else{
             console.log("Error fetching assignment:", error)

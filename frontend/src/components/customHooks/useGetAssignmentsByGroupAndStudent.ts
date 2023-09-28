@@ -36,7 +36,7 @@ export const useGetAssignmentsByGroupAndStudent = (groupId: number|undefined|nul
         }
         catch (error:any) {
           if(error !== null && error!== undefined && error.response.status === 404){
-            setAssignments([])
+            if(mounted){setAssignments([])}
           }
           else{
             console.log(error)
