@@ -27,7 +27,12 @@ export const useGetAssignment = (assignmentId:number|undefined|null) => {
           }
         })
         .catch((error) => {
-          console.log("Error fetching assignment:", error)
+          if(error !== null && error !== undefined && error.response.status === 404){
+            setAssignment(undefined)
+          }
+          else{
+            console.log("Error fetching assignment:", error)
+          }
         })
       dispatch(setIsLoading(false))
 

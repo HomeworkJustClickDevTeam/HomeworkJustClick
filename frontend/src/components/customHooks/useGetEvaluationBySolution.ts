@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react"
-import { UserInterface } from "../../types/UserInterface"
 import { useAppDispatch } from "../../types/HooksRedux"
 import { setIsLoading } from "../../redux/isLoadingSlice"
-import { getEvaluationBySolutionPostgresService, getUserPostgresService } from "../../services/postgresDatabaseServices"
+import { getEvaluationBySolutionPostgresService } from "../../services/postgresDatabaseServices"
 import { AxiosError } from "axios"
 import { EvaluationInterface } from "../../types/EvaluationInterface"
 
@@ -12,18 +11,23 @@ export const useGetEvaluationBySolution = (solutionId: number|undefined|null)=>{
 
   useEffect(() => {
     let mounted = true
-    if(solutionId !== undefined && solutionId !== null){
+    if(solutionId !== undefined && solutionId !== null) {
       dispatch(setIsLoading(true))
       getEvaluationBySolutionPostgresService(solutionId.toString())
-        .then((response) =>
-        {
-          if(response !== null && response !== undefined){
-            if(mounted){
+        .then((response) => {
+          if (response !== null && response !== undefined) {
+            if (mounted) {
               setEvaluation(response.data)
             }
           }
         })
-        .catch((error: AxiosError) => console.log(error))
+        .catch((error) => {
+          if (error !== null && error !== undefined && error.response.status === 404) {
+            setEvaluation(undefined)
+          } else {
+            console.log("Error fetching evaluation:", error)
+          }
+        })
       dispatch(setIsLoading(false))
     }
     return () => {mounted = false}

@@ -22,6 +22,9 @@ export const useGetAssignmentsByStudent = (studentId:number|undefined|null) => {
           if(error !== null && error!== undefined && error.response.status === 404){
             setAssignments([])
           }
+          else{
+            console.log(error)
+          }
         }
         dispatch(setIsLoading(false))
       }

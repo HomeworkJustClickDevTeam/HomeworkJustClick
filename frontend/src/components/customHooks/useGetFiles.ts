@@ -54,8 +54,13 @@ export const useGetFiles = (filterId: number|undefined|null, filter:"assignment"
               setFiles(updatedFiles)
             }
           }
-        } catch (e) {
-          console.log("Error retrieving database file:", e)
+        }catch (error:any) {
+          if(error !== null && error!== undefined && error.response.status === 404){
+            setFiles([])
+          }
+          else{
+            console.log("Error retrieving database file:", error)
+          }
         }
         dispatch(setIsLoading(false))
       }

@@ -26,8 +26,14 @@ export const useGetSolutionByUserAssignmentGroup = (userId: number|undefined|nul
           if(response !== null && response!==undefined){
             if(mounted){setSolution(response.data)}
           }
+        }catch (error:any) {
+          if(error !== null && error!== undefined && error.response.status === 404){
+            setSolution(undefined)
+          }
+          else{
+            console.log(error)
+          }
         }
-        catch (e) {console.log(e)}
         dispatch(setIsLoading(false))
       }
     }

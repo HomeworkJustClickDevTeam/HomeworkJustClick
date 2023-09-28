@@ -29,10 +29,16 @@ export const useGetUserGroups = (userId:number|undefined|null, filter: 'student'
           if(response !== null && response !== undefined) {
             if(mounted){setGroups(response.data)}
           }
-        }catch(e){console.log(e)}
+        }catch (error:any) {
+          if(error !== null && error!== undefined && error.response.status === 404){
+            setGroups([])
+          }
+          else{
+            console.log(error)
+          }
+        }
         dispatch(setIsLoading(false))
       }
-
     }
 
     let mounted = true

@@ -22,7 +22,14 @@ export const useGetUser = (userId: number|undefined|null) => {
             }
           }
         })
-        .catch((error: AxiosError) => console.log(error))
+        .catch((error) => {
+          if(error !== null && error !== undefined && error.response.status === 404){
+            setUser(undefined)
+          }
+          else{
+            console.log("Error fetching user:", error)
+          }
+        })
       dispatch(setIsLoading(false))
     }
     return () => {mounted = false}

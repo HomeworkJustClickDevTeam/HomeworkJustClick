@@ -1,11 +1,8 @@
-import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import NotFoundPage from "../errors/NotFoundPage"
-import { SolutionExtendedInterface } from "../../types/SolutionExtendedInterface"
 import { selectGroup } from "../../redux/groupSlice"
-import { setIsLoading } from "../../redux/isLoadingSlice"
 import { selectRole } from "../../redux/roleSlice"
-import { useAppDispatch, useAppSelector } from "../../types/HooksRedux"
+import { useAppSelector } from "../../types/HooksRedux"
 import { useGetExtendedSolutionsByGroup } from "../customHooks/useGetExtendedSolutionsByGroup"
 import { ExtendedSolutionType } from "../../types/ExtendedSolutionType"
 

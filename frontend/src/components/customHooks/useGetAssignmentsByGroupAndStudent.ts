@@ -34,7 +34,14 @@ export const useGetAssignmentsByGroupAndStudent = (groupId: number|undefined|nul
             }
           }
         }
-        catch (e) {console.log(e)}
+        catch (error:any) {
+          if(error !== null && error!== undefined && error.response.status === 404){
+            setAssignments([])
+          }
+          else{
+            console.log(error)
+          }
+        }
         dispatch(setIsLoading(false))
       }
     }

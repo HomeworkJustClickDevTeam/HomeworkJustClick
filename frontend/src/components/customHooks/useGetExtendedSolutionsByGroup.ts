@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react"
-import { SolutionInterface } from "../../types/SolutionInterface"
 import { useAppDispatch } from "../../types/HooksRedux"
 import { setIsLoading } from "../../redux/isLoadingSlice"
 import {
-  getExtendedSolutionsCheckedByGroupPostgresService, getExtendedSolutionsLateByGroupPostgresService,
+  getExtendedSolutionsCheckedByGroupPostgresService,
+  getExtendedSolutionsLateByGroupPostgresService,
   getExtendedSolutionsUncheckedByGroupPostgresService
 } from "../../services/postgresDatabaseServices"
 import { SolutionExtendedInterface } from "../../types/SolutionExtendedInterface"
@@ -31,7 +31,14 @@ export const useGetExtendedSolutionsByGroup = (groupId: number|undefined|null, f
           if(response !== null && response!==undefined) {
             if(mounted){setSolutions(response.data)}
           }
-          }catch (e){console.log(e)}
+        }catch (error:any) {
+          if(error !== null && error!== undefined && error.response.status === 404){
+            setSolutions([])
+          }
+          else{
+            console.log(error)
+          }
+        }
         dispatch(setIsLoading(false))
       }
     }
