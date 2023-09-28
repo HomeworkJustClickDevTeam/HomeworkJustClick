@@ -9,14 +9,14 @@ import {
 import { SolutionExtendedInterface } from "../../types/SolutionExtendedInterface"
 import { ExtendedSolutionType } from "../../types/ExtendedSolutionType"
 
-export const useGetExtendedSolutionsByGroup = (groupId: number|undefined, filter: ExtendedSolutionType) => {
+export const useGetExtendedSolutionsByGroup = (groupId: number|undefined|null, filter: ExtendedSolutionType) => {
   const [solutions, setSolutions] = useState<SolutionExtendedInterface[]>([])
   const dispatch = useAppDispatch()
 
   useEffect(() => {
     const fetchData = async () =>{
       let response = null
-      if(groupId !== undefined){
+      if(groupId !== undefined && groupId !== null){
         dispatch(setIsLoading(true))
         try {
           if(filter==="checked"){

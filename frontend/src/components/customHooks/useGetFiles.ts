@@ -9,7 +9,7 @@ import { FileInterface } from "../../types/FileInterface"
 import { setIsLoading } from "../../redux/isLoadingSlice"
 import { useAppDispatch } from "../../types/HooksRedux"
 
-export const useGetFiles = (filterId: number|undefined, filter:"assignment" | "solution") => {
+export const useGetFiles = (filterId: number|undefined|null, filter:"assignment" | "solution") => {
   const [files, setFiles] = useState<FileInterface[]>([])
   const dispatch = useAppDispatch()
 

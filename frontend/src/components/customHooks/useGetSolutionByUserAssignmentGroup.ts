@@ -7,14 +7,14 @@ import {
 } from "../../services/postgresDatabaseServices"
 import { setIsLoading } from "../../redux/isLoadingSlice"
 
-export const useGetSolutionByUserAssignmentGroup = (userId: number|undefined, assignmentId: number|undefined, groupId:number|undefined, filter:"unchecked"|"checked") => {
+export const useGetSolutionByUserAssignmentGroup = (userId: number|undefined|null, assignmentId: number|undefined|null, groupId:number|undefined|null, filter:"unchecked"|"checked") => {
   const [solution, setSolution] = useState<SolutionInterface|undefined>(undefined)
   const dispatch = useAppDispatch()
 
   useEffect(() => {
     const fetchData = async () => {
       let response = null
-      if(userId !== undefined && assignmentId !== undefined && groupId !== undefined){
+      if(userId !== undefined && assignmentId !== undefined && groupId !== undefined && userId !== null && assignmentId !== null && groupId !== null){
         dispatch(setIsLoading(true))
         try {
           if(filter==="unchecked"){

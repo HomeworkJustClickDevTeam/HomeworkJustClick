@@ -8,50 +8,35 @@ import {
 import { useAppDispatch } from "../../types/HooksRedux"
 import { setIsLoading } from "../../redux/isLoadingSlice"
 
-export const useGetUserGroups = (userId:number|undefined, filter: 'student'|'teacher'|'all') => {
+export const useGetUserGroups = (userId:number|undefined|null, filter: 'student'|'teacher'|'all') => {
   const [groups, setGroups] = useState<GroupInterface[]>([])
   const dispatch = useAppDispatch()
   useEffect(() => {
-    let mounted = true
-    if(userId !== undefined && userId !== null){
-      if(filter==="teacher"){
+    const fetchData = async () => {
+      if(userId !== undefined && userId !== null){
         dispatch(setIsLoading(true))
-        getGroupsByTeacherPostgresService(userId.toString())
-          .then((response) => {
-            if(mounted){
-              const groups: GroupInterface[] = response.data
-              setGroups(groups)
-            }
-          })
-          .catch(() => setGroups([]))
+        let response = null
+        try{
+          if(filter==="teacher") {
+            response = await getGroupsByTeacherPostgresService(userId.toString())
+          }
+          else if (filter === 'student') {
+            response = await getGroupsByStudentPostgresService(userId.toString())
+          }
+          else if(filter==='all') {
+            response = await getGroupsByUserPostgresService(userId.toString())
+          }
+          if(response !== null && response !== undefined) {
+            if(mounted){setGroups(response.data)}
+          }
+        }catch(e){console.log(e)}
         dispatch(setIsLoading(false))
       }
-      else if (filter === 'student'){
-        dispatch(setIsLoading(true))
-        getGroupsByStudentPostgresService(userId.toString())
-          .then((response) => {
-            if(mounted) {
-              const groups: GroupInterface[] = response.data
-              setGroups(groups)
-            }
-          })
-          .catch(() => setGroups([]))
-        dispatch(setIsLoading(false))
-      }
-      else if(filter==='all'){
-        dispatch(setIsLoading(true))
-        getGroupsByUserPostgresService(userId.toString())
-          .then((response) => {
-            if(mounted) {
-              const groups: GroupInterface[] = response.data
-              setGroups(groups)
-            }
-          })
-          .catch(() => setGroups([]))
-        dispatch(setIsLoading(false))
-      }
+
     }
 
+    let mounted = true
+    fetchData()
     return () => {mounted = false}
   }, [userId, filter])
 

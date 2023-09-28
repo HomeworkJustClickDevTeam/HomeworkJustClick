@@ -6,13 +6,13 @@ import { getEvaluationBySolutionPostgresService, getUserPostgresService } from "
 import { AxiosError } from "axios"
 import { EvaluationInterface } from "../../types/EvaluationInterface"
 
-export const useGetEvaluationBySolution = (solutionId: number|undefined)=>{
+export const useGetEvaluationBySolution = (solutionId: number|undefined|null)=>{
   const [evaluation, setEvaluation] = useState<EvaluationInterface|undefined>(undefined)
   const dispatch = useAppDispatch()
 
   useEffect(() => {
     let mounted = true
-    if(solutionId!== undefined){
+    if(solutionId !== undefined && solutionId !== null){
       dispatch(setIsLoading(true))
       getEvaluationBySolutionPostgresService(solutionId.toString())
         .then((response) =>

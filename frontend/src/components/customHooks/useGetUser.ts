@@ -5,13 +5,13 @@ import { AxiosError } from "axios/index"
 import { useAppDispatch } from "../../types/HooksRedux"
 import { setIsLoading } from "../../redux/isLoadingSlice"
 
-export const useGetUser = (userId: number|undefined) => {
+export const useGetUser = (userId: number|undefined|null) => {
   const [user, setUser] = useState<UserInterface|undefined>(undefined)
   const dispatch = useAppDispatch()
 
   useEffect(() => {
     let mounted = true
-    if(userId!== undefined){
+    if(userId!== undefined && userId!== null){
       dispatch(setIsLoading(true))
       getUserPostgresService(userId.toString())
         .then((response) =>

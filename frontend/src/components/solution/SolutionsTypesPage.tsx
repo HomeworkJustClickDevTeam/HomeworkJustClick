@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import NotFoundPage from "../errors/NotFoundPage"
-import { solutionFilter } from "../../filter/SolutionFilter"
 import { SolutionExtendedInterface } from "../../types/SolutionExtendedInterface"
 import { selectGroup } from "../../redux/groupSlice"
 import { setIsLoading } from "../../redux/isLoadingSlice"

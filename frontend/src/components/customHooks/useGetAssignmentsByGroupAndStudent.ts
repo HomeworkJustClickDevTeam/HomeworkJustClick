@@ -9,14 +9,14 @@ import { useAppDispatch } from "../../types/HooksRedux"
 import { setIsLoading } from "../../redux/isLoadingSlice"
 import { AssignmentsType } from "../../types/AssignmentsType"
 
-export const useGetAssignmentsByGroupAndStudent = (groupId: number|undefined, userId: number|undefined, filter:AssignmentsType) => {
+export const useGetAssignmentsByGroupAndStudent = (groupId: number|undefined|null, userId: number|undefined|null, filter:AssignmentsType) => {
   const dispatch = useAppDispatch()
   const [assignments, setAssignments] = useState<AssignmentInterface[]>([])
 
   useEffect(() => {
     const fetchData =async () => {
       let response = null
-      if(groupId !==undefined && userId !== undefined){
+      if(groupId !==undefined && userId !== undefined && groupId !==null && userId !== null){
         dispatch(setIsLoading(true))
         try{
           if(filter==='done'){
