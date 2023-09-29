@@ -15,7 +15,7 @@ export const useGetSolutionByUserAssignmentGroup = (userId: number|undefined|nul
     const fetchData = async () => {
       let response = null
       if(userId !== undefined && assignmentId !== undefined && groupId !== undefined && userId !== null && assignmentId !== null && groupId !== null){
-        dispatch(setIsLoading(true))
+
         try {
           if(filter==="unchecked"){
             response =  await getUncheckedSolutionByUserAssignmentGroupPostgresService(userId.toString(), assignmentId.toString(), groupId.toString())
@@ -34,11 +34,13 @@ export const useGetSolutionByUserAssignmentGroup = (userId: number|undefined|nul
             console.log(error)
           }
         }
-        dispatch(setIsLoading(false))
+
       }
     }
     let mounted = true
+    dispatch(setIsLoading(true))
     fetchData()
+    dispatch(setIsLoading(false))
     return () => {mounted = false}
   }, [userId,assignmentId,groupId,filter])
 

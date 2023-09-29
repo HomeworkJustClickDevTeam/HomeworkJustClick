@@ -9,10 +9,8 @@ export const useGetAssignmentsByStudent = (studentId:number|undefined|null) => {
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-
     const fetchData = async () => {
       if(studentId !== undefined && studentId !== null){
-        dispatch(setIsLoading(true))
         try {
           const response = await getAssignmentsByStudentPostgresService(studentId.toString())
           if(response !== null && response !== undefined){
@@ -26,12 +24,13 @@ export const useGetAssignmentsByStudent = (studentId:number|undefined|null) => {
             console.log(error)
           }
         }
-        dispatch(setIsLoading(false))
       }
     }
 
     let mounted = true
+    dispatch(setIsLoading(true))
     fetchData()
+    dispatch(setIsLoading(false))
     return () => {mounted = false}
   }, [studentId])
 

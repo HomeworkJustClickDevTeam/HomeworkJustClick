@@ -15,7 +15,7 @@ export const useGetUsersByGroup = (groupId:number|undefined|null, filter:"studen
     const fetchdata = async () => {
       if(groupId !== undefined && groupId !== null){
         let response = null
-        dispatch(setIsLoading(true))
+
         try {
           if(filter === "students"){
             response = await getStudentsByGroupPostgresService(groupId.toString())
@@ -32,12 +32,13 @@ export const useGetUsersByGroup = (groupId:number|undefined|null, filter:"studen
           }
           else {console.log(error)}
         }
-        dispatch(setIsLoading(false))
+
       }
     }
-
     let mounted = true
+    dispatch(setIsLoading(true))
     fetchdata()
+    dispatch(setIsLoading(false))
     return () => {mounted = false}
   }, [groupId, filter])
   return {users, setUsers}

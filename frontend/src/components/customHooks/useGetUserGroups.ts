@@ -14,7 +14,7 @@ export const useGetUserGroups = (userId:number|undefined|null, filter: 'student'
   useEffect(() => {
     const fetchData = async () => {
       if(userId !== undefined && userId !== null){
-        dispatch(setIsLoading(true))
+
         let response = null
         try{
           if(filter==="teacher") {
@@ -37,12 +37,14 @@ export const useGetUserGroups = (userId:number|undefined|null, filter: 'student'
             console.log(error)
           }
         }
-        dispatch(setIsLoading(false))
+
       }
     }
 
     let mounted = true
+    dispatch(setIsLoading(true))
     fetchData()
+    dispatch(setIsLoading(false))
     return () => {mounted = false}
   }, [userId, filter])
 

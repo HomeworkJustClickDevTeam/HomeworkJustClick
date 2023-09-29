@@ -17,7 +17,7 @@ export const useGetFiles = (filterId: number|undefined|null, filter:"assignment"
     const fetchData = async () => {
       let response = null
       if(filterId !== undefined && filterId !== null) {
-        dispatch(setIsLoading(true))
+
         try {
           if(filter === "solution"){
             response = await getFilesBySolutionPostgresService(filterId)
@@ -62,11 +62,13 @@ export const useGetFiles = (filterId: number|undefined|null, filter:"assignment"
             console.log("Error retrieving database file:", error)
           }
         }
-        dispatch(setIsLoading(false))
+
       }
     }
     let mounted = true
+    dispatch(setIsLoading(true))
     fetchData()
+    dispatch(setIsLoading(false))
     return () => {mounted = false}
   }, [filterId, filter])
   return files

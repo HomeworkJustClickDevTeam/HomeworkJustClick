@@ -14,10 +14,9 @@ export const useGetAssignmentsByGroupAndStudent = (groupId: number|undefined|nul
   const [assignments, setAssignments] = useState<AssignmentInterface[]>([])
 
   useEffect(() => {
-    const fetchData =async () => {
+    const fetchData = async () => {
       let response = null
       if(groupId !==undefined && userId !== undefined && groupId !==null && userId !== null){
-        dispatch(setIsLoading(true))
         try{
           if(filter==='done'){
             response = await getAssignmentsDoneByGroupAndStudentPostgresService(groupId.toString(), userId.toString())
@@ -42,12 +41,13 @@ export const useGetAssignmentsByGroupAndStudent = (groupId: number|undefined|nul
             console.log(error)
           }
         }
-        dispatch(setIsLoading(false))
+
       }
     }
     let mounted = true
+    dispatch(setIsLoading(true))
     fetchData()
-
+    dispatch(setIsLoading(false))
     return () => {mounted = false}
 
   }, [userId,groupId,filter])

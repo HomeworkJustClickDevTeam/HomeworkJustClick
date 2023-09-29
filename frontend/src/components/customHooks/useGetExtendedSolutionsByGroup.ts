@@ -17,7 +17,7 @@ export const useGetExtendedSolutionsByGroup = (groupId: number|undefined|null, f
     const fetchData = async () =>{
       let response = null
       if(groupId !== undefined && groupId !== null){
-        dispatch(setIsLoading(true))
+
         try {
           if(filter==="checked"){
             response = await getExtendedSolutionsCheckedByGroupPostgresService(groupId.toString())
@@ -39,11 +39,13 @@ export const useGetExtendedSolutionsByGroup = (groupId: number|undefined|null, f
             console.log(error)
           }
         }
-        dispatch(setIsLoading(false))
+
       }
     }
     let mounted = true
+    dispatch(setIsLoading(true))
     fetchData()
+    dispatch(setIsLoading(false))
     return () => {mounted = false}
   }, [groupId, filter])
   return solutions
