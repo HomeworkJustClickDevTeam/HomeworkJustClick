@@ -1,35 +1,14 @@
 import { Link } from "react-router-dom"
-import { useEffect, useState } from "react"
-import { getAssignmentsByGroupPostgresService } from "../../services/postgresDatabaseServices"
 import AssignmentListElement from "./AssignmentListElement"
-import { AxiosError } from "axios"
-import { AssignmentInterface } from "../../types/AssignmentInterface"
 import { selectRole } from "../../redux/roleSlice"
 import { selectGroup } from "../../redux/groupSlice"
-import { setIsLoading } from "../../redux/isLoadingSlice"
-import { useAppDispatch, useAppSelector } from "../../types/HooksRedux"
+import { useAppSelector } from "../../types/HooksRedux"
+import { useGetAssignmentsByGroup } from "../customHooks/useGetAssignmentsByGroup"
 
 function AssignmentsGroupDisplayedPage() {
-  const [assignments, setAssignments] = useState<AssignmentInterface[]>([])
   const role = useAppSelector(selectRole)
   const group= useAppSelector(selectGroup)
-  const dispatch = useAppDispatch()
-
-  useEffect(() => {
-    dispatch(setIsLoading(true))
-    getAssignmentsByGroupPostgresService(group?.id as unknown as string).then((response) => {
-      const assignmentFromServer = response.data as AssignmentInterface[]
-      if (role === "Teacher") {
-        setAssignments(assignmentFromServer)
-      } else {
-        setAssignments(
-          assignmentFromServer.filter((assignment) => assignment.visible)
-        )
-      }
-    })
-      .catch((error: AxiosError) => console.log(error))
-    dispatch(setIsLoading(false))
-  }, [])
+  const assignments = useGetAssignmentsByGroup(group?.id)
 
   return (
     <div className='relative h-[420px]'>

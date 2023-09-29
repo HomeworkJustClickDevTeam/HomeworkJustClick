@@ -4,11 +4,10 @@ import {
   changeGroupDescriptionPostgresService,
   changeGroupNamePostgresService,
   deleteGroupPostgresService,
-  getGroupPostgresService,
   unarchiveGroupPostgresService
 } from "../../services/postgresDatabaseServices"
 import { AxiosError } from "axios"
-import React, { useEffect } from "react"
+import React from "react"
 import { selectGroup, setGroup } from "../../redux/groupSlice"
 import { GroupInterface } from "../../types/GroupInterface"
 import { useAppDispatch, useAppSelector } from "../../types/HooksRedux"
@@ -70,15 +69,6 @@ export default function GroupGeneralSettings() {
       console.log(error)
     }
   }
-  useEffect(() => {
-    getGroupPostgresService(group?.id as unknown as string)
-      .then((response) => {
-        dispatch(setGroup(response.data))
-      })
-      .catch((error: AxiosError) => console.log(error))
-  }, [])
-
-
   return (
     <>
       <ul>
