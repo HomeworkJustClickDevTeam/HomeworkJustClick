@@ -1,55 +1,27 @@
 import { Outlet, useParams } from "react-router-dom"
-import React, { useContext, useEffect } from "react"
-import {
-  addStudentToGroupPostgresService,
-  getGroupPostgresService,
-  getUserRoleInGroupPostgresService
-} from "../../services/postgresDatabaseServices"
+import React from "react"
+import { addStudentToGroupPostgresService } from "../../services/postgresDatabaseServices"
 import GroupHeader from "./GroupHeader"
 import Loading from "../animations/Loading"
-import { useDispatch, useSelector } from "react-redux"
 import { selectUserState } from "../../redux/userStateSlice"
-import { selectHomePageIn, setHomePageIn } from "../../redux/homePageInSlice"
-import { selectGroup, setGroup } from "../../redux/groupSlice"
-import { selectRole, setRole } from "../../redux/roleSlice"
+import { selectGroup } from "../../redux/groupSlice"
+import { selectRole } from "../../redux/roleSlice"
+import { useAppSelector } from "../../types/HooksRedux"
+import { useGetGroupAndRole } from "../customHooks/useGetGroupAndRole"
 
 function GroupPage() {
   const {idGroup} = useParams()
-  const userState = useSelector(selectUserState)
-  const group= useSelector(selectGroup)
-  const dispatch = useDispatch()
-  const role = useSelector(selectRole)
-
-  useEffect(() => {
-    getGroup()
-    dispatch(setHomePageIn(false))
-  }, []);
-
-
-   function getGroup() {
-     getGroupPostgresService(idGroup as string)
-      .then((r) => {
-        dispatch(setGroup(r.data))
-        getUserRoleInGroupPostgresService(userState?.id as unknown as string, r.data.id)
-          .then((r) => dispatch(setRole(r.data)))
-          .catch(() => dispatch(setRole("User not in group")))
-      })
-  }
+  const userState = useAppSelector(selectUserState)
+  const group= useAppSelector(selectGroup)
+  const role = useAppSelector(selectRole)
+  useGetGroupAndRole(idGroup as unknown as number, userState?.id)
 
   if (group === undefined || group === null) {
     return <Loading/>
   }
-
-
-
   async function addToGroup() {
     await addStudentToGroupPostgresService(userState?.id as unknown as string, group?.id as unknown as string)
-    getUserRoleInGroupPostgresService(userState?.id as unknown as string, group?.id as unknown as string)
-      .then((r) => dispatch(setRole(r.data)))
-      .catch(() => dispatch(setRole("User not in group")))
   }
-
-
   if (role === "User not in group") {
     return (
       <>

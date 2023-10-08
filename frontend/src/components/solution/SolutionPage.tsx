@@ -1,31 +1,16 @@
 import { Link, useLocation } from "react-router-dom"
-import { useContext, useEffect, useState } from "react"
-import { getEvaluationBySolutionPostgresService } from "../../services/postgresDatabaseServices"
+import { useState } from "react"
 import { Rating } from "../evaluation/Rating"
 import { SolutionFile } from "./SolutionFile"
 import { SolutionExtendedInterface } from "../../types/SolutionExtendedInterface"
-import { useDispatch, useSelector } from "react-redux"
-import { selectIsLoading, setIsLoading } from "../../redux/isLoadingSlice"
+import { useGetEvaluationBySolution } from "../customHooks/useGetEvaluationBySolution"
 
 function SolutionPage() {
   let {state} = useLocation()
   const [solutionExtended] = useState<SolutionExtendedInterface>(state?.solution)
   const [points, setPoints] = useState<number>()
   const [showRating, setShowRating] = useState<boolean>(false)
-  const dispatch = useDispatch()
-  const [isCheck, setIsCheck] = useState<boolean>(false)
-  useEffect(() => {
-    let ignore = false
-    getEvaluationBySolutionPostgresService(solutionExtended.id)
-      .then((r) => {
-        if(!ignore){
-          setPoints(r.data.result)
-          setIsCheck(true)
-        }
-      })
-      .finally(() => dispatch(setIsLoading(false)))
-    return () => {ignore = true}
-  }, [])
+  const evaluation = useGetEvaluationBySolution(solutionExtended.id)
 
   const handleDisableRating = () => {
     setShowRating(false)
@@ -49,11 +34,12 @@ function SolutionPage() {
         <p className="mr-2">Przesłane pliki: </p>
         {solutionExtended.id ? <SolutionFile solutionId={solutionExtended.id}/> : <p>Brak</p>}
       </div>
-      {!isCheck ? (
+      {(evaluation===undefined) ? (
         <div>
           {solutionExtended.id &&
             <Link
-            to={`/group/${solutionExtended.assignment.groupId}/solution/${solutionExtended.user.id}/${solutionExtended.assignment.id}/advancedEvaluation`}
+            to={`/advancedEvaluation`}
+            state={solutionExtended.id}
             className="absolute underline font-semibold bottom-0 left-0 mb-2 ml-4">Zaawansowane Sprawdzanie</Link>
           }
           {showRating ? (

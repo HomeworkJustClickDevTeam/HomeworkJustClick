@@ -1,51 +1,29 @@
-import React, { useContext, useEffect, useState } from "react"
-import GroupListElement from "../group/GroupListElement"
+import React, { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
-import { groupFilter } from "../../filter/GroupFilter"
-import Loading from "../animations/Loading"
 import { FaCaretDown } from "react-icons/fa"
-import { GroupInterface } from "../../types/GroupInterface"
-import { useDispatch, useSelector } from "react-redux"
 import { selectUserState } from "../../redux/userStateSlice"
 import { setGroup } from "../../redux/groupSlice"
 import { setHomePageIn } from "../../redux/homePageInSlice"
 import { setRole } from "../../redux/roleSlice"
+import { useAppDispatch, useAppSelector } from "../../types/HooksRedux"
+import { GroupHomePageDisplayer } from "../group/GroupHomePageDisplayer"
+import { useGetUserGroups } from "../customHooks/useGetUserGroups"
 
 function HomePage() {
-  const [groups, setGroups] = useState<GroupInterface[] | undefined>(undefined)
-  const [isLoading, setIsLoading] = useState<boolean>()
   const [isOpen, setIsOpen] = useState(false)
   const [btnName, setBtnName] = useState('Wszystkie grupy')
-  const userState = useSelector(selectUserState)
-  const dispatch = useDispatch()
-  let teacherUserGroups = () => {
-  }
-  let studentsUserGroups = () => {
-  }
-  let allUserGroups = () => {
-  }
-
-  if (userState !== null) {
-    ({teacherUserGroups, studentsUserGroups, allUserGroups} = groupFilter({
-      setGroups,
-      setIsLoading,
-      userId: userState.id.toString()
-    }))
-  }
-
+  const userState = useAppSelector(selectUserState)
+  const dispatch = useAppDispatch()
+  const teacherUserGroups = useGetUserGroups(userState?.id, "teacher")
+  const studentsUserGroups = useGetUserGroups(userState?.id, "student")
+  const allUserGroups = useGetUserGroups(userState?.id, "all")
 
   useEffect(() => {
     dispatch(setGroup(null))
     dispatch(setHomePageIn(true))
     dispatch(setRole(null))
-    allUserGroups()
   }, [])
-
-  if (groups === undefined || groups === null) {
-    return <Loading/>
-  }
   return (
-
     <div className='pl-6 pr-8'>
       <div className='flex inline-block mb-4 mt-4 pl-5'>
         <p className='pr-8 text-2xl'>Moje grupy</p>
@@ -64,36 +42,31 @@ function HomePage() {
             <div
               className=' absolute left-20 z-10 w-56 mt-4 origin-top-right bg-white border border-hover_gray rounded-md shadow-lg'>
               <div onClick={() => {
-                studentsUserGroups();
                 setBtnName('Grupy uczniowskie')
               }} className="block px-4 py-2 text-sm text-black rounded-lg hover:bg-lilly-bg hover:text-black">
                 Grupy uczniowskie użytkownika
               </div>
               <div onClick={() => {
-                teacherUserGroups();
                 setBtnName('Grupy nauczycielskie')
               }} className="block px-4 py-2 text-sm text-black rounded-lg hover:bg-lilly-bg hover:text-black">
                 {" "}
                 Grupy nauczycielskie użytkownika
               </div>
               <div onClick={() => {
-                allUserGroups();
                 setBtnName('Wszystkie grupy')
-              }} className="block px-4 py-2 text-sm text-black rounded-lg hover:bg-lilly-bg hover:text-black">Wszystkie
-                grupy użytkownika
+              }} className="block px-4 py-2 text-sm text-black rounded-lg hover:bg-lilly-bg hover:text-black">
+                Wszystkie grupy użytkownika
               </div>
             </div>
           )}
 
         </div>
       </div>
-
-        <div className='relative flex flex-wrap gap-x-5 gap-y-2 bg-light_gray px-8 py-6 bg-lilly-bg rounded-md'>
-          {groups?.map((group) =>
-            groups?.length > 0 ? <GroupListElement group={group} key={group.id}/> : <div>Dodaj nową grupę!</div>
-          )}
-        </div>
-
+      {btnName === "Wszystkie grupy"
+        ? <GroupHomePageDisplayer groups={allUserGroups}/> : btnName === "Grupy nauczycielskie"
+          ? <GroupHomePageDisplayer groups={teacherUserGroups}/> : btnName === "Grupy uczniowskie"
+          && <GroupHomePageDisplayer groups={studentsUserGroups}/>
+      }
     </div>
   )
 }

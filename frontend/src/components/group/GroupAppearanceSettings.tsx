@@ -1,14 +1,14 @@
-import React, { useContext } from "react"
+import React from "react"
 import { changeGroupColorPostgresService } from "../../services/postgresDatabaseServices"
 import { AxiosError } from "axios"
 import { colorsArray } from "../../assets/colors"
 import { selectGroup, setGroup } from "../../redux/groupSlice"
-import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch } from "../../redux/store"
+import { useAppDispatch, useAppSelector } from "../../types/HooksRedux"
 
 export default function GroupAppearanceSettings() {
-  const dispatch:AppDispatch = useDispatch()
-  const group= useSelector(selectGroup)
+  const dispatch:AppDispatch = useAppDispatch()
+  const group= useAppSelector(selectGroup)
   const handleColorChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     try {
       if(group !== null){

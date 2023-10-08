@@ -1,21 +1,13 @@
-import React, { useContext, useEffect, useState } from "react"
-import { changeUserIndexPostgresService, getUserPostgresService } from "../../services/postgresDatabaseServices"
+import React, { useState } from "react"
+import { changeUserIndexPostgresService } from "../../services/postgresDatabaseServices"
 import { AxiosError } from "axios"
-import { useNavigate } from "react-router-dom"
-import { useSelector } from "react-redux"
 import { selectUserState } from "../../redux/userStateSlice"
+import { useAppSelector } from "../../types/HooksRedux"
 
 export default function UserGeneralSettingsPage() {
-  const userState = useSelector(selectUserState)
-  const [index, setIndex] = useState<number | undefined>(undefined)
+  const userState = useAppSelector(selectUserState)
+  const [index, setIndex] = useState<number | undefined>(userState?.index)
 
-  useEffect(() => {
-    if (userState !== null) {
-      getUserPostgresService(userState.id.toString())
-        .then((response) => setIndex(response.data.index))
-        .catch(() => setIndex(undefined))
-    }
-  }, [userState?.id])
   const handleIndexSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     if (userState !== null) {
       event.preventDefault()

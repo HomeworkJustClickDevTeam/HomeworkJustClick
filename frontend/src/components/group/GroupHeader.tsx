@@ -1,18 +1,18 @@
 import { Link, useLocation } from "react-router-dom"
-import { useContext, useEffect } from "react"
+import { useEffect } from "react"
 import { colorsArray } from "../../assets/colors"
 import Loading from "../animations/Loading"
 import { selectGroup } from "../../redux/groupSlice"
-import { useSelector } from "react-redux"
 import { selectRole } from "../../redux/roleSlice"
+import { useAppSelector } from "../../types/HooksRedux"
 
 //import {theme.colors.colorsArray: string[]} = require("../../../tailwind.config")
 
 function GroupHeader({}:{key:number}) {
   const location = useLocation();
   const locationSplit = location.pathname.split("/");
-  const group= useSelector(selectGroup)
-  const role = useSelector(selectRole)
+  const group= useAppSelector(selectGroup)
+  const role = useAppSelector(selectRole)
 
   useEffect(() => {
   }, [group]);

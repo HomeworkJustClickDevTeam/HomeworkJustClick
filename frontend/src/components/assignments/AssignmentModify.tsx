@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom"
-import React, { ChangeEvent, useContext, useEffect, useState } from "react"
+import React, { ChangeEvent, useEffect, useState } from "react"
 import {
   changeAssignmentPostgresService,
   deleteAssignmentPostgresService
@@ -9,7 +9,7 @@ import ReactDatePicker from "react-datepicker"
 import { AssignmentModifyFile } from "./AssignmentModifyFile"
 import { AssignmentPropsInterface } from "../../types/AssignmentPropsInterface"
 import { selectGroup } from "../../redux/groupSlice"
-import { useSelector } from "react-redux"
+import { useAppSelector } from "../../types/HooksRedux"
 
 interface AssignmentModifyPropsInterface extends AssignmentPropsInterface {
   setAssignment: (assignment: (prevState: any) => any) => void
@@ -19,7 +19,7 @@ function AssignmentModify({assignment, setAssignment}: AssignmentModifyPropsInte
   const navigate = useNavigate()
   const [toSend, setToSend] = useState<boolean>(false)
   const [toNavigate, setToNavigate] = useState<boolean>(false)
-  const group= useSelector(selectGroup)
+  const group= useAppSelector(selectGroup)
 
   useEffect(() => {
     if (toNavigate) {

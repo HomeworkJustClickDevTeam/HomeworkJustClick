@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom"
-import React, { ChangeEvent, useContext, useEffect, useState } from "react"
+import React, { ChangeEvent, useEffect, useState } from "react"
 import { createAssignmentWithUserAndGroupPostgresService } from "../../services/postgresDatabaseServices"
 import ReactDatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
@@ -8,11 +8,12 @@ import { AssignmentToSendInterface } from "../../types/AssignmentToSendInterface
 import { selectGroup } from "../../redux/groupSlice"
 import { useSelector } from "react-redux"
 import { selectUserState } from "../../redux/userStateSlice"
+import { useAppSelector } from "../../types/HooksRedux"
 
 
 function AssignmentAddPage() {
   const navigate = useNavigate()
-  const userState = useSelector(selectUserState)
+  const userState = useAppSelector(selectUserState)
 
   const [assignment, setAssignment] = useState<AssignmentToSendInterface>({
     title: "",
@@ -20,6 +21,7 @@ function AssignmentAddPage() {
     taskDescription: "",
     visible: false,
     max_points: 1,
+    auto_penalty: 50
   })
   const [toSend, setToSend] = useState<boolean>(false)
   const [idAssignment, setIdAssignment] = useState<number>()
