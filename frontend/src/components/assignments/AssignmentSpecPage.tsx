@@ -15,6 +15,7 @@ import { selectRole } from "../../redux/roleSlice"
 import { useAppSelector } from "../../types/HooksRedux"
 import { useGetSolutionByUserAssignmentGroup } from "../customHooks/useGetSolutionByUserAssignmentGroup"
 import { useGetAssignment } from "../customHooks/useGetAssignment"
+import Loading from "../animations/Loading"
 
 function AssignmentSpecPage() {
   const {idAssignment} = useParams()
@@ -27,6 +28,9 @@ function AssignmentSpecPage() {
   const checkedSolution = useGetSolutionByUserAssignmentGroup(userId !== undefined? userId : userState?.id, idAssignment as unknown as number, group?.id, "checked")
   const uncheckedSolution = useGetSolutionByUserAssignmentGroup(userId !== undefined? userId : userState?.id, idAssignment as unknown as number, group?.id, "unchecked")
 
+  if((uncheckedSolution || checkedSolution || assignment) === undefined){
+    return <Loading></Loading>
+  }
   return (
     <div>
       {((role === "Teacher") ? (
