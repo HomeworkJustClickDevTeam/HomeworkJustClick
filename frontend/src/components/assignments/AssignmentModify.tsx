@@ -65,15 +65,15 @@ function AssignmentModify({assignment, setAssignment}: AssignmentModifyPropsInte
       .catch((e) => console.log(e))
   }
 
-  function handleDelete() {
-    deleteAssignmentPostgresService('assignment.id')
+  function handleDelete(event: React.FormEvent) {
+    deleteAssignmentPostgresService(assignment.id.toString())
       .then(() => navigate(`/group/${group?.id}/assignments/`))
-      .catch((e) => console.log(e))
+      .catch((e) => console.log("TUTAJ", e))
   }
 
   return (
     <div className='relative flex flex-col mx-[7.5%] mt-4 border border-border_gray border-1 rounded-md pt-4 px-4 h-80'>
-      <form onSubmit={handleSubmit} className='flex flex-col gap-3'>
+      <form onSubmit={() => handleSubmit} className='flex flex-col gap-3'>
         <label className='pr-3'>
           Tytuł
           <input
@@ -140,7 +140,7 @@ function AssignmentModify({assignment, setAssignment}: AssignmentModifyPropsInte
         setToNavigate={setToNavigate}
       />
 
-      <button onClick={handleDelete}
+      <button onClick={(e) => handleDelete(e)}
               className='absolute bottom-0 right-0 mr-6 mb-4 px-4 py-1 rounded-lg bg-berry_red text-white'>Usuń Zadanie
       </button>
     </div>
