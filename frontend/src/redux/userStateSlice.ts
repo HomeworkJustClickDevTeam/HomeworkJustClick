@@ -9,7 +9,7 @@ export const userStateSlice = createSlice({
   name: 'userState',
   initialState: getUser() as UserStateSliceType,
   reducers: {
-    logOut: (state) => {
+    logOut: (_) => {
       localStorage.removeItem("user")
       return null
     },
@@ -20,8 +20,16 @@ export const userStateSlice = createSlice({
       setIsLoadingInReducer(true)
       return null
     })
-    builder.addCase(loginUser.rejected, () => null)
-    builder.addCase(loginUser.fulfilled,(_, action) => action.payload)
+    builder.addCase(loginUser.rejected, () => {
+      setIsLoadingInReducer(false)
+      localStorage.removeItem("user")
+      return null
+    })
+    builder.addCase(loginUser.fulfilled,(_, action) =>
+    {
+      setIsLoadingInReducer(false)
+      return action.payload
+    })
   }
 })
 
