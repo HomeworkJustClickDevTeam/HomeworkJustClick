@@ -1,9 +1,8 @@
-import React, { useContext } from "react"
+import React from "react"
 
 import { Navigate, Outlet } from "react-router-dom"
 import HeaderLoggedOutState from "../header/HeaderLoggedOutState"
 import { selectUserState } from "../../redux/userStateSlice"
-import { useSelector } from "react-redux"
 import { useAppSelector } from "../../types/HooksRedux"
 
 

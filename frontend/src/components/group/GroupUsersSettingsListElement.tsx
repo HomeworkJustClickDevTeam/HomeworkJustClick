@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react"
+import React, { useState } from "react"
 import {
   addTeacherToGroupPostgresService,
   deleteStudentInGroupPostgresService,
@@ -6,7 +6,6 @@ import {
 } from "../../services/postgresDatabaseServices"
 import { AxiosError } from "axios"
 import { UserInterface } from "../../types/UserInterface"
-import { useSelector } from "react-redux"
 import { selectRole } from "../../redux/roleSlice"
 import { useAppSelector } from "../../types/HooksRedux"
 

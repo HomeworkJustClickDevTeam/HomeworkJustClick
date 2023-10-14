@@ -1,49 +1,18 @@
 import { useParams } from "react-router-dom"
-import { useContext, useEffect, useState } from "react"
-import {
-  getAssignmentsDoneByGroupAndStudentPostgresService,
-  getAssignmentsExpiredUndoneByGroupAndStudentPostgresService,
-  getAssignmentsUndoneByGroupAndStudentPostgresService,
-  getUserPostgresService
-} from "../../services/postgresDatabaseServices"
-import { AxiosError } from "axios"
-import Loading from "../animations/Loading"
 import AssignmentListElement from "../assignments/AssignmentListElement"
-import { UserInterface } from "../../types/UserInterface"
-import { AssignmentInterface } from "../../types/AssignmentInterface"
-import { useSelector } from "react-redux"
 import { selectGroup } from "../../redux/groupSlice"
 import { useAppSelector } from "../../types/HooksRedux"
+import { useGetUser } from "../customHooks/useGetUser"
+import { useGetAssignmentsByGroupAndStudent } from "../customHooks/useGetAssignmentsByGroupAndStudent"
+
 export default function GroupUserProfilePage() {
   const {userProfileId} = useParams()
   const group= useAppSelector(selectGroup)
-  const [userProfile, setUserProfile] = useState<UserInterface | undefined>(undefined)
-  const [doneAssignments, setDoneAssignments] = useState<AssignmentInterface[] | undefined>(undefined)
-  const [expiredUndoneAssignments, setExpiredUndoneAssignments] = useState<AssignmentInterface[] | undefined>(undefined)
-  const [undoneAssignments, setUndoneAssignments] = useState<AssignmentInterface[] | undefined>(undefined)
+  const userProfile = useGetUser(userProfileId as unknown as number)
+  const doneAssignments = useGetAssignmentsByGroupAndStudent(group?.id, userProfileId as unknown as number, "done")
+  const expiredUndoneAssignments = useGetAssignmentsByGroupAndStudent(group?.id, userProfileId as unknown as number, "expiredUndone")
+  const undoneAssignments = useGetAssignmentsByGroupAndStudent(group?.id, userProfileId as unknown as number, "undone")
 
-  useEffect(() => {
-    getUserPostgresService(userProfileId as string)
-      .then((response) => setUserProfile(response.data))
-      .catch((error: AxiosError) => console.log(error))
-
-    getAssignmentsDoneByGroupAndStudentPostgresService(group?.id as unknown as string, userProfileId as string)
-      .then((r) => setDoneAssignments(r.data))
-      .catch((e: AxiosError) => (e.response?.status === 404) ? setDoneAssignments([]) : console.log(e))
-
-    getAssignmentsExpiredUndoneByGroupAndStudentPostgresService(group?.id as unknown as string, userProfileId as string)
-      .then((r) => setExpiredUndoneAssignments(r.data))
-      .catch((e: AxiosError) => (e.response?.status === 404) ? setExpiredUndoneAssignments([]) : console.log(e))
-
-    getAssignmentsUndoneByGroupAndStudentPostgresService(group?.id as unknown as string, userProfileId as string)
-      .then((r) => setUndoneAssignments(r.data))
-      .catch((e: AxiosError) => (e.response?.status === 404) ? setUndoneAssignments([]) : console.log(e))
-  }, [])
-
-
-  if ((userProfile || doneAssignments || expiredUndoneAssignments || undoneAssignments) === undefined) {
-    return <Loading/>
-  }
   return (
     <ul>
       <li>Imię i nazwisko: {userProfile?.firstname} {userProfile?.lastname}</li>
@@ -65,7 +34,7 @@ export default function GroupUserProfilePage() {
             <dd>
               <ul>
                 {undoneAssignments?.map((assignment) => {
-                  return (<li><AssignmentListElement optionalUserId={userProfile?.id?.toString()} assignment={assignment}
+                  return (<li key={assignment.id}><AssignmentListElement optionalUserId={userProfile?.id?.toString()} assignment={assignment}
                                                      idGroup={group?.id as unknown as string}/></li>)
                 })}
               </ul>
@@ -75,7 +44,7 @@ export default function GroupUserProfilePage() {
             <dd>
               <ul>
                 {expiredUndoneAssignments?.map((assignment) => {
-                  return (<li><AssignmentListElement optionalUserId={userProfile?.id?.toString()} assignment={assignment}
+                  return (<li key={assignment.id}><AssignmentListElement optionalUserId={userProfile?.id?.toString()} assignment={assignment}
                                                      idGroup={group?.id as unknown as string}/></li>)
                 })}
               </ul>

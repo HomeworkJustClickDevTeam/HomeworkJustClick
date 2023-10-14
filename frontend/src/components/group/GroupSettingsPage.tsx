@@ -1,8 +1,7 @@
 import GroupAppearanceSettings from "./GroupAppearanceSettings"
 import GroupUsersSettings from "./GroupUsersSettings"
 import GroupGeneralSettings from "./GroupGeneralSettings"
-import React, { useContext } from "react"
-import { useNavigate } from "react-router-dom"
+import React from "react"
 
 export default function GroupSettingsPage() {
 

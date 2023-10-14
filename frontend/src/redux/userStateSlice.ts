@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { UserInterface } from "../types/UserInterface"
-import { AppDispatch, RootState } from "./store"
-import { getUser, loginUser} from "../services/otherServices"
+import { RootState } from "./store"
+import { getUser, loginUser } from "../services/otherServices"
 import { setIsLoadingInReducer } from "./isLoadingSlice"
 
 type UserStateSliceType = UserInterface | null

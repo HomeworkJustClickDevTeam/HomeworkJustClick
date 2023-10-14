@@ -1,5 +1,4 @@
-import { useNavigate } from "react-router-dom"
-import React, { useContext } from "react"
+import React from "react"
 import UserGeneralSettingsPage from "./UserGeneralSettingsPage"
 import UserSecuritySettingsPage from "./UserSecuritySettingsPage"
 import UserAppearanceSettingsPage from "./UserAppearanceSettingsPage"

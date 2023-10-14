@@ -1,6 +1,3 @@
-import { useState } from "react"
-import { AdvancedEvaluationCommentInterface } from "../../types/AdvancedEvaluationCommentInterface"
-
 interface AdvancedEvaluationTextFileAreaInterface{
   text: string
   letterColor: (undefined|string)[]

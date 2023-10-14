@@ -1,4 +1,3 @@
-import { AdvancedEvaluationCommentInterface } from "../../types/AdvancedEvaluationCommentInterface"
 import { CommentInterface } from "../../types/CommentInterface"
 
 export const AdvancedEvaluationCommentPanel = (
@@ -11,7 +10,7 @@ export const AdvancedEvaluationCommentPanel = (
     Panel komentarzy <br/>
     Komentarze: <br/>
     {comments.map((comment) => {
-      return <><button type={'button'} onClick={() => handleActiveCommentChange(comment)} key={comment.id} style={{backgroundColor: comment.color}}>{comment.description}</button><br/></>
+      return <div key={comment.id}><button type={'button'} onClick={() => handleActiveCommentChange(comment)} style={{backgroundColor: comment.color}}>{comment.description}</button><br/></div>
     })}
     </>
 }

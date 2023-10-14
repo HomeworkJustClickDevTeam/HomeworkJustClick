@@ -1,0 +1,1 @@
+export type ExtendedSolutionType = "checked"|"unchecked"|"late"

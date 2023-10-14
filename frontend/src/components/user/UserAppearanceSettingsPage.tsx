@@ -1,15 +1,12 @@
-import React, { useContext, useEffect, useState } from "react"
-import { changeUserColorPostgresService, getUserPostgresService } from "../../services/postgresDatabaseServices"
+import React, { useState } from "react"
+import { changeUserColorPostgresService } from "../../services/postgresDatabaseServices"
 import { AxiosError } from "axios"
-import { useNavigate } from "react-router-dom"
-import { useSelector } from "react-redux"
 import { selectUserState } from "../../redux/userStateSlice"
 import { useAppSelector } from "../../types/HooksRedux"
 
 export default function UserAppearanceSettingsPage() {
-  const [color, setColor] = useState<number | undefined>(undefined)
   const userState = useAppSelector(selectUserState)
-
+  const [color, setColor] = useState<number | undefined>(userState?.color)
   const handleColorChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -25,13 +22,6 @@ export default function UserAppearanceSettingsPage() {
       console.log(e)
     }
   }
-  useEffect(() => {
-    if (userState !== null) {
-      getUserPostgresService(userState.id.toString())
-        .then((response) => setColor(response.data.color))
-        .catch(() => setColor(undefined))
-    }
-  }, [userState?.id])
   return (
     <>
       <p>Wybierz swój kolor:</p>

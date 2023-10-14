@@ -1,9 +1,8 @@
 import { Link, useLocation } from "react-router-dom"
-import { useContext, useEffect } from "react"
+import { useEffect } from "react"
 import { colorsArray } from "../../assets/colors"
 import Loading from "../animations/Loading"
 import { selectGroup } from "../../redux/groupSlice"
-import { useSelector } from "react-redux"
 import { selectRole } from "../../redux/roleSlice"
 import { useAppSelector } from "../../types/HooksRedux"
 

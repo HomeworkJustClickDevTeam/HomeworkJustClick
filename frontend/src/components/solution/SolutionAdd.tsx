@@ -1,20 +1,17 @@
-import React, { ChangeEvent, MouseEventHandler, useContext, useEffect, useState } from "react"
+import React, { ChangeEvent, useEffect, useState } from "react"
 import { postFileMongoService } from "../../services/mongoDatabaseServices"
-import { useNavigate, useParams } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import {
   createFileWithSolutionPostgresService,
-  createSolutionWithUserAndAssignmentPostgresService,
-  getFilesByAssignmentPostgresService
+  createSolutionWithUserAndAssignmentPostgresService
 } from "../../services/postgresDatabaseServices"
 import { AssignmentFile } from "../assignments/AssignmentFile"
 import { format } from "date-fns"
 import { AssignmentPropsInterface } from "../../types/AssignmentPropsInterface"
 import { SolutionInterface } from "../../types/SolutionInterface"
 import { SolutionToSendInterface } from "../../types/SolutionToSendInterface"
-import { useDispatch, useSelector } from "react-redux"
-import { selectIsLoading, setIsLoading } from "../../redux/isLoadingSlice"
+import { setIsLoading } from "../../redux/isLoadingSlice"
 import { selectUserState } from "../../redux/userStateSlice"
-import loading from "../animations/Loading"
 import { useAppDispatch, useAppSelector } from "../../types/HooksRedux"
 import { useGetFiles } from "../customHooks/useGetFiles"
 
