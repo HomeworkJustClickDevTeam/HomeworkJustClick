@@ -28,7 +28,7 @@ export const userStateSlice = createSlice({
     builder.addCase(loginUser.fulfilled,(_, action) =>
     {
       setIsLoadingInReducer(false)
-      if(action.payload.response.status !== 200){
+      if(action.payload.response !== undefined && action.payload.response.status !== 200){
         return null
       }
       else {
