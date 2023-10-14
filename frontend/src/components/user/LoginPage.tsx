@@ -21,12 +21,6 @@ const LoginPage = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     dispatch(loginUser(userProvided))
-    if(user === null){
-      navigate("/home")
-    }
-    else {
-      navigate("/")
-    }
   }
 
 
