@@ -1,7 +1,7 @@
 export interface FileInterface{
   data: Blob
   name: string
-  type: string
+  format: string
   postgresId: number
   mongoId:string
 }

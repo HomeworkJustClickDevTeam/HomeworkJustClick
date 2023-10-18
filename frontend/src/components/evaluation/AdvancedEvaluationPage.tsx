@@ -5,6 +5,8 @@ import { AdvancedEvaluationCommentPanel } from "./AdvancedEvaluationCommentPanel
 import { AdvancedEvaluationTextFileArea } from "./AdvancedEvaluationTextFileArea"
 import { CommentInterface } from "../../types/CommentInterface"
 import { AdvancedEvaluationCommentInterface } from "../../types/AdvancedEvaluationCommentInterface"
+import { AdvancedEvaluationImageArea } from "./AdvancedEvaluationImageArea"
+import Loading from "../animations/Loading"
 
 export default function AdvancedEvaluationPage() {
   let {state} = useLocation()
@@ -12,6 +14,7 @@ export default function AdvancedEvaluationPage() {
   const [fileText, setFileText] = useState("")
   const [comments, setComments] = useState<AdvancedEvaluationCommentInterface[]>([])
   const [letterColor, setLetterColor] = useState<(string|undefined)[]>([undefined])
+  let image = document.createElement("img")
 
   const checkNewRanges = (updatedComment:AdvancedEvaluationCommentInterface, selectedComment:AdvancedEvaluationCommentInterface):AdvancedEvaluationCommentInterface[] => {
     if(updatedComment.highlightStart<=updatedComment.highlightEnd){
@@ -36,10 +39,13 @@ export default function AdvancedEvaluationPage() {
   }, [fileText])
 
   useEffect(() => {
-    if(file){
+    if(file && file.format !== "jpg" && file.format !== "png"){
       file.data.text()
         .then((text) => {
           setFileText(text)})
+    }
+    else if(file){
+      image.src = URL.createObjectURL(file.data)
     }
 
   }, [file])
@@ -123,17 +129,18 @@ export default function AdvancedEvaluationPage() {
     }
   }
 
-
-
-
-
   return (
     <>
       <AdvancedEvaluationCommentPanel handleActiveCommentChange={handleActiveCommentChange}></AdvancedEvaluationCommentPanel>
       <br/>
-      <AdvancedEvaluationTextFileArea
-        letterColor={letterColor}
-        text={fileText}/>
+      {file
+        ? (file.format === "txt"
+            ? <AdvancedEvaluationTextFileArea
+              letterColor={letterColor}
+              text={fileText}/>
+            : <AdvancedEvaluationImageArea image={image}></AdvancedEvaluationImageArea>)
+        : <Loading></Loading>
+        }
     </>
   )
 }
