@@ -52,7 +52,7 @@ public class Assignment {
 
     @Column(name = "taskDescription")
     @Schema(example = "Example desc")
-    @Size(max = 255)
+    @Size(max = 1000)
     private String taskDescription;
 
     @Column(name = "creationDatetime", updatable = false, nullable = false)
