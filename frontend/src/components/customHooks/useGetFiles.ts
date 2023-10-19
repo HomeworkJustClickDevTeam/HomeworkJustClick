@@ -43,7 +43,7 @@ export const useGetFiles = (filterId: number|undefined|null, filter:"assignment"
                   updatedFiles.push({
                     data: blob,
                     name: mongoResponse.data.name,
-                    type: fileData.file.type,
+                    format: fileData.format,
                     mongoId: file.mongo_id,
                     postgresId: file.id
                   })

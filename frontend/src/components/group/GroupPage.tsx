@@ -1,4 +1,4 @@
-import { Outlet, useParams } from "react-router-dom"
+import { Outlet, useNavigate, useParams } from "react-router-dom"
 import React from "react"
 import { addStudentToGroupPostgresService } from "../../services/postgresDatabaseServices"
 import GroupHeader from "./GroupHeader"
@@ -14,6 +14,7 @@ function GroupPage() {
   const userState = useAppSelector(selectUserState)
   const group= useAppSelector(selectGroup)
   const role = useAppSelector(selectRole)
+  const navigate = useNavigate()
   useGetGroupAndRole(idGroup as unknown as number, userState?.id)
 
   if (group === undefined || group === null) {
@@ -21,12 +22,13 @@ function GroupPage() {
   }
   async function addToGroup() {
     await addStudentToGroupPostgresService(userState?.id as unknown as string, group?.id as unknown as string)
+      .then(() => navigate("/"))
   }
   if (role === "User not in group") {
     return (
       <>
         User not in group
-        <button onClick={addToGroup}> Add to group</button>
+        <button onClick={() => addToGroup()}> Add to group</button>
       </>
     )
   }

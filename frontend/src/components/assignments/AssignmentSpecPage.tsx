@@ -20,15 +20,15 @@ import Loading from "../animations/Loading"
 function AssignmentSpecPage() {
   const {idAssignment} = useParams()
   const location = useLocation()
-  let userId: number | undefined = location.state
+  let userId: number | null = location.state
   const {assignment, setAssignment}= useGetAssignment(idAssignment as unknown as number)
   const userState = useAppSelector(selectUserState)
   const group= useAppSelector(selectGroup)
   const role = useAppSelector(selectRole)
-  const checkedSolution = useGetSolutionByUserAssignmentGroup(userId !== undefined? userId : userState?.id, idAssignment as unknown as number, group?.id, "checked")
-  const uncheckedSolution = useGetSolutionByUserAssignmentGroup(userId !== undefined? userId : userState?.id, idAssignment as unknown as number, group?.id, "unchecked")
+  const checkedSolution = useGetSolutionByUserAssignmentGroup(userId !== null ? userId : userState?.id, idAssignment as unknown as number, group?.id, "checked")
+  const uncheckedSolution = useGetSolutionByUserAssignmentGroup(userId !== null ? userId : userState?.id, idAssignment as unknown as number, group?.id, "unchecked")
 
-  if((uncheckedSolution || checkedSolution || assignment) === undefined){
+  if(assignment === undefined){
     return <Loading></Loading>
   }
   return (

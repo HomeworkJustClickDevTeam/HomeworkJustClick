@@ -5,31 +5,28 @@ import login_right_circle from "./login_right_circle.svg"
 import { LoginUserInterface } from "../../types/LoginUserInterface"
 import { AppDispatch } from "../../redux/store"
 import { loginUser } from "../../services/otherServices"
-import { useAppDispatch } from "../../types/HooksRedux"
+import { useAppDispatch, useAppSelector } from "../../types/HooksRedux"
+import { selectUserState } from "../../redux/userStateSlice"
 
 
 const LoginPage = () => {
-  const [user, setUser] = useState<LoginUserInterface>({
+  const [userProvided, setUserProvided] = useState<LoginUserInterface>({
     email: "",
     password: "",
   })
   const navigate = useNavigate()
   const dispatch :AppDispatch = useAppDispatch()
+  const user = useAppSelector(selectUserState)
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-
-    try {
-      dispatch(loginUser(user))
-    } catch (e) {
-      console.log(e)
-    }
+    dispatch(loginUser(userProvided))
   }
 
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const {name, value} = event.target
-    setUser((prevState) => ({
+    setUserProvided((prevState) => ({
       ...prevState,
       [name]: value,
     }))
