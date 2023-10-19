@@ -45,7 +45,7 @@ public class GroupStudentRepositoryTest {
     @Test
     void itShouldReturn1ForStudentInGroup() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupStudent groupStudent = new GroupStudent(group, user, "");
         userRepository.save(user);
@@ -62,7 +62,7 @@ public class GroupStudentRepositoryTest {
     @Test
     void itShouldReturn0ForStudentInGroup() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupStudent groupStudent = new GroupStudent(group, user, "");
         userRepository.save(user);
@@ -79,7 +79,7 @@ public class GroupStudentRepositoryTest {
     @Test
     void itShouldReturn0ForStudentInGroup_2() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupStudent groupStudent = new GroupStudent(group, user, "");
         userRepository.save(user);
@@ -96,7 +96,7 @@ public class GroupStudentRepositoryTest {
     @Test
     void itShouldReturn0ForStudentInGroup_3() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupStudent groupStudent = new GroupStudent(group, user, "");
         userRepository.save(user);
@@ -113,7 +113,7 @@ public class GroupStudentRepositoryTest {
     @Test
     void itShouldReturnGroupStudentForGroupAndStudent() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupStudent groupStudent = new GroupStudent(group, user, "");
         userRepository.save(user);
@@ -130,7 +130,7 @@ public class GroupStudentRepositoryTest {
     @Test
     void itShouldNotReturnGroupStudentForGroupAndStudent() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupStudent groupStudent = new GroupStudent(group, user, "");
         userRepository.save(user);
@@ -147,7 +147,7 @@ public class GroupStudentRepositoryTest {
     @Test
     void itShouldNotReturnGroupStudentForGroupAndStudent_2() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupStudent groupStudent = new GroupStudent(group, user, "");
         userRepository.save(user);
@@ -164,7 +164,7 @@ public class GroupStudentRepositoryTest {
     @Test
     void itShouldNotReturnGroupStudentForGroupAndStudent_3() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupStudent groupStudent = new GroupStudent(group, user, "");
         userRepository.save(user);

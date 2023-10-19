@@ -67,9 +67,9 @@ public class EvaluationRepositoryTest {
     @Test
     void itShouldGetEvaluationsByAssignmentId() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -117,9 +117,9 @@ public class EvaluationRepositoryTest {
     @Test
     void itShouldNotGetEvaluationsByAssignmentId() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -167,9 +167,9 @@ public class EvaluationRepositoryTest {
     @Test
     void itShouldNotGetEvaluationsByAssignmentId_2() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -217,9 +217,9 @@ public class EvaluationRepositoryTest {
     @Test
     void itShouldCountEvaluationsByAssignmentId() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -263,9 +263,9 @@ public class EvaluationRepositoryTest {
     @Test
     void itShouldCountEvaluationsByAssignmentId_2() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -309,9 +309,9 @@ public class EvaluationRepositoryTest {
     @Test
     void itShouldGetEvaluationsByStudentId() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -359,9 +359,9 @@ public class EvaluationRepositoryTest {
     @Test
     void itShouldNotGetEvaluationsByStudentId() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -409,9 +409,9 @@ public class EvaluationRepositoryTest {
     @Test
     void itShouldNotGetEvaluationsByStudentId_2() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -459,9 +459,9 @@ public class EvaluationRepositoryTest {
     @Test
     void itShouldGetEvaluationsByStudentIdAndGroupId() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -509,9 +509,9 @@ public class EvaluationRepositoryTest {
     @Test
     void itShouldNotGetEvaluationsByStudentIdAndGroupId() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -559,9 +559,9 @@ public class EvaluationRepositoryTest {
     @Test
     void itShouldNotGetEvaluationsByStudentIdAndGroupId_2() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -609,9 +609,9 @@ public class EvaluationRepositoryTest {
     @Test
     void itShouldGetEvaluationBySolutionId() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -657,9 +657,9 @@ public class EvaluationRepositoryTest {
     @Test
     void itShouldNotGetEvaluationBySolutionId() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -704,9 +704,9 @@ public class EvaluationRepositoryTest {
     @Test
     void itShouldReturn1() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -748,9 +748,9 @@ public class EvaluationRepositoryTest {
     @Test
     void itShouldReturn0() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");

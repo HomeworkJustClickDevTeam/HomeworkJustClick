@@ -70,9 +70,9 @@ public class FileRepositoryTest {
     @Test
     void itShouldGetFilesByAssignmentId() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -134,9 +134,9 @@ public class FileRepositoryTest {
     @Test
     void itShouldNotGetFilesByAssignmentId() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -198,9 +198,9 @@ public class FileRepositoryTest {
     @Test
     void itShouldGetFilesBySolutionId() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -262,9 +262,9 @@ public class FileRepositoryTest {
     @Test
     void itShouldNotGetFilesBySolutionId() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");

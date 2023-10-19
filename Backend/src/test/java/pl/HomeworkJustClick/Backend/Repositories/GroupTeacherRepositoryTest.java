@@ -45,7 +45,7 @@ public class GroupTeacherRepositoryTest {
     @Test
     void itShouldReturn1ForTeacherInGroup() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         userRepository.save(user);
@@ -62,7 +62,7 @@ public class GroupTeacherRepositoryTest {
     @Test
     void itShouldReturn0ForTeacherInGroup() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         userRepository.save(user);
@@ -79,7 +79,7 @@ public class GroupTeacherRepositoryTest {
     @Test
     void itShouldReturn0ForTeacherInGroup_2() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         userRepository.save(user);
@@ -96,7 +96,7 @@ public class GroupTeacherRepositoryTest {
     @Test
     void itShouldReturn0ForTeacherInGroup_3() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         userRepository.save(user);
@@ -113,7 +113,7 @@ public class GroupTeacherRepositoryTest {
     @Test
     void itShouldReturnGroupTeacherForGroupAndTeacher() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         userRepository.save(user);
@@ -130,7 +130,7 @@ public class GroupTeacherRepositoryTest {
     @Test
     void itShouldNotReturnGroupTeacherForGroupAndTeacher() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         userRepository.save(user);
@@ -147,7 +147,7 @@ public class GroupTeacherRepositoryTest {
     @Test
     void itShouldNotReturnGroupTeacherForGroupAndTeacher_2() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         userRepository.save(user);
@@ -164,7 +164,7 @@ public class GroupTeacherRepositoryTest {
     @Test
     void itShouldNotReturnGroupTeacherForGroupAndTeacher_3() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         userRepository.save(user);
@@ -181,7 +181,7 @@ public class GroupTeacherRepositoryTest {
     @Test
     void itShouldCountTeachersInGroup() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         userRepository.save(user);
@@ -198,7 +198,7 @@ public class GroupTeacherRepositoryTest {
     @Test
     void itShouldCountTeachersInGroup_2() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         userRepository.save(user);
@@ -215,8 +215,8 @@ public class GroupTeacherRepositoryTest {
     @Test
     void itShouldCountTeachersInGroup_3() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupTeacher groupTeacher2 = new GroupTeacher(group, user2, "");
