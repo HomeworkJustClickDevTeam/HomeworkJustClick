@@ -41,7 +41,7 @@ export default function AdvancedEvaluationPage() {
             ? (<AdvancedEvaluationTextFileArea
               chosenComment={chosenComment}
               fileText={fileText}/>)
-            : (image !== undefined ? <AdvancedEvaluationImageArea image={image} chosenComment={chosenComment}></AdvancedEvaluationImageArea>
+            : (image !== undefined ? <AdvancedEvaluationImageArea setChosenComment={setChosenComment} image={image} chosenComment={chosenComment}></AdvancedEvaluationImageArea>
               : <Loading></Loading>))
         : <Loading></Loading>}
     </>

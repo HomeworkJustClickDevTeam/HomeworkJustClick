@@ -5,7 +5,7 @@ export const AdvancedEvaluationCommentPanel = (
   {setChosenComment, chosenComment}:{setChosenComment:(comment:CommentInterface|undefined) => void, chosenComment:CommentInterface|undefined}) => {
 
   const handleCommentClick = (clickedComment:CommentInterface) => {
-    if(chosenComment === clickedComment){
+    if(chosenComment?.id === clickedComment.id){
       setChosenComment(undefined)
     }
     else{
