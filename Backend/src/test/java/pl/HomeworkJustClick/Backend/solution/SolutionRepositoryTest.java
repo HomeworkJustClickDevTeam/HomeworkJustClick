@@ -1,4 +1,4 @@
-package pl.HomeworkJustClick.Backend.Repositories;
+package pl.HomeworkJustClick.Backend.solution;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,8 +16,6 @@ import pl.HomeworkJustClick.Backend.groupstudent.GroupStudentRepository;
 import pl.HomeworkJustClick.Backend.groupteacher.GroupTeacher;
 import pl.HomeworkJustClick.Backend.groupteacher.GroupTeacherRepository;
 import pl.HomeworkJustClick.Backend.infrastructure.enums.Role;
-import pl.HomeworkJustClick.Backend.solution.Solution;
-import pl.HomeworkJustClick.Backend.solution.SolutionRepository;
 import pl.HomeworkJustClick.Backend.user.User;
 import pl.HomeworkJustClick.Backend.user.UserRepository;
 

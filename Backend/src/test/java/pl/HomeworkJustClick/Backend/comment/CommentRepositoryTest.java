@@ -1,4 +1,4 @@
-package pl.HomeworkJustClick.Backend.Repositories;
+package pl.HomeworkJustClick.Backend.comment;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import pl.HomeworkJustClick.Backend.assignment.Assignment;
 import pl.HomeworkJustClick.Backend.assignment.AssignmentRepository;
-import pl.HomeworkJustClick.Backend.comment.Comment;
-import pl.HomeworkJustClick.Backend.comment.CommentRepository;
 import pl.HomeworkJustClick.Backend.commentevaluation.CommentEvaluation;
 import pl.HomeworkJustClick.Backend.commentevaluation.CommentEvaluationRepository;
 import pl.HomeworkJustClick.Backend.evaluation.Evaluation;

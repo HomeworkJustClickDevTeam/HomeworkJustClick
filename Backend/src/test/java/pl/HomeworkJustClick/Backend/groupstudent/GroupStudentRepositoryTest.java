@@ -1,4 +1,4 @@
-package pl.HomeworkJustClick.Backend.Repositories;
+package pl.HomeworkJustClick.Backend.groupstudent;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import pl.HomeworkJustClick.Backend.group.Group;
 import pl.HomeworkJustClick.Backend.group.GroupRepository;
-import pl.HomeworkJustClick.Backend.groupstudent.GroupStudent;
-import pl.HomeworkJustClick.Backend.groupstudent.GroupStudentRepository;
 import pl.HomeworkJustClick.Backend.groupteacher.GroupTeacherRepository;
 import pl.HomeworkJustClick.Backend.infrastructure.enums.Role;
 import pl.HomeworkJustClick.Backend.user.User;

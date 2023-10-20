@@ -1,4 +1,4 @@
-package pl.HomeworkJustClick.Backend.Repositories;
+package pl.HomeworkJustClick.Backend.commentevaluation;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,8 +9,6 @@ import pl.HomeworkJustClick.Backend.assignment.Assignment;
 import pl.HomeworkJustClick.Backend.assignment.AssignmentRepository;
 import pl.HomeworkJustClick.Backend.comment.Comment;
 import pl.HomeworkJustClick.Backend.comment.CommentRepository;
-import pl.HomeworkJustClick.Backend.commentevaluation.CommentEvaluation;
-import pl.HomeworkJustClick.Backend.commentevaluation.CommentEvaluationRepository;
 import pl.HomeworkJustClick.Backend.evaluation.Evaluation;
 import pl.HomeworkJustClick.Backend.evaluation.EvaluationRepository;
 import pl.HomeworkJustClick.Backend.group.Group;

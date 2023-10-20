@@ -33,17 +33,17 @@ public class Solution {
     private int id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "Fk_user"))
+    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "solution_user_id_fk"))
     @JsonIgnore
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "assignment_id", nullable = false, foreignKey = @ForeignKey(name = "Fk_assignment"))
+    @JoinColumn(name = "assignment_id", nullable = false, foreignKey = @ForeignKey(name = "solution_assignment_id_fk"))
     @JsonIgnore
     private Assignment assignment;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "group_id", nullable = false, foreignKey = @ForeignKey(name = "Fk_group"))
+    @JoinColumn(name = "group_id", nullable = false, foreignKey = @ForeignKey(name = "solution_group_id_fk"))
     @JsonIgnore
     private Group group;
 

@@ -1,4 +1,4 @@
-package pl.HomeworkJustClick.Backend.Repositories;
+package pl.HomeworkJustClick.Backend.file;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,8 +9,6 @@ import pl.HomeworkJustClick.Backend.assignment.Assignment;
 import pl.HomeworkJustClick.Backend.assignment.AssignmentRepository;
 import pl.HomeworkJustClick.Backend.evaluation.Evaluation;
 import pl.HomeworkJustClick.Backend.evaluation.EvaluationRepository;
-import pl.HomeworkJustClick.Backend.file.File;
-import pl.HomeworkJustClick.Backend.file.FileRepository;
 import pl.HomeworkJustClick.Backend.group.Group;
 import pl.HomeworkJustClick.Backend.group.GroupRepository;
 import pl.HomeworkJustClick.Backend.groupstudent.GroupStudent;

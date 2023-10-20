@@ -38,11 +38,11 @@ create table _group_student
         primary key,
     description varchar(255),
     group_id    integer not null
-        constraint fk_group
-            references _group,
+        constraint group_student_group_id_fk
+            references _group (id),
     user_id     integer not null
-        constraint fk_student
-            references _user
+        constraint group_student_user_id_fk
+            references _user (id)
 );
 
 create unique index group_student_uix on _group_student (group_id, user_id);
@@ -53,11 +53,11 @@ create table _group_teacher
         primary key,
     description varchar(255),
     group_id    integer not null
-        constraint fk_group
-            references _group,
+        constraint group_teacher_group_id_fk
+            references _group (id),
     user_id     integer not null
-        constraint fk_teacher
-            references _user
+        constraint group_teacher_user_id_fk
+            references _user (id)
 );
 
 create unique index group_teacher_uix on _group_teacher (group_id, user_id);
@@ -75,11 +75,11 @@ create table _assignment
     title                  varchar(255)                not null,
     visible                boolean default true        not null,
     group_id               integer                     not null
-        constraint fk_group
-            references _group,
+        constraint assignment_group_id_fk
+            references _group (id),
     user_id                integer                     not null
-        constraint fk_user
-            references _user
+        constraint assignment_user_id_fk
+            references _user (id)
 );
 
 create table _solution
@@ -90,14 +90,14 @@ create table _solution
     creation_datetime      timestamp(6) with time zone not null,
     last_modified_datetime timestamp(6) with time zone,
     assignment_id          integer                     not null
-        constraint fk_assignment
-            references _assignment,
+        constraint solution_assignment_id_fk
+            references _assignment (id),
     group_id               integer                     not null
-        constraint fk_group
-            references _group,
+        constraint solution_group_id_fk
+            references _group (id),
     user_id                integer                     not null
-        constraint fk_user
-            references _user
+        constraint solution_user_id_fk
+            references _user (id)
 );
 
 create table _evaluation
@@ -109,14 +109,14 @@ create table _evaluation
     last_modified_datetime timestamp(6) with time zone,
     result                 double precision            not null,
     group_id               integer                     not null
-        constraint fk_group
-            references _group,
+        constraint evaluation_group_id_fk
+            references _group (id),
     solution_id            integer                     not null
-        constraint fk_solution
-            references _solution,
+        constraint evaluation_solution_id_fk
+            references _solution (id),
     user_id                integer                     not null
-        constraint fk_user
-            references _user
+        constraint evaluation_user_id_fk
+            references _user (id)
 );
 
 create table _file
@@ -127,11 +127,11 @@ create table _file
     mongo_id      varchar(255) not null,
     name          varchar(255) not null,
     assignment_id integer
-        constraint fk_assignment
-            references _assignment,
+        constraint file_assignment_id_fk
+            references _assignment (id),
     solution_id   integer
-        constraint fk_solution
-            references _solution
+        constraint file_solution_id_fk
+            references _solution (id)
 );
 
 create table _comment
@@ -141,8 +141,8 @@ create table _comment
     description varchar(255),
     title       varchar(255) not null,
     user_id     integer      not null
-        constraint fk_user
-            references _user
+        constraint comment_user_id_fk
+            references _user (id)
 );
 
 create table _comment_evaluation
@@ -151,9 +151,9 @@ create table _comment_evaluation
         primary key,
     description   varchar(255),
     comment_id    integer not null
-        constraint fk_comment
-            references _comment,
+        constraint comment_evaluation_evaluation_id_fk
+            references _comment (id),
     evaluation_id integer not null
-        constraint fk_evaluation
-            references _evaluation
+        constraint comment_evaluation_comment_id_fk
+            references _evaluation (id)
 );

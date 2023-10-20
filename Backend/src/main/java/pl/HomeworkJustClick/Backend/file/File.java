@@ -41,12 +41,12 @@ public class File {
     private String mongo_id;
 
     @ManyToOne
-    @JoinColumn(name = "assignmentId")
+    @JoinColumn(name = "assignmentId", foreignKey = @ForeignKey(name = "file_assignment_id_fk"))
     @JsonIgnore
     private Assignment assignment;
 
     @ManyToOne
-    @JoinColumn(name = "solutionId")
+    @JoinColumn(name = "solutionId", foreignKey = @ForeignKey(name = "file_solution_id_fk"))
     @JsonIgnore
     private Solution solution;
 
