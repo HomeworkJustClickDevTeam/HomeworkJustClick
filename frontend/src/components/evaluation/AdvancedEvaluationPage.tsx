@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useLocation } from "react-router-dom"
 import { useGetFiles } from "../customHooks/useGetFiles"
 import { AdvancedEvaluationCommentPanel } from "./AdvancedEvaluationCommentPanel"
@@ -12,7 +12,7 @@ export default function AdvancedEvaluationPage() {
   let {state} = useLocation()
   const file = useGetFiles(state, 'solution')[0]
   const [fileText, setFileText] = useState("")
-  let image = document.createElement("img")
+  const [image, setImage] = useState<HTMLImageElement|undefined>(undefined)
   const [chosenComment, setChosenComment] = useState<CommentInterface|undefined>(undefined)
 
   useEffect(() => {
@@ -22,25 +22,28 @@ export default function AdvancedEvaluationPage() {
           setFileText(text)})
     }
     else if(file){
-      image.src = URL.createObjectURL(file.data)
+      let imageTemp = document.createElement("img")
+      imageTemp.src = URL.createObjectURL(file.data)
+      imageTemp.onload = () => {
+        setImage(imageTemp)
+      }
     }
-
   }, [file])
 
 
 
   return (
     <>
-      <AdvancedEvaluationCommentPanel setChosenComment={setChosenComment}></AdvancedEvaluationCommentPanel>
+      <AdvancedEvaluationCommentPanel chosenComment={chosenComment} setChosenComment={setChosenComment}></AdvancedEvaluationCommentPanel>
       <br/>
       {file
         ? (file.format === "txt"
-            ? <AdvancedEvaluationTextFileArea
+            ? (<AdvancedEvaluationTextFileArea
               chosenComment={chosenComment}
-              fileText={fileText}/>
-            : <AdvancedEvaluationImageArea image={image} chosenComment={chosenComment}></AdvancedEvaluationImageArea>)
-        : <Loading></Loading>
-        }
+              fileText={fileText}/>)
+            : (image !== undefined ? <AdvancedEvaluationImageArea image={image} chosenComment={chosenComment}></AdvancedEvaluationImageArea>
+              : <Loading></Loading>))
+        : <Loading></Loading>}
     </>
   )
 }
