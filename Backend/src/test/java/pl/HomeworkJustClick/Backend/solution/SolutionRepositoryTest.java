@@ -1,4 +1,4 @@
-package pl.HomeworkJustClick.Backend.Repositories;
+package pl.HomeworkJustClick.Backend.solution;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,8 +16,6 @@ import pl.HomeworkJustClick.Backend.groupstudent.GroupStudentRepository;
 import pl.HomeworkJustClick.Backend.groupteacher.GroupTeacher;
 import pl.HomeworkJustClick.Backend.groupteacher.GroupTeacherRepository;
 import pl.HomeworkJustClick.Backend.infrastructure.enums.Role;
-import pl.HomeworkJustClick.Backend.solution.Solution;
-import pl.HomeworkJustClick.Backend.solution.SolutionRepository;
 import pl.HomeworkJustClick.Backend.user.User;
 import pl.HomeworkJustClick.Backend.user.UserRepository;
 
@@ -67,9 +65,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldGetSolutionsByGroupId() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -109,9 +107,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldNotGetSolutionsByGroupId() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -150,9 +148,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldGetSolutionsByAssignmentId() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -192,9 +190,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldGetSolutionsByAssignmentId_2() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -234,9 +232,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldNotGetSolutionsByAssignmentId() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -276,9 +274,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldCountSolutionsByAssignmentId() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -313,9 +311,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldCountSolutionsByAssignmentId_2() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -350,9 +348,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldGetSolutionsByGroupIdAndStudent_id() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -392,9 +390,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldGetSolutionsByGroupIdAndStudent_id_2() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -433,9 +431,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldNotGetSolutionsByGroupIdAndStudent_id() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -475,9 +473,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldGetSolutionsByStudent_id() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -517,9 +515,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldNotGetSolutionsByStudent_id() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -559,9 +557,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldGetSolutionsByStudentIdAndAssignmentId() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -602,9 +600,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldNotGetSolutionsByStudentIdAndAssignmentId() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -644,9 +642,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldGetUncheckedSolutionsByGroupId() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -686,9 +684,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldGetUncheckedSolutionsByGroupId_2() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -732,9 +730,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldNotGetUncheckedSolutionsByGroupId() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -782,9 +780,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldNotGetUncheckedSolutionsByGroupId_2() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -832,9 +830,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldGetUncheckedSolutionsByStudentId() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -874,9 +872,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldGetUncheckedSolutionsByStudentId_2() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -920,9 +918,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldNotGetUncheckedSolutionsByStudentId() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -970,9 +968,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldNotGetUncheckedSolutionsByStudentId_2() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -1020,9 +1018,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldGetUncheckedSolutionsByStudentIdAndGroupId() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -1062,9 +1060,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldGetUncheckedSolutionsByStudentIdAndGroupId_2() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -1108,9 +1106,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldNotGetUncheckedSolutionsByStudentIdAndGroupId() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -1158,9 +1156,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldNotGetUncheckedSolutionsByStudentIdAndGroupId_2() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -1208,9 +1206,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldGetUncheckedSolutionsByAssignmentId() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -1250,9 +1248,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldGetUncheckedSolutionsByAssignmentId_2() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -1296,9 +1294,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldNotGetUncheckedSolutionsByAssignmentId() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -1346,9 +1344,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldNotGetUncheckedSolutionsByAssignmentId_2() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -1396,9 +1394,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldGetUncheckedSolutionsByTeacherId() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -1438,9 +1436,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldGetUncheckedSolutionsByTeacherId_2() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -1484,9 +1482,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldNotGetUncheckedSolutionsByTeacherId() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -1534,9 +1532,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldNotGetUncheckedSolutionsByTeacherId_2() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -1584,9 +1582,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldNotGetCheckedSolutionsByGroupId() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -1626,9 +1624,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldGetCheckedSolutionsByGroupId_2() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -1672,9 +1670,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldGetCheckedSolutionsByGroupId() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -1722,9 +1720,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldNotGetCheckedSolutionsByGroupId_2() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -1772,9 +1770,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldGetCheckedSolutionsByStudentId() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -1818,9 +1816,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldGetCheckedSolutionsByStudentId_2() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -1864,9 +1862,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldNotGetCheckedSolutionsByStudentId() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -1914,9 +1912,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldNotGetCheckedSolutionsByStudentId_2() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -1964,9 +1962,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldGetCheckedSolutionsByStudentIdAndGroupId() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -2014,9 +2012,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldGetCheckedSolutionsByStudentIdAndGroupId_2() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -2060,9 +2058,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldNotGetCheckedSolutionsByStudentIdAndGroupId() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -2110,9 +2108,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldNotGetCheckedSolutionsByStudentIdAndGroupId_2() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -2160,9 +2158,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldGetCheckedSolutionsByAssignmentId() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -2210,9 +2208,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldGetCheckedSolutionsByAssignmentId_2() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -2256,9 +2254,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldNotGetCheckedSolutionsByAssignmentId() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -2306,9 +2304,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldNotGetCheckedSolutionsByAssignmentId_2() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -2356,9 +2354,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldGetCheckedSolutionsByTeacherId() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -2406,9 +2404,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldGetCheckedSolutionsByTeacherId_2() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -2452,9 +2450,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldNotGetCheckedSolutionsByTeacherId() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -2502,9 +2500,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldNotGetCheckedSolutionsByTeacherId_2() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -2552,9 +2550,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldReturn1() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis", 5, false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -2591,9 +2589,9 @@ public class SolutionRepositoryTest {
     @Test
     void itShouldReturn0() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis", 5, false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");

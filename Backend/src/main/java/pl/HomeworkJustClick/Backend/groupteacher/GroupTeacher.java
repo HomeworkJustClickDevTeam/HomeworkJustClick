@@ -25,12 +25,12 @@ public class GroupTeacher {
     private int id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "group_id", nullable = false, foreignKey = @ForeignKey(name = "Fk_group"))
+    @JoinColumn(name = "group_id", nullable = false, foreignKey = @ForeignKey(name = "group_teacher_group_id_fk"))
     @JsonIgnore
     private Group group;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "Fk_teacher"))
+    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "group_teacher_user_id_fk"))
     @JsonIgnore
     private User user;
 

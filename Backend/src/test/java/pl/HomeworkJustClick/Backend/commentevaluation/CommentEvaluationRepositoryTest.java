@@ -1,4 +1,4 @@
-package pl.HomeworkJustClick.Backend.Repositories;
+package pl.HomeworkJustClick.Backend.commentevaluation;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,8 +9,6 @@ import pl.HomeworkJustClick.Backend.assignment.Assignment;
 import pl.HomeworkJustClick.Backend.assignment.AssignmentRepository;
 import pl.HomeworkJustClick.Backend.comment.Comment;
 import pl.HomeworkJustClick.Backend.comment.CommentRepository;
-import pl.HomeworkJustClick.Backend.commentevaluation.CommentEvaluation;
-import pl.HomeworkJustClick.Backend.commentevaluation.CommentEvaluationRepository;
 import pl.HomeworkJustClick.Backend.evaluation.Evaluation;
 import pl.HomeworkJustClick.Backend.evaluation.EvaluationRepository;
 import pl.HomeworkJustClick.Backend.group.Group;
@@ -75,9 +73,9 @@ public class CommentEvaluationRepositoryTest {
     @Test
     void itShouldGetCommentEvaluationByCommentIdAndEvaluationId() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");
@@ -136,9 +134,9 @@ public class CommentEvaluationRepositoryTest {
     @Test
     void itShouldNotGetCommentEvaluationByCommentIdAndEvaluationId() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
-        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7);
-        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
+        User user2 = new User("jan_kowalski2@gmail.com", "123", true, Role.USER, 123456, "Jan2", "Kowalski2", 7, "x");
+        User user3 = new User("jan_kowalski3@gmail.com", "123", true, Role.USER, 123456, "Jan3", "Kowalski3", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         GroupStudent groupStudent = new GroupStudent(group, user2, "");

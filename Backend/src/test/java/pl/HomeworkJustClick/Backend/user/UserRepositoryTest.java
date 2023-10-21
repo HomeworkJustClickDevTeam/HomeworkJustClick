@@ -1,4 +1,4 @@
-package pl.HomeworkJustClick.Backend.Repositories;
+package pl.HomeworkJustClick.Backend.user;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,8 +12,6 @@ import pl.HomeworkJustClick.Backend.groupstudent.GroupStudentRepository;
 import pl.HomeworkJustClick.Backend.groupteacher.GroupTeacher;
 import pl.HomeworkJustClick.Backend.groupteacher.GroupTeacherRepository;
 import pl.HomeworkJustClick.Backend.infrastructure.enums.Role;
-import pl.HomeworkJustClick.Backend.user.User;
-import pl.HomeworkJustClick.Backend.user.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +55,7 @@ public class UserRepositoryTest {
         String firstname = "Jan";
         String lastname = "Kowalski";
         int color = 7;
-        User user = new User(email, password, isVerified, role, index, firstname, lastname, color);
+        User user = new User(email, password, isVerified, role, index, firstname, lastname, color, "x");
         userRepository.save(user);
 
         //when
@@ -79,7 +77,7 @@ public class UserRepositoryTest {
         String firstname = "Jan";
         String lastname = "Kowalski";
         int color = 7;
-        User user = new User(email, password, isVerified, role, index, firstname, lastname, color);
+        User user = new User(email, password, isVerified, role, index, firstname, lastname, color, "x");
         userRepository.save(user);
 
         //when
@@ -92,7 +90,7 @@ public class UserRepositoryTest {
     @Test
     void itShouldGetTeachersByGroupId() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         userRepository.save(user);
@@ -111,7 +109,7 @@ public class UserRepositoryTest {
     @Test
     void itShouldNotGetTeachersByGroupId() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupTeacher groupTeacher = new GroupTeacher(group, user, "");
         userRepository.save(user);
@@ -130,7 +128,7 @@ public class UserRepositoryTest {
     @Test
     void itShouldGetStudentsByGroupId() {
         //given
-        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupStudent groupStudent = new GroupStudent(group, user, "");
         userRepository.save(user);
@@ -149,7 +147,7 @@ public class UserRepositoryTest {
     @Test
     void itShouldNotGetStudentsByGroupId() {
         //given
-        User user = new User( "jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7);
+        User user = new User("jan_kowalski@gmail.com", "123", true, Role.USER, 123456, "Jan", "Kowalski", 7, "x");
         Group group = new Group("Grupa", "opis",5,false);
         GroupStudent groupStudent = new GroupStudent(group, user, "");
         userRepository.save(user);

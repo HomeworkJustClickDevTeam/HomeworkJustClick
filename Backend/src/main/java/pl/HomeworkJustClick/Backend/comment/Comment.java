@@ -48,7 +48,7 @@ public class Comment {
     private List<CommentEvaluation> commentEvaluations = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "Fk_user"))
+    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "comment_user_id_fk"))
     @JsonIgnore
     private User user;
 
