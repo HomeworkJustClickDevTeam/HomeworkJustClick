@@ -33,12 +33,12 @@ public class Assignment {
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "Fk_user"))
+    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "assignment_user_id_fk"))
     @JsonIgnore
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "group_id", nullable = false, foreignKey = @ForeignKey(name = "Fk_group"))
+    @JoinColumn(name = "group_id", nullable = false, foreignKey = @ForeignKey(name = "assignment_group_id_fk"))
     @JsonIgnore
     private Group group;
 
@@ -52,7 +52,7 @@ public class Assignment {
 
     @Column(name = "taskDescription")
     @Schema(example = "Example desc")
-    @Size(max = 255)
+    @Size(max = 1000)
     private String taskDescription;
 
     @Column(name = "creationDatetime", updatable = false, nullable = false)

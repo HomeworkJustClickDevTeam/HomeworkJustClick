@@ -26,12 +26,12 @@ public class CommentEvaluation {
     private int id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "evaluation_id", nullable = false, foreignKey = @ForeignKey(name = "Fk_evaluation"))
+    @JoinColumn(name = "evaluation_id", nullable = false, foreignKey = @ForeignKey(name = "comment_evaluation_evaluation_id_fk"))
     @JsonIgnore
     private Evaluation evaluation;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "comment_id", nullable = false, foreignKey = @ForeignKey(name = "Fk_comment"))
+    @JoinColumn(name = "comment_id", nullable = false, foreignKey = @ForeignKey(name = "comment_evaluation_comment_id_fk"))
     @JsonIgnore
     private Comment comment;
 
