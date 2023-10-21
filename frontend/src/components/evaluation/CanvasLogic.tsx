@@ -13,29 +13,27 @@ export const CanvasLogic = ({image, commentsList, setCommentsList, chosenComment
   const commentsListRef = useRef(commentsList)
   const mouseStartX = useRef<null|number>(null)
   const mouseStartY = useRef<null|number>(null)
-  const commentNumber = useRef<null|number>(null)
-  const commentUnchangedLeftTopXY = useRef<null|number[]>(null)
+  const commentIndex = useRef<null|number>(null)
+  const commentPreviousState = useRef<null|AdvancedEvaluationImageCommentInterface>(null)
 
-  const checkCollision = (topLeftX:number, topLeftY:number, width:number, height:number, movedCommentId:number) => {
-    const commentToCheckX = [topLeftX, topLeftX+width, topLeftX+width, topLeftX]
-    const commentToCheckY = [topLeftY, topLeftY, topLeftY+height, topLeftY+height]
+  const checkCollision = (topLeftX:number, topLeftY:number, width:number, height:number, movedCommentIndex:number) => {
+    let j= 0
     for(const comment of commentsListRef.current){
-      for(let i=0; i<4; i++){
-        if(
-          (comment.leftTopXY[0] <= commentToCheckX[i]) && (commentToCheckX[i] <= (comment.leftTopXY[0] + comment.width)) &&
-          (comment.leftTopXY[1] <= commentToCheckY[i]) && (commentToCheckY[i] <= (comment.leftTopXY[1] + comment.height)) &&
-          (comment.id !== movedCommentId)
-        ){
-          return true
-        }
+      if((movedCommentIndex !== j) &&
+        (topLeftX <= comment.leftTopXY[0] + comment.width) &&
+        (comment.leftTopXY[0] <= topLeftX + width) &&
+        (topLeftY <= comment.leftTopXY[1] + comment.height) &&
+        (comment.leftTopXY[1] <= topLeftY + height)){
+        return true
       }
+      j++
     }
     return false
   }
   const handleNewCommentCreation = (mouseX:number, mouseY:number) =>{
     if(chosenComment !== undefined){
       let newComment:AdvancedEvaluationImageCommentInterface = {...chosenComment, leftTopXY:[mouseX, mouseY], width: 1, height:1, lineWidth: 2}
-      commentNumber.current = commentsListRef.current.push(newComment) - 1
+      commentIndex.current = commentsListRef.current.push(newComment) - 1
     }
   }
   const calculateStartingCoordsOnCanvas = (x:number, y:number) => {
@@ -58,36 +56,47 @@ export const CanvasLogic = ({image, commentsList, setCommentsList, chosenComment
     }
     return {moveDiffX: 0, moveDiffY: 0}
   }
-  const chooseCommentToMove = (mouseX:number, mouseY:number) => {
-
+  const chooseWhichCommentGotClicked = (mouseX:number, mouseY:number, clickedCommentIndex?:number|null) => {
     for (let i = 0; i < commentsListRef.current.length; i++){
       const comment = commentsListRef.current[i]
       if(
+        clickedCommentIndex !== i &&
         mouseX >= comment.leftTopXY[0] &&
         mouseX <= comment.leftTopXY[0] + comment.width &&
         mouseY >= comment.leftTopXY[1] &&
         mouseY <= comment.leftTopXY[1] + comment.height
       ){
-        commentUnchangedLeftTopXY.current = [...comment.leftTopXY]
+        commentPreviousState.current = JSON.parse(JSON.stringify(comment))//deep copy
         return i
       }
     }
     return null
   }
+  const handleRightClick = (event:React.MouseEvent) =>{
+    event.preventDefault()
+    if (canvasContext.current !== null && canvasContext.current !== undefined) {
+      const { mouseXOnCanvas, mouseYOnCanvas } = calculateStartingCoordsOnCanvas(event.clientX, event.clientY)
+      const rightClickedComment = chooseWhichCommentGotClicked(mouseXOnCanvas, mouseYOnCanvas)
+      if(rightClickedComment !== null){
+        commentsListRef.current.splice(rightClickedComment, 1)
+        drawBoxes()
+      }
+    }
+  }
   const handleMouseMove = (event:React.MouseEvent) => {
     if(chosenComment === undefined){
-      if(commentNumber.current!==null && canvasContext.current !== null && canvasContext.current !== undefined && mouseStartX.current!==null && mouseStartY.current!==null){
+      if(commentIndex.current!==null && canvasContext.current !== null && canvasContext.current !== undefined && mouseStartX.current!==null && mouseStartY.current!==null){
         const {moveDiffX, moveDiffY} = updateMouseCoords(event.clientX, event.clientY)
-        commentsListRef.current[commentNumber.current].leftTopXY[0] += moveDiffX
-        commentsListRef.current[commentNumber.current].leftTopXY[1] += moveDiffY
+        commentsListRef.current[commentIndex.current].leftTopXY[0] += moveDiffX
+        commentsListRef.current[commentIndex.current].leftTopXY[1] += moveDiffY
         drawBoxes()
       }
     }
     else {
-      if(commentNumber.current!==null && canvasContext.current !== null && canvasContext.current !== undefined && mouseStartX.current!==null && mouseStartY.current!==null){
+      if(commentIndex.current!==null && canvasContext.current !== null && canvasContext.current !== undefined && mouseStartX.current!==null && mouseStartY.current!==null){
         const {moveDiffX, moveDiffY} = updateMouseCoords(event.clientX, event.clientY)
-        commentsListRef.current[commentNumber.current].width += moveDiffX
-        commentsListRef.current[commentNumber.current].height += moveDiffY
+        commentsListRef.current[commentIndex.current].width += moveDiffX
+        commentsListRef.current[commentIndex.current].height += moveDiffY
         drawBoxes()
       }
     }
@@ -98,9 +107,9 @@ export const CanvasLogic = ({image, commentsList, setCommentsList, chosenComment
       mouseStartX.current = mouseXOnCanvas
       mouseStartY.current = mouseYOnCanvas
       if (chosenComment === undefined) {
-        commentNumber.current = chooseCommentToMove(mouseStartX.current, mouseStartY.current)
+        commentIndex.current = chooseWhichCommentGotClicked(mouseStartX.current, mouseStartY.current, commentIndex.current)
       } else {
-        if(chooseCommentToMove(mouseStartX.current, mouseStartY.current) === null){
+        if(chooseWhichCommentGotClicked(mouseStartX.current, mouseStartY.current, commentIndex.current) === null){
           handleNewCommentCreation(mouseStartX.current, mouseStartY.current)
         }
       }
@@ -109,47 +118,47 @@ export const CanvasLogic = ({image, commentsList, setCommentsList, chosenComment
   const handleMouseUp = () =>{
     let draw = false
     if(chosenComment === undefined){
-      if(commentNumber.current !== null && commentUnchangedLeftTopXY.current !== null) {
-        if (commentsListRef.current[commentNumber.current].leftTopXY[0] < 0) { //check if out of canvas
-          commentsListRef.current[commentNumber.current].leftTopXY = [...commentUnchangedLeftTopXY.current]
+      if(commentIndex.current !== null && commentPreviousState.current !== null) {
+        if (commentsListRef.current[commentIndex.current].leftTopXY[0] < 0) { //check if out of canvas
+          commentsListRef.current[commentIndex.current].leftTopXY = [...commentPreviousState.current.leftTopXY]
           draw = true
         }
-        if (commentsListRef.current[commentNumber.current].leftTopXY[1] < 0) {//check if out of canvas
-          commentsListRef.current[commentNumber.current].leftTopXY = [...commentUnchangedLeftTopXY.current]
+        if (commentsListRef.current[commentIndex.current].leftTopXY[1] < 0) {//check if out of canvas
+          commentsListRef.current[commentIndex.current].leftTopXY = [...commentPreviousState.current.leftTopXY]
           draw = true
         }
-        if (commentsListRef.current[commentNumber.current].leftTopXY[0] + commentsListRef.current[commentNumber.current].width > image.width) {//check if out of canvas
-          commentsListRef.current[commentNumber.current].leftTopXY = [...commentUnchangedLeftTopXY.current]
+        if (commentsListRef.current[commentIndex.current].leftTopXY[0] + commentsListRef.current[commentIndex.current].width > image.width) {//check if out of canvas
+          commentsListRef.current[commentIndex.current].leftTopXY = [...commentPreviousState.current.leftTopXY]
           draw = true
         }
-        if (commentsListRef.current[commentNumber.current].leftTopXY[1] + commentsListRef.current[commentNumber.current].height > image.height) {//check if out of canvas
-          commentsListRef.current[commentNumber.current].leftTopXY = [...commentUnchangedLeftTopXY.current]
+        if (commentsListRef.current[commentIndex.current].leftTopXY[1] + commentsListRef.current[commentIndex.current].height > image.height) {//check if out of canvas
+          commentsListRef.current[commentIndex.current].leftTopXY = [...commentPreviousState.current.leftTopXY]
           draw = true
         }
-        if(checkCollision(commentsListRef.current[commentNumber.current].leftTopXY[0],
-          commentsListRef.current[commentNumber.current].leftTopXY[1],
-          commentsListRef.current[commentNumber.current].width,
-          commentsListRef.current[commentNumber.current].height,
-          commentsListRef.current[commentNumber.current].id))
+        if(checkCollision(commentsListRef.current[commentIndex.current].leftTopXY[0],
+          commentsListRef.current[commentIndex.current].leftTopXY[1],
+          commentsListRef.current[commentIndex.current].width,
+          commentsListRef.current[commentIndex.current].height,
+          commentIndex.current))
         {
-          commentsListRef.current[commentNumber.current].leftTopXY = [...commentUnchangedLeftTopXY.current]
+          commentsListRef.current[commentIndex.current].leftTopXY = [...commentPreviousState.current.leftTopXY]
           draw = true
         }
       }
     }
     else{//mouse up while creating new comment
-      if(commentNumber.current !== null) {
-        if (commentsListRef.current[commentNumber.current].height <= 0) {//minus height removal
-          commentsListRef.current[commentNumber.current].height = Math.abs(commentsListRef.current[commentNumber.current].height)
-          commentsListRef.current[commentNumber.current].leftTopXY[1] -= commentsListRef.current[commentNumber.current].height
+      if(commentIndex.current !== null) {
+        if (commentsListRef.current[commentIndex.current].height <= 0) {//minus height removal
+          commentsListRef.current[commentIndex.current].height = Math.abs(commentsListRef.current[commentIndex.current].height)
+          commentsListRef.current[commentIndex.current].leftTopXY[1] -= commentsListRef.current[commentIndex.current].height
         }
-        if (commentsListRef.current[commentNumber.current].width <= 0) {//minus width removal
-          commentsListRef.current[commentNumber.current].width = Math.abs(commentsListRef.current[commentNumber.current].width)
-          commentsListRef.current[commentNumber.current].leftTopXY[0] -= commentsListRef.current[commentNumber.current].width
+        if (commentsListRef.current[commentIndex.current].width <= 0) {//minus width removal
+          commentsListRef.current[commentIndex.current].width = Math.abs(commentsListRef.current[commentIndex.current].width)
+          commentsListRef.current[commentIndex.current].leftTopXY[0] -= commentsListRef.current[commentIndex.current].width
         }
         if(mouseStartX.current !== null && mouseStartY.current !== null){
-          if (chooseCommentToMove(mouseStartX.current, mouseStartY.current) !== commentNumber.current) {//check if mouse up on existing comment cancel is so (comment that we are creating is already in the array)
-            commentsListRef.current.splice(commentNumber.current, 1)
+          if (chooseWhichCommentGotClicked(mouseStartX.current, mouseStartY.current, commentIndex.current) !== null) {//check if mouse up on existing comment cancel is so (comment that we are creating is already in the array)
+            commentsListRef.current.splice(commentIndex.current, 1)
             draw = true
           }
         }
@@ -158,12 +167,13 @@ export const CanvasLogic = ({image, commentsList, setCommentsList, chosenComment
     if (draw) {
       drawBoxes()
     }
-    commentNumber.current = null
-    commentUnchangedLeftTopXY.current = null
+    commentIndex.current = null
+    commentPreviousState.current = null
     setCommentsList(commentsListRef.current)
     setChosenComment(undefined)
     mouseStartY.current = null
     mouseStartX.current = null
+    console.log(commentsListRef.current)
   }
   const drawBoxes = () => {
     if(canvasContext.current!==null && canvasContext.current!==undefined){
@@ -186,6 +196,6 @@ export const CanvasLogic = ({image, commentsList, setCommentsList, chosenComment
 
   return (<div style={{position: "relative"}}>
     <img id={"backgroundPhotoLayer"} style={{position:"absolute", zIndex:"0"}} src={image.src}  alt={""} width={image.width} height={image.height}/>
-    <canvas onMouseOut={handleMouseUp} style={{position:"absolute", zIndex:"1"}} id={"commentsLayer"} onMouseUp={handleMouseUp} onMouseMove={handleMouseMove} onMouseDown={handleMouseDown} ref={canvasRef} height={image.height} width={image.width}/>
+    <canvas onContextMenu={handleRightClick} onMouseOut={handleMouseUp} style={{position:"absolute", zIndex:"1"}} id={"commentsLayer"} onMouseUp={handleMouseUp} onMouseMove={handleMouseMove} onMouseDown={handleMouseDown} ref={canvasRef} height={image.height} width={image.width}/>
   </div>)
 }
