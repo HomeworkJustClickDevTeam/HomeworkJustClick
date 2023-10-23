@@ -16,19 +16,20 @@ public class PostgresClientService {
 
     public Boolean checkToken(String token) {
         String uri = postgresConfigProps.getUrl() + "/auth/checkToken";
-        uri += "?token=" + token;
-        return postgresWebClient.post()
+        var valid = postgresWebClient.post()
                 .uri(uri)
-                .headers(httpHeaders -> httpHeaders.addAll(createHttpHeaders()))
+                .headers(httpHeaders -> httpHeaders.addAll(createHttpHeaders(token)))
                 .retrieve()
                 .bodyToMono(Boolean.class)
                 .onErrorComplete()
                 .block();
+        return Boolean.TRUE.equals(valid);
     }
 
-    private HttpHeaders createHttpHeaders() {
+    private HttpHeaders createHttpHeaders(String jwtToken) {
         var headers = new HttpHeaders();
         headers.setAccept(List.of(MediaType.APPLICATION_JSON));
+        headers.setBearerAuth(jwtToken);
         return headers;
     }
 }

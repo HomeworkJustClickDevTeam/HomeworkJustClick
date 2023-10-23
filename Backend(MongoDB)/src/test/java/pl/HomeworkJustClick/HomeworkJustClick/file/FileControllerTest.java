@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.http.HttpHeaders;
 import org.springframework.mock.web.MockMultipartFile;
 import pl.HomeworkJustClick.HomeworkJustClick.infrastructure.BaseTestEntity;
 
@@ -43,7 +44,7 @@ public class FileControllerTest extends BaseTestEntity {
     void shouldGetFile() throws Exception {
         var id = fileRepository.findAll().get(0).getId();
         mockMvc.perform(get("/api/file/" + id)
-                        .param("jwtToken", "aaa"))
+                        .headers(HttpHeaders.writableHttpHeaders(createHttpHeaders("aaa"))))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(id));
     }
@@ -55,7 +56,7 @@ public class FileControllerTest extends BaseTestEntity {
         var multipartFile = new MockMultipartFile("file", "lorem_lines.txt", "txt", inputStream);
         var res = mockMvc.perform(multipart("/api/file")
                         .file(multipartFile)
-                        .param("jwtToken", "aaa"))
+                        .headers(HttpHeaders.writableHttpHeaders(createHttpHeaders("aaa"))))
                 .andExpect(status().isOk())
                 .andReturn();
         var content = res.getResponse().getContentAsString();
@@ -68,7 +69,7 @@ public class FileControllerTest extends BaseTestEntity {
         var id = fileRepository.findAll().get(0).getId();
         assertTrue(fileRepository.findById(id).isPresent());
         mockMvc.perform(delete("/api/file/" + id)
-                        .param("jwtToken", "aaa"))
+                        .headers(HttpHeaders.writableHttpHeaders(createHttpHeaders("aaa"))))
                 .andExpect(status().isOk())
                 .andReturn();
         assertFalse(fileRepository.findById(id).isPresent());
