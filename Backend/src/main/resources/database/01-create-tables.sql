@@ -102,7 +102,7 @@ create table _solution
 
 create table _evaluation
 (
-    id                     serial
+    id serial not null
         primary key,
     creation_datetime      timestamp(6) with time zone not null,
     grade                  double precision            not null,

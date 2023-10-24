@@ -2,13 +2,14 @@ package pl.HomeworkJustClick.Backend.comment;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 import pl.HomeworkJustClick.Backend.commentevaluation.CommentEvaluation;
+import pl.HomeworkJustClick.Backend.commentfileimg.CommentFileImg;
+import pl.HomeworkJustClick.Backend.commentfiletext.CommentFileText;
 import pl.HomeworkJustClick.Backend.user.User;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,19 +26,19 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "id", updatable = false, unique = true, nullable = false)
-    @Schema(example = "0")
     private Integer id;
 
     @Column(name="title")
-    @Schema(example = "Example title")
-    @Size(max = 255)
     private String title;
 
     @Column(name = "description")
-    @Schema(example = "Example desc")
-    @Size(max = 255)
     private String description;
+
+    @Column(name = "defaultColor")
+    private Integer defaultColor;
+
+    @Column(name = "lastUsedDate")
+    private OffsetDateTime lastUsedDate;
 
     @OneToMany(
             mappedBy = "comment",
@@ -47,14 +48,32 @@ public class Comment {
     @JsonIgnore
     private List<CommentEvaluation> commentEvaluations = new ArrayList<>();
 
+    @OneToMany(
+            mappedBy = "comment",
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    @JsonIgnore
+    private List<CommentFileImg> commentFileImgs = new ArrayList<>();
+
+    @OneToMany(
+            mappedBy = "comment",
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    @JsonIgnore
+    private List<CommentFileText> commentFileTexts = new ArrayList<>();
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "comment_user_id_fk"))
     @JsonIgnore
     private User user;
 
-    public Comment(String title, String description, User user) {
+    public Comment(String title, String description, User user, Integer defaultColor, OffsetDateTime lastUsedDate) {
         this.title = title;
         this.description = description;
         this.user = user;
+        this.defaultColor = defaultColor;
+        this.lastUsedDate = lastUsedDate;
     }
 }

@@ -2,6 +2,7 @@ package pl.HomeworkJustClick.Backend.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import pl.HomeworkJustClick.Backend.infrastructure.exception.user.UserNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +19,11 @@ public class UserService {
 
     public Optional<User> getById(int id) {
         return userRepository.findById(id);
+    }
+
+    public User findById(int id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User with id = " + id + " not found"));
     }
 
     public Boolean add(User user) {
