@@ -6,12 +6,13 @@ import { CanvasActionsType } from "../../types/CanvasActionsType"
 import { ca } from "date-fns/locale"
 import { CommentActionsType } from "../../types/CommentActionsType"
 
-export const CanvasLogic = ({image, commentsList, setCommentsList, chosenComment, setChosenComment}:{
+export const CanvasLogic = ({image, commentsList, setCommentsList, chosenComment, setChosenComment, editable}:{
   image:HTMLImageElement,
   commentsList: AdvancedEvaluationImageCommentInterface[],
-  setCommentsList: (comments:AdvancedEvaluationImageCommentInterface[]) => void,
-  chosenComment:CommentInterface|undefined,
-  setChosenComment: (comment:AdvancedEvaluationImageCommentInterface|undefined) => void}) => {
+  setCommentsList?: (comments:AdvancedEvaluationImageCommentInterface[]) => void,
+  chosenComment?:CommentInterface|undefined,
+  setChosenComment?: (comment:AdvancedEvaluationImageCommentInterface|undefined) => void,
+  editable: boolean}) => {
   const canvasRef = useRef<HTMLCanvasElement|null>(null)
   const canvasContext = useRef(canvasRef.current?.getContext("2d"))
   const commentsListRef = useRef(commentsList)
@@ -113,6 +114,42 @@ export const CanvasLogic = ({image, commentsList, setCommentsList, chosenComment
       if(commentIndex.current !== null){
         commentsListRef.current.splice(commentIndex.current, 1)
         drawBoxes()
+      }
+    }
+  }
+  const handleCursorAppearanceChange = () => {
+    if (canvasRef.current !== null) {
+      switch (commentAction.current) {
+        case "leftTopCornerHovered":
+          canvasRef.current.style.cursor = cursors.nwseResize
+          break
+        case "rightTopCornerHovered":
+          canvasRef.current.style.cursor = cursors.neswResize
+          break
+        case "leftBottomCornerHovered":
+          canvasRef.current.style.cursor = cursors.neswResize
+          break
+        case "rightBottomCornerHovered":
+          canvasRef.current.style.cursor = cursors.nwseResize
+          break
+        case "topLineHovered":
+          canvasRef.current.style.cursor = cursors.nsResize
+          break
+        case "bottomLineHovered":
+          canvasRef.current.style.cursor = cursors.nsResize
+          break
+        case "leftLineHovered":
+          canvasRef.current.style.cursor = cursors.ewResize
+          break
+        case "rightLineHovered":
+          canvasRef.current.style.cursor = cursors.ewResize
+          break
+        case "centerHovered":
+          canvasRef.current.style.cursor = cursors.move
+          break
+        case "noHover":
+          canvasRef.current.style.cursor = cursors.default
+          break
       }
     }
   }
@@ -245,6 +282,8 @@ export const CanvasLogic = ({image, commentsList, setCommentsList, chosenComment
   }
   const handleMouseMove = (event:React.MouseEvent) => {
     event.preventDefault()
+    event.stopPropagation()
+    if(!editable) return
     console.log(canvasAction.current, commentAction.current)
     if(canvasAction.current === "commentDeleting") {
       const {mouseXOnCanvas, mouseYOnCanvas} = calculateCoordsOnCanvas(event.clientX, event.clientY)
@@ -257,55 +296,22 @@ export const CanvasLogic = ({image, commentsList, setCommentsList, chosenComment
       handleCommentSizeChangeWhileItBeingCreated(event.clientX, event.clientY)
     }
     else if(canvasAction.current === "commentResizing"){
-        handleCommentResizing(event.clientX, event.clientY)
+      handleCommentResizing(event.clientX, event.clientY)
     }
     else if(canvasAction.current === "hovering"){
       const {mouseXOnCanvas, mouseYOnCanvas} = calculateCoordsOnCanvas(event.clientX, event.clientY)
       commentIndex.current = setPartOfCommentHovered(mouseXOnCanvas, mouseYOnCanvas)
-      if (canvasRef.current !== null) {
-        switch (commentAction.current) {
-          case "leftTopCornerHovered":
-            canvasRef.current.style.cursor = cursors.nwseResize
-            break
-          case "rightTopCornerHovered":
-            canvasRef.current.style.cursor = cursors.neswResize
-            break
-          case "leftBottomCornerHovered":
-            canvasRef.current.style.cursor = cursors.neswResize
-            break
-          case "rightBottomCornerHovered":
-            canvasRef.current.style.cursor = cursors.nwseResize
-            break
-          case "topLineHovered":
-            canvasRef.current.style.cursor = cursors.nsResize
-            break
-          case "bottomLineHovered":
-            canvasRef.current.style.cursor = cursors.nsResize
-            break
-          case "leftLineHovered":
-            canvasRef.current.style.cursor = cursors.ewResize
-            break
-          case "rightLineHovered":
-            canvasRef.current.style.cursor = cursors.ewResize
-            break
-          case "centerHovered":
-            canvasRef.current.style.cursor = cursors.move
-            break
-          case "noHover":
-            canvasRef.current.style.cursor = cursors.default
-            break
-        }
-      }
+      handleCursorAppearanceChange()
     }
-
   }
   const handleMouseDown = (event:React.MouseEvent) => {
     event.preventDefault()
-    if(event.nativeEvent.button === 2){//check if rmb used
+    event.stopPropagation()
+    if(!editable) return
+    else if(event.button === 2 && commentAction.current==="centerHovered"){//check if rmb used
       canvasAction.current = "commentDeleting"
-      return
     }
-    if(commentAction.current==="centerHovered"){
+    else if(commentAction.current==="centerHovered"){
       canvasAction.current = "commentDragging"
     }
     else if(commentAction.current==="leftTopCornerHovered" ||
@@ -336,7 +342,10 @@ export const CanvasLogic = ({image, commentsList, setCommentsList, chosenComment
       }
     }
   }
-  const handleMouseUp = () =>{
+  const handleMouseUp = (event:React.MouseEvent) =>{
+    event.preventDefault()
+    event.stopPropagation()
+    if(!editable) return
     let draw = false
     if(canvasAction.current === "commentDragging"){
       if(commentIndex.current !== null && commentPreviousState.current !== null) {
@@ -371,12 +380,17 @@ export const CanvasLogic = ({image, commentsList, setCommentsList, chosenComment
     }
     commentIndex.current = null
     commentPreviousState.current = null
-    setCommentsList(commentsListRef.current)
-    setChosenComment(undefined)
+    if(setCommentsList !== undefined)
+      setCommentsList(commentsListRef.current)
+    if(setChosenComment !== undefined)
+      setChosenComment(undefined)
     mouseStartY.current = null
     mouseStartX.current = null
     canvasAction.current = "hovering"
-    console.log(commentsListRef.current)
+    const {mouseXOnCanvas, mouseYOnCanvas} = calculateCoordsOnCanvas(event.clientX, event.clientY)
+    setPartOfCommentHovered(mouseXOnCanvas, mouseYOnCanvas)
+    handleCursorAppearanceChange()
+    console.log(commentsListRef.current, canvasAction.current)
   }
   const drawBoxes = () => {
     if(canvasContext.current!==null && canvasContext.current!==undefined){

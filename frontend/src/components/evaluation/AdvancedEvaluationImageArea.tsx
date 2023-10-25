@@ -8,5 +8,5 @@ export const AdvancedEvaluationImageArea = ({image, chosenComment, setChosenComm
   chosenComment: CommentInterface|undefined,
   setChosenComment: (comment:AdvancedEvaluationImageCommentInterface|undefined) => void}) =>{
   const [comments, setComments] = useState<AdvancedEvaluationImageCommentInterface[]>([])
-  return <CanvasLogic setChosenComment={setChosenComment} chosenComment={chosenComment} setCommentsList={setComments} image={image} commentsList={comments}></CanvasLogic>
+  return <CanvasLogic editable={true} setChosenComment={setChosenComment} chosenComment={chosenComment} setCommentsList={setComments} image={image} commentsList={comments}></CanvasLogic>
 }
