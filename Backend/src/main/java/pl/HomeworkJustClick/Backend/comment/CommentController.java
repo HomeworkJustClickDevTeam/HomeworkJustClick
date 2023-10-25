@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.HomeworkJustClick.Backend.infrastructure.exception.comment.CommentNotFoundException;
 
 @RestController
-@RequestMapping("/api/comment")
+@RequestMapping("api/comment")
 @SecurityRequirement(name = "Bearer Authentication")
 @Tag(name = "Comment", description = "Comment related calls.")
 @ApiResponse(

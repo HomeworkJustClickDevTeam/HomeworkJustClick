@@ -13,7 +13,7 @@ public class CommentMapper {
     private final UserService userService;
     private final UserMapper userMapper;
 
-    Comment map(CommentDto commentDto) {
+    public Comment map(CommentDto commentDto) {
         return Comment.builder()
                 .title(commentDto.getTitle())
                 .description(commentDto.getDescription())
@@ -23,18 +23,18 @@ public class CommentMapper {
                 .build();
     }
 
-    CommentResponseDto map(Comment comment) {
+    public CommentResponseDto map(Comment comment) {
         return CommentResponseDto.builder()
                 .id(comment.getId())
                 .title(comment.getTitle())
                 .description(comment.getDescription())
                 .defaultColor(comment.getDefaultColor())
-                .lastUsedDate(OffsetDateTime.now())
+                .lastUsedDate(comment.getLastUsedDate())
                 .user(userMapper.map(comment.getUser()))
                 .build();
     }
 
-    void map(Comment target, CommentDto source) {
+    public void map(Comment target, CommentDto source) {
         target.setTitle(source.getTitle());
         target.setDescription(source.getDescription());
         target.setDefaultColor(source.getDefaultColor());

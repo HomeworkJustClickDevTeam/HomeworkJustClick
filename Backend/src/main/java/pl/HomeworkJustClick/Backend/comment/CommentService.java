@@ -12,6 +12,11 @@ public class CommentService {
     private final CommentRepository repository;
     private final CommentMapper mapper;
 
+    public Comment findById(Integer id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new CommentNotFoundException("Comment not found"));
+    }
+
     public Slice<CommentResponseDto> getComments(Pageable pageable) {
         return repository.findAll(pageable)
                 .map(mapper::map);

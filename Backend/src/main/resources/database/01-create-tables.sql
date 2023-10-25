@@ -138,8 +138,8 @@ create table _comment
 (
     id          serial       not null
         primary key,
-    description varchar(255),
-    title       varchar(255) not null,
+    description varchar(255) not null,
+    title       varchar(255),
     user_id     integer      not null
         constraint comment_user_id_fk
             references _user (id)
