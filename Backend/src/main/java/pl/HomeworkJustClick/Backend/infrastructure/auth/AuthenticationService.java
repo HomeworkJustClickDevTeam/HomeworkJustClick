@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.HomeworkJustClick.Backend.infrastructure.config.JwtService;
@@ -23,6 +24,7 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final UserDetailsService userDetailsService;
 
     public AuthenticationResponseDto registerUser(RegisterRequest request) {
         Optional<User> optionalUser = userRepository.findByEmail(request.getEmail());
@@ -126,6 +128,16 @@ public class AuthenticationService {
         var user = userRepository.findById(id).orElseThrow();
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponseDto.builder().token(jwtToken).id(user.getId()).role(user.getRole()).message("ok").color(user.getColor()).name(user.getFirstname()).lastname(user.getLastname()).index(user.getIndex()).build();
+    }
+
+    public Boolean checkToken(String token) {
+        try {
+            var userEmail = jwtService.extractUserEmail(token);
+            var userDetails = userDetailsService.loadUserByUsername(userEmail);
+            return jwtService.isTokenValid(token, userDetails);
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     private Boolean emailCheck(String email) {
