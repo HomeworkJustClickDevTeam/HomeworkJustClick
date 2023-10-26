@@ -34,42 +34,42 @@ export const CanvasLogic = ({image, commentsList, setCommentsList, chosenComment
           commentsListRef.current[commentIndex.current].leftTopXY[1] += moveDiffY
           commentsListRef.current[commentIndex.current].width -= moveDiffX
           commentsListRef.current[commentIndex.current].height -= moveDiffY
-          drawBoxes()
+          drawOnCanvas()
           break
         case "topLineHovered":
           commentsListRef.current[commentIndex.current].leftTopXY[1] += moveDiffY
           commentsListRef.current[commentIndex.current].height -= moveDiffY
-          drawBoxes()
+          drawOnCanvas()
           break
         case "rightTopCornerHovered":
           commentsListRef.current[commentIndex.current].leftTopXY[1] += moveDiffY
           commentsListRef.current[commentIndex.current].width += moveDiffX
           commentsListRef.current[commentIndex.current].height -= moveDiffY
-          drawBoxes()
+          drawOnCanvas()
           break
         case "rightLineHovered":
           commentsListRef.current[commentIndex.current].width += moveDiffX
-          drawBoxes()
+          drawOnCanvas()
           break
         case "rightBottomCornerHovered":
           commentsListRef.current[commentIndex.current].width += moveDiffX
           commentsListRef.current[commentIndex.current].height += moveDiffY
-          drawBoxes()
+          drawOnCanvas()
           break
         case "bottomLineHovered":
           commentsListRef.current[commentIndex.current].height += moveDiffY
-          drawBoxes()
+          drawOnCanvas()
           break
         case "leftBottomCornerHovered":
           commentsListRef.current[commentIndex.current].leftTopXY[0] += moveDiffX
           commentsListRef.current[commentIndex.current].width -= moveDiffX
           commentsListRef.current[commentIndex.current].height += moveDiffY
-          drawBoxes()
+          drawOnCanvas()
           break
         case "leftLineHovered":
           commentsListRef.current[commentIndex.current].leftTopXY[0] += moveDiffX
           commentsListRef.current[commentIndex.current].width -= moveDiffX
-          drawBoxes()
+          drawOnCanvas()
           break
       }
     }
@@ -99,7 +99,7 @@ export const CanvasLogic = ({image, commentsList, setCommentsList, chosenComment
       const {moveDiffX, moveDiffY} = updateMouseCoords(mouseX, mouseY)
       commentsListRef.current[commentIndex.current].width += moveDiffX
       commentsListRef.current[commentIndex.current].height += moveDiffY
-      drawBoxes()
+      drawOnCanvas()
     }
   }
   const handleCommentMove = (mouseX:number, mouseY:number) => {
@@ -107,14 +107,14 @@ export const CanvasLogic = ({image, commentsList, setCommentsList, chosenComment
       const {moveDiffX, moveDiffY} = updateMouseCoords(mouseX, mouseY)
       commentsListRef.current[commentIndex.current].leftTopXY[0] += moveDiffX
       commentsListRef.current[commentIndex.current].leftTopXY[1] += moveDiffY
-      drawBoxes()
+      drawOnCanvas()
     }
   }
   const handleCommentDeletion = () => {
     if (canvasContext.current !== null && canvasContext.current !== undefined) {
       if(commentIndex.current !== null){
         commentsListRef.current.splice(commentIndex.current, 1)
-        drawBoxes()
+        drawOnCanvas()
       }
     }
   }
@@ -389,7 +389,7 @@ export const CanvasLogic = ({image, commentsList, setCommentsList, chosenComment
       handleCommentDeletion()
     }
     if (draw) {
-      drawBoxes()
+      drawOnCanvas()
     }
     commentIndex.current = null
     commentPreviousState.current = null
@@ -405,11 +405,18 @@ export const CanvasLogic = ({image, commentsList, setCommentsList, chosenComment
     handleCursorAppearanceChange()
     console.log(commentsListRef.current, canvasAction.current)
   }
-  const drawBoxes = () => {
+  const drawOnCanvas = () => {
     if(canvasContext.current!==null && canvasContext.current!==undefined){
       canvasContext.current.clearRect(0,0, image.width, image.height)
       canvasContext.current.canvas.width = image.width
       canvasContext.current.canvas.height = image.height
+      console.log(image.complete)
+      if(image.complete)
+        canvasContext.current.drawImage(image,0,0)
+      else
+        image.onload = () =>{
+          canvasContext.current?.drawImage(image,0,0)
+        }
       for (const comment of commentsListRef.current) {
         canvasContext.current.strokeStyle = comment.color
         canvasContext.current.lineWidth = comment.lineWidth
@@ -420,15 +427,13 @@ export const CanvasLogic = ({image, commentsList, setCommentsList, chosenComment
 
   useEffect(() => {
     canvasContext.current = canvasRef.current?.getContext("2d")
-
     scaleCommentsToImageDimensions()
-    drawBoxes()
+    drawOnCanvas()
   }, [windowSize])
 
 
 
-  return (<div style={{position: "relative"}}>
-    <img id={"backgroundPhotoLayer"} width={1920} height={500} style={{position:"absolute", zIndex:"0"}} src={image.src}  alt={""}/>
+  return (<div>
     <canvas onContextMenu={handleMouseDown}
             onMouseOut={handleMouseUp}
             style={{position:"absolute", zIndex:"1"}}
@@ -437,7 +442,7 @@ export const CanvasLogic = ({image, commentsList, setCommentsList, chosenComment
             onMouseMove={handleMouseMove}
             onMouseDown={handleMouseDown}
             ref={canvasRef}
-            height={document.getElementById("backgroundPhotoLayer")?.clientHeight}
-            width={document.getElementById("backgroundPhotoLayer")?.clientWidth}/>
+            height={image.width}
+            width={image.height}/>
   </div>)
 }
