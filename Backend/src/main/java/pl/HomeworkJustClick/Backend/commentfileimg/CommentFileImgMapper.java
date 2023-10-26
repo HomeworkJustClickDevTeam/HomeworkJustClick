@@ -19,6 +19,8 @@ public class CommentFileImgMapper {
                 .width(commentFileImg.getWidth())
                 .height(commentFileImg.getHeight())
                 .lineWidth(commentFileImg.getLineWidth())
+                .imgWidth(commentFileImg.getImgWidth())
+                .imgHeight(commentFileImg.getImgHeight())
                 .color(commentFileImg.getColor())
                 .comment(commentMapper.map(commentFileImg.getComment()))
                 .file(fileMapper.map(commentFileImg.getFile()))
@@ -32,6 +34,8 @@ public class CommentFileImgMapper {
                 .width(commentFileImgDto.getWidth())
                 .height(commentFileImgDto.getHeight())
                 .lineWidth(commentFileImgDto.getLineWidth())
+                .imgWidth(commentFileImgDto.getImgWidth())
+                .imgHeight(commentFileImgDto.getImgHeight())
                 .color(commentFileImgDto.getColor())
                 .build();
     }
@@ -42,6 +46,8 @@ public class CommentFileImgMapper {
         target.setWidth(source.getWidth());
         target.setHeight(source.getHeight());
         target.setLineWidth(source.getLineWidth());
+        target.setImgWidth(source.getImgWidth());
+        target.setImgHeight(source.getImgHeight());
         target.setColor(source.getColor());
     }
 }

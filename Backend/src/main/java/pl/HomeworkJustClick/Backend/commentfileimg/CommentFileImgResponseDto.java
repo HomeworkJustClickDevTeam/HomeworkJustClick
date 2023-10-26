@@ -18,6 +18,8 @@ public class CommentFileImgResponseDto implements Serializable {
     private Integer width;
     private Integer height;
     private Integer lineWidth;
+    private Integer imgWidth;
+    private Integer imgHeight;
     private Integer color;
     private CommentResponseDto comment;
     private FileResponseDto file;

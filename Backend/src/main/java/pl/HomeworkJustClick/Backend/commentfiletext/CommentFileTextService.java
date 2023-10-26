@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import pl.HomeworkJustClick.Backend.comment.CommentService;
+import pl.HomeworkJustClick.Backend.comment.CommentUtilsService;
 import pl.HomeworkJustClick.Backend.file.FileService;
 import pl.HomeworkJustClick.Backend.infrastructure.exception.commentfiletext.CommentFileTextNotFoundException;
 
@@ -15,6 +16,7 @@ public class CommentFileTextService {
     private final CommentFileTextMapper mapper;
     private final CommentService commentService;
     private final FileService fileService;
+    private final CommentUtilsService commentUtilsService;
 
     public CommentFileText findById(Integer id) {
         return repository.findById(id)
@@ -43,6 +45,7 @@ public class CommentFileTextService {
     public CommentFileTextResponseDto createCommentFileText(CommentFileTextDto commentFileTextDto) {
         var commentFileText = mapper.map(commentFileTextDto);
         setRelationFields(commentFileText, commentFileTextDto);
+        commentUtilsService.update(commentFileTextDto.getCommentId());
         return mapper.map(repository.save(commentFileText));
     }
 

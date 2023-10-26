@@ -11,7 +11,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
-import pl.HomeworkJustClick.Backend.infrastructure.exception.comment.CommentNotFoundException;
 
 @RestController
 @RequestMapping("api/comment")
@@ -52,7 +51,6 @@ public class CommentController {
 
     @DeleteMapping
     public void deleteComment(@RequestParam Integer commentId) {
-        throw new CommentNotFoundException("");
-//        service.deleteComment(commentId);
+        service.deleteComment(commentId);
     }
 }

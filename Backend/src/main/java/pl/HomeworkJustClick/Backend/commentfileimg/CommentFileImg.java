@@ -30,6 +30,10 @@ public class CommentFileImg {
     private Integer height;
     @Column(name = "line_width")
     private Integer lineWidth;
+    @Column(name = "img_width")
+    private Integer imgWidth;
+    @Column(name = "img_height")
+    private Integer imgHeight;
     @Column(name = "color")
     private Integer color;
     @ManyToOne(fetch = FetchType.LAZY)

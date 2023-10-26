@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import pl.HomeworkJustClick.Backend.comment.CommentService;
+import pl.HomeworkJustClick.Backend.comment.CommentUtilsService;
 import pl.HomeworkJustClick.Backend.file.FileService;
 import pl.HomeworkJustClick.Backend.infrastructure.exception.commentfileimg.CommentFileImgNotFoundException;
 
@@ -15,6 +16,7 @@ public class CommentFileImgService {
     private final CommentFileImgMapper mapper;
     private final CommentService commentService;
     private final FileService fileService;
+    private final CommentUtilsService commentUtilsService;
 
     public CommentFileImg findById(Integer id) {
         return repository.findById(id)
@@ -43,6 +45,7 @@ public class CommentFileImgService {
     public CommentFileImgResponseDto createCommentFileImg(CommentFileImgDto commentFileImgDto) {
         var commentFileImg = mapper.map(commentFileImgDto);
         setRelationFields(commentFileImg, commentFileImgDto);
+        commentUtilsService.update(commentFileImgDto.getCommentId());
         return mapper.map(repository.save(commentFileImg));
     }
 

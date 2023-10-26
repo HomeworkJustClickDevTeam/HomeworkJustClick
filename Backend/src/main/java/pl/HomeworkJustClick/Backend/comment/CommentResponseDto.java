@@ -22,5 +22,6 @@ public class CommentResponseDto {
     private String description;
     private Integer defaultColor;
     private OffsetDateTime lastUsedDate;
+    private Integer counter;
     private UserResponseDto user;
 }

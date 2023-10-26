@@ -22,6 +22,10 @@ public class CommentFileImgDto implements Serializable {
     @NonNull
     private Integer lineWidth;
     @NonNull
+    private Integer imgWidth;
+    @NonNull
+    private Integer imgHeight;
+    @NonNull
     private Integer color;
     @NonNull
     private Integer commentId;

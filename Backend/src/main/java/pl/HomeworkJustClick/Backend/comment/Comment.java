@@ -40,6 +40,9 @@ public class Comment {
     @Column(name = "lastUsedDate")
     private OffsetDateTime lastUsedDate;
 
+    @Column(name = "counter")
+    private Integer counter;
+
     @OneToMany(
             mappedBy = "comment",
             orphanRemoval = true,

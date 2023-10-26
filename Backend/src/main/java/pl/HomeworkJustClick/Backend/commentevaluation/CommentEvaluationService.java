@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import pl.HomeworkJustClick.Backend.comment.CommentService;
+import pl.HomeworkJustClick.Backend.comment.CommentUtilsService;
 import pl.HomeworkJustClick.Backend.evaluation.EvaluationService;
 import pl.HomeworkJustClick.Backend.infrastructure.exception.commentevaluation.CommentEvaluationNotFoundException;
 
@@ -15,6 +16,7 @@ public class CommentEvaluationService {
     private final CommentEvaluationMapper mapper;
     private final CommentService commentService;
     private final EvaluationService evaluationService;
+    private final CommentUtilsService commentUtilsService;
 
     public Slice<CommentEvaluationResponseDto> getCommentEvaluations(Pageable pageable) {
         return repository.findAll(pageable)
@@ -43,6 +45,7 @@ public class CommentEvaluationService {
     public CommentEvaluationResponseDto addCommentEvaluation(CommentEvaluationDto commentEvaluationDto) {
         var commentEvaluation = mapper.map(commentEvaluationDto);
         setRelationFields(commentEvaluationDto, commentEvaluation);
+        commentUtilsService.update(commentEvaluationDto.getCommentId());
         return mapper.map(repository.save(commentEvaluation));
     }
 

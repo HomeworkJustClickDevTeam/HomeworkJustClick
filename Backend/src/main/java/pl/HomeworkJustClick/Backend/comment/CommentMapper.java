@@ -19,6 +19,7 @@ public class CommentMapper {
                 .description(commentDto.getDescription())
                 .defaultColor(commentDto.getDefaultColor())
                 .lastUsedDate(OffsetDateTime.now())
+                .counter(0)
                 .user(userService.findById(commentDto.getUserId()))
                 .build();
     }
@@ -30,6 +31,7 @@ public class CommentMapper {
                 .description(comment.getDescription())
                 .defaultColor(comment.getDefaultColor())
                 .lastUsedDate(comment.getLastUsedDate())
+                .counter(comment.getCounter())
                 .user(userMapper.map(comment.getUser()))
                 .build();
     }
