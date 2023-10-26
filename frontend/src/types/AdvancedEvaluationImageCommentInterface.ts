@@ -5,4 +5,6 @@ export interface AdvancedEvaluationImageCommentInterface extends CommentInterfac
   width: number
   height: number
   lineWidth: number
+  windowHeight: number
+  windowWidth:number
 }

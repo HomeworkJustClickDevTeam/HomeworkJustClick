@@ -6,13 +6,14 @@ import { CanvasActionsType } from "../../types/CanvasActionsType"
 import { ca } from "date-fns/locale"
 import { CommentActionsType } from "../../types/CommentActionsType"
 
-export const CanvasLogic = ({image, commentsList, setCommentsList, chosenComment, setChosenComment, editable}:{
+export const CanvasLogic = ({image, commentsList, setCommentsList, chosenComment, setChosenComment, editable, windowSize}:{
   image:HTMLImageElement,
   commentsList: AdvancedEvaluationImageCommentInterface[],
   setCommentsList?: (comments:AdvancedEvaluationImageCommentInterface[]) => void,
   chosenComment?:CommentInterface|undefined,
   setChosenComment?: (comment:AdvancedEvaluationImageCommentInterface|undefined) => void,
-  editable: boolean}) => {
+  editable: boolean,
+  windowSize: {windowHeight: number, windowWidth: number}}) => {
   const canvasRef = useRef<HTMLCanvasElement|null>(null)
   const canvasContext = useRef(canvasRef.current?.getContext("2d"))
   const commentsListRef = useRef(commentsList)
@@ -89,7 +90,7 @@ export const CanvasLogic = ({image, commentsList, setCommentsList, chosenComment
   }
   const handleNewCommentCreation = (mouseX:number, mouseY:number) =>{
     if(chosenComment !== undefined){
-      let newComment:AdvancedEvaluationImageCommentInterface = {...JSON.parse(JSON.stringify(chosenComment)), leftTopXY:[mouseX, mouseY], width: 1, height:1, lineWidth: 2}
+      let newComment:AdvancedEvaluationImageCommentInterface = {...JSON.parse(JSON.stringify(chosenComment)), leftTopXY:[mouseX, mouseY], width: 1, height:1, lineWidth: 2, windowHeight:windowSize.windowHeight, windowWidth:windowSize.windowWidth}
       commentIndex.current = commentsListRef.current.push(newComment) - 1
     }
   }
@@ -406,13 +407,35 @@ export const CanvasLogic = ({image, commentsList, setCommentsList, chosenComment
   }
   useEffect(() => {
     canvasContext.current = canvasRef.current?.getContext("2d")
+    const scaleCommentsToWindowDimensions = () => {
+      for(const comment of commentsListRef.current){
+        const commentsProportionsWidth = windowSize.windowWidth/comment.windowWidth
+        const commentsProportionsHeight = windowSize.windowHeight/comment.windowHeight
+        comment.leftTopXY[0] *= commentsProportionsWidth
+        comment.leftTopXY[1] *= commentsProportionsHeight
+        comment.width *= commentsProportionsWidth
+        comment.height *= commentsProportionsHeight
+        comment.windowWidth = windowSize.windowWidth
+        comment.windowHeight = windowSize.windowHeight
+      }
+    }
+    scaleCommentsToWindowDimensions()
     drawBoxes()
-  }, [])
+  }, [windowSize])
 
 
 
   return (<div style={{position: "relative"}}>
-    <img id={"backgroundPhotoLayer"} style={{position:"absolute", zIndex:"0"}} src={image.src}  alt={""} width={image.width} height={image.height}/>
-    <canvas onContextMenu={handleMouseDown} onMouseOut={handleMouseUp} style={{position:"absolute", zIndex:"1"}} id={"commentsLayer"} onMouseUp={handleMouseUp} onMouseMove={handleMouseMove} onMouseDown={handleMouseDown} ref={canvasRef} height={image.height} width={image.width}/>
+    <img id={"backgroundPhotoLayer"} width={1920} height={500} style={{position:"absolute", zIndex:"0"}} src={image.src}  alt={""}/>
+    <canvas onContextMenu={handleMouseDown}
+            onMouseOut={handleMouseUp}
+            style={{position:"absolute", zIndex:"1"}}
+            id={"commentsLayer"}
+            onMouseUp={handleMouseUp}
+            onMouseMove={handleMouseMove}
+            onMouseDown={handleMouseDown}
+            ref={canvasRef}
+            height={document.getElementById("backgroundPhotoLayer")?.clientHeight}
+            width={document.getElementById("backgroundPhotoLayer")?.clientWidth}/>
   </div>)
 }
