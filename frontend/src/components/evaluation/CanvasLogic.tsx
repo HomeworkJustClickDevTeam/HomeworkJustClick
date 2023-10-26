@@ -265,6 +265,18 @@ export const CanvasLogic = ({image, commentsList, setCommentsList, chosenComment
     commentAction.current = "noHover"
     return null
   }
+  const scaleCommentsToImageDimensions = () => {
+    for(const comment of commentsListRef.current){
+      const commentsProportionsWidth = windowSize.windowWidth/comment.windowWidth
+      const commentsProportionsHeight = windowSize.windowHeight/comment.windowHeight
+      comment.leftTopXY[0] *= commentsProportionsWidth
+      comment.leftTopXY[1] *= commentsProportionsHeight
+      comment.width *= commentsProportionsWidth
+      comment.height *= commentsProportionsHeight
+      comment.windowWidth = windowSize.windowWidth
+      comment.windowHeight = windowSize.windowHeight
+    }
+  }
   const runBackCommentValues = (initialDrawValue:boolean) => {
     let draw = initialDrawValue
     if(commentIndex.current !== null && commentPreviousState.current !== null) {
@@ -405,21 +417,11 @@ export const CanvasLogic = ({image, commentsList, setCommentsList, chosenComment
       }
     }
   }
+
   useEffect(() => {
     canvasContext.current = canvasRef.current?.getContext("2d")
-    const scaleCommentsToWindowDimensions = () => {
-      for(const comment of commentsListRef.current){
-        const commentsProportionsWidth = windowSize.windowWidth/comment.windowWidth
-        const commentsProportionsHeight = windowSize.windowHeight/comment.windowHeight
-        comment.leftTopXY[0] *= commentsProportionsWidth
-        comment.leftTopXY[1] *= commentsProportionsHeight
-        comment.width *= commentsProportionsWidth
-        comment.height *= commentsProportionsHeight
-        comment.windowWidth = windowSize.windowWidth
-        comment.windowHeight = windowSize.windowHeight
-      }
-    }
-    scaleCommentsToWindowDimensions()
+
+    scaleCommentsToImageDimensions()
     drawBoxes()
   }, [windowSize])
 
