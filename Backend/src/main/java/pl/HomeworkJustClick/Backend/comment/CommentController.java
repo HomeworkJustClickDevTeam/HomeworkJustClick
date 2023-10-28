@@ -29,8 +29,8 @@ import org.springframework.web.bind.annotation.*;
 public class CommentController {
     private final CommentService service;
 
-    @GetMapping("/byUser")
-    public Slice<CommentResponseDto> getCommentsByUser(@RequestParam Integer userId, @PageableDefault(sort = "lastUsedDate") Pageable pageable) {
+    @GetMapping("/byUser/{userId}")
+    public Slice<CommentResponseDto> getCommentsByUser(@PathVariable Integer userId, @PageableDefault(sort = "lastUsedDate") Pageable pageable) {
         return service.getCommentsByUser(userId, pageable);
     }
 
@@ -44,13 +44,13 @@ public class CommentController {
         return service.createComment(commentDto);
     }
 
-    @PutMapping
-    public CommentResponseDto updateComment(@RequestBody @Valid CommentDto commentDto, @RequestParam Integer commentId) {
+    @PutMapping("{commentId}")
+    public CommentResponseDto updateComment(@PathVariable Integer commentId, @RequestBody @Valid CommentDto commentDto) {
         return service.updateComment(commentDto, commentId);
     }
 
-    @DeleteMapping
-    public void deleteComment(@RequestParam Integer commentId) {
+    @DeleteMapping("{commentId}")
+    public void deleteComment(@PathVariable Integer commentId) {
         service.deleteComment(commentId);
     }
 }

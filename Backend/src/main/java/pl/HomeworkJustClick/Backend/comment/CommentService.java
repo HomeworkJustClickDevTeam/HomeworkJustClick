@@ -32,15 +32,13 @@ public class CommentService {
     }
 
     public CommentResponseDto updateComment(CommentDto commentDto, int commentId) {
-        var comment = repository.findById(commentId)
-                .orElseThrow(() -> new CommentNotFoundException("Comment with given id not found"));
+        var comment = findById(commentId);
         mapper.map(comment, commentDto);
         return mapper.map(repository.save(comment));
     }
 
     public void deleteComment(int commentId) {
-        var comment = repository.findById(commentId)
-                .orElseThrow(() -> new CommentNotFoundException("Comment with given id not found"));
+        var comment = findById(commentId);
         repository.delete(comment);
     }
 }
