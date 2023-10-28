@@ -111,7 +111,7 @@ public class CommentEvaluationControllerTest extends BaseTestEntity {
                         .content(body)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.comment.id").value(commentEvaluationDto.getCommentId()))
                 .andExpect(jsonPath("$.evaluation.id").value(commentEvaluationDto.getEvaluationId()))
                 .andExpect(jsonPath("$.description").value(commentEvaluationDto.getDescription()))

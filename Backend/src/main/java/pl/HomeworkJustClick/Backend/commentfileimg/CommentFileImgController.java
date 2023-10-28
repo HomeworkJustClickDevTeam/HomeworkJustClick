@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -34,6 +35,7 @@ public class CommentFileImgController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public CommentFileImgResponseDto createCommentFileImg(@RequestBody @Valid CommentFileImgDto commentFileImgDto) {
         return service.createCommentFileImg(commentFileImgDto);
     }

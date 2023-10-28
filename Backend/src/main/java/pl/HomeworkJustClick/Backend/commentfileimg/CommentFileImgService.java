@@ -45,6 +45,7 @@ public class CommentFileImgService {
     public CommentFileImgResponseDto createCommentFileImg(CommentFileImgDto commentFileImgDto) {
         var commentFileImg = mapper.map(commentFileImgDto);
         setRelationFields(commentFileImg, commentFileImgDto);
+        checkColor(commentFileImg);
         commentUtilsService.update(commentFileImgDto.getCommentId());
         return mapper.map(repository.save(commentFileImg));
     }
@@ -53,6 +54,7 @@ public class CommentFileImgService {
         var commentFileImg = findById(id);
         mapper.map(commentFileImgDto, commentFileImg);
         setRelationFields(commentFileImg, commentFileImgDto);
+        checkColor(commentFileImg);
         return mapper.map(repository.save(commentFileImg));
     }
 
@@ -66,5 +68,11 @@ public class CommentFileImgService {
         var file = fileService.findById(commentFileImgDto.getFileId());
         commentFileImg.setComment(comment);
         commentFileImg.setFile(file);
+    }
+
+    private void checkColor(CommentFileImg commentFileImg) {
+        if (commentFileImg.getColor() == null) {
+            commentFileImg.setColor(commentFileImg.getComment().getDefaultColor());
+        }
     }
 }

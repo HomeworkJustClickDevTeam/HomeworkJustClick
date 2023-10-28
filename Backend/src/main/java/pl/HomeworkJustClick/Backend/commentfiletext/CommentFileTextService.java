@@ -45,6 +45,7 @@ public class CommentFileTextService {
     public CommentFileTextResponseDto createCommentFileText(CommentFileTextDto commentFileTextDto) {
         var commentFileText = mapper.map(commentFileTextDto);
         setRelationFields(commentFileText, commentFileTextDto);
+        checkColor(commentFileText);
         commentUtilsService.update(commentFileTextDto.getCommentId());
         return mapper.map(repository.save(commentFileText));
     }
@@ -53,6 +54,7 @@ public class CommentFileTextService {
         var commentFileText = findById(id);
         mapper.map(commentFileText, commentFileTextDto);
         setRelationFields(commentFileText, commentFileTextDto);
+        checkColor(commentFileText);
         return mapper.map(repository.save(commentFileText));
     }
 
@@ -66,5 +68,11 @@ public class CommentFileTextService {
         var file = fileService.findById(commentFileTextDto.getFileId());
         commentFileText.setComment(comment);
         commentFileText.setFile(file);
+    }
+
+    private void checkColor(CommentFileText commentFileText) {
+        if (commentFileText.getColor() == null) {
+            commentFileText.setColor(commentFileText.getComment().getDefaultColor());
+        }
     }
 }

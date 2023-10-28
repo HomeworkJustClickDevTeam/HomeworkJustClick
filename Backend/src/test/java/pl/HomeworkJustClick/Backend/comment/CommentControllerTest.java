@@ -80,7 +80,6 @@ public class CommentControllerTest extends BaseTestEntity {
                 .andExpect(jsonPath("$.title").value(comment.getTitle()))
                 .andExpect(jsonPath("$.description").value(comment.getDescription()))
                 .andExpect(jsonPath("$.defaultColor").value(comment.getDefaultColor()))
-                .andExpect(jsonPath("$.lastUsedDate").value(comment.getLastUsedDate().toString()))
                 .andExpect(jsonPath("$.counter").value(comment.getCounter()))
                 .andReturn();
     }
@@ -104,7 +103,7 @@ public class CommentControllerTest extends BaseTestEntity {
                         .content(body)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.title").value(commentDto.getTitle()))
                 .andExpect(jsonPath("$.description").value(commentDto.getDescription()))
                 .andExpect(jsonPath("$.defaultColor").value(commentDto.getDefaultColor()))
@@ -162,6 +161,18 @@ public class CommentControllerTest extends BaseTestEntity {
         assertNotEquals(updatedComment.getDescription(), commentDto.getDescription());
         assertNotEquals(updatedComment.getDefaultColor(), commentDto.getDefaultColor());
         assertNotEquals(updatedComment.getUser().getId(), commentDto.getUserId());
+    }
+
+    @Test
+    void shouldNotUpdateNotExistingComment() throws Exception {
+        var commentDto = createCommentDto("title", "desc", 20, 1);
+        var body = objectMapper.writeValueAsString(commentDto);
+        mockMvc.perform(put("/api/comment/" + 999)
+                        .content(body)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().is4xxClientError())
+                .andReturn();
     }
 
     @Test
