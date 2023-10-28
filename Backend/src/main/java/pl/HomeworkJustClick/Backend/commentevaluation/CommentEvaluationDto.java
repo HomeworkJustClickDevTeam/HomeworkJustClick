@@ -1,5 +1,6 @@
 package pl.HomeworkJustClick.Backend.commentevaluation;
 
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.io.Serializable;
@@ -15,5 +16,6 @@ public class CommentEvaluationDto implements Serializable {
     private Integer commentId;
     @NonNull
     private Integer evaluationId;
+    @Size(max = 255)
     private String description;
 }

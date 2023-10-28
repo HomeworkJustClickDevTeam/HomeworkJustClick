@@ -105,6 +105,11 @@ public class CommentControllerTest extends BaseTestEntity {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").value(commentDto.getTitle()))
+                .andExpect(jsonPath("$.description").value(commentDto.getDescription()))
+                .andExpect(jsonPath("$.defaultColor").value(commentDto.getDefaultColor()))
+                .andExpect(jsonPath("$.counter").value(0))
+                .andExpect(jsonPath("$.user.id").value(commentDto.getUserId()))
                 .andReturn();
     }
 
