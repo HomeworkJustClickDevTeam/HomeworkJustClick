@@ -89,8 +89,8 @@ export const CanvasLogic = ({image, commentsList, setCommentsList, chosenComment
     return false
   }
   const handleNewCommentCreation = (mouseX:number, mouseY:number) =>{
-    if(chosenComment !== undefined){
-      let newComment:AdvancedEvaluationImageCommentInterface = {...JSON.parse(JSON.stringify(chosenComment)), leftTopXY:[mouseX, mouseY], width: 1, height:1, lineWidth: 2, windowHeight:windowSize.windowHeight, windowWidth:windowSize.windowWidth}
+    if(chosenComment !== undefined && canvasRef.current !== undefined && canvasRef.current !== null){
+      let newComment:AdvancedEvaluationImageCommentInterface = {...JSON.parse(JSON.stringify(chosenComment)), leftTopXY:[mouseX, mouseY], width: 1, height:1, lineWidth: 2, canvasHeight:canvasRef.current.height, canvasWidth:canvasRef.current.width}
       commentIndex.current = commentsListRef.current.push(newComment) - 1
     }
   }
@@ -176,7 +176,7 @@ export const CanvasLogic = ({image, commentsList, setCommentsList, chosenComment
   }
   const checkIfOutOfCanvas = (initialDrawValue:boolean) =>{
     let draw = initialDrawValue
-    if(commentIndex.current !== null && commentPreviousState.current !== null) {
+    if(commentIndex.current !== null && commentPreviousState.current !== null && canvasRef.current!==null && canvasRef.current!==undefined) {
       if (commentsListRef.current[commentIndex.current].leftTopXY[0] < 0) { //check if out of canvas
         commentsListRef.current[commentIndex.current].leftTopXY = [...commentPreviousState.current.leftTopXY]
         draw = true
@@ -185,11 +185,11 @@ export const CanvasLogic = ({image, commentsList, setCommentsList, chosenComment
         commentsListRef.current[commentIndex.current].leftTopXY = [...commentPreviousState.current.leftTopXY]
         draw = true
       }
-      if (commentsListRef.current[commentIndex.current].leftTopXY[0] + commentsListRef.current[commentIndex.current].width > image.width) {//check if out of canvas
+      if (commentsListRef.current[commentIndex.current].leftTopXY[0] + commentsListRef.current[commentIndex.current].width > canvasRef.current.width) {//check if out of canvas
         commentsListRef.current[commentIndex.current].leftTopXY = [...commentPreviousState.current.leftTopXY]
         draw = true
       }
-      if (commentsListRef.current[commentIndex.current].leftTopXY[1] + commentsListRef.current[commentIndex.current].height > image.height) {//check if out of canvas
+      if (commentsListRef.current[commentIndex.current].leftTopXY[1] + commentsListRef.current[commentIndex.current].height > canvasRef.current.height) {//check if out of canvas
         commentsListRef.current[commentIndex.current].leftTopXY = [...commentPreviousState.current.leftTopXY]
         draw = true
       }
@@ -206,6 +206,18 @@ export const CanvasLogic = ({image, commentsList, setCommentsList, chosenComment
         commentsListRef.current[commentIndex.current].width = Math.abs(commentsListRef.current[commentIndex.current].width)
         commentsListRef.current[commentIndex.current].leftTopXY[0] -= commentsListRef.current[commentIndex.current].width
       }
+    }
+  }
+  const calculateImageSizeWithProportions = (targetWidth?:number, targetHeight?:number) => {
+    const imageProportions = image.width/image.height
+    if(targetWidth!==undefined && targetHeight===undefined){
+      return targetWidth/imageProportions
+    }
+    else if (targetWidth===undefined && targetHeight!==undefined){
+      return targetHeight*imageProportions
+    }
+    else{
+      return 1
     }
   }
   const setPartOfCommentHovered = (mouseX:number, mouseY:number, clickedCommentIndex?:number|null) => {
@@ -266,15 +278,17 @@ export const CanvasLogic = ({image, commentsList, setCommentsList, chosenComment
     return null
   }
   const scaleCommentsToImageDimensions = () => {
-    for(const comment of commentsListRef.current){
-      const commentsProportionsWidth = windowSize.windowWidth/comment.windowWidth
-      const commentsProportionsHeight = windowSize.windowHeight/comment.windowHeight
-      comment.leftTopXY[0] *= commentsProportionsWidth
-      comment.leftTopXY[1] *= commentsProportionsHeight
-      comment.width *= commentsProportionsWidth
-      comment.height *= commentsProportionsHeight
-      comment.windowWidth = windowSize.windowWidth
-      comment.windowHeight = windowSize.windowHeight
+    if(canvasRef.current!==null && canvasRef.current!==undefined){
+      for(const comment of commentsListRef.current){
+        const commentsProportionsWidth = canvasRef.current.width/comment.canvasWidth
+        const commentsProportionsHeight = canvasRef.current.height/comment.canvasHeight
+        comment.leftTopXY[0] *= commentsProportionsWidth
+        comment.leftTopXY[1] *= commentsProportionsHeight
+        comment.width *= commentsProportionsWidth
+        comment.height *= commentsProportionsHeight
+        comment.canvasWidth = canvasRef.current.width
+        comment.canvasHeight = canvasRef.current.height
+      }
     }
   }
   const runBackCommentValues = (initialDrawValue:boolean) => {
@@ -408,14 +422,21 @@ export const CanvasLogic = ({image, commentsList, setCommentsList, chosenComment
   const drawOnCanvas = () => {
     if(canvasContext.current!==null && canvasContext.current!==undefined){
       canvasContext.current.clearRect(0,0, image.width, image.height)
-      canvasContext.current.canvas.width = image.width
-      canvasContext.current.canvas.height = image.height
+      const commentPanelWidth = document.getElementById("commentPanel")?.clientWidth
+      if (commentPanelWidth!==undefined)
+        canvasContext.current.canvas.width = image.width - commentPanelWidth
+      else
+        canvasContext.current.canvas.width = image.width
+
       console.log(image.complete)
+      const calculatedHeight = calculateImageSizeWithProportions( canvasContext.current.canvas.width, undefined)
+      canvasContext.current.canvas.height = calculatedHeight
       if(image.complete)
-        canvasContext.current.drawImage(image,0,0)
+        canvasContext.current.drawImage(image,0,0,  canvasContext.current.canvas.width, calculatedHeight)
       else
         image.onload = () =>{
-          canvasContext.current?.drawImage(image,0,0)
+          if(canvasContext.current!==null && canvasContext.current!==undefined)
+            canvasContext.current.drawImage(image,0,0,  canvasContext.current.canvas.width, calculatedHeight)
         }
       for (const comment of commentsListRef.current) {
         canvasContext.current.strokeStyle = comment.color
@@ -433,16 +454,13 @@ export const CanvasLogic = ({image, commentsList, setCommentsList, chosenComment
 
 
 
-  return (<div>
+  return (
     <canvas onContextMenu={handleMouseDown}
             onMouseOut={handleMouseUp}
-            style={{position:"absolute", zIndex:"1"}}
             id={"commentsLayer"}
             onMouseUp={handleMouseUp}
             onMouseMove={handleMouseMove}
             onMouseDown={handleMouseDown}
             ref={canvasRef}
-            height={image.width}
-            width={image.height}/>
-  </div>)
+    />)
 }

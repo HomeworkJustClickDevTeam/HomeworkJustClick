@@ -16,11 +16,11 @@ export const AdvancedEvaluationCommentPanel = (
     {color:'red', id:0, description: "tutaj komentarz"},
     {color:'CornflowerBlue', id:1, description: "tutaj inny komentraz"},
     {color:'yellow', id:2, description: "ostatni komentarz"}]
-  return <>
+  return <div id={"commentPanel"} style={{float:"right", height:"100vh"}}>
     Panel komentarzy <br/>
     Komentarze: <br/>
     {comments.map((comment) => {
       return <div key={comment.id}><button type={'button'} onClick={() => handleCommentClick(comment)} style={{backgroundColor: comment.color}}>{comment.description}</button><br/></div>
     })}
-    </>
+    </div>
 }
