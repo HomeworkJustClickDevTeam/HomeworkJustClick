@@ -1,4 +1,4 @@
-import React, { CanvasHTMLAttributes, MouseEventHandler, useEffect, useRef, useState } from "react"
+import React, { CanvasHTMLAttributes, MouseEventHandler, MutableRefObject, useEffect, useRef, useState } from "react"
 import { AdvancedEvaluationImageCommentInterface } from "../../types/AdvancedEvaluationImageCommentInterface"
 import { CommentInterface } from "../../types/CommentInterface"
 import { cursors } from "../../assets/cursors"
@@ -6,14 +6,15 @@ import { CanvasActionsType } from "../../types/CanvasActionsType"
 import { ca } from "date-fns/locale"
 import { CommentActionsType } from "../../types/CommentActionsType"
 
-export const CanvasLogic = ({image, commentsList, setCommentsList, chosenComment, setChosenComment, editable, windowSize}:{
+export const CanvasLogic = ({image, commentsList, setCommentsList, chosenComment, setChosenComment, editable, commentPanelWidth, chosenCommentFrameWidth}:{
   image:HTMLImageElement,
   commentsList: AdvancedEvaluationImageCommentInterface[],
   setCommentsList?: (comments:AdvancedEvaluationImageCommentInterface[]) => void,
   chosenComment?:CommentInterface|undefined,
   setChosenComment?: (comment:AdvancedEvaluationImageCommentInterface|undefined) => void,
   editable: boolean,
-  windowSize: {windowHeight: number, windowWidth: number}}) => {
+  commentPanelWidth: number,
+  chosenCommentFrameWidth:number|undefined}) => {
   const canvasRef = useRef<HTMLCanvasElement|null>(null)
   const canvasContext = useRef(canvasRef.current?.getContext("2d"))
   const commentsListRef = useRef(commentsList)
@@ -89,8 +90,8 @@ export const CanvasLogic = ({image, commentsList, setCommentsList, chosenComment
     return false
   }
   const handleNewCommentCreation = (mouseX:number, mouseY:number) =>{
-    if(chosenComment !== undefined && canvasRef.current !== undefined && canvasRef.current !== null){
-      let newComment:AdvancedEvaluationImageCommentInterface = {...JSON.parse(JSON.stringify(chosenComment)), leftTopXY:[mouseX, mouseY], width: 1, height:1, lineWidth: 2, canvasHeight:canvasRef.current.height, canvasWidth:canvasRef.current.width}
+    if(chosenComment !== undefined && canvasRef.current !== undefined && canvasRef.current !== null && chosenCommentFrameWidth!==undefined){
+      let newComment:AdvancedEvaluationImageCommentInterface = {...JSON.parse(JSON.stringify(chosenComment)), leftTopXY:[mouseX, mouseY], width: 1, height:1, lineWidth: chosenCommentFrameWidth, canvasHeight:canvasRef.current.height, canvasWidth:canvasRef.current.width}
       commentIndex.current = commentsListRef.current.push(newComment) - 1
     }
   }
@@ -422,13 +423,7 @@ export const CanvasLogic = ({image, commentsList, setCommentsList, chosenComment
   const drawOnCanvas = () => {
     if(canvasContext.current!==null && canvasContext.current!==undefined){
       canvasContext.current.clearRect(0,0, image.width, image.height)
-      const commentPanelWidth = document.getElementById("commentPanel")?.clientWidth
-      if (commentPanelWidth!==undefined)
-        canvasContext.current.canvas.width = image.width - commentPanelWidth
-      else
-        canvasContext.current.canvas.width = image.width
-
-      console.log(image.complete)
+      canvasContext.current.canvas.width = image.width - commentPanelWidth
       const calculatedHeight = calculateImageSizeWithProportions( canvasContext.current.canvas.width, undefined)
       canvasContext.current.canvas.height = calculatedHeight
       if(image.complete)
@@ -450,7 +445,7 @@ export const CanvasLogic = ({image, commentsList, setCommentsList, chosenComment
     canvasContext.current = canvasRef.current?.getContext("2d")
     scaleCommentsToImageDimensions()
     drawOnCanvas()
-  }, [windowSize])
+  }, [])
 
 
 

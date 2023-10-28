@@ -14,6 +14,8 @@ export default function AdvancedEvaluationPage() {
   const [fileText, setFileText] = useState("")
   const [image, setImage] = useState<HTMLImageElement|undefined>(undefined)
   const [chosenComment, setChosenComment] = useState<CommentInterface|undefined>(undefined)
+  const commentPanelRef = useRef<HTMLDivElement|null>(null)
+  const [chosenCommentFrameWidth, setChosenCommentFrameWidth] = useState<number|undefined>(undefined)
 
   useEffect(() => {
     if(file && file.format !== "jpg" && file.format !== "png"){
@@ -34,14 +36,13 @@ export default function AdvancedEvaluationPage() {
 
   return (
     <>
-      <AdvancedEvaluationCommentPanel chosenComment={chosenComment} setChosenComment={setChosenComment}></AdvancedEvaluationCommentPanel>
-      <br/>
+      <AdvancedEvaluationCommentPanel setChosenCommentFrameWidth={setChosenCommentFrameWidth} commentPanelRef={commentPanelRef} chosenComment={chosenComment} setChosenComment={setChosenComment}></AdvancedEvaluationCommentPanel>
       {file
         ? (file.format === "txt"
             ? (<AdvancedEvaluationTextFileArea
               chosenComment={chosenComment}
               fileText={fileText}/>)
-            : (image !== undefined ? <AdvancedEvaluationImageArea setChosenComment={setChosenComment} image={image} chosenComment={chosenComment}></AdvancedEvaluationImageArea>
+            : (image !== undefined ? <AdvancedEvaluationImageArea chosenCommentFrameWidth={chosenCommentFrameWidth} commentPanelRef={commentPanelRef} setChosenComment={setChosenComment} image={image} chosenComment={chosenComment}></AdvancedEvaluationImageArea>
               : <Loading></Loading>))
         : <Loading></Loading>}
     </>
