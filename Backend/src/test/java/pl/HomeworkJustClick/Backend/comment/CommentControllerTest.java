@@ -31,6 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         "classpath:db/init_solution.sql",
         "classpath:db/init_evaluation.sql",
         "classpath:db/init_comment.sql",
+        "classpath:db/init_comment_evaluation.sql",
         "classpath:db/init_file.sql",
         "classpath:db/init_comment_file_img.sql",
         "classpath:db/init_comment_file_text.sql"
@@ -63,10 +64,24 @@ public class CommentControllerTest extends BaseTestEntity {
     }
 
     @Test
-    void shouldFindAllComments() throws Exception {
+    void shouldGetAllComments() throws Exception {
         mockMvc.perform(get("/api/comment").param("page", "0").param("size", "20"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.numberOfElements").value(12))
+                .andReturn();
+    }
+
+    @Test
+    void shouldGetCommentById() throws Exception {
+        var comment = commentRepository.findAll().get(0);
+        mockMvc.perform(get("/api/comment/" + comment.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(comment.getId()))
+                .andExpect(jsonPath("$.title").value(comment.getTitle()))
+                .andExpect(jsonPath("$.description").value(comment.getDescription()))
+                .andExpect(jsonPath("$.defaultColor").value(comment.getDefaultColor()))
+                .andExpect(jsonPath("$.lastUsedDate").value(comment.getLastUsedDate().toString()))
+                .andExpect(jsonPath("$.counter").value(comment.getCounter()))
                 .andReturn();
     }
 

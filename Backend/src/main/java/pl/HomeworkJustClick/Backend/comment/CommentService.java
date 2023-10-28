@@ -22,6 +22,10 @@ public class CommentService {
                 .map(mapper::map);
     }
 
+    public CommentResponseDto getCommentById(Integer commentId) {
+        return mapper.map(findById(commentId));
+    }
+
     public Slice<CommentResponseDto> getCommentsByUser(Integer userId, Pageable pageable) {
         return repository.getCommentsByUserId(userId, pageable)
                 .map(mapper::map);
