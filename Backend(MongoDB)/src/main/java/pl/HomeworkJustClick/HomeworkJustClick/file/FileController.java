@@ -19,7 +19,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "${security.corsUrl}")
 @Tag(name = "File", description = "Files related calls.")
 @RequiredArgsConstructor
 public class FileController {
