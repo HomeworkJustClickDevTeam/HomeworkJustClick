@@ -2,6 +2,7 @@ package pl.HomeworkJustClick.Backend.comment;
 
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -11,6 +12,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -48,9 +50,14 @@ public class CommentController {
                             description = "Jwt token invalid",
                             content = @Content
                     )
+            },
+            parameters = {
+                    @Parameter(name = "page", example = "0", description = "default = 0"),
+                    @Parameter(name = "size", example = "10", description = "default = 20"),
+                    @Parameter(name = "sort", example = "counter,desc", description = "default = lastUsedDate,desc")
             }
     )
-    public Slice<CommentResponseDto> getComments(@PageableDefault(sort = "lastUsedDate") Pageable pageable) {
+    public Slice<CommentResponseDto> getComments(@Parameter(hidden = true) @PageableDefault(sort = "lastUsedDate", direction = Sort.Direction.DESC) Pageable pageable) {
         return service.getComments(pageable);
     }
 
@@ -83,7 +90,7 @@ public class CommentController {
 
     @GetMapping("/byUser/{userId}")
     @Operation(
-            summary = "Returns comment by it's id.",
+            summary = "Returns paged list of comments by it's id.",
             responses = {
                     @ApiResponse(
                             responseCode = "404",
@@ -102,9 +109,14 @@ public class CommentController {
                             description = "Jwt token invalid",
                             content = @Content
                     )
+            },
+            parameters = {
+                    @Parameter(name = "page", example = "0", description = "default = 0"),
+                    @Parameter(name = "size", example = "10", description = "default = 20"),
+                    @Parameter(name = "sort", example = "counter,desc", description = "default = lastUsedDate,desc")
             }
     )
-    public Slice<CommentResponseDto> getCommentsByUser(@PathVariable Integer userId, @PageableDefault(sort = "lastUsedDate") Pageable pageable) {
+    public Slice<CommentResponseDto> getCommentsByUser(@PathVariable Integer userId, @Parameter(hidden = true) @PageableDefault(sort = "lastUsedDate", direction = Sort.Direction.DESC) Pageable pageable) {
         return service.getCommentsByUser(userId, pageable);
     }
 
