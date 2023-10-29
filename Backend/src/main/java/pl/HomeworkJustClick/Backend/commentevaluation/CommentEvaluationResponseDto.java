@@ -1,7 +1,7 @@
 package pl.HomeworkJustClick.Backend.commentevaluation;
 
 import lombok.*;
-import pl.HomeworkJustClick.Backend.comment.CommentResponseDto;
+import pl.HomeworkJustClick.Backend.comment.CommentSimpleResponseDto;
 import pl.HomeworkJustClick.Backend.evaluation.EvaluationResponseDto;
 
 import java.io.Serializable;
@@ -13,7 +13,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class CommentEvaluationResponseDto implements Serializable {
     private Integer id;
-    private CommentResponseDto comment;
+    private CommentSimpleResponseDto comment;
     private EvaluationResponseDto evaluation;
     private String description;
 }

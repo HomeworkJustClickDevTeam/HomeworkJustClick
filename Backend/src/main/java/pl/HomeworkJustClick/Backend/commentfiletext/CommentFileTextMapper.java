@@ -25,7 +25,7 @@ public class CommentFileTextMapper {
                 .highlightStart(commentFileText.getHighlightStart())
                 .highlightEnd(commentFileText.getHighlightEnd())
                 .color(commentFileText.getColor())
-                .comment(commentMapper.map(commentFileText.getComment()))
+                .comment(commentMapper.mapToSimpleResponseDto(commentFileText.getComment()))
                 .file(fileMapper.map(commentFileText.getFile()))
                 .build();
     }

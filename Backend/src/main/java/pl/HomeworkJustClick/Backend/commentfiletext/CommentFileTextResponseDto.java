@@ -1,7 +1,7 @@
 package pl.HomeworkJustClick.Backend.commentfiletext;
 
 import lombok.*;
-import pl.HomeworkJustClick.Backend.comment.CommentResponseDto;
+import pl.HomeworkJustClick.Backend.comment.CommentSimpleResponseDto;
 import pl.HomeworkJustClick.Backend.file.FileResponseDto;
 
 import java.io.Serializable;
@@ -16,6 +16,6 @@ public class CommentFileTextResponseDto implements Serializable {
     private Integer highlightStart;
     private Integer highlightEnd;
     private Integer color;
-    private CommentResponseDto comment;
+    private CommentSimpleResponseDto comment;
     private FileResponseDto file;
 }

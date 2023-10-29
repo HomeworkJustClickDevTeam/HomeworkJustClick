@@ -36,6 +36,18 @@ public class CommentMapper {
                 .build();
     }
 
+    public CommentSimpleResponseDto mapToSimpleResponseDto(Comment comment) {
+        return CommentSimpleResponseDto.builder()
+                .id(comment.getId())
+                .title(comment.getTitle())
+                .description(comment.getDescription())
+                .defaultColor(comment.getDefaultColor())
+                .lastUsedDate(comment.getLastUsedDate())
+                .counter(comment.getCounter())
+                .userId(comment.getUser().getId())
+                .build();
+    }
+
     public void map(Comment target, CommentDto source) {
         target.setTitle(source.getTitle());
         target.setDescription(source.getDescription());

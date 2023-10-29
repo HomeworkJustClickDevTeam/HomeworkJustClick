@@ -119,6 +119,27 @@ public class AuthenticationController {
     }
 
     @PostMapping("/checkToken")
+    @Operation(
+            summary = "Used by other microservice to check if jwt token is valid.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Jwt token invalid.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = Boolean.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Jwt token valid.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = Boolean.class)
+                            )
+                    )
+            }
+    )
     public Boolean checkToken(@NonNull HttpServletRequest request) {
         return authenticationService.checkToken(request.getHeader("Authorization").substring(7));
     }
