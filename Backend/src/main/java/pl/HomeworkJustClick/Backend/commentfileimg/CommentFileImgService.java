@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import pl.HomeworkJustClick.Backend.comment.CommentService;
 import pl.HomeworkJustClick.Backend.comment.CommentUtilsService;
 import pl.HomeworkJustClick.Backend.file.FileService;
-import pl.HomeworkJustClick.Backend.infrastructure.exception.commentfileimg.CommentFileImgNotFoundException;
+import pl.HomeworkJustClick.Backend.infrastructure.exception.EntityNotFoundException;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +20,7 @@ public class CommentFileImgService {
 
     public CommentFileImg findById(Integer id) {
         return repository.findById(id)
-                .orElseThrow(() -> new CommentFileImgNotFoundException("CommentFileImg not found"));
+                .orElseThrow(() -> new EntityNotFoundException("CommentFileImg with id = " + id + " not found"));
     }
 
     public Slice<CommentFileImgResponseDto> getCommentFileImgs(Pageable pageable) {

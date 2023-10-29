@@ -1,7 +1,7 @@
 package pl.HomeworkJustClick.Backend.commentfileimg;
 
 import lombok.*;
-import pl.HomeworkJustClick.Backend.comment.CommentResponseDto;
+import pl.HomeworkJustClick.Backend.comment.CommentSimpleResponseDto;
 import pl.HomeworkJustClick.Backend.file.FileResponseDto;
 
 import java.io.Serializable;
@@ -21,6 +21,6 @@ public class CommentFileImgResponseDto implements Serializable {
     private Integer imgWidth;
     private Integer imgHeight;
     private Integer color;
-    private CommentResponseDto comment;
+    private CommentSimpleResponseDto comment;
     private FileResponseDto file;
 }

@@ -22,7 +22,7 @@ public class CommentFileImgMapper {
                 .imgWidth(commentFileImg.getImgWidth())
                 .imgHeight(commentFileImg.getImgHeight())
                 .color(commentFileImg.getColor())
-                .comment(commentMapper.map(commentFileImg.getComment()))
+                .comment(commentMapper.mapToSimpleResponseDto(commentFileImg.getComment()))
                 .file(fileMapper.map(commentFileImg.getFile()))
                 .build();
     }
