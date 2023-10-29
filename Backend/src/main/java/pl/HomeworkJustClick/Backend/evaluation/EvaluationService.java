@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.HomeworkJustClick.Backend.group.Group;
 import pl.HomeworkJustClick.Backend.group.GroupResponseDto;
-import pl.HomeworkJustClick.Backend.infrastructure.exception.evaluation.EvaluationNotFoundException;
+import pl.HomeworkJustClick.Backend.infrastructure.exception.EntityNotFoundException;
 import pl.HomeworkJustClick.Backend.solution.Solution;
 import pl.HomeworkJustClick.Backend.solution.SolutionRepository;
 import pl.HomeworkJustClick.Backend.solution.SolutionResponseDto;
@@ -33,7 +33,7 @@ public class EvaluationService {
 
     public Evaluation findById(Integer id) {
         return evaluationRepository.findById(id)
-                .orElseThrow(() -> new EvaluationNotFoundException("Evaluation not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Evaluation with id = " + id + " not found"));
     }
 
     public List<EvaluationResponseDto> getAll() {

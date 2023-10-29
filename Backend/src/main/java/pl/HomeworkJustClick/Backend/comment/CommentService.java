@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
-import pl.HomeworkJustClick.Backend.infrastructure.exception.comment.CommentNotFoundException;
+import pl.HomeworkJustClick.Backend.infrastructure.exception.EntityNotFoundException;
 
 @Service
 @RequiredArgsConstructor
@@ -14,7 +14,7 @@ public class CommentService {
 
     public Comment findById(Integer id) {
         return repository.findById(id)
-                .orElseThrow(() -> new CommentNotFoundException("Comment not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Comment with id = " + id + " not found"));
     }
 
     public Slice<CommentResponseDto> getComments(Pageable pageable) {

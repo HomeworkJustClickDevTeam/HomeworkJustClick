@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import pl.HomeworkJustClick.Backend.comment.CommentService;
 import pl.HomeworkJustClick.Backend.comment.CommentUtilsService;
 import pl.HomeworkJustClick.Backend.file.FileService;
-import pl.HomeworkJustClick.Backend.infrastructure.exception.commentfiletext.CommentFileTextNotFoundException;
+import pl.HomeworkJustClick.Backend.infrastructure.exception.EntityNotFoundException;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +20,7 @@ public class CommentFileTextService {
 
     public CommentFileText findById(Integer id) {
         return repository.findById(id)
-                .orElseThrow(() -> new CommentFileTextNotFoundException("CommentFileText not found"));
+                .orElseThrow(() -> new EntityNotFoundException("CommentFileText with id = " + id + " not found"));
     }
 
     public Slice<CommentFileTextResponseDto> getCommentFileTexts(Pageable pageable) {
