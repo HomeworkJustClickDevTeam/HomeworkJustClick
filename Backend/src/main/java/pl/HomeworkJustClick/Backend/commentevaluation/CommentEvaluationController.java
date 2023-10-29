@@ -19,7 +19,6 @@ public class CommentEvaluationController {
     private final CommentEvaluationService service;
 
     @GetMapping
-    @ResponseStatus(HttpStatus.CREATED)
     @Operation(
             summary = "Returns paged list of commentEvaluations",
             responses = {
