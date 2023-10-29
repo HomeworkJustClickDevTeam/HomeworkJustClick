@@ -14,7 +14,7 @@ export const CanvasLogic = ({image, commentsList, setCommentsList, chosenComment
   setChosenComment?: (comment:AdvancedEvaluationImageCommentInterface|undefined) => void,
   editable: boolean,
   commentPanelWidth: number,
-  chosenCommentFrameWidth:number|undefined}) => {
+  chosenCommentFrameWidth?:number|undefined}) => {
   const canvasRef = useRef<HTMLCanvasElement|null>(null)
   const canvasContext = useRef(canvasRef.current?.getContext("2d"))
   const commentsListRef = useRef(commentsList)
@@ -111,13 +111,14 @@ export const CanvasLogic = ({image, commentsList, setCommentsList, chosenComment
       drawOnCanvas()
     }
   }
-  const handleCommentDeletion = () => {
+  const handleCommentDeletion = (draw:boolean) => {
     if (canvasContext.current !== null && canvasContext.current !== undefined) {
       if(commentIndex.current !== null){
         commentsListRef.current.splice(commentIndex.current, 1)
-        drawOnCanvas()
+        return true
       }
     }
+    return draw
   }
   const handleCursorAppearanceChange = () => {
     if (canvasRef.current !== null) {
@@ -316,6 +317,7 @@ export const CanvasLogic = ({image, commentsList, setCommentsList, chosenComment
     if(canvasAction.current === "commentDeleting") {
       const {mouseXOnCanvas, mouseYOnCanvas} = calculateCoordsOnCanvas(event.clientX, event.clientY)
       commentIndex.current = setPartOfCommentHovered(mouseXOnCanvas, mouseYOnCanvas)
+      handleCursorAppearanceChange()
     }
     else if(canvasAction.current === "commentDragging"){
       handleCommentMove(event.clientX, event.clientY)
@@ -336,7 +338,7 @@ export const CanvasLogic = ({image, commentsList, setCommentsList, chosenComment
     event.preventDefault()
     event.stopPropagation()
     if(!editable) return
-    else if(event.button === 2 && commentAction.current==="centerHovered"){//check if rmb used
+    else if(event.button === 2){//check if rmb used
       canvasAction.current = "commentDeleting"
     }
     else if(commentAction.current==="centerHovered"){
@@ -400,8 +402,8 @@ export const CanvasLogic = ({image, commentsList, setCommentsList, chosenComment
       normalizeCommentValues()
       draw = runBackCommentValues(draw)
     }
-    else if(canvasAction.current === "commentDeleting"){
-      handleCommentDeletion()
+    else if(canvasAction.current === "commentDeleting" && event.button === 2){
+      draw = handleCommentDeletion(draw)
     }
     if (draw) {
       drawOnCanvas()
@@ -410,8 +412,6 @@ export const CanvasLogic = ({image, commentsList, setCommentsList, chosenComment
     commentPreviousState.current = null
     if(setCommentsList !== undefined)
       setCommentsList(commentsListRef.current)
-    if(setChosenComment !== undefined)
-      setChosenComment(undefined)
     mouseStartY.current = null
     mouseStartX.current = null
     canvasAction.current = "hovering"
@@ -450,7 +450,7 @@ export const CanvasLogic = ({image, commentsList, setCommentsList, chosenComment
 
 
   return (
-    <canvas onContextMenu={handleMouseDown}
+    <canvas onContextMenu={(event) => {event.preventDefault(); event.stopPropagation()}}
             onMouseOut={handleMouseUp}
             id={"commentsLayer"}
             onMouseUp={handleMouseUp}
