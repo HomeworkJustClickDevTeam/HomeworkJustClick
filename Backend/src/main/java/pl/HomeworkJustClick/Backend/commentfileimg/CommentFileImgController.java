@@ -1,6 +1,7 @@
 package pl.HomeworkJustClick.Backend.commentfileimg;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -20,7 +21,7 @@ public class CommentFileImgController {
 
     @GetMapping
     @Operation(
-            summary = "Returns paged list of commentFileImg",
+            summary = "Returns paged list of commentFileImgs",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -34,9 +35,14 @@ public class CommentFileImgController {
                             description = "Jwt token invalid",
                             content = @Content
                     )
+            },
+            parameters = {
+                    @Parameter(name = "page", example = "0", description = "default = 0"),
+                    @Parameter(name = "size", example = "10", description = "default = 20"),
+                    @Parameter(name = "sort", example = "id,desc", description = "default = id,asc")
             }
     )
-    public Slice<CommentFileImgResponseDto> getCommentFileImgs(@PageableDefault(sort = "id") Pageable pageable) {
+    public Slice<CommentFileImgResponseDto> getCommentFileImgs(@Parameter(hidden = true) @PageableDefault(sort = "id") Pageable pageable) {
         return service.getCommentFileImgs(pageable);
     }
 
@@ -69,7 +75,7 @@ public class CommentFileImgController {
 
     @GetMapping("byCommentId/{commentId}")
     @Operation(
-            summary = "Returns commentFileImg by commentId",
+            summary = "Returns paged list of commentFileImgs by commentId",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -88,15 +94,20 @@ public class CommentFileImgController {
                             description = "Jwt token invalid",
                             content = @Content
                     )
+            },
+            parameters = {
+                    @Parameter(name = "page", example = "0", description = "default = 0"),
+                    @Parameter(name = "size", example = "10", description = "default = 20"),
+                    @Parameter(name = "sort", example = "id,desc", description = "default = id,asc")
             }
     )
-    public Slice<CommentFileImgResponseDto> getCommentFileImgsByCommentId(@PathVariable Integer commentId, @PageableDefault(sort = "id") Pageable pageable) {
+    public Slice<CommentFileImgResponseDto> getCommentFileImgsByCommentId(@PathVariable Integer commentId, @Parameter(hidden = true) @PageableDefault(sort = "id") Pageable pageable) {
         return service.getCommentFileImgByCommentId(commentId, pageable);
     }
 
     @GetMapping("byFileId/{fileId}")
     @Operation(
-            summary = "Returns commentFileImg by fileId",
+            summary = "Returns paged list of commentFileImgs by fileId",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -115,9 +126,14 @@ public class CommentFileImgController {
                             description = "Jwt token invalid",
                             content = @Content
                     )
+            },
+            parameters = {
+                    @Parameter(name = "page", example = "0", description = "default = 0"),
+                    @Parameter(name = "size", example = "10", description = "default = 20"),
+                    @Parameter(name = "sort", example = "id,desc", description = "default = id,asc")
             }
     )
-    public Slice<CommentFileImgResponseDto> getCommentFileImgsByFileId(@PathVariable Integer fileId, @PageableDefault(sort = "id") Pageable pageable) {
+    public Slice<CommentFileImgResponseDto> getCommentFileImgsByFileId(@PathVariable Integer fileId, @Parameter(hidden = true) @PageableDefault(sort = "id") Pageable pageable) {
         return service.getCommentFileImgByFileId(fileId, pageable);
     }
 

@@ -1,6 +1,7 @@
 package pl.HomeworkJustClick.Backend.commentfiletext;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -34,9 +35,14 @@ public class CommentFileTextController {
                             description = "Jwt token invalid",
                             content = @Content
                     )
+            },
+            parameters = {
+                    @Parameter(name = "page", example = "0", description = "default = 0"),
+                    @Parameter(name = "size", example = "10", description = "default = 20"),
+                    @Parameter(name = "sort", example = "id,desc", description = "default = id,asc")
             }
     )
-    public Slice<CommentFileTextResponseDto> getCommentFileTexts(@PageableDefault(sort = "id") Pageable pageable) {
+    public Slice<CommentFileTextResponseDto> getCommentFileTexts(@Parameter(hidden = true) @PageableDefault(sort = "id") Pageable pageable) {
         return service.getCommentFileTexts(pageable);
     }
 
@@ -69,7 +75,7 @@ public class CommentFileTextController {
 
     @GetMapping("byCommentId/{commentId}")
     @Operation(
-            summary = "Returns commentFileText by commentId",
+            summary = "Returns paged list of commentFileTexts by commentId",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -88,15 +94,20 @@ public class CommentFileTextController {
                             description = "Jwt token invalid",
                             content = @Content
                     )
+            },
+            parameters = {
+                    @Parameter(name = "page", example = "0", description = "default = 0"),
+                    @Parameter(name = "size", example = "10", description = "default = 20"),
+                    @Parameter(name = "sort", example = "id,desc", description = "default = id,asc")
             }
     )
-    public Slice<CommentFileTextResponseDto> getCommentFileTextsByCommentId(@PathVariable Integer commentId, @PageableDefault(sort = "id") Pageable pageable) {
+    public Slice<CommentFileTextResponseDto> getCommentFileTextsByCommentId(@PathVariable Integer commentId, @Parameter(hidden = true) @PageableDefault(sort = "id") Pageable pageable) {
         return service.getCommentFileTextsByCommentId(commentId, pageable);
     }
 
     @GetMapping("byFileId/{fileId}")
     @Operation(
-            summary = "Returns commentFileText by fileId",
+            summary = "Returns paged list of commentFileTexts by fileId",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -115,9 +126,14 @@ public class CommentFileTextController {
                             description = "Jwt token invalid",
                             content = @Content
                     )
+            },
+            parameters = {
+                    @Parameter(name = "page", example = "0", description = "default = 0"),
+                    @Parameter(name = "size", example = "10", description = "default = 20"),
+                    @Parameter(name = "sort", example = "id,desc", description = "default = id,asc")
             }
     )
-    public Slice<CommentFileTextResponseDto> getCommentFileTextsByFileId(@PathVariable Integer fileId, @PageableDefault(sort = "id") Pageable pageable) {
+    public Slice<CommentFileTextResponseDto> getCommentFileTextsByFileId(@PathVariable Integer fileId, @Parameter(hidden = true) @PageableDefault(sort = "id") Pageable pageable) {
         return service.getCommentFileTextsByFileId(fileId, pageable);
     }
 
