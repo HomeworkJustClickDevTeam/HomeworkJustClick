@@ -29,7 +29,7 @@ export const AdvancedEvaluationCommentPanelListElement = ({handleCommentClick, c
   }
 
   useEffect(() => {
-    const drawOnCanvas = () => {
+    const drawWidthPreviewOnCanvas = () => {
       if(canvasContext.current!==null && canvasContext.current!==undefined && canvasRef.current!==null && canvasRef.current!==undefined) {
         canvasContext.current.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height)
         canvasContext.current.strokeStyle = commentState.color
@@ -37,7 +37,7 @@ export const AdvancedEvaluationCommentPanelListElement = ({handleCommentClick, c
         canvasContext.current.strokeRect(5, 5,canvasRef.current.width - 10 , 20)
       }
     }
-    drawOnCanvas()
+    drawWidthPreviewOnCanvas()
   }, [frameWidth, commentState.color])
   useEffect(() => {
     canvasContext.current = canvasRef.current?.getContext("2d")
