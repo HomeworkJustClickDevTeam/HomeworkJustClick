@@ -126,6 +126,7 @@ function AssignmentAddPage() {
             onChange={handleNumberChange}
             min="0"
             max="100"
+            step="25"
             className="pl-1 ml-2 border-b-2 border-b-light_gray cursor-pointer w-12"
           />
         </label>

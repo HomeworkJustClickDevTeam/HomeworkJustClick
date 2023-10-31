@@ -121,6 +121,7 @@ function AssignmentModify({
             onChange={handleNumberChange}
             min="0"
             max="100"
+            step="25"
             value={assignment.auto_penalty}
             className="pl-1 ml-2 border-b-2 border-b-light_gray cursor-pointer w-12"
           />
