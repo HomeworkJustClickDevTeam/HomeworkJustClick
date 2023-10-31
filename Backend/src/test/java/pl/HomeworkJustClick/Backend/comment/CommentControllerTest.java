@@ -45,21 +45,22 @@ public class CommentControllerTest extends BaseTestEntity {
 
     private static Stream<Arguments> prepareValidData() {
         return Stream.of(
-                Arguments.of("title", "desc", 20, 1),
-                Arguments.of("", "desc", 20, 1),
-                Arguments.of(null, "desc", 20, 1),
-                Arguments.of("A".repeat(255), "A".repeat(255), 20, 1)
+                Arguments.of("title", "desc", "#ffffff", 1),
+                Arguments.of("", "desc", "#ffffff", 1),
+                Arguments.of(null, "desc", "#ffffff", 1),
+                Arguments.of("A".repeat(255), "A".repeat(255), "A".repeat(10), 1)
         );
     }
 
     private static Stream<Arguments> prepareInvalidData() {
         return Stream.of(
-                Arguments.of("title", "", 20, 1),
-                Arguments.of("", "", 20, 1),
-                Arguments.of("title", "desc", 20, 999),
-                Arguments.of("A".repeat(256), "desc", 20, 1),
-                Arguments.of("title", "A".repeat(256), 20, 1),
-                Arguments.of("title", null, 20, 1)
+                Arguments.of("title", "", "#ffffff", 1),
+                Arguments.of("", "", "#ffffff", 1),
+                Arguments.of("", "", "", 1),
+                Arguments.of("title", "desc", "#ffffff", 999),
+                Arguments.of("A".repeat(256), "desc", "#ffffff", 1),
+                Arguments.of("title", "A".repeat(256), "#ffffff", 1),
+                Arguments.of("title", null, "#ffffff", 1)
         );
     }
 
@@ -96,7 +97,7 @@ public class CommentControllerTest extends BaseTestEntity {
 
     @ParameterizedTest
     @MethodSource("prepareValidData")
-    void shouldCreateComment(String title, String description, Integer defaultColor, Integer userId) throws Exception {
+    void shouldCreateComment(String title, String description, String defaultColor, Integer userId) throws Exception {
         var commentDto = createCommentDto(title, description, defaultColor, userId);
         var body = objectMapper.writeValueAsString(commentDto);
         mockMvc.perform(post("/api/comment")
@@ -114,7 +115,7 @@ public class CommentControllerTest extends BaseTestEntity {
 
     @ParameterizedTest
     @MethodSource("prepareInvalidData")
-    void shouldNotCreateComment(String title, String description, Integer defaultColor, Integer userId) throws Exception {
+    void shouldNotCreateComment(String title, String description, String defaultColor, Integer userId) throws Exception {
         var commentDto = createCommentDto(title, description, defaultColor, userId);
         var body = objectMapper.writeValueAsString(commentDto);
         mockMvc.perform(post("/api/comment")
@@ -127,7 +128,7 @@ public class CommentControllerTest extends BaseTestEntity {
 
     @ParameterizedTest
     @MethodSource("prepareValidData")
-    void shouldUpdateComment(String title, String description, Integer defaultColor, Integer userId) throws Exception {
+    void shouldUpdateComment(String title, String description, String defaultColor, Integer userId) throws Exception {
         var commentId = commentRepository.findAll().get(0).getId();
         var commentDto = createCommentDto(title, description, defaultColor, userId);
         var body = objectMapper.writeValueAsString(commentDto);
@@ -146,7 +147,7 @@ public class CommentControllerTest extends BaseTestEntity {
 
     @ParameterizedTest
     @MethodSource("prepareInvalidData")
-    void shouldNotUpdateComment(String title, String description, Integer defaultColor, Integer userId) throws Exception {
+    void shouldNotUpdateComment(String title, String description, String defaultColor, Integer userId) throws Exception {
         var commentId = commentRepository.findAll().get(0).getId();
         var commentDto = createCommentDto(title, description, defaultColor, userId);
         var body = objectMapper.writeValueAsString(commentDto);
@@ -165,7 +166,7 @@ public class CommentControllerTest extends BaseTestEntity {
 
     @Test
     void shouldNotUpdateNotExistingComment() throws Exception {
-        var commentDto = createCommentDto("title", "desc", 20, 1);
+        var commentDto = createCommentDto("title", "desc", "#ffffff", 1);
         var body = objectMapper.writeValueAsString(commentDto);
         mockMvc.perform(put("/api/comment/" + 999)
                         .content(body)
@@ -191,7 +192,7 @@ public class CommentControllerTest extends BaseTestEntity {
                 .andReturn();
     }
 
-    private CommentDto createCommentDto(String title, String description, Integer defaultColor, Integer userId) {
+    private CommentDto createCommentDto(String title, String description, String defaultColor, Integer userId) {
         if (userId == 1) {
             userId = userRepository.findAll().get(0).getId();
         }

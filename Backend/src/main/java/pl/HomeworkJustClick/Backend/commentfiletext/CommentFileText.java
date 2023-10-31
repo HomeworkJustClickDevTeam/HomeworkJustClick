@@ -25,7 +25,7 @@ public class CommentFileText {
     @Column(name = "highlight_end")
     private Integer highlightEnd;
     @Column(name = "color")
-    private Integer color;
+    private String color;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "comment_id", nullable = false, foreignKey = @ForeignKey(name = "comment_file_text_comment_id_fk"))
     @JsonIgnore

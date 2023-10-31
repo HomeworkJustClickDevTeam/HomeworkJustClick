@@ -15,8 +15,7 @@ public class CommentFileTextDto implements Serializable {
     private Integer highlightStart;
     @NonNull
     private Integer highlightEnd;
-    @NonNull
-    private Integer color;
+    private String color;
     @NonNull
     private Integer commentId;
     @NonNull
