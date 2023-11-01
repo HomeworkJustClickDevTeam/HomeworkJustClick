@@ -35,7 +35,7 @@ public class Comment {
     private String description;
 
     @Column(name = "defaultColor")
-    private Integer defaultColor;
+    private String defaultColor;
 
     @Column(name = "lastUsedDate")
     private OffsetDateTime lastUsedDate;
@@ -72,7 +72,7 @@ public class Comment {
     @JsonIgnore
     private User user;
 
-    public Comment(String title, String description, User user, Integer defaultColor, OffsetDateTime lastUsedDate) {
+    public Comment(String title, String description, User user, String defaultColor, OffsetDateTime lastUsedDate) {
         this.title = title;
         this.description = description;
         this.user = user;
