@@ -7,6 +7,7 @@ import { CommentInterface } from "../../types/CommentInterface"
 import { AdvancedEvaluationImageArea } from "./AdvancedEvaluationImageArea"
 import Loading from "../animations/Loading"
 import { AdvancedEvaluationImageCommentInterface } from "../../types/AdvancedEvaluationImageCommentInterface"
+import { useGetSolutionAreaSizeAvailable } from "../customHooks/useGetSolutionAreaSizeAvailable"
 
 export default function AdvancedEvaluationPage() {
   let {state} = useLocation()
@@ -22,6 +23,8 @@ export default function AdvancedEvaluationPage() {
     {color:'#0068ff', id:1, description: "tutaj inny komentraz"},
     {color:'#fffb00', id:2, description: "ostatni komentarz"}])
   const [drawOnCanvasRunner, setDrawOnCanvasRunner] = useState(false)
+  const {availableHeight, availableWidth} = useGetSolutionAreaSizeAvailable()
+
 
   const setChosenCommentProps = () => {
     
@@ -52,17 +55,37 @@ export default function AdvancedEvaluationPage() {
 
 
 
+
+
   return (
-    <>
-      <AdvancedEvaluationCommentPanel handleCommentRemoval={handleCommentRemoval} setRightPanelUserComments={setRightPanelUserComments} rightPanelUserComments={rightPanelUserComments} setChosenCommentFrameWidth={setChosenCommentFrameWidth} commentPanelRef={commentPanelRef} chosenComment={chosenComment} setChosenComment={setChosenComment}></AdvancedEvaluationCommentPanel>
+    <div id={"advancedEvaluationCommentPanelDiv"}>
+      <AdvancedEvaluationCommentPanel
+        height={availableHeight}
+        handleCommentRemoval={handleCommentRemoval}
+        setRightPanelUserComments={setRightPanelUserComments}
+        rightPanelUserComments={rightPanelUserComments}
+        setChosenCommentFrameWidth={setChosenCommentFrameWidth}
+        setChosenComment={setChosenComment}></AdvancedEvaluationCommentPanel>
       {file
         ? (file.format === "txt"
             ? (<AdvancedEvaluationTextFileArea
               chosenComment={chosenComment}
+              width = {availableWidth}
+              height = {availableHeight}
               fileText={fileText}/>)
-            : (image !== undefined ? <AdvancedEvaluationImageArea drawOnCanvasRunner={drawOnCanvasRunner} editable={true} drawnComments={drawnCommentsRef.current} chosenCommentFrameWidth={chosenCommentFrameWidth} commentPanelRef={commentPanelRef} setChosenComment={setChosenComment} image={image} chosenComment={chosenComment}></AdvancedEvaluationImageArea>
+            : (image !== undefined ? <AdvancedEvaluationImageArea
+              drawOnCanvasRunner={drawOnCanvasRunner}
+              width = {availableWidth}
+              height = {availableHeight}
+              editable={true}
+              drawnComments={drawnCommentsRef.current}
+              chosenCommentFrameWidth={chosenCommentFrameWidth}
+              commentPanelRef={commentPanelRef}
+              setChosenComment={setChosenComment}
+              image={image}
+              chosenComment={chosenComment}></AdvancedEvaluationImageArea>
               : <Loading></Loading>))
         : <Loading></Loading>}
-    </>
+    </div>
   )
 }

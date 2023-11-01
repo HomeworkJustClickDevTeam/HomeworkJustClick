@@ -3,7 +3,9 @@ import { CommentInterface } from "../../types/CommentInterface"
 import { useEffect, useState } from "react"
 
 
-export const AdvancedEvaluationTextFileArea = ({chosenComment, fileText}:{
+export const AdvancedEvaluationTextFileArea = ({chosenComment, fileText, width, height}:{
+  width:number|undefined,
+  height:number|undefined,
   chosenComment: CommentInterface|undefined
   fileText: string }) => {
   const [comments, setComments] = useState<AdvancedEvaluationCommentInterface[]>([])
@@ -113,7 +115,7 @@ export const AdvancedEvaluationTextFileArea = ({chosenComment, fileText}:{
     setLetterColor(toLetterArray(comments))
   }, [fileText])
 
-  return <>{fileText.split('').map((letter:string, index)=>{
+  return <div style={{width: width !== undefined ? width : "100%", height: height !== undefined ? height:"100%"}}>{fileText.split('').map((letter:string, index)=>{
     return <span id={index.toString()} style={{backgroundColor: letterColor[index] ? letterColor[index] : 'white'}} key={index}>{letter}</span>
-  })}</>
+  })}</div>
 }

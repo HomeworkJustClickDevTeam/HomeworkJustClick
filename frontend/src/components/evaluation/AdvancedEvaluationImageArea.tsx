@@ -6,13 +6,14 @@ import { CanvasActionsType } from "../../types/CanvasActionsType"
 import { CommentActionsType } from "../../types/CommentActionsType"
 import { cursors } from "../../assets/cursors"
 
-export const AdvancedEvaluationImageArea = ({drawOnCanvasRunner, editable, image, chosenComment, setChosenComment, commentPanelRef, chosenCommentFrameWidth, drawnComments}:{
+export const AdvancedEvaluationImageArea = ({drawOnCanvasRunner, editable, image, chosenComment, chosenCommentFrameWidth, drawnComments, width, height}:{
+  width:number|undefined,
+  height:number|undefined,
   image: HTMLImageElement,
   drawOnCanvasRunner:boolean
   editable:boolean,
   chosenComment?: CommentInterface|undefined,
   setChosenComment?: (comment:AdvancedEvaluationImageCommentInterface|undefined) => void,
-  commentPanelRef: MutableRefObject<HTMLDivElement|null>,
   chosenCommentFrameWidth?:number|undefined,
   drawnComments:AdvancedEvaluationImageCommentInterface[],}) =>{
   const canvasRef = useRef<HTMLCanvasElement|null>(null)
@@ -23,6 +24,7 @@ export const AdvancedEvaluationImageArea = ({drawOnCanvasRunner, editable, image
   const commentPreviousState = useRef<null|AdvancedEvaluationImageCommentInterface>(null)
   const canvasAction = useRef<CanvasActionsType>("hovering")
   const commentAction = useRef<CommentActionsType>("noHover")
+  const {windowHeight, windowWidth} =  useWindowSize()
 
 
   const handleCommentResizing = (mouseX:number, mouseY:number) => {
@@ -420,16 +422,18 @@ export const AdvancedEvaluationImageArea = ({drawOnCanvasRunner, editable, image
   const drawOnCanvas = () => {
     if(canvasContext.current!==null && canvasContext.current!==undefined){
       canvasContext.current.clearRect(0,0, image.width, image.height)
-      if(commentPanelRef.current !== undefined && commentPanelRef.current !== null){
-        canvasContext.current.canvas.width = image.width - commentPanelRef.current.clientWidth
-      }
-      else{
-        canvasContext.current.canvas.width = image.width
+      if(height !== undefined && width !== undefined){
+        if(image.height <= height && image.width <= width){
+          canvasContext.current.canvas.height = image.height
+          canvasContext.current.canvas.width = image.width
+        }
+        else if(){
+
+        }
       }
       const calculatedHeight = calculateImageSizeWithProportions( canvasContext.current.canvas.width, undefined)
       canvasContext.current.canvas.height = calculatedHeight
       if(image.complete){
-        console.log("draw")
         canvasContext.current.drawImage(image,0,0,  canvasContext.current.canvas.width, calculatedHeight)
       }
       else
@@ -452,8 +456,9 @@ export const AdvancedEvaluationImageArea = ({drawOnCanvasRunner, editable, image
   }, [])
 
   useEffect(() => {
+    scaleCommentsToImageDimensions()
     drawOnCanvas()
-  }, [drawOnCanvasRunner])
+  }, [drawOnCanvasRunner, windowHeight, windowWidth])
 
 
 

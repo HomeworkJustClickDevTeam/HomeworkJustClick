@@ -3,10 +3,9 @@ import React, { MutableRefObject, useState } from "react"
 import { AdvancedEvaluationCommentPanelListElement } from "./AdvancedEvaluationCommentPanelListElement"
 
 export const AdvancedEvaluationCommentPanel = (
-  {setChosenComment, chosenComment, commentPanelRef, setChosenCommentFrameWidth, rightPanelUserComments, setRightPanelUserComments, handleCommentRemoval}:{
+  {setChosenComment, setChosenCommentFrameWidth, rightPanelUserComments, setRightPanelUserComments, handleCommentRemoval, height}:{
+    height:number|undefined
     setChosenComment:(comment:CommentInterface|undefined) => void,
-    chosenComment:CommentInterface|undefined,
-    commentPanelRef: MutableRefObject<HTMLDivElement|null>,
     setChosenCommentFrameWidth:(commentWidth:number|undefined) => void,
     rightPanelUserComments: CommentInterface[],
     setRightPanelUserComments: (comments:CommentInterface[]) => void,
@@ -41,7 +40,7 @@ export const AdvancedEvaluationCommentPanel = (
     setRightPanelUserComments(newComments)
   }
 
-  return <div ref={commentPanelRef} id={"commentPanel"} style={{float:"right", height:"100vh"}}>
+  return <div id={"commentPanel"} style={{float:"right", height:height !== undefined ? height.toString() : "100vh"}}>
     Dodaj nowy komentarz:<br/>
       <input onChange={(event) => setNewCommentDescription(event.target.value)}/>
       <button type={"button"} onClick={(event) => handleNewCommentCreation(event)}>Dodaj</button><br/>
