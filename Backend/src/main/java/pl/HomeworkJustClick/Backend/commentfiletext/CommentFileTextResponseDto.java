@@ -15,7 +15,7 @@ public class CommentFileTextResponseDto implements Serializable {
     private Integer id;
     private Integer highlightStart;
     private Integer highlightEnd;
-    private Integer color;
+    private String color;
     private CommentSimpleResponseDto comment;
     private FileResponseDto file;
 }

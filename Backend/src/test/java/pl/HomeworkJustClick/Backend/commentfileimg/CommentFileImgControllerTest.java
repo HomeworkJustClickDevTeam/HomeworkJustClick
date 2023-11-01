@@ -50,7 +50,7 @@ public class CommentFileImgControllerTest extends BaseTestEntity {
 
     private static Stream<Arguments> prepareValidData() {
         return Stream.of(
-                Arguments.of(100, 100, 100, 100, 100, 100, 100, 1, 1, 1),
+                Arguments.of(100, 100, 100, 100, 100, 100, 100, "#ffffff", 1, 1),
                 Arguments.of(100, 100, 100, 100, 100, 100, 100, null, 1, 1)
         );
     }
@@ -104,7 +104,7 @@ public class CommentFileImgControllerTest extends BaseTestEntity {
 
     @ParameterizedTest
     @MethodSource("prepareValidData")
-    void shouldCreateCommentFileImg(Integer leftTopX, Integer leftTopY, Integer width, Integer height, Integer lineWidth, Integer imgWidth, Integer imgHeight, Integer color, Integer commentId, Integer fileId) throws Exception {
+    void shouldCreateCommentFileImg(Integer leftTopX, Integer leftTopY, Integer width, Integer height, Integer lineWidth, Integer imgWidth, Integer imgHeight, String color, Integer commentId, Integer fileId) throws Exception {
         var commentFileImgDto = createCommentImgDto(leftTopX, leftTopY, width, height, lineWidth, imgWidth, imgHeight, color, commentId, fileId);
         var body = objectMapper.writeValueAsString(commentFileImgDto);
         mockMvc.perform(post("/api/comment_file_img")
@@ -126,7 +126,7 @@ public class CommentFileImgControllerTest extends BaseTestEntity {
 
     @ParameterizedTest
     @MethodSource("prepareValidData")
-    void shouldUpdateCommentFileImg(Integer leftTopX, Integer leftTopY, Integer width, Integer height, Integer lineWidth, Integer imgWidth, Integer imgHeight, Integer color, Integer commentId, Integer fileId) throws Exception {
+    void shouldUpdateCommentFileImg(Integer leftTopX, Integer leftTopY, Integer width, Integer height, Integer lineWidth, Integer imgWidth, Integer imgHeight, String color, Integer commentId, Integer fileId) throws Exception {
         var commentFileImg = commentFileImgRepository.findAll().get(0);
         var commentFileImgDto = createCommentImgDto(leftTopX, leftTopY, width, height, lineWidth, imgWidth, imgHeight, color, commentId, fileId);
         var body = objectMapper.writeValueAsString(commentFileImgDto);
@@ -159,7 +159,7 @@ public class CommentFileImgControllerTest extends BaseTestEntity {
 
     @Test
     void shouldNotUpdateNotExistingCommentFileImg() throws Exception {
-        var commentFileImgDto = createCommentImgDto(1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
+        var commentFileImgDto = createCommentImgDto(1, 1, 1, 1, 1, 1, 1, "#ffffff", 1, 1);
         var body = objectMapper.writeValueAsString(commentFileImgDto);
         mockMvc.perform(put("/api/comment_file_img/" + 999)
                         .content(body)
@@ -185,7 +185,7 @@ public class CommentFileImgControllerTest extends BaseTestEntity {
                 .andReturn();
     }
 
-    private CommentFileImgDto createCommentImgDto(Integer leftTopX, Integer leftTopY, Integer width, Integer height, Integer lineWidth, Integer imgWidth, Integer imgHeight, Integer color, Integer commentId, Integer fileId) {
+    private CommentFileImgDto createCommentImgDto(Integer leftTopX, Integer leftTopY, Integer width, Integer height, Integer lineWidth, Integer imgWidth, Integer imgHeight, String color, Integer commentId, Integer fileId) {
         if (commentId == 1) {
             commentId = commentRepository.findAll().get(0).getId();
         }
