@@ -428,8 +428,10 @@ export const AdvancedEvaluationImageArea = ({drawOnCanvasRunner, editable, image
       }
       const calculatedHeight = calculateImageSizeWithProportions( canvasContext.current.canvas.width, undefined)
       canvasContext.current.canvas.height = calculatedHeight
-      if(image.complete)
+      if(image.complete){
+        console.log("draw")
         canvasContext.current.drawImage(image,0,0,  canvasContext.current.canvas.width, calculatedHeight)
+      }
       else
         image.onload = () =>{
           if(canvasContext.current!==null && canvasContext.current!==undefined)

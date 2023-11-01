@@ -6,12 +6,22 @@ const mongoDatabaseServices = axios.create({
   timeout: 8082,
   headers: {
     "Content-Type": `multipart/form-data`,
-    "Access-Control-Allow-Origin": "http://localhost:3000",
-    ...(getUser()?.token && {
-      Authorization: `Bearer ${getUser()?.token}`,
-    }),
+    "Access-Control-Allow-Origin": "http://localhost:3000"
   },
 })
+
+mongoDatabaseServices.interceptors.request.use(async (config) => {
+    const token = getUser()?.token
+    if (token !== undefined) {
+      config.headers["Authorization"] = "Bearer " + token
+    } else {
+      config.headers["Authorization"] = ""
+    }
+    return config
+  },
+  (error) => {
+    return Promise.reject(error)
+  })
 
 export const postFileMongoService = (file: FormData) => {
   return mongoDatabaseServices.post("file", file)
