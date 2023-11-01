@@ -5,9 +5,11 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -116,4 +118,29 @@ public class AuthenticationController {
 
     }
 
+    @PostMapping("/checkToken")
+    @Operation(
+            summary = "Used by other microservice to check if jwt token is valid.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Jwt token invalid.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = Boolean.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Jwt token valid.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = Boolean.class)
+                            )
+                    )
+            }
+    )
+    public Boolean checkToken(@NonNull HttpServletRequest request) {
+        return authenticationService.checkToken(request.getHeader("Authorization").substring(7));
+    }
 }

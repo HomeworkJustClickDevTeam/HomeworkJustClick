@@ -1,71 +1,63 @@
 package pl.HomeworkJustClick.Backend.commentevaluation;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
-import pl.HomeworkJustClick.Backend.comment.Comment;
-import pl.HomeworkJustClick.Backend.comment.CommentRepository;
-import pl.HomeworkJustClick.Backend.evaluation.Evaluation;
-import pl.HomeworkJustClick.Backend.evaluation.EvaluationRepository;
-
-import java.util.List;
-import java.util.Optional;
+import pl.HomeworkJustClick.Backend.comment.CommentService;
+import pl.HomeworkJustClick.Backend.comment.CommentUtilsService;
+import pl.HomeworkJustClick.Backend.evaluation.EvaluationService;
+import pl.HomeworkJustClick.Backend.infrastructure.exception.EntityNotFoundException;
 
 @Service
 @RequiredArgsConstructor
 public class CommentEvaluationService {
+    private final CommentEvaluationRepository repository;
+    private final CommentEvaluationMapper mapper;
+    private final CommentService commentService;
+    private final EvaluationService evaluationService;
+    private final CommentUtilsService commentUtilsService;
 
-    private final CommentRepository commentRepository;
-
-    private final CommentEvaluationRepository commentEvaluationRepository;
-
-    private final EvaluationRepository evaluationRepository;
-
-    public List<CommentEvaluation> getAll() {
-        return commentEvaluationRepository.findAll();
+    public Slice<CommentEvaluationResponseDto> getCommentEvaluations(Pageable pageable) {
+        return repository.findAll(pageable)
+                .map(mapper::map);
     }
 
-    public Optional<CommentEvaluation> getById(int id) {
-        return commentEvaluationRepository.findById(id);
+    public CommentEvaluation findById(Integer id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("CommentEvaluation with id = " + id + " not found"));
     }
 
-    @Transactional
-    public Boolean add(CommentEvaluation commentEvaluation) {
-        commentEvaluationRepository.save(commentEvaluation);
-        return true;
+    public CommentEvaluationResponseDto getCommentEvaluationById(Integer id) {
+        return mapper.map(findById(id));
     }
 
-    @Transactional
-    public Boolean addWithCommentAndEvaluation(int comment_id, int evaluation_id){
-        Optional<Comment> commentOptional = commentRepository.findById(comment_id);
-        Optional<Evaluation> evaluationOptional = evaluationRepository.findById(evaluation_id);
-        if(commentOptional.isPresent() && evaluationOptional.isPresent()) {
-            CommentEvaluation commentEvaluation = new CommentEvaluation(evaluationOptional.get(), commentOptional.get(), "");
-            commentEvaluationRepository.save(commentEvaluation);
-            return true;
-        } else {
-            return false;
-        }
+    public Slice<CommentEvaluationResponseDto> getCommentEvaluationsByCommentId(Integer commentId, Pageable pageable) {
+        return repository.getCommentEvaluationsByCommentId(commentId, pageable)
+                .map(mapper::map);
     }
 
-    @Transactional
-    public Boolean delete(int id) {
-        if(commentEvaluationRepository.existsById(id)) {
-            commentEvaluationRepository.deleteById(id);
-            return true;
-        } else {
-            return false;
-        }
+    public Slice<CommentEvaluationResponseDto> getCommentEvaluationsByEvaluationId(Integer evaluationId, Pageable pageable) {
+        return repository.getCommentEvaluationsByEvaluationId(evaluationId, pageable)
+                .map(mapper::map);
     }
 
-    @Transactional
-    public Boolean deleteFromEvaluation(int comment_id, int evaluation_id) {
-        Optional<CommentEvaluation> commentEvaluationOptional = commentEvaluationRepository.getCommentEvaluationByCommentAndEvaluation(comment_id, evaluation_id);
-        if(commentEvaluationOptional.isPresent()) {
-            commentEvaluationRepository.deleteById(commentEvaluationOptional.get().getId());
-            return true;
-        } else {
-            return false;
-        }
+    public CommentEvaluationResponseDto addCommentEvaluation(CommentEvaluationDto commentEvaluationDto) {
+        var commentEvaluation = mapper.map(commentEvaluationDto);
+        setRelationFields(commentEvaluationDto, commentEvaluation);
+        commentUtilsService.update(commentEvaluationDto.getCommentId());
+        return mapper.map(repository.save(commentEvaluation));
+    }
+
+    public void deleteCommentEvaluation(Integer id) {
+        var commentEvaluation = findById(id);
+        repository.delete(commentEvaluation);
+    }
+
+    private void setRelationFields(CommentEvaluationDto commentEvaluationDto, CommentEvaluation commentEvaluation) {
+        var comment = commentService.findById(commentEvaluationDto.getCommentId());
+        var evaluation = evaluationService.findById(commentEvaluationDto.getEvaluationId());
+        commentEvaluation.setComment(comment);
+        commentEvaluation.setEvaluation(evaluation);
     }
 }

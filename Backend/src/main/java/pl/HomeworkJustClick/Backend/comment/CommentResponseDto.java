@@ -2,12 +2,14 @@ package pl.HomeworkJustClick.Backend.comment;
 
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import pl.HomeworkJustClick.Backend.user.UserResponseDto;
+
+import java.time.OffsetDateTime;
 
 @Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,7 +20,8 @@ public class CommentResponseDto {
     private String title;
     @Schema(example = "Example desc")
     private String description;
-    @Schema(example = "0")
-    private int user_id;
-
+    private String defaultColor;
+    private OffsetDateTime lastUsedDate;
+    private Integer counter;
+    private UserResponseDto user;
 }

@@ -103,7 +103,6 @@ public class User implements UserDetails {
 
     @OneToMany(
             mappedBy = "user",
-            orphanRemoval = true,
             fetch = FetchType.LAZY
     )
     @JsonIgnore

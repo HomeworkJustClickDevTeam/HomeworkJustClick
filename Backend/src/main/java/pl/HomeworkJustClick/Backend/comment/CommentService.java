@@ -1,86 +1,48 @@
 package pl.HomeworkJustClick.Backend.comment;
 
-import jakarta.persistence.EntityManager;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
-import pl.HomeworkJustClick.Backend.user.User;
-import pl.HomeworkJustClick.Backend.user.UserRepository;
-
-import java.util.List;
-import java.util.Optional;
+import pl.HomeworkJustClick.Backend.infrastructure.exception.EntityNotFoundException;
 
 @Service
 @RequiredArgsConstructor
 public class CommentService {
-    private final EntityManager entityManager;
-    private final CommentRepository commentRepository;
-    private final UserRepository userRepository;
+    private final CommentRepository repository;
+    private final CommentMapper mapper;
 
-    public List<Comment> getAll() {
-        return commentRepository.findAll();
+    public Comment findById(Integer id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Comment with id = " + id + " not found"));
     }
 
-    public Optional<Comment> getById(int id) {
-        return commentRepository.findById(id);
+    public Slice<CommentResponseDto> getComments(Pageable pageable) {
+        return repository.findAll(pageable)
+                .map(mapper::map);
     }
 
-    public List<Comment> getCommentsByUser (int user_id) {
-        return commentRepository.getCommentsByUser(user_id);
+    public CommentResponseDto getCommentById(Integer commentId) {
+        return mapper.map(findById(commentId));
     }
 
-    public List<Comment> getCommentsByEvaluation (int evaluation_id) {
-        return commentRepository.getCommentsByEvaluation(evaluation_id);
+    public Slice<CommentResponseDto> getCommentsByUser(Integer userId, Pageable pageable) {
+        return repository.getCommentsByUserId(userId, pageable)
+                .map(mapper::map);
     }
 
-    @Transactional
-    public CommentResponseDto addWithUser(Comment comment, int user_id) {
-        Optional<User> user = userRepository.findById(user_id);
-        if(user.isPresent()) {
-            comment.setUser(user.get());
-            entityManager.persist(comment);
-            return CommentResponseDto.builder()
-                    .id(comment.getId())
-                    .title(comment.getTitle())
-                    .description(comment.getDescription())
-                    .user_id(comment.getUser().getId())
-                    .build();
-        } else {
-            return CommentResponseDto.builder().build();
-        }
+    public CommentResponseDto createComment(CommentDto commentDto) {
+        return mapper.map(repository.save(mapper.map(commentDto)));
     }
 
-    @Transactional
-    public Boolean delete (int id) {
-        if(commentRepository.existsById(id)){
-            commentRepository.deleteById(id);
-            return true;
-        } else {
-            return false;
-        }
+    public CommentResponseDto updateComment(CommentDto commentDto, int commentId) {
+        var comment = findById(commentId);
+        mapper.map(comment, commentDto);
+        return mapper.map(repository.save(comment));
     }
 
-    public Boolean changeTitleById (int id, String title) {
-        Optional<Comment> commentOptional = commentRepository.findById(id);
-        if (commentOptional.isPresent()) {
-            Comment comment = commentOptional.get();
-            comment.setTitle(title);
-            commentRepository.save(comment);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public Boolean changeDescriptionById (int id, String description) {
-        Optional<Comment> commentOptional = commentRepository.findById(id);
-        if (commentOptional.isPresent()) {
-            Comment comment = commentOptional.get();
-            comment.setTitle(description);
-            commentRepository.save(comment);
-            return true;
-        } else {
-            return false;
-        }
+    public void deleteComment(int commentId) {
+        var comment = findById(commentId);
+        repository.delete(comment);
     }
 }

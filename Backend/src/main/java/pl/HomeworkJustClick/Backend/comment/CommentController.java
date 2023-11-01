@@ -2,23 +2,23 @@ package pl.HomeworkJustClick.Backend.comment;
 
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.HomeworkJustClick.Backend.commentevaluation.CommentEvaluationService;
-
-import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("api/comment")
 @SecurityRequirement(name = "Bearer Authentication")
 @Tag(name = "Comment", description = "Comment related calls.")
 @ApiResponse(
@@ -32,28 +32,36 @@ import java.util.Optional;
 )
 @RequiredArgsConstructor
 public class CommentController {
+    private final CommentService service;
 
-    private final CommentService commentService;
-
-
-    private final CommentEvaluationService commentEvaluationService;
-
-    @GetMapping("/comments")
-    @Operation(summary = "Returns list of all comments in DB.",
-            responses =
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "List returned.",
-                    content = @Content(
-                            mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = Comment.class)))
-            )
+    @GetMapping
+    @Operation(
+            summary = "Returns paged list of comments.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = CommentResponseDto.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Jwt token invalid",
+                            content = @Content
+                    )
+            },
+            parameters = {
+                    @Parameter(name = "page", example = "0", description = "default = 0"),
+                    @Parameter(name = "size", example = "10", description = "default = 20"),
+                    @Parameter(name = "sort", example = "counter,desc", description = "default = lastUsedDate,desc")
+            }
     )
-    public List<Comment> getAll() {
-        return commentService.getAll();
+    public Slice<CommentResponseDto> getComments(@Parameter(hidden = true) @PageableDefault(sort = "lastUsedDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        return service.getComments(pageable);
     }
 
-    @GetMapping("/comment/{comment_id}")
+    @GetMapping("{commentId}")
     @Operation(
             summary = "Returns comment by it's id.",
             responses = {
@@ -67,188 +75,138 @@ public class CommentController {
                             description = "OK.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = Comment.class))
+                                    schema = @Schema(implementation = CommentResponseDto.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Jwt token invalid",
+                            content = @Content
                     )
             }
     )
-    public ResponseEntity<Comment> getById(@PathVariable("comment_id") int id) {
-        Optional<Comment> comment = commentService.getById(id);
-        return comment.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public CommentResponseDto getCommentById(@PathVariable Integer commentId) {
+        return service.getCommentById(commentId);
     }
 
-    @GetMapping("/comments/byUser/{user_id}")
+    @GetMapping("/byUser/{userId}")
     @Operation(
-            summary = "Returns list of all comments written by a user with given id.",
+            summary = "Returns paged list of comments by it's id.",
             responses = {
                     @ApiResponse(
                             responseCode = "404",
-                            description = "Missing user with this id in the DB or this user has not written any comments.",
+                            description = "No comment with this userId in the DB.",
                             content = @Content
                     ),
                     @ApiResponse(
                             responseCode = "200",
+                            description = "OK.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = Comment.class)))
+                                    schema = @Schema(implementation = CommentResponseDto.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Jwt token invalid",
+                            content = @Content
                     )
+            },
+            parameters = {
+                    @Parameter(name = "page", example = "0", description = "default = 0"),
+                    @Parameter(name = "size", example = "10", description = "default = 20"),
+                    @Parameter(name = "sort", example = "counter,desc", description = "default = lastUsedDate,desc")
             }
     )
-
-    public ResponseEntity<List<Comment>> getByUser(@PathVariable("user_id") int id) {
-        List<Comment> response = commentService.getCommentsByUser(id);
-        if(response.isEmpty()){
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-        }
-        else {
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        }
+    public Slice<CommentResponseDto> getCommentsByUser(@PathVariable Integer userId, @Parameter(hidden = true) @PageableDefault(sort = "lastUsedDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        return service.getCommentsByUser(userId, pageable);
     }
 
-    @GetMapping("/comments/byEvaluation/{evaluation_id}")
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     @Operation(
-            summary = "Returns list of all comments associated with an evaluation.",
+            summary = "Creates comment",
             responses = {
                     @ApiResponse(
+                            responseCode = "201",
+                            description = "Created",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = CommentResponseDto.class))
+                    ),
+                    @ApiResponse(
                             responseCode = "404",
-                            description = "Missing evaluation with this id in the DB or this evaluation have not any comments associated.",
+                            description = "User not found",
                             content = @Content
                     ),
                     @ApiResponse(
-                            responseCode = "200",
-                            content = @Content(
-                                    mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = Comment.class)))
-                    )
-            }
-    )
-    public ResponseEntity<List<Comment>> getByEvaluation(@PathVariable("evaluation_id") int id) {
-        List<Comment> response = commentService.getCommentsByEvaluation(id);
-        if(response.isEmpty())
-        {
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-        }
-        else {
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        }
-    }
-
-    @Operation(
-            summary = "Creates comment with user already attached to it.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "404",
-                            description = "Missing user with this id in the db.",
+                            responseCode = "400",
+                            description = "Invalid dto",
                             content = @Content
                     ),
                     @ApiResponse(
+                            responseCode = "403",
+                            description = "Jwt token invalid",
+                            content = @Content
+                    )
+            }
+    )
+    public CommentResponseDto createComment(@RequestBody @Valid CommentDto commentDto) {
+        return service.createComment(commentDto);
+    }
+
+    @PutMapping("{commentId}")
+    @Operation(
+            summary = "Updates comment",
+            responses = {
+                    @ApiResponse(
                             responseCode = "200",
+                            description = "OK.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = CommentResponseDto.class)
-                            )
-                    )
-            }
-    )
-    @PostMapping("/comment/addWithUser/{user_id}")
-    public ResponseEntity<CommentResponseDto> addWithUser(@PathVariable("user_id") int user_id, @RequestBody Comment comment) {
-        CommentResponseDto response = commentService.addWithUser(comment, user_id);
-        if (response.getId() != 0) {
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-
-    @PostMapping("/comment/addCommentToEvaluation/{comment_id}/{evaluation_id}")
-    @Operation(
-            summary = "Adds comment to evaluation.",
-            responses = {
+                                    schema = @Schema(implementation = CommentResponseDto.class))
+                    ),
                     @ApiResponse(
                             responseCode = "404",
-                            description = "Missing comment or evaluation with this id.",
+                            description = "Comment or user not found",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Invalid dto",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Jwt token invalid",
                             content = @Content
                     )
             }
     )
-    public ResponseEntity<Void> addCommentToEvaluation(@PathVariable("comment_id") int comment_id, @PathVariable("evaluation_id") int evaluation_id) {
-        if(commentEvaluationService.addWithCommentAndEvaluation(comment_id, evaluation_id)) {
-            return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public CommentResponseDto updateComment(@PathVariable Integer commentId, @RequestBody @Valid CommentDto commentDto) {
+        return service.updateComment(commentDto, commentId);
     }
 
-    @DeleteMapping("/comment/{comment_id}")
+    @DeleteMapping("{commentId}")
     @Operation(
-            summary = "Deletes comment.",
+            summary = "Deletes comment by id",
             responses = {
                     @ApiResponse(
+                            responseCode = "200",
+                            description = "OK.",
+                            content = @Content
+                    ),
+                    @ApiResponse(
                             responseCode = "404",
-                            description = "Missing comment with this id in the db.",
+                            description = "Comment not found",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Jwt token invalid",
                             content = @Content
                     )
             }
     )
-    public ResponseEntity<Void> delete (@PathVariable("comment_id") int id) {
-        if (commentService.delete(id)) {
-            return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @DeleteMapping("/comment/fromEvaluation/{comment_id}/{evaluation_id}")
-    @Operation(
-            summary = "Deletes connection between comment and evaluation.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "404",
-                            description = "Missing comment or evaluation with this id in the db.",
-                            content = @Content
-                    )
-            }
-    )
-    public ResponseEntity<Void> deleteCommentFromEvaluation (@PathVariable("comment_id") int comment_id, @PathVariable("evaluation_id") int evaluation_id) {
-        if(commentEvaluationService.deleteFromEvaluation(comment_id, evaluation_id)){
-            return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @PutMapping("/comment/changeTitleById/{comment_id}")
-    @Operation(
-            summary = "Changes comment's title.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "404",
-                            description = "Missing comment with this id in the db.",
-                            content = @Content
-                    )
-            }
-    )
-    public ResponseEntity<Void> changeTitleById (@PathVariable("comment_id") int id, @RequestBody String title) {
-        if (commentService.changeTitleById(id, title)) {
-            return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @PutMapping("/comment/changeDescriptionById/{comment_id}")
-    @Operation(
-            summary = "Changes comment's description.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "404",
-                            description = "Missing comment with this id in the db.",
-                            content = @Content
-                    )
-            }
-    )
-    public ResponseEntity<Void> changeDescriptionById (@PathVariable("comment_id") int id, @RequestBody String description ) {
-        if(commentService.changeDescriptionById(id, description)) {
-            return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public void deleteComment(@PathVariable Integer commentId) {
+        service.deleteComment(commentId);
     }
 }
