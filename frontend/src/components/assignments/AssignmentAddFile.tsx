@@ -12,9 +12,15 @@ export function AssignmentAddFile(props: AssignmentAddFilePropsInterface) {
         const formData = new FormData()
         formData.append("file", file)
         postFileMongoService(formData)
-          .then((response) => createFileWithAssignmentPostgresService(`${response.data.id}`, response.data.format, response.data.name, `${props.idAssignment}`))
+          .then((response) =>
+            createFileWithAssignmentPostgresService(
+              `${response.data.id}`,
+              response.data.format,
+              response.data.name,
+              `${props.idAssignment}`
+            )
+          )
           .catch()
-      } else {
         props.setToNavigate(true)
       }
     }
@@ -28,9 +34,8 @@ export function AssignmentAddFile(props: AssignmentAddFilePropsInterface) {
 
   return (
     <>
-      <input type="file" onChange={handleChangeFile}/>
-      <div> {file && `${file.name} - ${file.type}`}</div>
-      {" "}
+      <input type="file" onChange={handleChangeFile} />
+      <div> {file && `${file.name} - ${file.type}`}</div>{" "}
     </>
   )
 }
