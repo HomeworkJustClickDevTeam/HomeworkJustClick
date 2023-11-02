@@ -40,7 +40,7 @@ export const AdvancedEvaluationCommentPanel = (
     setRightPanelUserComments(newComments)
   }
 
-  return <div id={"commentPanel"} style={{float:"right", height:height !== undefined ? height.toString() : "100vh"}}>
+  return <div id={"commentPanel"} style={{float:"right", height:height !== undefined ? height.toString() : "100%", overflow:"scroll"}}>
     Dodaj nowy komentarz:<br/>
       <input onChange={(event) => setNewCommentDescription(event.target.value)}/>
       <button type={"button"} onClick={(event) => handleNewCommentCreation(event)}>Dodaj</button><br/>

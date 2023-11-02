@@ -2,8 +2,7 @@ import React, { ChangeEvent, useEffect, useRef, useState } from "react"
 import { CommentInterface } from "../../types/CommentInterface"
 import { colorToHex } from "../../helpers"
 
-export const AdvancedEvaluationCommentPanelListElement = ({handleCommentClick, comment, handleCommentRemoval,height}:{
-  height:number|undefined,
+export const AdvancedEvaluationCommentPanelListElement = ({handleCommentClick, comment, handleCommentRemoval}:{
   handleCommentClick: (comment:CommentInterface, commentWidth:number)=>void,
   comment:CommentInterface,
   handleCommentRemoval: (commentId:number)=>void
@@ -47,7 +46,7 @@ export const AdvancedEvaluationCommentPanelListElement = ({handleCommentClick, c
   }, [])
 
   return(
-  <div style={{height: height !== undefined ? height : "100%", overflow:"scroll"}}>
+  <div>
     <div>
       <input ref={commentDescriptionInputRef}
             onChange={(event) => {!commentReadonly &&

@@ -5,6 +5,7 @@ import { useWindowSize } from "../customHooks/useWindowSize"
 import { CanvasActionsType } from "../../types/CanvasActionsType"
 import { CommentActionsType } from "../../types/CommentActionsType"
 import { cursors } from "../../assets/cursors"
+import { he } from "date-fns/locale"
 
 export const AdvancedEvaluationImageArea = ({drawOnCanvasRunner, editable, image, chosenComment, chosenCommentFrameWidth, drawnComments, width, height}:{
   width:number|undefined,
@@ -24,8 +25,6 @@ export const AdvancedEvaluationImageArea = ({drawOnCanvasRunner, editable, image
   const commentPreviousState = useRef<null|AdvancedEvaluationImageCommentInterface>(null)
   const canvasAction = useRef<CanvasActionsType>("hovering")
   const commentAction = useRef<CommentActionsType>("noHover")
-  const {windowHeight, windowWidth} =  useWindowSize()
-
 
   const handleCommentResizing = (mouseX:number, mouseY:number) => {
     if(commentIndex.current !== null && canvasContext.current !== null && canvasContext.current !== undefined && mouseStartX.current!==null && mouseStartY.current!==null) {
@@ -211,7 +210,7 @@ export const AdvancedEvaluationImageArea = ({drawOnCanvasRunner, editable, image
       }
     }
   }
-  const calculateImageSizeWithProportions = (targetWidth?:number, targetHeight?:number) => {
+  const calculateImageSizeWithAspectRatio = (targetWidth?:number, targetHeight?:number) => {
     const imageProportions = image.width/image.height
     if(targetWidth!==undefined && targetHeight===undefined){
       return targetWidth/imageProportions
@@ -293,6 +292,23 @@ export const AdvancedEvaluationImageArea = ({drawOnCanvasRunner, editable, image
         comment.canvasHeight = canvasRef.current.height
       }
     }
+  }
+  const calculateCanvasSize = () => {
+    if(height !== undefined && width !== undefined){
+      if(image.height <= height && image.width <= width){
+        return {calculatedHeight: image.height, calculatedWidth: image.width}
+      }
+      else if(image.height > height && image.width <= width){
+        return {calculatedWidth: calculateImageSizeWithAspectRatio(undefined, height), calculatedHeight: height}
+      }
+      else if(image.height <= height, image.width > width){
+        return {calculatedWidth: width, calculatedHeight: calculateImageSizeWithAspectRatio(width, undefined)}
+      }
+      else{
+        return {calculatedWidth: calculateImageSizeWithAspectRatio(undefined, height), calculatedHeight: height}
+      }
+    }
+    return {calculatedHeight: image.height, calculatedWidth: image.width}
   }
   const runBackCommentValues = (initialDrawValue:boolean) => {
     let draw = initialDrawValue
@@ -421,25 +437,17 @@ export const AdvancedEvaluationImageArea = ({drawOnCanvasRunner, editable, image
   }
   const drawOnCanvas = () => {
     if(canvasContext.current!==null && canvasContext.current!==undefined){
-      canvasContext.current.clearRect(0,0, image.width, image.height)
-      if(height !== undefined && width !== undefined){
-        if(image.height <= height && image.width <= width){
-          canvasContext.current.canvas.height = image.height
-          canvasContext.current.canvas.width = image.width
-        }
-        else if(){
-
-        }
-      }
-      const calculatedHeight = calculateImageSizeWithProportions( canvasContext.current.canvas.width, undefined)
+      const {calculatedHeight, calculatedWidth} = calculateCanvasSize()
       canvasContext.current.canvas.height = calculatedHeight
+      canvasContext.current.canvas.width = calculatedWidth
+      canvasContext.current.clearRect(0,0, calculatedWidth, calculatedHeight)
       if(image.complete){
-        canvasContext.current.drawImage(image,0,0,  canvasContext.current.canvas.width, calculatedHeight)
+        canvasContext.current.drawImage(image,0,0,  canvasContext.current.canvas.width, canvasContext.current.canvas.height)
       }
       else
         image.onload = () =>{
           if(canvasContext.current!==null && canvasContext.current!==undefined)
-            canvasContext.current.drawImage(image,0,0,  canvasContext.current.canvas.width, calculatedHeight)
+            canvasContext.current.drawImage(image,0,0,  canvasContext.current.canvas.width, canvasContext.current.canvas.height)
         }
       for (const comment of drawnComments) {
         canvasContext.current.strokeStyle = comment.color
@@ -458,7 +466,7 @@ export const AdvancedEvaluationImageArea = ({drawOnCanvasRunner, editable, image
   useEffect(() => {
     scaleCommentsToImageDimensions()
     drawOnCanvas()
-  }, [drawOnCanvasRunner, windowHeight, windowWidth])
+  }, [drawOnCanvasRunner, width, height])
 
 
 

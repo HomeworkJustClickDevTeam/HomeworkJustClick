@@ -15,7 +15,6 @@ export default function AdvancedEvaluationPage() {
   const [fileText, setFileText] = useState("")
   const [image, setImage] = useState<HTMLImageElement|undefined>(undefined)
   const [chosenComment, setChosenComment] = useState<CommentInterface|undefined>(undefined)
-  const commentPanelRef = useRef<HTMLDivElement|null>(null)
   const [chosenCommentFrameWidth, setChosenCommentFrameWidth] = useState<number|undefined>(undefined)
   const drawnCommentsRef = useRef<AdvancedEvaluationImageCommentInterface[]>([])
   const [rightPanelUserComments, setRightPanelUserComments] = useState<CommentInterface[]>([
@@ -26,9 +25,6 @@ export default function AdvancedEvaluationPage() {
   const {availableHeight, availableWidth} = useGetSolutionAreaSizeAvailable()
 
 
-  const setChosenCommentProps = () => {
-    
-  }
 
   const handleCommentRemoval = (commentId:number) => {
     const userNewComments = rightPanelUserComments.filter(comment => comment.id !== commentId)
@@ -80,7 +76,6 @@ export default function AdvancedEvaluationPage() {
               editable={true}
               drawnComments={drawnCommentsRef.current}
               chosenCommentFrameWidth={chosenCommentFrameWidth}
-              commentPanelRef={commentPanelRef}
               setChosenComment={setChosenComment}
               image={image}
               chosenComment={chosenComment}></AdvancedEvaluationImageArea>
