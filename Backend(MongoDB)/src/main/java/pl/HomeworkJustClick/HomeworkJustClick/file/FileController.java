@@ -201,6 +201,30 @@ public class FileController {
         return ResponseEntity.ok(responseList);
     }
 
+    @PostMapping("/fileListPart")
+    @Operation(
+            summary = "Adds list of files and returns its' ids, filenames and formats.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Files added",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = FileResponseDto.class))
+
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "JwtToken not valid",
+                            content = @Content
+                    )
+            }
+    )
+    public ResponseEntity<List<FileResponseDto>> addListByPart(@NonNull HttpServletRequest request, @RequestPart List<MultipartFile> fileList) throws IOException {
+        List<FileResponseDto> responseList = fileService.addFileList(fileList, request.getHeader("Authorization").substring(7));
+        return ResponseEntity.ok(responseList);
+    }
+
     @GetMapping("/file/{id}")
     @ResponseBody
     @Operation(
