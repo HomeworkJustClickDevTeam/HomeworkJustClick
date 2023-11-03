@@ -1,6 +1,10 @@
 import { CommentInterface } from "../../types/CommentInterface"
 import React, { MutableRefObject, useState } from "react"
 import { AdvancedEvaluationCommentPanelListElement } from "./AdvancedEvaluationCommentPanelListElement"
+import { useAppSelector } from "../../types/HooksRedux"
+import { selectUserState } from "../../redux/userStateSlice"
+import { CommentCreateInterface } from "../../types/CommentCreateInterface"
+import { createCommentWithUserPostgresService } from "../../services/postgresDatabaseServices"
 
 export const AdvancedEvaluationCommentPanel = (
   {setChosenComment, setChosenCommentFrameWidth, rightPanelUserComments, setRightPanelUserComments, handleCommentRemoval, height}:{
@@ -12,20 +16,28 @@ export const AdvancedEvaluationCommentPanel = (
     handleCommentRemoval:(commentId:number)=>void}) => {
 
   const [newCommentDescription, setNewCommentDescription] = useState<string|undefined>(undefined)
+  const userState = useAppSelector(selectUserState)
 
-
-  const handleNewCommentCreation = (event:React.FormEvent<HTMLButtonElement>) => {
+  const handleNewCommentCreation = async (event:React.FormEvent<HTMLButtonElement>) => {
     event.preventDefault()
     if(newCommentDescription !== undefined)
     {
-      const newId = Math.max(...rightPanelUserComments.map(comment => comment.id)) + 1
-      const newComment:CommentInterface = {
-        description: newCommentDescription,
-        id: newId,
-        color: '#fffb00'
+      if(userState?.id !== null && userState?.id !== undefined){
+        const newComment:CommentCreateInterface = {
+          description: newCommentDescription,
+          title:"",
+          defaultColor: '#fffb00',
+          userId:userState.id
+        }
+        createCommentWithUserPostgresService(newComment)
+          .then((response) => {
+            if(response.data !== undefined && response.data !== null){
+              const tempComments = rightPanelUserComments
+              setRightPanelUserComments([response.data, ...tempComments])
+            }
+          })
+          .catch((error) => console.log(error))
       }
-      const tempComments = [newComment, ...rightPanelUserComments]
-      setRightPanelUserComments(tempComments)
     }
 
   }

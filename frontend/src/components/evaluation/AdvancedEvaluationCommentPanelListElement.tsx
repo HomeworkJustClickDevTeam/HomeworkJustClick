@@ -20,8 +20,8 @@ export const AdvancedEvaluationCommentPanelListElement = ({handleCommentClick, c
       commentDescriptionInputRef.current.focus()
   }
   const handleColorPickerChange = (event:React.ChangeEvent<HTMLInputElement>) => {
-    setCommentState((prevState)=>({...prevState, color:event.target.value}))
-    handleCommentClick({...commentState, color:event.target.value}, frameWidth)
+    setCommentState((prevState)=>({...prevState, defaultColor:event.target.value}))
+    handleCommentClick({...commentState, defaultColor:event.target.value}, frameWidth)
 }
   const handleSliderChange = (event:React.ChangeEvent<HTMLInputElement>) => {
     setFrameWidth(+event.target.value)
@@ -32,13 +32,13 @@ export const AdvancedEvaluationCommentPanelListElement = ({handleCommentClick, c
     const drawWidthPreviewOnCanvas = () => {
       if(canvasContext.current!==null && canvasContext.current!==undefined && canvasRef.current!==null && canvasRef.current!==undefined) {
         canvasContext.current.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height)
-        canvasContext.current.strokeStyle = commentState.color
+        canvasContext.current.strokeStyle = commentState.defaultColor
         canvasContext.current.lineWidth = frameWidth
         canvasContext.current.strokeRect(5, 5,canvasRef.current.width - 10 , 20)
       }
     }
     drawWidthPreviewOnCanvas()
-  }, [frameWidth, commentState.color])
+  }, [frameWidth, commentState.defaultColor])
   useEffect(() => {
     canvasContext.current = canvasRef.current?.getContext("2d")
     if(commentDescriptionInputRef.current !== null && commentDescriptionInputRef.current !== undefined)
@@ -62,7 +62,7 @@ export const AdvancedEvaluationCommentPanelListElement = ({handleCommentClick, c
       </button>
       <input
         id={"colorPicker"}
-        value={commentState.color}
+        value={commentState.defaultColor}
         onChange={(event) => handleColorPickerChange(event)}
         onMouseUp={() => {
           handleCommentClick(commentState, frameWidth)

@@ -8,6 +8,7 @@ import { LoginUserInterface } from "../types/LoginUserInterface"
 import { UserRegisterInterface } from "../types/UserRegisterInterface"
 import { CredentialsInterface } from "../types/CredentialsInterface"
 import { getUser } from "./otherServices"
+import { CommentCreateInterface } from "../types/CommentCreateInterface"
 
 const postgresqlDatabaseJSON = axios.create({
   baseURL: "http://localhost:8080/api",
@@ -114,6 +115,10 @@ export const createFileWithAssignmentPostgresService = async (
       format: format,
       name: name,
     })
+}
+
+export const createCommentWithUserPostgresService = async (comment:CommentCreateInterface) =>{
+  return await postgresqlDatabaseJSON.post("/comment", {comment})
 }
 
 export const createFileWithSolutionPostgresService = async (
@@ -258,6 +263,10 @@ export const getGroupPostgresService = async (groupId: string) => {
 
 export const getAssignmentsByGroupPostgresService = async (groupId: string) => {
   return await postgresqlDatabaseJSON.get("/assignments/byGroupId/" + groupId)
+}
+
+export const getCommentsByUserPostgresService = async (userId: string, params: string) =>{
+  return await postgresqlDatabaseJSON.get(`/comment/byUser/${userId}?${params}`)
 }
 
 export const getUserRoleInGroupPostgresService = async (userId: string, groupId: string) => {

@@ -450,7 +450,7 @@ export const AdvancedEvaluationImageArea = ({drawOnCanvasRunner, editable, image
             canvasContext.current.drawImage(image,0,0,  canvasContext.current.canvas.width, canvasContext.current.canvas.height)
         }
       for (const comment of drawnComments) {
-        canvasContext.current.strokeStyle = comment.color
+        canvasContext.current.strokeStyle = comment.defaultColor
         canvasContext.current.lineWidth = comment.lineWidth
         canvasContext.current.strokeRect(comment.leftTopXY[0], comment.leftTopXY[1], comment.width, comment.height)
       }
