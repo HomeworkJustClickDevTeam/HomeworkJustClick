@@ -7,13 +7,13 @@ import { CommentCreateInterface } from "../../types/CommentCreateInterface"
 import { createCommentWithUserPostgresService } from "../../services/postgresDatabaseServices"
 
 export const AdvancedEvaluationCommentPanel = (
-  {setChosenComment, setChosenCommentFrameWidth, rightPanelUserComments, setRightPanelUserComments, handleCommentRemoval, height}:{
+  {setChosenComment, setChosenCommentFrameWidth, rightPanelUserComments, setRightPanelUserComments, handleCommentImageRemoval, height}:{
     height:number|undefined
     setChosenComment:(comment:CommentInterface|undefined) => void,
     setChosenCommentFrameWidth:(commentWidth:number|undefined) => void,
     rightPanelUserComments: CommentInterface[],
     setRightPanelUserComments: (comments:CommentInterface[]) => void,
-    handleCommentRemoval:(commentId:number)=>void}) => {
+    handleCommentImageRemoval:(comment:CommentInterface)=>void}) => {
 
   const [newCommentDescription, setNewCommentDescription] = useState<string|undefined>(undefined)
   const userState = useAppSelector(selectUserState)
@@ -33,7 +33,7 @@ export const AdvancedEvaluationCommentPanel = (
           .then((response) => {
             if(response.data !== undefined && response.data !== null){
               const tempComments = rightPanelUserComments
-              setRightPanelUserComments([response.data.content, ...tempComments])
+              setRightPanelUserComments([response.data as CommentInterface, ...tempComments])
             }
           })
           .catch((error) => console.log(error))
@@ -59,7 +59,7 @@ export const AdvancedEvaluationCommentPanel = (
     Panel komentarzy: <br/>
     {rightPanelUserComments.map((comment) => {
       return(<AdvancedEvaluationCommentPanelListElement
-        handleCommentRemoval={handleCommentRemoval}
+        handleCommentRemoval={handleCommentImageRemoval}
         comment={comment}
         handleCommentClick={handleCommentClick}
         key={comment.id}></AdvancedEvaluationCommentPanelListElement>)

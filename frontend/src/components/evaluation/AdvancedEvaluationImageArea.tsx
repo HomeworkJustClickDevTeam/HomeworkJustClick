@@ -14,7 +14,7 @@ export const AdvancedEvaluationImageArea = ({drawOnCanvasRunner, editable, image
   drawOnCanvasRunner:boolean
   editable:boolean,
   chosenComment?: CommentInterface|undefined,
-  setChosenComment?: (comment:AdvancedEvaluationImageCommentInterface|undefined) => void,
+  setChosenComment?: (comment:CommentInterface|undefined) => void,
   chosenCommentFrameWidth?:number|undefined,
   drawnComments:AdvancedEvaluationImageCommentInterface[],}) =>{
   const canvasRef = useRef<HTMLCanvasElement|null>(null)
@@ -91,7 +91,7 @@ export const AdvancedEvaluationImageArea = ({drawOnCanvasRunner, editable, image
   }
   const handleNewCommentCreation = (mouseX:number, mouseY:number) =>{
     if(chosenComment !== undefined && canvasRef.current !== undefined && canvasRef.current !== null && chosenCommentFrameWidth!==undefined){
-      let newComment:AdvancedEvaluationImageCommentInterface = {...JSON.parse(JSON.stringify(chosenComment)), leftTopXY:[mouseX, mouseY], width: 1, height:1, lineWidth: chosenCommentFrameWidth, canvasHeight:canvasRef.current.height, canvasWidth:canvasRef.current.width}
+      let newComment:AdvancedEvaluationImageCommentInterface = {...JSON.parse(JSON.stringify(chosenComment)), leftTopXY:[mouseX, mouseY], width: 1, height:1, lineWidth: chosenCommentFrameWidth, imgHeight:canvasRef.current.height, imgWidth:canvasRef.current.width}
       commentIndex.current = drawnComments.push(newComment) - 1
     }
   }
@@ -282,14 +282,14 @@ export const AdvancedEvaluationImageArea = ({drawOnCanvasRunner, editable, image
   const scaleCommentsToImageDimensions = () => {
     if(canvasRef.current!==null && canvasRef.current!==undefined){
       for(const comment of drawnComments){
-        const commentsProportionsWidth = canvasRef.current.width/comment.canvasWidth
-        const commentsProportionsHeight = canvasRef.current.height/comment.canvasHeight
+        const commentsProportionsWidth = canvasRef.current.width/comment.imgWidth
+        const commentsProportionsHeight = canvasRef.current.height/comment.imgHeight
         comment.leftTopXY[0] *= commentsProportionsWidth
         comment.leftTopXY[1] *= commentsProportionsHeight
         comment.width *= commentsProportionsWidth
         comment.height *= commentsProportionsHeight
-        comment.canvasWidth = canvasRef.current.width
-        comment.canvasHeight = canvasRef.current.height
+        comment.imgWidth = canvasRef.current.width
+        comment.imgHeight = canvasRef.current.height
       }
     }
   }
@@ -301,14 +301,16 @@ export const AdvancedEvaluationImageArea = ({drawOnCanvasRunner, editable, image
       else if(image.height > height && image.width <= width){
         return {calculatedWidth: calculateImageSizeWithAspectRatio(undefined, height), calculatedHeight: height}
       }
-      else if(image.height <= height, image.width > width){
+      else if(image.height <= height && image.width > width){
         return {calculatedWidth: width, calculatedHeight: calculateImageSizeWithAspectRatio(width, undefined)}
       }
       else{
-        return {calculatedWidth: calculateImageSizeWithAspectRatio(undefined, height), calculatedHeight: height}
+        return {calculatedWidth: width, calculatedHeight: calculateImageSizeWithAspectRatio(width, undefined)}
       }
     }
-    return {calculatedHeight: image.height, calculatedWidth: image.width}
+    else{
+      return {calculatedHeight: image.height, calculatedWidth: image.width}
+    }
   }
   const runBackCommentValues = (initialDrawValue:boolean) => {
     let draw = initialDrawValue
@@ -450,7 +452,7 @@ export const AdvancedEvaluationImageArea = ({drawOnCanvasRunner, editable, image
             canvasContext.current.drawImage(image,0,0,  canvasContext.current.canvas.width, canvasContext.current.canvas.height)
         }
       for (const comment of drawnComments) {
-        canvasContext.current.strokeStyle = comment.defaultColor
+        canvasContext.current.strokeStyle = comment.color
         canvasContext.current.lineWidth = comment.lineWidth
         canvasContext.current.strokeRect(comment.leftTopXY[0], comment.leftTopXY[1], comment.width, comment.height)
       }

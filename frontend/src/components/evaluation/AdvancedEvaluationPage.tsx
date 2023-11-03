@@ -11,6 +11,10 @@ import { useGetSolutionAreaSizeAvailable } from "../customHooks/useGetSolutionAr
 import { useGetCommentsByUser } from "../customHooks/useGetCommentsByUser"
 import { useAppSelector } from "../../types/HooksRedux"
 import { selectUserState } from "../../redux/userStateSlice"
+import {
+  deleteCommentImagePostgresService,
+  deleteCommentPostgresService
+} from "../../services/postgresDatabaseServices"
 
 export default function AdvancedEvaluationPage() {
   let {state} = useLocation()
@@ -27,11 +31,34 @@ export default function AdvancedEvaluationPage() {
 
 
 
-  const handleCommentRemoval = (commentId:number) => {
-    const userNewComments = rightPanelUserComments.filter(comment => comment.id !== commentId)
-    setRightPanelUserComments(userNewComments)
-    drawnCommentsRef.current = drawnCommentsRef.current.filter(comment => comment.id !== commentId)
-    setDrawOnCanvasRunner((prevState)=>!prevState)
+  const handleCommentImageRemoval = async (comment:CommentInterface) => {
+
+    deleteCommentPostgresService(comment.id.toString())
+      .then((response)=> {
+        if(response.data !== null && response.data !== undefined && response.data.status === 200){
+          const userNewComments = rightPanelUserComments.filter(comment => comment.id !== comment.id)
+          setRightPanelUserComments(userNewComments)
+          drawnCommentsRef.current = drawnCommentsRef.current.filter(commentImage =>
+          {
+            if(commentImage.commentId === comment.id){
+              deleteCommentImagePostgresService(commentImage.commentId.toString())
+                .then((response) => {
+                  if(response!== null && response!== undefined && response.data.status === 200){
+                    return false
+                  }
+                })
+                .catch(error=>{
+                  console.log(error)
+                  return true
+                })
+            }
+            else {
+              return true
+            }
+          })
+          setDrawOnCanvasRunner((prevState)=>!prevState)
+        }
+      })
   }
 
   useEffect(() => {
@@ -57,7 +84,7 @@ export default function AdvancedEvaluationPage() {
     <div id={"advancedEvaluationCommentPanelDiv"}>
       <AdvancedEvaluationCommentPanel
         height={availableHeight}
-        handleCommentRemoval={handleCommentRemoval}
+        handleCommentImageRemoval={handleCommentImageRemoval}
         setRightPanelUserComments={setRightPanelUserComments}
         rightPanelUserComments={rightPanelUserComments}
         setChosenCommentFrameWidth={setChosenCommentFrameWidth}

@@ -5,7 +5,7 @@ import { colorToHex } from "../../helpers"
 export const AdvancedEvaluationCommentPanelListElement = ({handleCommentClick, comment, handleCommentRemoval}:{
   handleCommentClick: (comment:CommentInterface, commentWidth:number)=>void,
   comment:CommentInterface,
-  handleCommentRemoval: (commentId:number)=>void
+  handleCommentRemoval: (commentToBeRemoved:CommentInterface)=>void
 })=>{
   const [frameWidth, setFrameWidth] = useState<number>(5)
   const [commentState, setCommentState] = useState<CommentInterface>(comment)
@@ -83,7 +83,7 @@ export const AdvancedEvaluationCommentPanelListElement = ({handleCommentClick, c
                  commentDescriptionInputRef.current.focus()
              }}/><br/>
     Szerokość: {frameWidth}</div>
-    <button onClick={() => handleCommentRemoval(commentState.id)} type={"button"}>Usuń komentarz</button>
+    <button onClick={() => handleCommentRemoval(commentState)} type={"button"}>Usuń komentarz</button>
     <hr/>
   </div>)
 }

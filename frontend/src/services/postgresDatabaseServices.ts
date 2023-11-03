@@ -119,11 +119,11 @@ export const createFileWithAssignmentPostgresService = async (
 }
 
 export const createCommentWithUserPostgresService = async (comment:CommentCreateInterface) =>{
-  return await postgresqlDatabaseJSON.post("/comment", {comment})
+  return await postgresqlDatabaseJSON.post("/comment", comment)
 }
 
 export const createCommentWithFilePostgresService = async (comment:AdvancedEvaluationTextCommentCreateInterface) =>{
-  return await postgresqlDatabaseJSON.post("/comment_file_text", {comment})
+  return await postgresqlDatabaseJSON.post("/comment_file_text", comment)
 }
 export const createFileWithSolutionPostgresService = async (
   mongoId: string,
@@ -292,8 +292,8 @@ export const archiveGroupPostgresService = async (groupId: string) => {
   return await postgresqlDatabaseJSON.put("/group/archive/" + groupId)
 }
 
-export const changeGroupColorPostgresService = (groupId: string, color: number) => {
-  return postgresqlDatabaseJSON.put("/group/color/" + groupId, color)
+export const changeGroupColorPostgresService = async (groupId: string, color: number) => {
+  return await postgresqlDatabaseJSON.put("/group/color/" + groupId, color)
 }
 
 export const changeUserColorPostgresService = async (userId: string, color: number) => {
@@ -314,8 +314,8 @@ export const changeGroupDescriptionPostgresService = async (groupId: string, des
   return await postgresqlDatabaseTextPlain.put(`/group/description/${groupId}`, description)
 }
 
-export const deleteAssignmentPostgresService = (assignmentId: string) => {
-  return postgresqlDatabaseJSON
+export const deleteAssignmentPostgresService = async (assignmentId: string) => {
+  return await postgresqlDatabaseJSON
     .delete(`/assignment/${assignmentId}`)
 }
 
@@ -325,6 +325,16 @@ export const deleteFilePostgresService = async (fileId: string) => {
 
 export const deleteGroupPostgresService = async (groupId: string) => {
   return await postgresqlDatabaseJSON.delete("/group/" + groupId)
+}
+export const deleteCommentImagePostgresService = async (commentId:string) => {
+  return await postgresqlDatabaseJSON.delete(`/comment_file_img/${commentId}`)
+}
+
+export const deleteCommentTextPostgresService = async (commentId:string) => {
+  return await postgresqlDatabaseJSON.delete(`/comment_file_text/${commentId}`)
+}
+export const deleteCommentPostgresService = async (commentId:string) =>{
+  return await postgresqlDatabaseJSON.delete(`comment/${commentId}`)
 }
 
 export const deleteStudentInGroupPostgresService = async (userId: string, groupId: string) => {
