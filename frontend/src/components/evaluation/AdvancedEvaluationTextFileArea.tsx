@@ -1,16 +1,21 @@
-import { AdvancedEvaluationCommentInterface } from "../../types/AdvancedEvaluationCommentInterface"
+import { AdvancedEvaluationTextCommentInterface } from "../../types/AdvancedEvaluationTextCommentInterface"
 import { CommentInterface } from "../../types/CommentInterface"
 import { useEffect, useState } from "react"
+import { AdvancedEvaluationTextCommentCreateInterface } from "../../types/AdvancedEvaluationTextCommentCreateInterface"
+import { createCommentWithFilePostgresService } from "../../services/postgresDatabaseServices"
+import { Simulate } from "react-dom/test-utils"
+import error = Simulate.error
 
 
-export const AdvancedEvaluationTextFileArea = ({chosenComment, fileText, width, height}:{
+export const AdvancedEvaluationTextFileArea = ({chosenComment, fileText, width, height, fileId}:{
   width:number|undefined,
   height:number|undefined,
   chosenComment: CommentInterface|undefined
-  fileText: string }) => {
-  const [comments, setComments] = useState<AdvancedEvaluationCommentInterface[]>([])
+  fileText: string
+  fileId: number}) => {
+  const [comments, setComments] = useState<AdvancedEvaluationTextCommentInterface[]>([])
   const [letterColor, setLetterColor] = useState<(string|undefined)[]>([undefined])
-  const checkNewRanges = (updatedComment:AdvancedEvaluationCommentInterface, selectedComment:AdvancedEvaluationCommentInterface):AdvancedEvaluationCommentInterface[] => {
+  const checkNewRanges = (updatedComment:AdvancedEvaluationTextCommentInterface, selectedComment:AdvancedEvaluationTextCommentInterface):AdvancedEvaluationTextCommentInterface[] => {
     if(updatedComment.highlightStart<=updatedComment.highlightEnd){
       return [updatedComment, selectedComment]
     }
@@ -19,25 +24,33 @@ export const AdvancedEvaluationTextFileArea = ({chosenComment, fileText, width, 
     }
   }
 
-  const toLetterArray = (commentsList:AdvancedEvaluationCommentInterface[]):(string|undefined)[] => {
+  const toLetterArray = (commentsList:AdvancedEvaluationTextCommentInterface[]):(string|undefined)[] => {
     let newArray = Array<undefined|string>(fileText.length)
     newArray.fill(undefined, 0, fileText.length)
     commentsList.forEach((comment)=>{
-      newArray.fill(comment.defaultColor, comment.highlightStart, comment.highlightEnd+1)
+      newArray.fill(comment.color, comment.highlightStart, comment.highlightEnd+1)
     })
     return newArray
   }
-  const handleActiveCommentChange = (comment:CommentInterface) =>{
+  const handleActiveCommentChange =  async (comment:CommentInterface) =>{
     const selection = window.getSelection()
     if(selection && selection.rangeCount>0 && window.getSelection()?.getRangeAt(0).endContainer.parentElement?.id && window.getSelection()?.getRangeAt(0).startContainer.parentElement?.id !== null){
-      const selectedComment:AdvancedEvaluationCommentInterface = {
-        id: comment.id,
-        description: comment.description,
-        defaultColor: comment.defaultColor,
+      let selectedComment:any = undefined
+      createCommentWithFilePostgresService({
+        commentId: comment.id,
+        fileId:fileId,
+        color: comment.defaultColor,
         highlightStart: Math.min(selection.getRangeAt(0).endContainer.parentElement?.id as unknown as number, selection.getRangeAt(0).startContainer.parentElement?.id as unknown as number),
         highlightEnd: Math.max(selection.getRangeAt(0).endContainer.parentElement?.id as unknown as number, selection.getRangeAt(0).startContainer.parentElement?.id as unknown as number)
-      }
-      const newComments:AdvancedEvaluationCommentInterface[] = []
+      })
+        .then((response) => {
+          if(response !== null && response!==undefined){selectedComment = response.data.content as AdvancedEvaluationTextCommentInterface}
+        })
+        .catch(error => console.log(error))
+      
+      if(selectedComment === undefined){return}
+      
+      const newComments:AdvancedEvaluationTextCommentInterface[] = []
       if(comments.length === 0){
         newComments.push(selectedComment)
       }

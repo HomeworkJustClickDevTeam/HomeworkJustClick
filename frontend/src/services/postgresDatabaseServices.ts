@@ -9,6 +9,7 @@ import { UserRegisterInterface } from "../types/UserRegisterInterface"
 import { CredentialsInterface } from "../types/CredentialsInterface"
 import { getUser } from "./otherServices"
 import { CommentCreateInterface } from "../types/CommentCreateInterface"
+import { AdvancedEvaluationTextCommentCreateInterface } from "../types/AdvancedEvaluationTextCommentCreateInterface"
 
 const postgresqlDatabaseJSON = axios.create({
   baseURL: "http://localhost:8080/api",
@@ -121,6 +122,9 @@ export const createCommentWithUserPostgresService = async (comment:CommentCreate
   return await postgresqlDatabaseJSON.post("/comment", {comment})
 }
 
+export const createCommentWithFilePostgresService = async (comment:AdvancedEvaluationTextCommentCreateInterface) =>{
+  return await postgresqlDatabaseJSON.post("/comment_file_text", {comment})
+}
 export const createFileWithSolutionPostgresService = async (
   mongoId: string,
   format: any,

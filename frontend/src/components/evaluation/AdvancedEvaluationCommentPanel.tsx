@@ -33,7 +33,7 @@ export const AdvancedEvaluationCommentPanel = (
           .then((response) => {
             if(response.data !== undefined && response.data !== null){
               const tempComments = rightPanelUserComments
-              setRightPanelUserComments([response.data, ...tempComments])
+              setRightPanelUserComments([response.data.content, ...tempComments])
             }
           })
           .catch((error) => console.log(error))

@@ -14,7 +14,7 @@ export const useGetCommentsByUser = (userId: number|undefined|null, params:strin
     if(userId !== undefined && userId !== null) {
       getCommentsByUserPostgresService(userId.toString(), params)
         .then((response) => {
-          const commentsFromServer = response.data as CommentInterface[]
+          const commentsFromServer = response.data.content as CommentInterface[]
           if (response !== null && response !== undefined){
             if(mounted){setComments(commentsFromServer)}
           }

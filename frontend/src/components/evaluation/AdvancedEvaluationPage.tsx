@@ -65,6 +65,7 @@ export default function AdvancedEvaluationPage() {
       {file
         ? (file.format === "txt"
             ? (<AdvancedEvaluationTextFileArea
+              fileId={file.postgresId}
               chosenComment={chosenComment}
               width = {availableWidth}
               height = {availableHeight}
