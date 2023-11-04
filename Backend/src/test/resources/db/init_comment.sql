@@ -1,4 +1,4 @@
-insert into _comment (description, title, user_id, last_used_date, default_color, counter)
+insert into _comment (description, title, user_id, last_used_date, color, counter)
 values ('desc 1', 'title 1', (select id from _user where email = 'zofia_danielska@gmail.com'), now(), 1, 0),
        ('desc 2', 'title 2', (select id from _user where email = 'zofia_danielska@gmail.com'), now(), 1, 0),
        ('desc 3', 'title 3', (select id from _user where email = 'zofia_danielska@gmail.com'), now(), 1, 0),
