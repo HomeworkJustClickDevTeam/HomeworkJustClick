@@ -1,22 +1,35 @@
 import { CommentInterface } from "../../types/CommentInterface"
-import React, { MutableRefObject, useEffect, useRef, useState } from "react"
+import React, { MutableRefObject, useEffect, useImperativeHandle, useRef, useState } from "react"
 import { AdvancedEvaluationImageCommentInterface } from "../../types/AdvancedEvaluationImageCommentInterface"
 import { useWindowSize } from "../customHooks/useWindowSize"
 import { CanvasActionsType } from "../../types/CanvasActionsType"
 import { CommentActionsType } from "../../types/CommentActionsType"
 import { cursors } from "../../assets/cursors"
 import { he } from "date-fns/locale"
+import {
+  createCommentImageWithFilePostgresService,
+  deleteCommentImagePostgresService
+} from "../../services/postgresDatabaseServices"
 
-export const AdvancedEvaluationImageArea = ({drawOnCanvasRunner, editable, image, chosenComment, chosenCommentFrameWidth, drawnComments, width, height}:{
+interface AdvancedEvaluationImageAreaInterface{
   width:number|undefined,
   height:number|undefined,
   image: HTMLImageElement,
-  drawOnCanvasRunner:boolean
   editable:boolean,
   chosenComment?: CommentInterface|undefined,
-  setChosenComment?: (comment:CommentInterface|undefined) => void,
   chosenCommentFrameWidth?:number|undefined,
-  drawnComments:AdvancedEvaluationImageCommentInterface[],}) =>{
+  drawnComments:MutableRefObject<AdvancedEvaluationImageCommentInterface[]>
+  fileId:number
+}
+export const AdvancedEvaluationImageArea = React.forwardRef<any, AdvancedEvaluationImageAreaInterface>(({
+                                                                                                          fileId,
+                                                                                                          editable,
+                                                                                                          image,
+                                                                                                          chosenComment,
+                                                                                                          chosenCommentFrameWidth,
+                                                                                                          drawnComments,
+                                                                                                          width,
+                                                                                                          height}, advancedEvaluationImageAreaRef) =>{
   const canvasRef = useRef<HTMLCanvasElement|null>(null)
   const canvasContext = useRef(canvasRef.current?.getContext("2d"))
   const mouseStartX = useRef<null|number>(null)
@@ -26,63 +39,89 @@ export const AdvancedEvaluationImageArea = ({drawOnCanvasRunner, editable, image
   const canvasAction = useRef<CanvasActionsType>("hovering")
   const commentAction = useRef<CommentActionsType>("noHover")
 
+  useImperativeHandle(advancedEvaluationImageAreaRef, () => ({
+    drawOnCanvas() {
+      drawOnCanvas()
+    }
+  }))//use with caution
   const handleCommentResizing = (mouseX:number, mouseY:number) => {
     if(commentIndex.current !== null && canvasContext.current !== null && canvasContext.current !== undefined && mouseStartX.current!==null && mouseStartY.current!==null) {
       const {moveDiffX, moveDiffY} = updateMouseCoords(mouseX, mouseY)
       switch (commentAction.current){
         case "leftTopCornerHovered":
-          drawnComments[commentIndex.current].leftTopXY[0] += moveDiffX
-          drawnComments[commentIndex.current].leftTopXY[1] += moveDiffY
-          drawnComments[commentIndex.current].width -= moveDiffX
-          drawnComments[commentIndex.current].height -= moveDiffY
+          drawnComments.current[commentIndex.current].leftTopX += moveDiffX
+          drawnComments.current[commentIndex.current].leftTopY += moveDiffY
+          drawnComments.current[commentIndex.current].width -= moveDiffX
+          drawnComments.current[commentIndex.current].height -= moveDiffY
           drawOnCanvas()
           break
         case "topLineHovered":
-          drawnComments[commentIndex.current].leftTopXY[1] += moveDiffY
-          drawnComments[commentIndex.current].height -= moveDiffY
+          drawnComments.current[commentIndex.current].leftTopY += moveDiffY
+          drawnComments.current[commentIndex.current].height -= moveDiffY
           drawOnCanvas()
           break
         case "rightTopCornerHovered":
-          drawnComments[commentIndex.current].leftTopXY[1] += moveDiffY
-          drawnComments[commentIndex.current].width += moveDiffX
-          drawnComments[commentIndex.current].height -= moveDiffY
+          drawnComments.current[commentIndex.current].leftTopY += moveDiffY
+          drawnComments.current[commentIndex.current].width += moveDiffX
+          drawnComments.current[commentIndex.current].height -= moveDiffY
           drawOnCanvas()
           break
         case "rightLineHovered":
-          drawnComments[commentIndex.current].width += moveDiffX
+          drawnComments.current[commentIndex.current].width += moveDiffX
           drawOnCanvas()
           break
         case "rightBottomCornerHovered":
-          drawnComments[commentIndex.current].width += moveDiffX
-          drawnComments[commentIndex.current].height += moveDiffY
+          drawnComments.current[commentIndex.current].width += moveDiffX
+          drawnComments.current[commentIndex.current].height += moveDiffY
           drawOnCanvas()
           break
         case "bottomLineHovered":
-          drawnComments[commentIndex.current].height += moveDiffY
+          drawnComments.current[commentIndex.current].height += moveDiffY
           drawOnCanvas()
           break
         case "leftBottomCornerHovered":
-          drawnComments[commentIndex.current].leftTopXY[0] += moveDiffX
-          drawnComments[commentIndex.current].width -= moveDiffX
-          drawnComments[commentIndex.current].height += moveDiffY
+          drawnComments.current[commentIndex.current].leftTopX += moveDiffX
+          drawnComments.current[commentIndex.current].width -= moveDiffX
+          drawnComments.current[commentIndex.current].height += moveDiffY
           drawOnCanvas()
           break
         case "leftLineHovered":
-          drawnComments[commentIndex.current].leftTopXY[0] += moveDiffX
-          drawnComments[commentIndex.current].width -= moveDiffX
+          drawnComments.current[commentIndex.current].leftTopX += moveDiffX
+          drawnComments.current[commentIndex.current].width -= moveDiffX
           drawOnCanvas()
           break
       }
     }
   }
+
+  const saveCommentImageToDb = async (draw:boolean) => {
+    if (commentIndex.current !== undefined && commentIndex.current !== null) {
+      try {
+        const response = await createCommentImageWithFilePostgresService(drawnComments.current[commentIndex.current])
+        if (response.data !== undefined && response.data !== null && response.status === 201) {
+          drawnComments.current[commentIndex.current].id = response.data.id
+        }
+        else{
+          drawnComments.current.splice(commentIndex.current, 1)
+          return true
+        }
+      }
+      catch (error)
+        {
+          drawnComments.current.splice(commentIndex.current, 1)
+          return true
+        }
+    }
+    return draw
+  }
   const checkCollision = (topLeftX:number, topLeftY:number, width:number, height:number, movedCommentIndex:number) => {
     let j= 0
-    for(const comment of drawnComments){
+    for(const comment of drawnComments.current){
       if((movedCommentIndex !== j) &&
-        (topLeftX <= comment.leftTopXY[0] + comment.width) &&
-        (comment.leftTopXY[0] <= topLeftX + width) &&
-        (topLeftY <= comment.leftTopXY[1] + comment.height) &&
-        (comment.leftTopXY[1] <= topLeftY + height)){
+        (topLeftX <= comment.leftTopX + comment.width) &&
+        (comment.leftTopX <= topLeftX + width) &&
+        (topLeftY <= comment.leftTopY + comment.height) &&
+        (comment.leftTopY <= topLeftY + height)){
         return true
       }
       j++
@@ -91,31 +130,35 @@ export const AdvancedEvaluationImageArea = ({drawOnCanvasRunner, editable, image
   }
   const handleNewCommentCreation = (mouseX:number, mouseY:number) =>{
     if(chosenComment !== undefined && canvasRef.current !== undefined && canvasRef.current !== null && chosenCommentFrameWidth!==undefined){
-      let newComment:AdvancedEvaluationImageCommentInterface = {...JSON.parse(JSON.stringify(chosenComment)), leftTopXY:[mouseX, mouseY], width: 1, height:1, lineWidth: chosenCommentFrameWidth, imgHeight:canvasRef.current.height, imgWidth:canvasRef.current.width}
-      commentIndex.current = drawnComments.push(newComment) - 1
+      let newComment:AdvancedEvaluationImageCommentInterface = {
+        id:-1, color: chosenComment.color, fileId: fileId,commentId:chosenComment.id, leftTopX: mouseX, leftTopY:mouseY, width: 1, height:1, lineWidth: chosenCommentFrameWidth, imgHeight:canvasRef.current.height, imgWidth:canvasRef.current.width}
+      commentIndex.current = drawnComments.current.push(newComment) - 1
     }
   }
   const handleCommentSizeChangeWhileItBeingCreated = (mouseX:number, mouseY:number) => {
     if(commentIndex.current!==null && canvasContext.current !== null && canvasContext.current !== undefined && mouseStartX.current!==null && mouseStartY.current!==null){
       const {moveDiffX, moveDiffY} = updateMouseCoords(mouseX, mouseY)
-      drawnComments[commentIndex.current].width += moveDiffX
-      drawnComments[commentIndex.current].height += moveDiffY
+      drawnComments.current[commentIndex.current].width += moveDiffX
+      drawnComments.current[commentIndex.current].height += moveDiffY
       drawOnCanvas()
     }
   }
   const handleCommentMove = (mouseX:number, mouseY:number) => {
     if(commentIndex.current!==null && canvasContext.current !== null && canvasContext.current !== undefined && mouseStartX.current!==null && mouseStartY.current!==null){
       const {moveDiffX, moveDiffY} = updateMouseCoords(mouseX, mouseY)
-      drawnComments[commentIndex.current].leftTopXY[0] += moveDiffX
-      drawnComments[commentIndex.current].leftTopXY[1] += moveDiffY
+      drawnComments.current[commentIndex.current].leftTopX += moveDiffX
+      drawnComments.current[commentIndex.current].leftTopY += moveDiffY
       drawOnCanvas()
     }
   }
-  const handleCommentDeletion = (draw:boolean) => {
+  const handleCommentDeletion = async (draw:boolean) => {
     if (canvasContext.current !== null && canvasContext.current !== undefined) {
       if(commentIndex.current !== null){
-        drawnComments.splice(commentIndex.current, 1)
-        return true
+        const response = await deleteCommentImagePostgresService(drawnComments.current[commentIndex.current].id.toString())
+        if(response.data !== undefined && response.data !== null && response.status === 200) {
+          drawnComments.current.splice(commentIndex.current, 1)
+          return true
+        }
       }
     }
     return draw
@@ -179,20 +222,24 @@ export const AdvancedEvaluationImageArea = ({drawOnCanvasRunner, editable, image
   const checkIfOutOfCanvas = (initialDrawValue:boolean) =>{
     let draw = initialDrawValue
     if(commentIndex.current !== null && commentPreviousState.current !== null && canvasRef.current!==null && canvasRef.current!==undefined) {
-      if (drawnComments[commentIndex.current].leftTopXY[0] < 0) { //check if out of canvas
-        drawnComments[commentIndex.current].leftTopXY = [...commentPreviousState.current.leftTopXY]
+      if (drawnComments.current[commentIndex.current].leftTopX < 0) { //check if out of canvas
+        drawnComments.current[commentIndex.current].leftTopX = commentPreviousState.current.leftTopX
+        drawnComments.current[commentIndex.current].leftTopY = commentPreviousState.current.leftTopY
         draw = true
       }
-      if (drawnComments[commentIndex.current].leftTopXY[1] < 0) {//check if out of canvas
-        drawnComments[commentIndex.current].leftTopXY = [...commentPreviousState.current.leftTopXY]
+      if (drawnComments.current[commentIndex.current].leftTopY < 0) {//check if out of canvas
+        drawnComments.current[commentIndex.current].leftTopX = commentPreviousState.current.leftTopX
+        drawnComments.current[commentIndex.current].leftTopY = commentPreviousState.current.leftTopY
         draw = true
       }
-      if (drawnComments[commentIndex.current].leftTopXY[0] + drawnComments[commentIndex.current].width > canvasRef.current.width) {//check if out of canvas
-        drawnComments[commentIndex.current].leftTopXY = [...commentPreviousState.current.leftTopXY]
+      if (drawnComments.current[commentIndex.current].leftTopX + drawnComments.current[commentIndex.current].width > canvasRef.current.width) {//check if out of canvas
+        drawnComments.current[commentIndex.current].leftTopX = commentPreviousState.current.leftTopX
+        drawnComments.current[commentIndex.current].leftTopY = commentPreviousState.current.leftTopY
         draw = true
       }
-      if (drawnComments[commentIndex.current].leftTopXY[1] + drawnComments[commentIndex.current].height > canvasRef.current.height) {//check if out of canvas
-        drawnComments[commentIndex.current].leftTopXY = [...commentPreviousState.current.leftTopXY]
+      if (drawnComments.current[commentIndex.current].leftTopY + drawnComments.current[commentIndex.current].height > canvasRef.current.height) {//check if out of canvas
+        drawnComments.current[commentIndex.current].leftTopX = commentPreviousState.current.leftTopX
+        drawnComments.current[commentIndex.current].leftTopY = commentPreviousState.current.leftTopY
         draw = true
       }
     }
@@ -200,13 +247,13 @@ export const AdvancedEvaluationImageArea = ({drawOnCanvasRunner, editable, image
   }
   const normalizeCommentValues = () => {
     if (commentIndex.current !== null) {
-      if (drawnComments[commentIndex.current].height <= 0) {//minus height removal
-        drawnComments[commentIndex.current].height = Math.abs(drawnComments[commentIndex.current].height)
-        drawnComments[commentIndex.current].leftTopXY[1] -= drawnComments[commentIndex.current].height
+      if (drawnComments.current[commentIndex.current].height <= 0) {//minus height removal
+        drawnComments.current[commentIndex.current].height = Math.abs(drawnComments.current[commentIndex.current].height)
+        drawnComments.current[commentIndex.current].leftTopY -= drawnComments.current[commentIndex.current].height
       }
-      if (drawnComments[commentIndex.current].width <= 0) {//minus width removal
-        drawnComments[commentIndex.current].width = Math.abs(drawnComments[commentIndex.current].width)
-        drawnComments[commentIndex.current].leftTopXY[0] -= drawnComments[commentIndex.current].width
+      if (drawnComments.current[commentIndex.current].width <= 0) {//minus width removal
+        drawnComments.current[commentIndex.current].width = Math.abs(drawnComments.current[commentIndex.current].width)
+        drawnComments.current[commentIndex.current].leftTopX -= drawnComments.current[commentIndex.current].width
       }
     }
   }
@@ -223,23 +270,23 @@ export const AdvancedEvaluationImageArea = ({drawOnCanvasRunner, editable, image
     }
   }
   const setPartOfCommentHovered = (mouseX:number, mouseY:number, clickedCommentIndex?:number|null) => {
-    for (let i = 0; i < drawnComments.length; i++) {
-      const hoveredComment = JSON.parse(JSON.stringify(drawnComments[i]))
-      const hoveredCommentLeftTopXY = [...hoveredComment.leftTopXY]
+    for (let i = 0; i < drawnComments.current.length; i++) {
+      const hoveredComment = JSON.parse(JSON.stringify(drawnComments.current[i]))
+      const hoveredCommentLeftTopXY = [hoveredComment.leftTopX, hoveredComment.leftTopY]
       const hoveredCommentRightTopXY = [
-        hoveredComment.leftTopXY[0] + hoveredComment.width,
-        hoveredComment.leftTopXY[1]]
+        hoveredComment.leftTopX + hoveredComment.width,
+        hoveredComment.leftTopY]
       const hoveredCommentLeftBottomXY = [
-        hoveredComment.leftTopXY[0],
-        hoveredComment.leftTopXY[1] + hoveredComment.height
+        hoveredComment.leftTopX,
+        hoveredComment.leftTopY + hoveredComment.height
       ]
       const hoveredCommentRightBottomXY = [
-        hoveredComment.leftTopXY[0] + hoveredComment.width,
-        hoveredComment.leftTopXY[1] + hoveredComment.height
+        hoveredComment.leftTopX + hoveredComment.width,
+        hoveredComment.leftTopY + hoveredComment.height
       ]
       if(clickedCommentIndex === i) continue
-      if ((hoveredCommentLeftTopXY[0] - hoveredComment.lineWidth <= mouseX) && (mouseX <= hoveredCommentLeftTopXY[0] + hoveredComment.lineWidth) &&
-        (hoveredCommentLeftTopXY[1] - hoveredComment.lineWidth <= mouseY) && (mouseY <= hoveredCommentLeftTopXY[1] + hoveredComment.lineWidth)) {//left top corner hovered
+      if ((hoveredCommentLeftTopXY[0] - hoveredComment.lineWidth <= mouseX) && (mouseX <= hoveredCommentLeftTopXY[0]  + hoveredComment.lineWidth) &&
+        (hoveredCommentLeftTopXY[1]  - hoveredComment.lineWidth <= mouseY) && (mouseY <= hoveredCommentLeftTopXY[1]  + hoveredComment.lineWidth)) {//left top corner hovered
         commentAction.current = "leftTopCornerHovered"
         return i
       } else if ((hoveredCommentRightTopXY[0] - hoveredComment.lineWidth <= mouseX) && (mouseX <= hoveredCommentRightTopXY[0] + hoveredComment.lineWidth) &&
@@ -254,7 +301,7 @@ export const AdvancedEvaluationImageArea = ({drawOnCanvasRunner, editable, image
         (hoveredCommentRightBottomXY[1] - hoveredComment.lineWidth <= mouseY) && (mouseY <= hoveredCommentRightBottomXY[1] + hoveredComment.lineWidth)) {
         commentAction.current = "rightBottomCornerHovered"
         return i
-      } else if ((hoveredCommentLeftTopXY[0] + hoveredComment.lineWidth <= mouseX) && (mouseX <= hoveredCommentRightTopXY[0] - hoveredComment.lineWidth) &&
+      } else if ((hoveredCommentLeftTopXY[0]  + hoveredComment.lineWidth <= mouseX) && (mouseX <= hoveredCommentRightTopXY[0] - hoveredComment.lineWidth) &&
         (hoveredCommentRightTopXY[1] - hoveredComment.lineWidth <= mouseY) && (mouseY <= hoveredCommentRightTopXY[1] + hoveredComment.lineWidth)) {
         commentAction.current = "topLineHovered"
         return i
@@ -262,16 +309,16 @@ export const AdvancedEvaluationImageArea = ({drawOnCanvasRunner, editable, image
         (hoveredCommentRightBottomXY[1] - hoveredComment.lineWidth <= mouseY) && (mouseY <= hoveredCommentRightBottomXY[1] + hoveredComment.lineWidth)) {
         commentAction.current = "bottomLineHovered"
         return i
-      } else if ((hoveredCommentLeftTopXY[0] - hoveredComment.lineWidth <= mouseX) && (mouseX <= hoveredCommentLeftTopXY[0] + hoveredComment.lineWidth) &&
-        (hoveredCommentLeftTopXY[1] + hoveredComment.lineWidth <= mouseY) && (mouseY <= hoveredCommentLeftBottomXY[1] - hoveredComment.lineWidth)) {
+      } else if ((hoveredCommentLeftTopXY[0]  - hoveredComment.lineWidth <= mouseX) && (mouseX <= hoveredCommentLeftTopXY[0]  + hoveredComment.lineWidth) &&
+        (hoveredCommentLeftTopXY[1]  + hoveredComment.lineWidth <= mouseY) && (mouseY <= hoveredCommentLeftBottomXY[1] - hoveredComment.lineWidth)) {
         commentAction.current = "leftLineHovered"
         return i
       } else if ((hoveredCommentRightTopXY[0] - hoveredComment.lineWidth <= mouseX) && (mouseX <= hoveredCommentRightTopXY[0] + hoveredComment.lineWidth) &&
         (hoveredCommentRightTopXY[1] + hoveredComment.lineWidth <= mouseY) && (mouseY <= hoveredCommentRightBottomXY[1] - hoveredComment.lineWidth)) {
         commentAction.current = "rightLineHovered"
         return i
-      } else if ((hoveredCommentLeftTopXY[0] + hoveredComment.lineWidth <= mouseX) && (mouseX <= hoveredCommentRightBottomXY[0] - hoveredComment.lineWidth) &&
-        (hoveredCommentLeftTopXY[1] + hoveredComment.lineWidth <= mouseY) && (mouseY <= hoveredCommentRightBottomXY[1] - hoveredComment.lineWidth)) {
+      } else if ((hoveredCommentLeftTopXY[0]  + hoveredComment.lineWidth <= mouseX) && (mouseX <= hoveredCommentRightBottomXY[0] - hoveredComment.lineWidth) &&
+        (hoveredCommentLeftTopXY[1]  + hoveredComment.lineWidth <= mouseY) && (mouseY <= hoveredCommentRightBottomXY[1] - hoveredComment.lineWidth)) {
         commentAction.current = "centerHovered"
         return i
       }
@@ -281,11 +328,11 @@ export const AdvancedEvaluationImageArea = ({drawOnCanvasRunner, editable, image
   }
   const scaleCommentsToImageDimensions = () => {
     if(canvasRef.current!==null && canvasRef.current!==undefined){
-      for(const comment of drawnComments){
+      for(const comment of drawnComments.current){
         const commentsProportionsWidth = canvasRef.current.width/comment.imgWidth
         const commentsProportionsHeight = canvasRef.current.height/comment.imgHeight
-        comment.leftTopXY[0] *= commentsProportionsWidth
-        comment.leftTopXY[1] *= commentsProportionsHeight
+        comment.leftTopX *= commentsProportionsWidth
+        comment.leftTopY *= commentsProportionsHeight
         comment.width *= commentsProportionsWidth
         comment.height *= commentsProportionsHeight
         comment.imgWidth = canvasRef.current.width
@@ -316,13 +363,13 @@ export const AdvancedEvaluationImageArea = ({drawOnCanvasRunner, editable, image
     let draw = initialDrawValue
     if(commentIndex.current !== null && commentPreviousState.current !== null) {
       if(checkCollision(
-        drawnComments[commentIndex.current].leftTopXY[0],
-        drawnComments[commentIndex.current].leftTopXY[1],
-        drawnComments[commentIndex.current].width,
-        drawnComments[commentIndex.current].height,
+        drawnComments.current[commentIndex.current].leftTopX,
+        drawnComments.current[commentIndex.current].leftTopY,
+        drawnComments.current[commentIndex.current].width,
+        drawnComments.current[commentIndex.current].height,
         commentIndex.current))
       {
-        drawnComments[commentIndex.current] = JSON.parse(JSON.stringify(commentPreviousState.current))
+        drawnComments.current[commentIndex.current] = JSON.parse(JSON.stringify(commentPreviousState.current))
         draw = true
       }
     }
@@ -381,48 +428,46 @@ export const AdvancedEvaluationImageArea = ({drawOnCanvasRunner, editable, image
       mouseStartX.current = mouseXOnCanvas
       mouseStartY.current = mouseYOnCanvas
       if (canvasAction.current === "commentDragging") {
-        commentPreviousState.current = commentIndex.current === null ? null : JSON.parse(JSON.stringify(drawnComments[commentIndex.current]))//deep copy
+        commentPreviousState.current = commentIndex.current === null ? null : JSON.parse(JSON.stringify(drawnComments.current[commentIndex.current]))//deep copy
       }
       else if(canvasAction.current === "commentCreating"){
         handleNewCommentCreation(mouseStartX.current, mouseStartY.current)
       }
       else if(canvasAction.current === "commentResizing"){
-        commentPreviousState.current = commentIndex.current === null ? null : JSON.parse(JSON.stringify(drawnComments[commentIndex.current]))
+        commentPreviousState.current = commentIndex.current === null ? null : JSON.parse(JSON.stringify(drawnComments.current[commentIndex.current]))
       }
     }
   }
-  const handleMouseUp = (event:React.MouseEvent) =>{
+  const handleMouseUp = async (event: React.MouseEvent) => {
     event.preventDefault()
     event.stopPropagation()
-    if(!editable) return
+    if (!editable) return
     let draw = false
-    if(canvasAction.current === "commentDragging"){
-      if(commentIndex.current !== null && commentPreviousState.current !== null) {
+    if (canvasAction.current === "commentDragging") {
+      if (commentIndex.current !== null && commentPreviousState.current !== null) {
         draw = checkIfOutOfCanvas(draw)
         draw = runBackCommentValues(draw)
       }
-    }
-    else if(canvasAction.current === "commentCreating"){//mouse up while creating new comment
-      if(commentIndex.current !== null) {
+    } else if (canvasAction.current === "commentCreating") {//mouse up while creating new comment
+      if (commentIndex.current !== null) {
         normalizeCommentValues()
-        if(checkCollision(
-          drawnComments[commentIndex.current].leftTopXY[0],
-          drawnComments[commentIndex.current].leftTopXY[1],
-          drawnComments[commentIndex.current].width,
-          drawnComments[commentIndex.current].height,
-          commentIndex.current))
-        {//check if mouse up on existing comment cancel is so (comment that we are creating is already in the array)
-          drawnComments.splice(commentIndex.current, 1)
+        if (checkCollision(
+          drawnComments.current[commentIndex.current].leftTopX,
+          drawnComments.current[commentIndex.current].leftTopY,
+          drawnComments.current[commentIndex.current].width,
+          drawnComments.current[commentIndex.current].height,
+          commentIndex.current)) {//check if mouse up on existing comment cancel is so (comment that we are creating is already in the array)
+          drawnComments.current.splice(commentIndex.current, 1)
           draw = true
+        } else {
+          draw = await saveCommentImageToDb(draw)
         }
       }
-    }
-    else if(canvasAction.current === "commentResizing"){
+    } else if (canvasAction.current === "commentResizing") {
       normalizeCommentValues()
       draw = runBackCommentValues(draw)
-    }
-    else if(canvasAction.current === "commentDeleting" && event.button === 2){
-      draw = handleCommentDeletion(draw)
+    } else if (canvasAction.current === "commentDeleting" && event.button === 2) {
+      draw = await handleCommentDeletion(draw)
     }
     if (draw) {
       drawOnCanvas()
@@ -432,12 +477,13 @@ export const AdvancedEvaluationImageArea = ({drawOnCanvasRunner, editable, image
     mouseStartY.current = null
     mouseStartX.current = null
     canvasAction.current = "hovering"
-    const {mouseXOnCanvas, mouseYOnCanvas} = calculateCoordsOnCanvas(event.clientX, event.clientY)
+    const { mouseXOnCanvas, mouseYOnCanvas } = calculateCoordsOnCanvas(event.clientX, event.clientY)
     setPartOfCommentHovered(mouseXOnCanvas, mouseYOnCanvas)
     handleCursorAppearanceChange()
-    console.log(drawnComments, canvasAction.current)
+    console.log(drawnComments.current, canvasAction.current)
   }
   const drawOnCanvas = () => {
+    scaleCommentsToImageDimensions()
     if(canvasContext.current!==null && canvasContext.current!==undefined){
       const {calculatedHeight, calculatedWidth} = calculateCanvasSize()
       canvasContext.current.canvas.height = calculatedHeight
@@ -451,24 +497,22 @@ export const AdvancedEvaluationImageArea = ({drawOnCanvasRunner, editable, image
           if(canvasContext.current!==null && canvasContext.current!==undefined)
             canvasContext.current.drawImage(image,0,0,  canvasContext.current.canvas.width, canvasContext.current.canvas.height)
         }
-      for (const comment of drawnComments) {
+      for (const comment of drawnComments.current) {
         canvasContext.current.strokeStyle = comment.color
         canvasContext.current.lineWidth = comment.lineWidth
-        canvasContext.current.strokeRect(comment.leftTopXY[0], comment.leftTopXY[1], comment.width, comment.height)
+        canvasContext.current.strokeRect(comment.leftTopX, comment.leftTopY, comment.width, comment.height)
       }
     }
   }
 
   useEffect(() => {
     canvasContext.current = canvasRef.current?.getContext("2d")
-    scaleCommentsToImageDimensions()
     drawOnCanvas()
   }, [])
 
   useEffect(() => {
-    scaleCommentsToImageDimensions()
     drawOnCanvas()
-  }, [drawOnCanvasRunner, width, height])
+  }, [width, height])
 
 
 
@@ -481,4 +525,4 @@ export const AdvancedEvaluationImageArea = ({drawOnCanvasRunner, editable, image
             onMouseDown={handleMouseDown}
             ref={canvasRef}
     />)
-}
+})

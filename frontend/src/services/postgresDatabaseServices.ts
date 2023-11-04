@@ -10,6 +10,10 @@ import { CredentialsInterface } from "../types/CredentialsInterface"
 import { getUser } from "./otherServices"
 import { CommentCreateInterface } from "../types/CommentCreateInterface"
 import { AdvancedEvaluationTextCommentCreateInterface } from "../types/AdvancedEvaluationTextCommentCreateInterface"
+import { CommentInterface } from "../types/CommentInterface"
+import { AdvancedEvaluationImageCommentInterface } from "../types/AdvancedEvaluationImageCommentInterface"
+import { AdvancedEvaluationTextCommentInterface } from "../types/AdvancedEvaluationTextCommentInterface"
+import { AdvancedEvaluationImageCommentCreateInterface } from "../types/AdvancedEvaluationImageCommentCreateInterface"
 
 const postgresqlDatabaseJSON = axios.create({
   baseURL: "http://localhost:8080/api",
@@ -125,6 +129,10 @@ export const createCommentWithUserPostgresService = async (comment:CommentCreate
 export const createCommentWithFilePostgresService = async (comment:AdvancedEvaluationTextCommentCreateInterface) =>{
   return await postgresqlDatabaseJSON.post("/comment_file_text", comment)
 }
+
+export const createCommentImageWithFilePostgresService = async (comment:AdvancedEvaluationImageCommentCreateInterface) => {
+  return await postgresqlDatabaseJSON.post("/comment_file_img", comment)
+}
 export const createFileWithSolutionPostgresService = async (
   mongoId: string,
   format: any,
@@ -150,6 +158,8 @@ export const addTeacherToGroupPostgresService = async (userId: string, groupId: 
 export const createGroupWithTeacherPostgresService = async (userId: string, group: GroupCreateInterface) => {
   return await postgresqlDatabaseJSON.post("/group/withTeacher/" + userId, group)
 }
+
+
 
 export const changePasswordPostgresService = async (newCredentials: CredentialsInterface) => {
   return await postgresqlDatabaseJSON
@@ -273,6 +283,14 @@ export const getCommentsByUserPostgresService = async (userId: string, params: s
   return await postgresqlDatabaseJSON.get(`/comment/byUser/${userId}?${params}`)
 }
 
+export const getCommentsTextByFilePostgresService = async (fileId: string, params: string) => {
+  return await postgresqlDatabaseJSON.get(`/comment_file_text/byFileId/${fileId}?${params}`)
+}
+
+export const getCommentsImageByFilePostgresService = async (fileId: string, params: string) => {
+  return await postgresqlDatabaseJSON.get(`/comment_file_img/byFileId/${fileId}?${params}`)
+}
+
 export const getUserRoleInGroupPostgresService = async (userId: string, groupId: string) => {
   return await postgresqlDatabaseJSON
     .get(`/group/userCheckWithRole/${userId}/${groupId}`)
@@ -304,6 +322,15 @@ export const changeUserColorPostgresService = async (userId: string, color: numb
 export const changeUserIndexPostgresService = async (userId: string, index: number) => {
   return await postgresqlDatabaseJSON
     .put(`/user/index/${userId}`, index)
+}
+export const changeCommentPostgresService = async (comment:CommentInterface) => {
+  return await postgresqlDatabaseJSON.put(`/comment/${comment.id}`, comment)
+}
+export const changeCommentImagePostgresService = async (comment:AdvancedEvaluationImageCommentInterface) => {
+  return await postgresqlDatabaseJSON.put(`/comment/${comment.id}`, comment)
+}
+export const changeCommentTextPostgresService = async (comment:AdvancedEvaluationTextCommentInterface) => {
+  return await postgresqlDatabaseJSON.put(`/comment/${comment.id}`, comment)
 }
 
 export const changeGroupNamePostgresService = async (groupId: string, name: string) => {

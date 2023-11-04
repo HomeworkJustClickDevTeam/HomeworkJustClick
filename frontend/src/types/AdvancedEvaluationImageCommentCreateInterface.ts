@@ -1,5 +1,6 @@
 export interface AdvancedEvaluationImageCommentCreateInterface{
-  leftTopXY: number[]
+  leftTopX: number
+  leftTopY: number
   width: number
   height: number
   lineWidth: number

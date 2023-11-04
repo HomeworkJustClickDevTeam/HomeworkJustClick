@@ -9,13 +9,24 @@ export const useGetCommentsByUser = (userId: number|undefined|null, params:strin
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    dispatch(setIsLoading(true))
     let mounted = true
     if(userId !== undefined && userId !== null) {
+      dispatch(setIsLoading(true))
       getCommentsByUserPostgresService(userId.toString(), params)
         .then((response) => {
-          const commentsFromServer = response.data.content as CommentInterface[]
           if (response !== null && response !== undefined){
+            let commentsFromServer:CommentInterface[] = []
+            for(const commentFromServer of response.data.content){
+              commentsFromServer.push({
+                title:commentFromServer.title,
+                description: commentFromServer.description,
+                color:commentFromServer.color,
+                userId:commentFromServer.user.id,
+                lastUsedDate: commentFromServer.lastUsedDate,
+                counter: commentFromServer.counter,
+                id: commentFromServer.id
+              })
+            }
             if(mounted){setComments(commentsFromServer)}
           }
         })

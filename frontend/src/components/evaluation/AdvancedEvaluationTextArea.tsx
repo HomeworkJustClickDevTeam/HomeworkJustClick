@@ -7,7 +7,7 @@ import { Simulate } from "react-dom/test-utils"
 import error = Simulate.error
 
 
-export const AdvancedEvaluationTextFileArea = ({chosenComment, fileText, width, height, fileId}:{
+export const AdvancedEvaluationTextArea = ({chosenComment, fileText, width, height, fileId}:{
   width:number|undefined,
   height:number|undefined,
   chosenComment: CommentInterface|undefined
@@ -39,12 +39,12 @@ export const AdvancedEvaluationTextFileArea = ({chosenComment, fileText, width, 
       createCommentWithFilePostgresService({
         commentId: comment.id,
         fileId:fileId,
-        color: comment.defaultColor,
+        color: comment.color,
         highlightStart: Math.min(selection.getRangeAt(0).endContainer.parentElement?.id as unknown as number, selection.getRangeAt(0).startContainer.parentElement?.id as unknown as number),
         highlightEnd: Math.max(selection.getRangeAt(0).endContainer.parentElement?.id as unknown as number, selection.getRangeAt(0).startContainer.parentElement?.id as unknown as number)
       })
         .then((response) => {
-          if(response !== null && response!==undefined){selectedComment = response.data.content as AdvancedEvaluationTextCommentInterface}
+          if(response !== null && response!==undefined){selectedComment = response.data as AdvancedEvaluationTextCommentInterface}
         })
         .catch(error => console.log(error))
       
