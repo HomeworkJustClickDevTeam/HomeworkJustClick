@@ -17,7 +17,7 @@ public class CommentMapper {
         return Comment.builder()
                 .title(commentDto.getTitle())
                 .description(commentDto.getDescription())
-                .defaultColor(commentDto.getDefaultColor())
+                .color(commentDto.getColor())
                 .lastUsedDate(OffsetDateTime.now())
                 .counter(0)
                 .user(userService.findById(commentDto.getUserId()))
@@ -29,7 +29,7 @@ public class CommentMapper {
                 .id(comment.getId())
                 .title(comment.getTitle())
                 .description(comment.getDescription())
-                .defaultColor(comment.getDefaultColor())
+                .color(comment.getColor())
                 .lastUsedDate(comment.getLastUsedDate())
                 .counter(comment.getCounter())
                 .user(userMapper.map(comment.getUser()))
@@ -41,7 +41,7 @@ public class CommentMapper {
                 .id(comment.getId())
                 .title(comment.getTitle())
                 .description(comment.getDescription())
-                .defaultColor(comment.getDefaultColor())
+                .color(comment.getColor())
                 .lastUsedDate(comment.getLastUsedDate())
                 .counter(comment.getCounter())
                 .userId(comment.getUser().getId())
@@ -51,7 +51,7 @@ public class CommentMapper {
     public void map(Comment target, CommentDto source) {
         target.setTitle(source.getTitle());
         target.setDescription(source.getDescription());
-        target.setDefaultColor(source.getDefaultColor());
+        target.setColor(source.getColor());
         target.setUser(userService.findById(source.getUserId()));
     }
 }

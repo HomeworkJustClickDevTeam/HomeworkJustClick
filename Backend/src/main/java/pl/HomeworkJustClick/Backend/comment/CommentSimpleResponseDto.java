@@ -19,7 +19,7 @@ public class CommentSimpleResponseDto {
     @Schema(example = "Example desc")
     private String description;
     @Schema(example = "1")
-    private String defaultColor;
+    private String color;
     private OffsetDateTime lastUsedDate;
     @Schema(example = "1")
     private Integer counter;

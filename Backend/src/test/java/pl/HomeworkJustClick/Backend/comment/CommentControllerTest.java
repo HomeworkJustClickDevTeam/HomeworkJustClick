@@ -80,7 +80,7 @@ public class CommentControllerTest extends BaseTestEntity {
                 .andExpect(jsonPath("$.id").value(comment.getId()))
                 .andExpect(jsonPath("$.title").value(comment.getTitle()))
                 .andExpect(jsonPath("$.description").value(comment.getDescription()))
-                .andExpect(jsonPath("$.defaultColor").value(comment.getDefaultColor()))
+                .andExpect(jsonPath("$.color").value(comment.getColor()))
                 .andExpect(jsonPath("$.counter").value(comment.getCounter()))
                 .andReturn();
     }
@@ -97,8 +97,8 @@ public class CommentControllerTest extends BaseTestEntity {
 
     @ParameterizedTest
     @MethodSource("prepareValidData")
-    void shouldCreateComment(String title, String description, String defaultColor, Integer userId) throws Exception {
-        var commentDto = createCommentDto(title, description, defaultColor, userId);
+    void shouldCreateComment(String title, String description, String color, Integer userId) throws Exception {
+        var commentDto = createCommentDto(title, description, color, userId);
         var body = objectMapper.writeValueAsString(commentDto);
         mockMvc.perform(post("/api/comment")
                         .content(body)
@@ -107,7 +107,7 @@ public class CommentControllerTest extends BaseTestEntity {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.title").value(commentDto.getTitle()))
                 .andExpect(jsonPath("$.description").value(commentDto.getDescription()))
-                .andExpect(jsonPath("$.defaultColor").value(commentDto.getDefaultColor()))
+                .andExpect(jsonPath("$.color").value(commentDto.getColor()))
                 .andExpect(jsonPath("$.counter").value(0))
                 .andExpect(jsonPath("$.user.id").value(commentDto.getUserId()))
                 .andReturn();
@@ -115,8 +115,8 @@ public class CommentControllerTest extends BaseTestEntity {
 
     @ParameterizedTest
     @MethodSource("prepareInvalidData")
-    void shouldNotCreateComment(String title, String description, String defaultColor, Integer userId) throws Exception {
-        var commentDto = createCommentDto(title, description, defaultColor, userId);
+    void shouldNotCreateComment(String title, String description, String color, Integer userId) throws Exception {
+        var commentDto = createCommentDto(title, description, color, userId);
         var body = objectMapper.writeValueAsString(commentDto);
         mockMvc.perform(post("/api/comment")
                         .content(body)
@@ -128,9 +128,9 @@ public class CommentControllerTest extends BaseTestEntity {
 
     @ParameterizedTest
     @MethodSource("prepareValidData")
-    void shouldUpdateComment(String title, String description, String defaultColor, Integer userId) throws Exception {
+    void shouldUpdateComment(String title, String description, String color, Integer userId) throws Exception {
         var commentId = commentRepository.findAll().get(0).getId();
-        var commentDto = createCommentDto(title, description, defaultColor, userId);
+        var commentDto = createCommentDto(title, description, color, userId);
         var body = objectMapper.writeValueAsString(commentDto);
         mockMvc.perform(put("/api/comment/" + commentId)
                         .content(body)
@@ -141,15 +141,15 @@ public class CommentControllerTest extends BaseTestEntity {
         var updatedComment = commentRepository.findById(commentId).get();
         assertEquals(updatedComment.getTitle(), commentDto.getTitle());
         assertEquals(updatedComment.getDescription(), commentDto.getDescription());
-        assertEquals(updatedComment.getDefaultColor(), commentDto.getDefaultColor());
+        assertEquals(updatedComment.getColor(), commentDto.getColor());
         assertEquals(updatedComment.getUser().getId(), commentDto.getUserId());
     }
 
     @ParameterizedTest
     @MethodSource("prepareInvalidData")
-    void shouldNotUpdateComment(String title, String description, String defaultColor, Integer userId) throws Exception {
+    void shouldNotUpdateComment(String title, String description, String color, Integer userId) throws Exception {
         var commentId = commentRepository.findAll().get(0).getId();
-        var commentDto = createCommentDto(title, description, defaultColor, userId);
+        var commentDto = createCommentDto(title, description, color, userId);
         var body = objectMapper.writeValueAsString(commentDto);
         mockMvc.perform(put("/api/comment/" + commentId)
                         .content(body)
@@ -160,7 +160,7 @@ public class CommentControllerTest extends BaseTestEntity {
         var updatedComment = commentRepository.findById(commentId).get();
         assertNotEquals(updatedComment.getTitle(), commentDto.getTitle());
         assertNotEquals(updatedComment.getDescription(), commentDto.getDescription());
-        assertNotEquals(updatedComment.getDefaultColor(), commentDto.getDefaultColor());
+        assertNotEquals(updatedComment.getColor(), commentDto.getColor());
         assertNotEquals(updatedComment.getUser().getId(), commentDto.getUserId());
     }
 
@@ -192,14 +192,14 @@ public class CommentControllerTest extends BaseTestEntity {
                 .andReturn();
     }
 
-    private CommentDto createCommentDto(String title, String description, String defaultColor, Integer userId) {
+    private CommentDto createCommentDto(String title, String description, String color, Integer userId) {
         if (userId == 1) {
             userId = userRepository.findAll().get(0).getId();
         }
         return CommentDto.builder()
                 .title(title)
                 .description(description)
-                .defaultColor(defaultColor)
+                .color(color)
                 .userId(userId)
                 .build();
     }

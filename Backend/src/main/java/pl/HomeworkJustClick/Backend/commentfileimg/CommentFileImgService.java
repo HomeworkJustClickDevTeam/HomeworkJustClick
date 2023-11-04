@@ -72,7 +72,7 @@ public class CommentFileImgService {
 
     private void checkColor(CommentFileImg commentFileImg) {
         if (commentFileImg.getColor() == null) {
-            commentFileImg.setColor(commentFileImg.getComment().getDefaultColor());
+            commentFileImg.setColor(commentFileImg.getComment().getColor());
         }
     }
 }
