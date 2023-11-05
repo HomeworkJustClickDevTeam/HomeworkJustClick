@@ -151,6 +151,7 @@ export const AdvancedEvaluationImageArea = React.forwardRef<any, AdvancedEvaluat
       let newComment:AdvancedEvaluationImageCommentInterface = {
         id:-1, color: chosenComment.color, fileId: fileId,commentId:chosenComment.id, leftTopX: mouseX, leftTopY:mouseY, width: 1, height:1, lineWidth: chosenCommentFrameWidth, imgHeight:canvasRef.current.height, imgWidth:canvasRef.current.width}
       commentIndex.current = drawnComments.current.push(newComment) - 1
+
     }
   }
   const handleCommentSizeChangeWhileItBeingCreated = (mouseX:number, mouseY:number) => {
@@ -397,7 +398,6 @@ export const AdvancedEvaluationImageArea = React.forwardRef<any, AdvancedEvaluat
     event.preventDefault()
     event.stopPropagation()
     if(!editable) return
-    console.log(canvasAction.current, commentAction.current)
     if(canvasAction.current === "commentDeleting") {
       const {mouseXOnCanvas, mouseYOnCanvas} = calculateCoordsOnCanvas(event.clientX, event.clientY)
       commentIndex.current = setPartOfCommentHovered(mouseXOnCanvas, mouseYOnCanvas)
@@ -463,8 +463,7 @@ export const AdvancedEvaluationImageArea = React.forwardRef<any, AdvancedEvaluat
     if (!editable) return
     let draw = false
     if (canvasAction.current === "commentHolding") {
-      if(mouseDownTimestamp?.current !== null && (event.timeStamp - mouseDownTimestamp.current) < 1000){
-        //highlight comment
+      if(mouseDownTimestamp?.current !== null && (event.timeStamp - mouseDownTimestamp.current) < 150){
       }
       else if (commentIndex.current !== null && commentPreviousState.current !== null) {
         draw = checkIfOutOfCanvas(draw)

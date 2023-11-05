@@ -5,27 +5,34 @@ import { changeCommentPostgresService } from "../../services/postgresDatabaseSer
 import { Simulate } from "react-dom/test-utils"
 import error = Simulate.error
 
-export const AdvancedEvaluationCommentPanelListElement = ({fileType, handleCommentClick, comment, handleCommentRemoval}:{
-  handleCommentClick: (comment:CommentInterface, commentWidth?:number)=>void,
+export const AdvancedEvaluationCommentPanelListElement = ({chosenCommentId, updateCommentsLists, fileType, setChosenComment, comment, handleCommentRemoval}:{
+  setChosenComment: (comment:CommentInterface|undefined)=>void,
+  updateCommentsLists: (comment: CommentInterface, commentWidth?:number) => void,
   comment:CommentInterface,
   fileType:"txt"|"img",
   handleCommentRemoval: (commentToBeRemoved:CommentInterface)=>void
+  chosenCommentId:number|undefined
 })=>{
   const [frameWidth, setFrameWidth] = useState<number>(5)
   const [commentState, setCommentState] = useState<CommentInterface>(comment)
   const canvasRef = useRef<HTMLCanvasElement|null>(null)
   const canvasContext = useRef(canvasRef.current?.getContext("2d"))
   const [commentReadonly, setCommentReadonly] = useState(true)
-  const commentDescriptionInputRef = useRef<HTMLInputElement|null>(null)
 
+  const handleCommentChoice = () => {
+    if(chosenCommentId === comment.id) {
+      setChosenComment(undefined)
+    }
+    else {
+      setChosenComment(comment)
+    }
+  }
   const handleEditButtonBehaviour = async () => {
     if(!commentReadonly){
       changeCommentPostgresService(commentState)
         .catch((error)=> console.log(error))
     }
     setCommentReadonly(prevState => !prevState)
-    if(commentDescriptionInputRef.current !== null && commentDescriptionInputRef.current !== undefined)
-      commentDescriptionInputRef.current.focus()
   }
   const handleSliderChange = (event:React.ChangeEvent<HTMLInputElement>) => {
     setFrameWidth(+event.target.value)
@@ -44,14 +51,13 @@ export const AdvancedEvaluationCommentPanelListElement = ({fileType, handleComme
   }, [frameWidth, commentState.color])
   useEffect(() => {
     canvasContext.current = canvasRef.current?.getContext("2d")
-    if(commentDescriptionInputRef.current !== null && commentDescriptionInputRef.current !== undefined)
-      commentDescriptionInputRef.current.blur()
   }, [])
 
   return(
   <div>
+    <input type={"checkbox"} checked={comment.id === chosenCommentId} onChange={() => handleCommentChoice()}/>
     <div>
-      <input ref={commentDescriptionInputRef}
+      <input
             onChange={(event) => {!commentReadonly &&
               setCommentState((prevState) => ({...prevState, description:event.target.value}))}
             }
@@ -61,9 +67,9 @@ export const AdvancedEvaluationCommentPanelListElement = ({fileType, handleComme
              onClick={() => {
                commentReadonly && (
                  fileType === "txt" ?
-                   handleCommentClick(commentState)
+                   updateCommentsLists(commentState)
                    :
-                   handleCommentClick(commentState, frameWidth)
+                   updateCommentsLists(commentState, frameWidth)
                )
              }}
              defaultValue={commentState.description}></input>
@@ -74,18 +80,14 @@ export const AdvancedEvaluationCommentPanelListElement = ({fileType, handleComme
         onSubmit={(event) => {
           event.preventDefault()
           fileType === "txt" ?
-            handleCommentClick(commentState)
+            updateCommentsLists(commentState)
             :
-            handleCommentClick(commentState, frameWidth)}}>
+            updateCommentsLists(commentState, frameWidth)}}>
         <input
           id={"colorPicker"}
           value={commentState.color}
           onChange={(event) =>
             setCommentState((prevState)=>({...prevState, color:event.target.value}))}
-          onMouseUp={() => {
-            if(commentDescriptionInputRef.current !== null && commentDescriptionInputRef.current !== undefined)
-              commentDescriptionInputRef.current.focus()
-          }}
           type={"color"}/>
         <button type={"submit"}>Potwierdz zmiane koloru</button>
       </form>
@@ -99,11 +101,7 @@ export const AdvancedEvaluationCommentPanelListElement = ({fileType, handleComme
                max={10}
                value={frameWidth}
                onChange={(event) => handleSliderChange(event)}
-               onMouseUp={() => {
-                 handleCommentClick(commentState, frameWidth)
-                 if(commentDescriptionInputRef.current !== null && commentDescriptionInputRef.current !== undefined)
-                   commentDescriptionInputRef.current.focus()
-               }}/><br/>
+               onMouseUp={() => { updateCommentsLists(commentState, frameWidth)}}/><br/>
         Szerokość: {frameWidth}
       </div>
     }

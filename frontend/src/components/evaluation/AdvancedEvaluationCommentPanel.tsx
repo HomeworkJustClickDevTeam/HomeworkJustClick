@@ -7,11 +7,12 @@ import { CommentCreateInterface } from "../../types/CommentCreateInterface"
 import { createCommentWithUserPostgresService } from "../../services/postgresDatabaseServices"
 
 export const AdvancedEvaluationCommentPanel = (
-  {handleCommentClick, fileType, rightPanelUserComments, setRightPanelUserComments, handleCommentRemoval, height, chosenCommentId}:{
-    handleCommentClick: (comment:CommentInterface, clickedCommentWidth?:number) => void,
+  {updateCommentsLists, chosenCommentId, fileType, rightPanelUserComments, setRightPanelUserComments, handleCommentRemoval, height, setChosenComment}:{
+    setChosenComment: (comment:CommentInterface|undefined)=>void,
+    updateCommentsLists: (comment: CommentInterface, commentWidth?:number) => void,
+    chosenCommentId:number|undefined,
     fileType:"txt"|"img",
     height:number|undefined,
-    chosenCommentId: number|undefined
     rightPanelUserComments: CommentInterface[],
     setRightPanelUserComments: (comments:CommentInterface[]) => void,
     handleCommentRemoval:(comment:CommentInterface)=>void}) => {
@@ -55,13 +56,14 @@ export const AdvancedEvaluationCommentPanel = (
     Panel komentarzy: <br/>
     {rightPanelUserComments.map((comment) => {
       return(
-        <div style={{backgroundColor: comment.id === chosenCommentId ? comment.color + "80" : "white"}}>
+        <div key={comment.id}>
           <AdvancedEvaluationCommentPanelListElement
-          fileType={fileType}
-          handleCommentRemoval={handleCommentRemoval}
-          comment={comment}
-          handleCommentClick={handleCommentClick}
-          key={comment.id}></AdvancedEvaluationCommentPanelListElement>
+            chosenCommentId={chosenCommentId}
+            fileType={fileType}
+            handleCommentRemoval={handleCommentRemoval}
+            comment={comment}
+            setChosenComment={setChosenComment}
+            updateCommentsLists={updateCommentsLists}></AdvancedEvaluationCommentPanelListElement>
         </div>)
     })}
     </div>

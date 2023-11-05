@@ -32,7 +32,7 @@ export default function AdvancedEvaluationPage() {
   const [fileText, setFileText] = useState("")
   const [image, setImage] = useState<HTMLImageElement|undefined>(undefined)
   const [chosenComment, setChosenComment] = useState<CommentInterface|undefined>(undefined)
-  const [chosenCommentFrameWidth, setChosenCommentFrameWidth] = useState<number|undefined>(undefined)
+  const [chosenCommentFrameWidth, setChosenCommentFrameWidth] = useState<number>(5)
   const drawnCommentsRef = useRef<AdvancedEvaluationImageCommentInterface[]|null>(null)
   const {comments: rightPanelUserComments,setComments: setRightPanelUserComments} = useGetCommentsByUser(userState?.id, "")
   const {availableHeight, availableWidth} = useGetSolutionAreaSizeAvailable()
@@ -141,6 +141,7 @@ export default function AdvancedEvaluationPage() {
   const updateCommentsLists = async (clickedComment:CommentInterface, clickedCommentWidth?:number) => {
     const updateImageList = async () => {
       if (drawnCommentsRef?.current !== undefined && drawnCommentsRef?.current !== null && clickedCommentWidth !== undefined && advancedEvaluationImageAreaRef.current !== undefined && advancedEvaluationImageAreaRef.current !== null) {
+        setChosenCommentFrameWidth(clickedCommentWidth)
         const drawnCommentsTemp = await Promise.all(drawnCommentsRef.current.map(async (commentImage) => {
           if(commentImage.commentId === clickedComment.id){
             try {
@@ -201,11 +202,6 @@ export default function AdvancedEvaluationPage() {
     }catch (error){
       console.log(error)
     }
-  }
-  const handleCommentClick = async (clickedComment:CommentInterface, clickedCommentWidth?:number) => {
-    setChosenComment(clickedComment)
-    setChosenCommentFrameWidth(clickedCommentWidth)
-    await updateCommentsLists(clickedComment, clickedCommentWidth)
   }
   const handleCommentRemoval = async (comment:CommentInterface) => {
     const commentTextRemoval = async () => {
@@ -281,9 +277,10 @@ export default function AdvancedEvaluationPage() {
     return (
       <div id={"advancedEvaluationPageDiv"}>
         <AdvancedEvaluationCommentPanel
-          height={availableHeight}
           chosenCommentId={chosenComment?.id}
-          handleCommentClick={handleCommentClick}
+          height={availableHeight}
+          setChosenComment={setChosenComment}
+          updateCommentsLists={updateCommentsLists}
           handleCommentRemoval={handleCommentRemoval}
           setRightPanelUserComments={setRightPanelUserComments}
           rightPanelUserComments={rightPanelUserComments}
