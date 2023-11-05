@@ -27,41 +27,12 @@ function SolutionAddPage({assignment}: AssignmentPropsInterface) {
   const dispatch = useAppDispatch()
   const userState = useAppSelector(selectUserState)
   const [file, setFile] = useState<File>()
-  const [response, setResponse] = useState<FileRespondMongoInterface | undefined>(undefined)
   const files = useGetFiles(assignment.id, 'assignment')
   const [solution] = useState<SolutionToSendInterface>({
     creationDatetime: new Date().toISOString(),
     comment: "",
     lastModifiedDatetime: new Date().toISOString(),
   })
-
-  const [solutionFromServer, setSolutionFromServer] = useState<SolutionInterface | undefined>(undefined)
-
-
-  useEffect(() => {
-    dispatch(setIsLoading(true))
-    let mounted = true
-    if (mounted) {
-      if((response && solutionFromServer) !== undefined) {
-        createFileWithSolutionPostgresService(
-          response?.id as string,
-          response?.format as string,
-          response?.name as string,
-          solutionFromServer?.id as number)
-          .then((r) => {
-            if (mounted) {
-              navigate(-1)
-            }
-          })
-          .catch((e) => console.log(e))
-      }
-    }
-    dispatch(setIsLoading(false))
-    return () => {
-      mounted = false
-    }
-  }, [solutionFromServer?.id, response?.id])
-
 
   function handleChangeFile(e: ChangeEvent<HTMLInputElement>) {
     e.preventDefault()
@@ -78,14 +49,27 @@ function SolutionAddPage({assignment}: AssignmentPropsInterface) {
       if (userState) {
         const formData = new FormData()
         formData.append("file", file)
+        let mongoResponse:any = undefined
+        let postgresResponse:any = undefined
         postFileMongoService(formData)
           .then((r) => {
-            setResponse(r.data)
+            mongoResponse = r.data
+            return createSolutionWithUserAndAssignmentPostgresService(userState?.id.toString(), assignment.id.toString(), solution)
+          }).then((r) => {
+            postgresResponse = r.data
+            if(mongoResponse !== undefined && postgresResponse !== undefined){
+              return createFileWithSolutionPostgresService(
+                mongoResponse.id as string,
+                mongoResponse.format as string,
+                mongoResponse.name as string,
+                postgresResponse.id as number)
+            }
+            else{
+              return Promise.reject("Something went wrong with getting file to the dbs and getting data from them.")
+            }
           })
-          .catch((e) => console.log(e))
-        createSolutionWithUserAndAssignmentPostgresService(userState?.id.toString(), assignment.id.toString(), solution)
-          .then((r) => {
-            setSolutionFromServer(r.data)
+          .then(r => {
+            navigate(-1)
           })
           .catch((e) => console.log(e))
       }
