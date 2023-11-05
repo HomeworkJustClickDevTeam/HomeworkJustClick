@@ -22,7 +22,7 @@ interface FileRespondMongoInterface {
   format: string
 }
 
-function SolutionAdd({assignment}: AssignmentPropsInterface) {
+function SolutionAddPage({assignment}: AssignmentPropsInterface) {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const userState = useAppSelector(selectUserState)
@@ -104,11 +104,11 @@ function SolutionAdd({assignment}: AssignmentPropsInterface) {
       <input type="file" onChange={(e)=>handleChangeFile(e)} />
       <div> {file && `${file.name} - ${file.type}`}</div>
       <button type={"submit"} onClick={(e) => handleUploadClick(e)}
-              className='absolute bg-main_blue text-white px-6 py-1 rounded w-40 bottom-0 left-0 ml-4 mb-6 hover:bg-hover_blue hover:shadow-md active:shadow-none'>Wyslij
+              className='absolute bg-main_blue text-white px-6 py-1 rounded w-40 bottom-0 left-0 ml-4 mb-6 hover:bg-hover_blue hover:shadow-md active:shadow-none'>Wyślij
         zadanie
       </button>
     </div>
   )
 
 }
-export default SolutionAdd
+export default SolutionAddPage

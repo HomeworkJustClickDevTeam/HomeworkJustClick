@@ -1,8 +1,11 @@
 import { AdvancedEvaluationTextCommentInterface } from "../../types/AdvancedEvaluationTextCommentInterface"
 import { CommentInterface } from "../../types/CommentInterface"
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { AdvancedEvaluationTextCommentCreateInterface } from "../../types/AdvancedEvaluationTextCommentCreateInterface"
-import { createCommentWithFilePostgresService } from "../../services/postgresDatabaseServices"
+import {
+  createCommentWithFilePostgresService,
+  deleteCommentTextPostgresService
+} from "../../services/postgresDatabaseServices"
 import { Simulate } from "react-dom/test-utils"
 import error = Simulate.error
 
@@ -23,7 +26,6 @@ export const AdvancedEvaluationTextArea = ({chosenComment, fileText, width, heig
       return [selectedComment]
     }
   }
-
   const toLetterArray = (commentsList:AdvancedEvaluationTextCommentInterface[]):(string|undefined)[] => {
     let newArray = Array<undefined|string>(fileText.length)
     newArray.fill(undefined, 0, fileText.length)
@@ -118,6 +120,28 @@ export const AdvancedEvaluationTextArea = ({chosenComment, fileText, width, heig
       selection?.removeAllRanges()
     }
   }
+  const handleCommentDeletion = async (event:React.MouseEvent, index:number) => {
+    if(event.button === 2){//RMB
+      try {
+        let commentToBeDeleted:undefined|AdvancedEvaluationTextCommentInterface = undefined
+        for(const comment of comments){
+          if(comment.highlightStart <= index && comment.highlightEnd <= index){
+            commentToBeDeleted = comment
+            break
+          }
+        }
+        if(commentToBeDeleted!==undefined){
+          const response = await deleteCommentTextPostgresService(commentToBeDeleted.id.toString())
+          if(response?.status === 200){
+            const tempComments = comments.filter((comment)=>comment.id !== commentToBeDeleted?.id)
+            setComments(tempComments)
+          }
+        }
+      }catch (error){
+        console.log(error)
+      }
+    }
+  }
 
   useEffect(() => {
     if(chosenComment !== undefined){
@@ -129,6 +153,6 @@ export const AdvancedEvaluationTextArea = ({chosenComment, fileText, width, heig
   }, [fileText])
 
   return <div style={{width: width !== undefined ? width : "100%", height: height !== undefined ? height:"100%"}}>{fileText.split('').map((letter:string, index)=>{
-    return <span id={index.toString()} style={{backgroundColor: letterColor[index] ? letterColor[index] : 'white'}} key={index}>{letter}</span>
+    return <span onClick={(event) => handleCommentDeletion(event, index)} id={index.toString()} style={{backgroundColor: letterColor[index] ? letterColor[index] : 'white'}} key={index}>{letter}</span>
   })}</div>
 }

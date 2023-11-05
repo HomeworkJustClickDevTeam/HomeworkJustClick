@@ -15,7 +15,7 @@ interface AssignmentModifyPropsInterface extends AssignmentPropsInterface {
   setAssignment: (assignment: (prevState: any) => any) => void
 }
 
-function AssignmentModify({
+function AssignmentModifyPage({
   assignment,
   setAssignment,
 }: AssignmentModifyPropsInterface) {
@@ -168,4 +168,4 @@ function AssignmentModify({
   )
 }
 
-export default AssignmentModify
+export default AssignmentModifyPage
