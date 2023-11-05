@@ -7,10 +7,11 @@ import { CommentCreateInterface } from "../../types/CommentCreateInterface"
 import { createCommentWithUserPostgresService } from "../../services/postgresDatabaseServices"
 
 export const AdvancedEvaluationCommentPanel = (
-  {handleCommentClick, fileType, rightPanelUserComments, setRightPanelUserComments, handleCommentRemoval, height}:{
+  {handleCommentClick, fileType, rightPanelUserComments, setRightPanelUserComments, handleCommentRemoval, height, chosenCommentId}:{
     handleCommentClick: (comment:CommentInterface, clickedCommentWidth?:number) => void,
     fileType:"txt"|"img",
     height:number|undefined,
+    chosenCommentId: number|undefined
     rightPanelUserComments: CommentInterface[],
     setRightPanelUserComments: (comments:CommentInterface[]) => void,
     handleCommentRemoval:(comment:CommentInterface)=>void}) => {
@@ -53,12 +54,15 @@ export const AdvancedEvaluationCommentPanel = (
       <button type={"button"} onClick={(event) => handleNewCommentCreation(event)}>Dodaj</button><br/>
     Panel komentarzy: <br/>
     {rightPanelUserComments.map((comment) => {
-      return(<AdvancedEvaluationCommentPanelListElement
-        fileType={fileType}
-        handleCommentRemoval={handleCommentRemoval}
-        comment={comment}
-        handleCommentClick={handleCommentClick}
-        key={comment.id}></AdvancedEvaluationCommentPanelListElement>)
+      return(
+        <div style={{backgroundColor: comment.id === chosenCommentId ? comment.color + "80" : "white"}}>
+          <AdvancedEvaluationCommentPanelListElement
+          fileType={fileType}
+          handleCommentRemoval={handleCommentRemoval}
+          comment={comment}
+          handleCommentClick={handleCommentClick}
+          key={comment.id}></AdvancedEvaluationCommentPanelListElement>
+        </div>)
     })}
     </div>
 }

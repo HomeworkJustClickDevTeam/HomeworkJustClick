@@ -39,6 +39,7 @@ export const AdvancedEvaluationImageArea = React.forwardRef<any, AdvancedEvaluat
   const commentPreviousState = useRef<null|AdvancedEvaluationImageCommentInterface>(null)
   const canvasAction = useRef<CanvasActionsType>("hovering")
   const commentAction = useRef<CommentActionsType>("noHover")
+  const mouseDownTimestamp = useRef<number|null>(null)
 
   useImperativeHandle(advancedEvaluationImageAreaRef, () => ({
     drawOnCanvas() {
@@ -402,7 +403,7 @@ export const AdvancedEvaluationImageArea = React.forwardRef<any, AdvancedEvaluat
       commentIndex.current = setPartOfCommentHovered(mouseXOnCanvas, mouseYOnCanvas)
       handleCursorAppearanceChange()
     }
-    else if(canvasAction.current === "commentDragging"){
+    else if(canvasAction.current === "commentHolding"){
       handleCommentMove(event.clientX, event.clientY)
     }
     else if(canvasAction.current === "commentCreating") {
@@ -425,7 +426,7 @@ export const AdvancedEvaluationImageArea = React.forwardRef<any, AdvancedEvaluat
       canvasAction.current = "commentDeleting"
     }
     else if(commentAction.current==="centerHovered"){
-      canvasAction.current = "commentDragging"
+      canvasAction.current = "commentHolding"
     }
     else if(commentAction.current==="leftTopCornerHovered" ||
       commentAction.current==="topLineHovered" ||
@@ -444,7 +445,7 @@ export const AdvancedEvaluationImageArea = React.forwardRef<any, AdvancedEvaluat
       const { mouseXOnCanvas, mouseYOnCanvas } = calculateCoordsOnCanvas(event.clientX, event.clientY)
       mouseStartX.current = mouseXOnCanvas
       mouseStartY.current = mouseYOnCanvas
-      if (canvasAction.current === "commentDragging") {
+      if (canvasAction.current === "commentHolding") {
         commentPreviousState.current = commentIndex.current === null ? null : JSON.parse(JSON.stringify(drawnComments.current[commentIndex.current]))//deep copy
       }
       else if(canvasAction.current === "commentCreating"){
@@ -454,14 +455,18 @@ export const AdvancedEvaluationImageArea = React.forwardRef<any, AdvancedEvaluat
         commentPreviousState.current = commentIndex.current === null ? null : JSON.parse(JSON.stringify(drawnComments.current[commentIndex.current]))
       }
     }
+    mouseDownTimestamp.current = event.timeStamp
   }
   const handleMouseUp = async (event: React.MouseEvent) => {
     event.preventDefault()
     event.stopPropagation()
     if (!editable) return
     let draw = false
-    if (canvasAction.current === "commentDragging") {
-      if (commentIndex.current !== null && commentPreviousState.current !== null) {
+    if (canvasAction.current === "commentHolding") {
+      if(mouseDownTimestamp?.current !== null && (event.timeStamp - mouseDownTimestamp.current) < 1000){
+        //highlight comment
+      }
+      else if (commentIndex.current !== null && commentPreviousState.current !== null) {
         draw = checkIfOutOfCanvas(draw)
         draw = runBackCommentValues(draw)
         if(!draw)
@@ -497,6 +502,7 @@ export const AdvancedEvaluationImageArea = React.forwardRef<any, AdvancedEvaluat
     commentPreviousState.current = null
     mouseStartY.current = null
     mouseStartX.current = null
+    mouseDownTimestamp.current = null
     canvasAction.current = "hovering"
     const { mouseXOnCanvas, mouseYOnCanvas } = calculateCoordsOnCanvas(event.clientX, event.clientY)
     setPartOfCommentHovered(mouseXOnCanvas, mouseYOnCanvas)
@@ -509,6 +515,7 @@ export const AdvancedEvaluationImageArea = React.forwardRef<any, AdvancedEvaluat
       const {calculatedHeight, calculatedWidth} = calculateCanvasSize()
       canvasContext.current.canvas.height = calculatedHeight
       canvasContext.current.canvas.width = calculatedWidth
+      canvasContext.current.globalAlpha = 1
       canvasContext.current.clearRect(0,0, calculatedWidth, calculatedHeight)
       if(image.complete){
         canvasContext.current.drawImage(image,0,0,  canvasContext.current.canvas.width, canvasContext.current.canvas.height)
@@ -519,9 +526,10 @@ export const AdvancedEvaluationImageArea = React.forwardRef<any, AdvancedEvaluat
             canvasContext.current.drawImage(image,0,0,  canvasContext.current.canvas.width, canvasContext.current.canvas.height)
         }
       for (const comment of drawnComments.current) {
-        canvasContext.current.strokeStyle = comment.color
+        canvasContext.current.fillStyle = comment.color
         canvasContext.current.lineWidth = comment.lineWidth
-        canvasContext.current.strokeRect(comment.leftTopX, comment.leftTopY, comment.width, comment.height)
+        canvasContext.current.globalAlpha = 0.5
+        canvasContext.current.fillRect(comment.leftTopX, comment.leftTopY, comment.width, comment.height)
       }
     }
   }
@@ -538,7 +546,10 @@ export const AdvancedEvaluationImageArea = React.forwardRef<any, AdvancedEvaluat
 
 
   return (
-    <canvas onContextMenu={(event) => {event.preventDefault(); event.stopPropagation()}}
+    <canvas onContextMenu={(event) => {
+              event.preventDefault();
+              event.stopPropagation()
+              canvasAction.current = "commentDeleting"}}
             onMouseOut={handleMouseUp}
             id={"commentsLayer"}
             onMouseUp={handleMouseUp}

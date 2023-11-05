@@ -13,14 +13,17 @@ import { useAppSelector } from "../../types/HooksRedux"
 import { selectUserState } from "../../redux/userStateSlice"
 import {
   changeCommentImagePostgresService,
-  changeCommentPostgresService,
+  changeCommentPostgresService, changeCommentTextPostgresService, createCommentTextWithFilePostgresService,
   deleteCommentImagePostgresService,
-  deleteCommentPostgresService
+  deleteCommentPostgresService, deleteCommentTextPostgresService
 } from "../../services/postgresDatabaseServices"
 import { Simulate } from "react-dom/test-utils"
 import error = Simulate.error
 import { retry } from "@reduxjs/toolkit/query"
 import { useGetCommentsImageByFile } from "../customHooks/useGetCommentsImageByFile"
+import { AdvancedEvaluationTextCommentCreateInterface } from "../../types/AdvancedEvaluationTextCommentCreateInterface"
+import { AdvancedEvaluationTextCommentInterface } from "../../types/AdvancedEvaluationTextCommentInterface"
+import { useGetCommentsTextByFile } from "../customHooks/useGetCommentsTextByFile"
 
 export default function AdvancedEvaluationPage() {
   let {state} = useLocation()
@@ -35,7 +38,153 @@ export default function AdvancedEvaluationPage() {
   const {availableHeight, availableWidth} = useGetSolutionAreaSizeAvailable()
   const commentsImageState = useGetCommentsImageByFile(file?.postgresId, "")
   const advancedEvaluationImageAreaRef:any = useRef()
+  const {comments: commentsTextState, setComments: setCommentsTextState} = useGetCommentsTextByFile(file?.postgresId, "")
+
+  const handleNewCommentTextCreation =  async () =>{
+    if(chosenComment === undefined) return
+    const checkNewRanges = async (updatedComment:AdvancedEvaluationTextCommentInterface, selectedComment:AdvancedEvaluationTextCommentInterface) => {
+      if(updatedComment.highlightStart<=updatedComment.highlightEnd){
+        const response = await changeCommentTextPostgresService(updatedComment)
+        if(response?.status === 200)
+          return [updatedComment, selectedComment]
+        else return Promise.reject("something went wrong with changing old comment text")
+      }
+      else{
+        return [selectedComment]
+      }
+    }
+    const selection = window.getSelection()
+    try {
+      if (selection && selection.rangeCount > 0 && window.getSelection()?.getRangeAt(0).endContainer.parentElement?.id && window.getSelection()?.getRangeAt(0).startContainer.parentElement?.id !== null) {
+        const newComment: AdvancedEvaluationTextCommentCreateInterface = {
+          commentId: chosenComment.id,
+          fileId: file.postgresId,
+          color: chosenComment.color,
+          highlightStart: Math.min(selection.getRangeAt(0).endContainer.parentElement?.id as unknown as number, selection.getRangeAt(0).startContainer.parentElement?.id as unknown as number),
+          highlightEnd: Math.max(selection.getRangeAt(0).endContainer.parentElement?.id as unknown as number, selection.getRangeAt(0).startContainer.parentElement?.id as unknown as number)
+        }
+        const response = await createCommentTextWithFilePostgresService(newComment)
+        if(response?.status !== 201) return
+        const selectedComment = response.data
+        const newComments: AdvancedEvaluationTextCommentInterface[] = []
+        if (commentsTextState.length === 0) {
+          newComments.push(selectedComment)
+        } else {
+          await Promise.all(commentsTextState.map( async (oldComment) => {
+            if (oldComment.highlightStart < selectedComment.highlightStart && oldComment.highlightStart < selectedComment.highlightEnd && oldComment.highlightEnd > selectedComment.highlightStart && oldComment.highlightEnd < selectedComment.highlightEnd) {
+              const updatedComment = { ...oldComment, highlightEnd: selectedComment.highlightStart - 1 }
+              const newRanges = await checkNewRanges(updatedComment, selectedComment)
+              newComments.push(...newRanges)
+            } else if (oldComment.highlightStart > selectedComment.highlightStart && oldComment.highlightStart < selectedComment.highlightEnd && oldComment.highlightEnd > selectedComment.highlightStart && oldComment.highlightEnd > selectedComment.highlightEnd) {
+              const updatedComment = {
+                ...oldComment,
+                highlightStart: selectedComment.highlightEnd + 1
+              }
+              const newRanges = await checkNewRanges(updatedComment, selectedComment)
+              newComments.push(...newRanges)
+            } else if (oldComment.highlightStart > selectedComment.highlightStart && oldComment.highlightStart < selectedComment.highlightEnd && oldComment.highlightEnd > selectedComment.highlightStart && oldComment.highlightEnd < selectedComment.highlightEnd) {
+              newComments.push(selectedComment)
+            } else if (oldComment.highlightStart < selectedComment.highlightStart && oldComment.highlightStart < selectedComment.highlightEnd && oldComment.highlightEnd > selectedComment.highlightStart && oldComment.highlightEnd > selectedComment.highlightEnd) {
+              newComments.push(selectedComment)
+            } else if (oldComment.highlightStart < selectedComment.highlightStart && oldComment.highlightStart < selectedComment.highlightEnd && oldComment.highlightEnd === selectedComment.highlightStart && oldComment.highlightEnd < selectedComment.highlightEnd) {
+              const updatedComment = { ...oldComment, highlightEnd: oldComment.highlightEnd - 1 }
+              const newRanges = await checkNewRanges(updatedComment, selectedComment)
+              newComments.push(...newRanges)
+            } else if (oldComment.highlightStart > selectedComment.highlightStart && oldComment.highlightStart === selectedComment.highlightEnd && oldComment.highlightEnd > selectedComment.highlightStart && oldComment.highlightEnd > selectedComment.highlightEnd) {
+              const updatedComment = { ...oldComment, highlightStart: oldComment.highlightStart + 1 }
+              const newRanges = await checkNewRanges(updatedComment, selectedComment)
+              newComments.push(...newRanges)
+            } else if (oldComment.highlightStart < selectedComment.highlightStart && oldComment.highlightStart < selectedComment.highlightEnd && oldComment.highlightEnd > selectedComment.highlightStart && oldComment.highlightEnd === selectedComment.highlightEnd) {
+              const updatedComment = {
+                ...oldComment,
+                highlightEnd: selectedComment.highlightStart - 1
+              }
+              const newRanges = await checkNewRanges(updatedComment, selectedComment)
+              newComments.push(...newRanges)
+            } else if (oldComment.highlightStart === selectedComment.highlightStart && oldComment.highlightStart < selectedComment.highlightEnd && oldComment.highlightEnd > selectedComment.highlightStart && oldComment.highlightEnd > selectedComment.highlightEnd) {
+              const updatedComment = {
+                ...oldComment,
+                highlightStart: selectedComment.highlightEnd + 1
+              }
+              const newRanges = await checkNewRanges(updatedComment, selectedComment)
+              newComments.push(...newRanges)
+            } else if (oldComment.highlightStart > selectedComment.highlightStart && oldComment.highlightStart === selectedComment.highlightEnd && oldComment.highlightEnd > selectedComment.highlightStart && oldComment.highlightEnd > selectedComment.highlightEnd) {
+              const updatedComment = {
+                ...oldComment,
+                highlightStart: selectedComment.highlightEnd + 1
+              }
+              const newRanges = await checkNewRanges(updatedComment, selectedComment)
+              newComments.push(...newRanges)
+            } else if (oldComment.highlightStart > selectedComment.highlightStart && oldComment.highlightStart === selectedComment.highlightEnd && oldComment.highlightEnd > selectedComment.highlightStart && oldComment.highlightEnd > selectedComment.highlightEnd) {
+              const updatedComment = {
+                ...oldComment,
+                highlightStart: selectedComment.highlightEnd + 1
+              }
+              const newRanges = await checkNewRanges(updatedComment, selectedComment)
+              newComments.push(...newRanges)
+            } else if (oldComment.highlightStart === selectedComment.highlightStart && oldComment.highlightStart === selectedComment.highlightEnd && oldComment.highlightEnd === selectedComment.highlightStart && oldComment.highlightEnd === selectedComment.highlightEnd) {
+              newComments.push(selectedComment)
+              console.log(newComments)
+              return
+            } else {
+              newComments.push(selectedComment, oldComment)
+            }
+          }))
+        }
+        selection?.removeAllRanges()
+        setCommentsTextState(newComments)
+      }
+    }catch (error){
+      console.log(error)
+    }
+  }
   const updateCommentsLists = async (clickedComment:CommentInterface, clickedCommentWidth?:number) => {
+    const updateImageList = async () => {
+      if (drawnCommentsRef?.current !== undefined && drawnCommentsRef?.current !== null && clickedCommentWidth !== undefined && advancedEvaluationImageAreaRef.current !== undefined && advancedEvaluationImageAreaRef.current !== null) {
+        const drawnCommentsTemp = await Promise.all(drawnCommentsRef.current.map(async (commentImage) => {
+          if(commentImage.commentId === clickedComment.id){
+            try {
+              const updatedComment = { ...commentImage, color: clickedComment.color, lineWidth: clickedCommentWidth } as AdvancedEvaluationImageCommentInterface
+              const response = await changeCommentImagePostgresService(updatedComment)
+              if (response !== undefined && response !== null && response.data !== undefined && response.status === 200) {
+                return updatedComment
+              }
+              else {
+                return commentImage
+              }
+            }catch (error){
+              console.log(error)
+              return commentImage
+            }
+          }
+          return commentImage
+        }))
+        drawnCommentsRef.current = drawnCommentsTemp
+        advancedEvaluationImageAreaRef.current.drawOnCanvas()
+      }
+    }
+    const updateTextList = async () => {
+      const textCommentsTemp = await Promise.all(commentsTextState.map(async textComment => {
+        if(textComment.commentId === clickedComment.id){
+          try {
+            const updatedComment = {...textComment, color: clickedComment.color} as AdvancedEvaluationTextCommentInterface
+            const response = await changeCommentTextPostgresService(updatedComment)
+            if (response !== undefined && response !== null && response.data !== undefined && response.status === 200) {
+              return updatedComment
+            }
+            else {
+              return textComment
+            }
+          }catch (error){
+            console.log(error)
+            return textComment
+          }
+        }
+        return textComment
+      }))
+      setCommentsTextState(textCommentsTemp)
+    }
+
     try {
       const response = await changeCommentPostgresService(clickedComment)
       if (response !== undefined && response !== null && response.data !== undefined && response.status === 200) {
@@ -44,29 +193,10 @@ export default function AdvancedEvaluationPage() {
           else return comment
         })
         setRightPanelUserComments(newComments)
-
-        if (drawnCommentsRef?.current !== undefined && drawnCommentsRef?.current !== null && clickedCommentWidth !== undefined && advancedEvaluationImageAreaRef.current !== undefined && advancedEvaluationImageAreaRef.current !== null) {
-          const drawnCommentsTemp = await Promise.all(drawnCommentsRef.current.map(async (commentImage) => {
-            if(commentImage.commentId === clickedComment.id){
-              try {
-                const updatedComment = { ...commentImage, color: clickedComment.color, lineWidth: clickedCommentWidth } as AdvancedEvaluationImageCommentInterface
-                const response = await changeCommentImagePostgresService(updatedComment)
-                if (response !== undefined && response !== null && response.data !== undefined && response.status === 200) {
-                  return updatedComment
-                }
-                else {
-                  return commentImage
-                }
-              }catch (error){
-                console.log(error)
-                return commentImage
-              }
-            }
-            return commentImage
-          }))
-          drawnCommentsRef.current = drawnCommentsTemp
-          advancedEvaluationImageAreaRef.current.drawOnCanvas()
-        }
+        if(file.format !== "txt")
+          await updateImageList()
+        else
+          await updateTextList()
       }
     }catch (error){
       console.log(error)
@@ -78,27 +208,48 @@ export default function AdvancedEvaluationPage() {
     await updateCommentsLists(clickedComment, clickedCommentWidth)
   }
   const handleCommentRemoval = async (comment:CommentInterface) => {
+    const commentTextRemoval = async () => {
+      const textCommentsTemp = await Promise.all(commentsTextState.filter(async (commentText)=> {
+        if(commentText.commentId === comment.id){
+          try {
+            const response = await deleteCommentTextPostgresService(commentText.id.toString())
+            return !(response !== null && response !== undefined && response.status === 200) //if request went okay remove comment - filter false
+          }catch (error){
+            console.log(error)
+            return true
+          }
+        }
+        return true
+      }))
+      setCommentsTextState(textCommentsTemp)
+    }
+    const commentImageRemoval = async () => {
+      if(drawnCommentsRef?.current !== undefined && drawnCommentsRef?.current !== null && file.format !== "txt" && advancedEvaluationImageAreaRef.current !== undefined && advancedEvaluationImageAreaRef.current!==null) {
+        const drawnCommentsTemp = await Promise.all(drawnCommentsRef.current.filter(async commentImage => {
+          if (commentImage.commentId === comment.id) {
+            try {
+              const response = await deleteCommentImagePostgresService(commentImage.id.toString())
+              return !(response !== null && response !== undefined && response.status === 200) //if request went okay remove comment - filter false
+            } catch (error) {
+              console.log(error)
+              return true
+            }
+          }
+          return true
+        }))
+        drawnCommentsRef.current = drawnCommentsTemp
+        advancedEvaluationImageAreaRef.current.drawOnCanvas()
+      }
+    }
     try {
       const response = await deleteCommentPostgresService(comment.id.toString())
       if (response.data !== null && response.data !== undefined && response.status === 200) {
         const userNewComments = rightPanelUserComments.filter(oldComment => oldComment.id !== comment.id)
         setRightPanelUserComments(userNewComments)
-        if(drawnCommentsRef?.current !== undefined && drawnCommentsRef?.current !== null && file.format !== "txt" && advancedEvaluationImageAreaRef.current !== undefined && advancedEvaluationImageAreaRef.current!==null) {
-          const drawnCommentsTemp = await Promise.all(drawnCommentsRef.current.filter(async commentImage => {
-            if (commentImage.commentId === comment.id) {
-              try {
-                const response = await deleteCommentImagePostgresService(commentImage.id.toString())
-                return !(response !== null && response !== undefined && response.status === 200) //if request went okay remove comment - filter false
-              } catch (error) {
-                console.log(error)
-                return true
-              }
-            }
-            return true
-          }))
-          drawnCommentsRef.current = drawnCommentsTemp
-          advancedEvaluationImageAreaRef.current.drawOnCanvas()
-        }
+        if(file.format !== "txt")
+          await commentImageRemoval()
+        else
+          await commentTextRemoval()
       }
     } catch (error) {
       console.log(error)
@@ -131,6 +282,7 @@ export default function AdvancedEvaluationPage() {
       <div id={"advancedEvaluationPageDiv"}>
         <AdvancedEvaluationCommentPanel
           height={availableHeight}
+          chosenCommentId={chosenComment?.id}
           handleCommentClick={handleCommentClick}
           handleCommentRemoval={handleCommentRemoval}
           setRightPanelUserComments={setRightPanelUserComments}
@@ -138,8 +290,10 @@ export default function AdvancedEvaluationPage() {
           fileType={file.format === "txt"? "txt" : "img"}></AdvancedEvaluationCommentPanel>
         {(file.format === "txt"
             ? (<AdvancedEvaluationTextArea
-              fileId={file.postgresId}
-              chosenComment={chosenComment}
+              editable={true}
+              handleNewCommentTextCreation={handleNewCommentTextCreation}
+              setComments={setCommentsTextState}
+              comments={commentsTextState}
               width = {availableWidth}
               height = {availableHeight}
               fileText={fileText}/>)

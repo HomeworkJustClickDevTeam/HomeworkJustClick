@@ -126,7 +126,7 @@ export const createCommentWithUserPostgresService = async (comment:CommentCreate
   return await postgresqlDatabaseJSON.post("/comment", comment)
 }
 
-export const createCommentWithFilePostgresService = async (comment:AdvancedEvaluationTextCommentCreateInterface) =>{
+export const createCommentTextWithFilePostgresService = async (comment:AdvancedEvaluationTextCommentCreateInterface) =>{
   return await postgresqlDatabaseJSON.post("/comment_file_text", comment)
 }
 
