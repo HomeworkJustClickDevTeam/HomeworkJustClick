@@ -41,13 +41,16 @@ export const AdvancedEvaluationCommentPanel = (
         else return comment
       })
       setRightPanelComments(newComments)
+
   }
 
-  return <div ref={commentPanelRef} id={"commentPanel"} style={{float:"right", height:"100vh"}}>
+  return <div ref={commentPanelRef} id={"commentPanel"} className='float-right h-full'>
+      <p className='text-center underline underline-offset-4 mb-4'>KOMENTARZE</p>
     Dodaj nowy komentarz:<br/>
-      <input onChange={(event) => setNewCommentDescription(event.target.value)}/>
-      <button type={"button"} onClick={(event) => handleNewCommentCreation(event)}>Dodaj</button><br/>
-    Panel komentarzy: <br/>
+      <div className='inline-flex w-full pb-4'><input className='border border-black rounded-sm mr-2 w-full pl-1.5' onChange={(event) => {setNewCommentDescription(event.target.value) }}/>
+      <button type={"button"} className='w-24 ml-auto mr-2 bg-main_blue text-white px-2 py-1 rounded-md' onClick={(event) => {handleNewCommentCreation(event);
+      }}>Dodaj +</button></div><br/><hr/>
+      <div><p className='pt-2'>Wybierz komentarz: </p>
     {rightPanelComments.map((comment) => {
       return(<AdvancedEvaluationCommentPanelListElement
         handleCommentRemoval={handleCommentRemoval}
@@ -55,5 +58,6 @@ export const AdvancedEvaluationCommentPanel = (
         handleCommentClick={handleCommentClick}
         key={comment.id}></AdvancedEvaluationCommentPanelListElement>)
     })}
+    </div>
     </div>
 }

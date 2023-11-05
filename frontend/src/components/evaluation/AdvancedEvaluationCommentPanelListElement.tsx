@@ -46,8 +46,8 @@ export const AdvancedEvaluationCommentPanelListElement = ({handleCommentClick, c
   }, [])
 
   return(
-  <div>
-    <div>
+  <div  className='border m-1'>
+    <div >
       <input ref={commentDescriptionInputRef}
             onChange={(event) => {!commentReadonly &&
               setCommentState((prevState) => ({...prevState, description:event.target.value}))}
@@ -84,6 +84,5 @@ export const AdvancedEvaluationCommentPanelListElement = ({handleCommentClick, c
              }}/><br/>
     Szerokość: {frameWidth}</div>
     <button onClick={() => handleCommentRemoval(commentState.id)} type={"button"}>Usuń komentarz</button>
-    <hr/>
   </div>)
 }
