@@ -40,8 +40,7 @@ export default function AdvancedEvaluationPage() {
   const advancedEvaluationImageAreaRef:any = useRef()
   const {comments: commentsTextState, setComments: setCommentsTextState} = useGetCommentsTextByFile(file?.postgresId, "")
   const [highlightedCommentId, setHighlightedCommentId] = useState<number|undefined>(undefined)
-
-  const handleCommentHighlight = (commentId:number) => {
+  const handleCommentHighlighting = (commentId:number) => {
     setHighlightedCommentId(commentId)
     setTimeout(() => {
       setHighlightedCommentId(undefined)
@@ -258,7 +257,6 @@ export default function AdvancedEvaluationPage() {
       console.log(error)
     }
   }
-
   useEffect(() => {
     if(file && file.format !== "jpg" && file.format !== "png"){
       file.data.text()
@@ -273,13 +271,14 @@ export default function AdvancedEvaluationPage() {
       }
     }
   }, [file])
-
   useEffect(() => {
-    commentsImageState !== undefined && commentsImageState !== null &&
-      (drawnCommentsRef.current = commentsImageState)
-    advancedEvaluationImageAreaRef?.current !== undefined && advancedEvaluationImageAreaRef?.current !== null &&
+    if(commentsImageState !== undefined && commentsImageState !== null){
+      drawnCommentsRef.current = commentsImageState
+    }
+    if(advancedEvaluationImageAreaRef?.current !== undefined && advancedEvaluationImageAreaRef?.current !== null)
       advancedEvaluationImageAreaRef.current.drawOnCanvas()
   }, [commentsImageState])
+
   if(file)
     return (
       <div id={"advancedEvaluationPageDiv"}>
@@ -296,6 +295,7 @@ export default function AdvancedEvaluationPage() {
         {(file.format === "txt"
             ? (<AdvancedEvaluationTextArea
               editable={true}
+              handleCommentHighlighting={handleCommentHighlighting}
               handleNewCommentTextCreation={handleNewCommentTextCreation}
               setComments={setCommentsTextState}
               comments={commentsTextState}
@@ -305,7 +305,7 @@ export default function AdvancedEvaluationPage() {
             : (image !== undefined && drawnCommentsRef?.current !== undefined && drawnCommentsRef?.current !== null ?
               <AdvancedEvaluationImageArea
                 ref={advancedEvaluationImageAreaRef}
-                handleCommentHighlight={handleCommentHighlight}
+                handleCommentHighlighting={handleCommentHighlighting}
                 width = {availableWidth}
                 height = {availableHeight}
                 editable={true}

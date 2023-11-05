@@ -21,10 +21,10 @@ interface AdvancedEvaluationImageAreaInterface{
   chosenCommentFrameWidth?:number|undefined,
   drawnComments:MutableRefObject<AdvancedEvaluationImageCommentInterface[]>
   fileId:number
-  handleCommentHighlight:(commentId: number) => void
+  handleCommentHighlighting:(commentId: number) => void
 }
 export const AdvancedEvaluationImageArea = React.forwardRef<any, AdvancedEvaluationImageAreaInterface>(({
-                                                                                                          handleCommentHighlight,
+                                                                                                          handleCommentHighlighting,
                                                                                                           fileId,
                                                                                                           editable,
                                                                                                           image,
@@ -377,7 +377,7 @@ export const AdvancedEvaluationImageArea = React.forwardRef<any, AdvancedEvaluat
       }
     }
     else{
-      return {calculatedHeight: image.height, calculatedWidth: image.width}
+      return {calculatedHeight: undefined, calculatedWidth: undefined}
     }
   }
   const runBackCommentValues = (initialDrawValue:boolean) => {
@@ -466,7 +466,7 @@ export const AdvancedEvaluationImageArea = React.forwardRef<any, AdvancedEvaluat
     let draw = false
     if (canvasAction.current === "commentHolding" && commentIndex.current !== null) {
       if(mouseDownTimestamp?.current !== null && (event.timeStamp - mouseDownTimestamp.current) < 150){
-        handleCommentHighlight(drawnComments.current[commentIndex.current].commentId)
+        handleCommentHighlighting(drawnComments.current[commentIndex.current].commentId)
         drawnComments.current[commentIndex.current] = JSON.parse(JSON.stringify(commentPreviousState.current))
         draw = true
       }
@@ -514,9 +514,9 @@ export const AdvancedEvaluationImageArea = React.forwardRef<any, AdvancedEvaluat
     console.log(drawnComments.current, canvasAction.current)
   }
   const drawOnCanvas = () => {
-    scaleCommentsToImageDimensions()
     if(canvasContext.current!==null && canvasContext.current!==undefined){
       const {calculatedHeight, calculatedWidth} = calculateCanvasSize()
+      if(calculatedHeight === undefined || calculatedWidth === undefined) return
       canvasContext.current.canvas.height = calculatedHeight
       canvasContext.current.canvas.width = calculatedWidth
       canvasContext.current.globalAlpha = 1
@@ -529,6 +529,7 @@ export const AdvancedEvaluationImageArea = React.forwardRef<any, AdvancedEvaluat
           if(canvasContext.current!==null && canvasContext.current!==undefined)
             canvasContext.current.drawImage(image,0,0,  canvasContext.current.canvas.width, canvasContext.current.canvas.height)
         }
+      scaleCommentsToImageDimensions()
       for (const comment of drawnComments.current) {
         canvasContext.current.fillStyle = comment.color
         canvasContext.current.lineWidth = comment.lineWidth
@@ -542,7 +543,6 @@ export const AdvancedEvaluationImageArea = React.forwardRef<any, AdvancedEvaluat
     canvasContext.current = canvasRef.current?.getContext("2d")
     drawOnCanvas()
   }, [])
-
   useEffect(() => {
     drawOnCanvas()
   }, [width, height])

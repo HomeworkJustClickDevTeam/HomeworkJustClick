@@ -9,10 +9,9 @@ export const useGetSolutionAreaSizeAvailable = () => {
   useEffect(() => {
     const commentPanelWidth = document.getElementById("commentPanel")?.clientWidth
     const headerHeight = document.getElementById("headerLoggedIn")?.clientHeight
-
     commentPanelWidth !== undefined && setAvailableWidth(windowWidth-commentPanelWidth)
     headerHeight !== undefined && setAvailableHeight(windowHeight-headerHeight)
-  }, [windowWidth, windowHeight])
+  }, [windowWidth, windowHeight, document.getElementById("commentPanel")?.clientWidth, document.getElementById("headerLoggedIn")?.clientHeight])
 
   return {availableHeight: availableHeight, availableWidth:availableWidth}
 }

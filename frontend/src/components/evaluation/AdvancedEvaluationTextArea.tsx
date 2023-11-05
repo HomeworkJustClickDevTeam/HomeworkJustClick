@@ -10,8 +10,9 @@ import {
 import { useGetCommentsTextByFile } from "../customHooks/useGetCommentsTextByFile"
 
 
-export const AdvancedEvaluationTextArea = ({fileText, width, height, comments, setComments, handleNewCommentTextCreation, editable}:{
+export const AdvancedEvaluationTextArea = ({fileText, width, height, comments, setComments, handleNewCommentTextCreation, handleCommentHighlighting, editable}:{
   setComments:(comments:AdvancedEvaluationTextCommentInterface[]) => void,
+  handleCommentHighlighting:(commentId: number) => void,
   editable:boolean
   handleNewCommentTextCreation: ()=> void,
   width:number|undefined,
