@@ -327,10 +327,10 @@ export const changeCommentPostgresService = async (comment:CommentInterface) => 
   return await postgresqlDatabaseJSON.put(`/comment/${comment.id}`, comment)
 }
 export const changeCommentImagePostgresService = async (comment:AdvancedEvaluationImageCommentInterface) => {
-  return await postgresqlDatabaseJSON.put(`/comment/${comment.id}`, comment)
+  return await postgresqlDatabaseJSON.put(`/comment_file_img/${comment.id}`, comment)
 }
 export const changeCommentTextPostgresService = async (comment:AdvancedEvaluationTextCommentInterface) => {
-  return await postgresqlDatabaseJSON.put(`/comment/${comment.id}`, comment)
+  return await postgresqlDatabaseJSON.put(`/comment_file_text/${comment.id}`, comment)
 }
 
 export const changeGroupNamePostgresService = async (groupId: string, name: string) => {

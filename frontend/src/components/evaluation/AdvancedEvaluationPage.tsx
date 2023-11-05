@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { MutableRefObject, useEffect, useRef, useState } from "react"
 import { useLocation } from "react-router-dom"
 import { useGetFiles } from "../customHooks/useGetFiles"
 import { AdvancedEvaluationCommentPanel } from "./AdvancedEvaluationCommentPanel"
@@ -30,10 +30,10 @@ export default function AdvancedEvaluationPage() {
   const [image, setImage] = useState<HTMLImageElement|undefined>(undefined)
   const [chosenComment, setChosenComment] = useState<CommentInterface|undefined>(undefined)
   const [chosenCommentFrameWidth, setChosenCommentFrameWidth] = useState<number|undefined>(undefined)
-  const drawnCommentsRef = useRef<AdvancedEvaluationImageCommentInterface[]>([])
+  const drawnCommentsRef = useRef<AdvancedEvaluationImageCommentInterface[]|null>(null)
   const {comments: rightPanelUserComments,setComments: setRightPanelUserComments} = useGetCommentsByUser(userState?.id, "")
   const {availableHeight, availableWidth} = useGetSolutionAreaSizeAvailable()
-  const imageCommentsState = useGetCommentsImageByFile(file?.postgresId, "")
+  const commentsImageState = useGetCommentsImageByFile(file?.postgresId, "")
   const advancedEvaluationImageAreaRef:any = useRef()
   const updateCommentsLists = async (clickedComment:CommentInterface, clickedCommentWidth?:number) => {
     try {
@@ -45,13 +45,14 @@ export default function AdvancedEvaluationPage() {
         })
         setRightPanelUserComments(newComments)
 
-        if (clickedCommentWidth !== undefined && advancedEvaluationImageAreaRef.current !== undefined && advancedEvaluationImageAreaRef.current !== null) {
+        if (drawnCommentsRef?.current !== undefined && drawnCommentsRef?.current !== null && clickedCommentWidth !== undefined && advancedEvaluationImageAreaRef.current !== undefined && advancedEvaluationImageAreaRef.current !== null) {
           const drawnCommentsTemp = await Promise.all(drawnCommentsRef.current.map(async (commentImage) => {
             if(commentImage.commentId === clickedComment.id){
               try {
-                const response = await changeCommentImagePostgresService({ ...commentImage, color: clickedComment.color, lineWidth: clickedCommentWidth })
+                const updatedComment = { ...commentImage, color: clickedComment.color, lineWidth: clickedCommentWidth } as AdvancedEvaluationImageCommentInterface
+                const response = await changeCommentImagePostgresService(updatedComment)
                 if (response !== undefined && response !== null && response.data !== undefined && response.status === 200) {
-                  return { ...commentImage, color: clickedComment.color, lineWidth: clickedCommentWidth }
+                  return updatedComment
                 }
                 else {
                   return commentImage
@@ -82,11 +83,11 @@ export default function AdvancedEvaluationPage() {
       if (response.data !== null && response.data !== undefined && response.status === 200) {
         const userNewComments = rightPanelUserComments.filter(oldComment => oldComment.id !== comment.id)
         setRightPanelUserComments(userNewComments)
-        if(file.format === "img" && advancedEvaluationImageAreaRef.current !== undefined && advancedEvaluationImageAreaRef.current!==null) {
+        if(drawnCommentsRef?.current !== undefined && drawnCommentsRef?.current !== null && file.format !== "txt" && advancedEvaluationImageAreaRef.current !== undefined && advancedEvaluationImageAreaRef.current!==null) {
           const drawnCommentsTemp = await Promise.all(drawnCommentsRef.current.filter(async commentImage => {
             if (commentImage.commentId === comment.id) {
               try {
-                const response = await deleteCommentImagePostgresService(commentImage.commentId.toString())
+                const response = await deleteCommentImagePostgresService(commentImage.id.toString())
                 return !(response !== null && response !== undefined && response.status === 200) //if request went okay remove comment - filter false
               } catch (error) {
                 console.log(error)
@@ -95,7 +96,6 @@ export default function AdvancedEvaluationPage() {
             }
             return true
           }))
-          console.log(drawnCommentsTemp)
           drawnCommentsRef.current = drawnCommentsTemp
           advancedEvaluationImageAreaRef.current.drawOnCanvas()
         }
@@ -119,6 +119,13 @@ export default function AdvancedEvaluationPage() {
       }
     }
   }, [file])
+
+  useEffect(() => {
+    commentsImageState !== undefined && commentsImageState !== null &&
+      (drawnCommentsRef.current = commentsImageState)
+    advancedEvaluationImageAreaRef?.current !== undefined && advancedEvaluationImageAreaRef?.current !== null &&
+      advancedEvaluationImageAreaRef.current.drawOnCanvas()
+  }, [commentsImageState])
   if(file)
     return (
       <div id={"advancedEvaluationPageDiv"}>
@@ -136,16 +143,17 @@ export default function AdvancedEvaluationPage() {
               width = {availableWidth}
               height = {availableHeight}
               fileText={fileText}/>)
-            : (image !== undefined && drawnCommentsRef.current !== undefined ? <AdvancedEvaluationImageArea
-              ref={advancedEvaluationImageAreaRef}
-              width = {availableWidth}
-              height = {availableHeight}
-              editable={true}
-              drawnComments={drawnCommentsRef}
-              chosenCommentFrameWidth={chosenCommentFrameWidth}
-              image={image}
-              fileId={file.postgresId}
-              chosenComment={chosenComment}></AdvancedEvaluationImageArea>
+            : (image !== undefined && drawnCommentsRef?.current !== undefined && drawnCommentsRef?.current !== null ?
+              <AdvancedEvaluationImageArea
+                ref={advancedEvaluationImageAreaRef}
+                width = {availableWidth}
+                height = {availableHeight}
+                editable={true}
+                drawnComments={drawnCommentsRef as MutableRefObject<AdvancedEvaluationImageCommentInterface[]>}
+                chosenCommentFrameWidth={chosenCommentFrameWidth}
+                image={image}
+                fileId={file.postgresId}
+                chosenComment={chosenComment}></AdvancedEvaluationImageArea>
               : <Loading></Loading>))}
       </div>
     )

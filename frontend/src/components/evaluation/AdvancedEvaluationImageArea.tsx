@@ -7,6 +7,7 @@ import { CommentActionsType } from "../../types/CommentActionsType"
 import { cursors } from "../../assets/cursors"
 import { he } from "date-fns/locale"
 import {
+  changeCommentImagePostgresService,
   createCommentImageWithFilePostgresService,
   deleteCommentImagePostgresService
 } from "../../services/postgresDatabaseServices"
@@ -93,12 +94,28 @@ export const AdvancedEvaluationImageArea = React.forwardRef<any, AdvancedEvaluat
       }
     }
   }
-
+  const updateCommentImageInDb = async (draw:boolean) => {
+    if (commentIndex.current !== undefined && commentIndex.current !== null) {
+      try {
+        const response = await changeCommentImagePostgresService(drawnComments.current[commentIndex.current])
+        if(!(response?.data !== undefined && response?.data !== null && response?.status === 200)){
+          drawnComments.current[commentIndex.current] = JSON.parse(JSON.stringify(commentPreviousState.current))
+          return true
+        }
+      }
+      catch (error)
+      {
+        drawnComments.current[commentIndex.current] = JSON.parse(JSON.stringify(commentPreviousState.current))
+        return true
+      }
+    }
+    return draw
+  }
   const saveCommentImageToDb = async (draw:boolean) => {
     if (commentIndex.current !== undefined && commentIndex.current !== null) {
       try {
         const response = await createCommentImageWithFilePostgresService(drawnComments.current[commentIndex.current])
-        if (response.data !== undefined && response.data !== null && response.status === 201) {
+        if (response?.data !== undefined && response?.data !== null && response?.status === 201) {
           drawnComments.current[commentIndex.current].id = response.data.id
         }
         else{
@@ -447,6 +464,8 @@ export const AdvancedEvaluationImageArea = React.forwardRef<any, AdvancedEvaluat
       if (commentIndex.current !== null && commentPreviousState.current !== null) {
         draw = checkIfOutOfCanvas(draw)
         draw = runBackCommentValues(draw)
+        if(!draw)
+          draw = await updateCommentImageInDb(draw)
       }
     } else if (canvasAction.current === "commentCreating") {//mouse up while creating new comment
       if (commentIndex.current !== null) {
@@ -466,6 +485,8 @@ export const AdvancedEvaluationImageArea = React.forwardRef<any, AdvancedEvaluat
     } else if (canvasAction.current === "commentResizing") {
       normalizeCommentValues()
       draw = runBackCommentValues(draw)
+      if(!draw)
+        draw = await updateCommentImageInDb(draw)
     } else if (canvasAction.current === "commentDeleting" && event.button === 2) {
       draw = await handleCommentDeletion(draw)
     }
