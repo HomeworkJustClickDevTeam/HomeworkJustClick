@@ -21,8 +21,10 @@ interface AdvancedEvaluationImageAreaInterface{
   chosenCommentFrameWidth?:number|undefined,
   drawnComments:MutableRefObject<AdvancedEvaluationImageCommentInterface[]>
   fileId:number
+  handleCommentHighlight:(commentId: number) => void
 }
 export const AdvancedEvaluationImageArea = React.forwardRef<any, AdvancedEvaluationImageAreaInterface>(({
+                                                                                                          handleCommentHighlight,
                                                                                                           fileId,
                                                                                                           editable,
                                                                                                           image,
@@ -462,10 +464,13 @@ export const AdvancedEvaluationImageArea = React.forwardRef<any, AdvancedEvaluat
     event.stopPropagation()
     if (!editable) return
     let draw = false
-    if (canvasAction.current === "commentHolding") {
+    if (canvasAction.current === "commentHolding" && commentIndex.current !== null) {
       if(mouseDownTimestamp?.current !== null && (event.timeStamp - mouseDownTimestamp.current) < 150){
+        handleCommentHighlight(drawnComments.current[commentIndex.current].commentId)
+        drawnComments.current[commentIndex.current] = JSON.parse(JSON.stringify(commentPreviousState.current))
+        draw = true
       }
-      else if (commentIndex.current !== null && commentPreviousState.current !== null) {
+      else if (commentPreviousState.current !== null) {
         draw = checkIfOutOfCanvas(draw)
         draw = runBackCommentValues(draw)
         if(!draw)

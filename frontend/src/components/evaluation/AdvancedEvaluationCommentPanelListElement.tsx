@@ -5,13 +5,15 @@ import { changeCommentPostgresService } from "../../services/postgresDatabaseSer
 import { Simulate } from "react-dom/test-utils"
 import error = Simulate.error
 
-export const AdvancedEvaluationCommentPanelListElement = ({chosenCommentId, updateCommentsLists, fileType, setChosenComment, comment, handleCommentRemoval}:{
+export const AdvancedEvaluationCommentPanelListElement = (
+  {highlightedCommentId, chosenCommentId, updateCommentsLists, fileType, setChosenComment, comment, handleCommentRemoval}:{
   setChosenComment: (comment:CommentInterface|undefined)=>void,
   updateCommentsLists: (comment: CommentInterface, commentWidth?:number) => void,
   comment:CommentInterface,
   fileType:"txt"|"img",
   handleCommentRemoval: (commentToBeRemoved:CommentInterface)=>void
   chosenCommentId:number|undefined
+  highlightedCommentId:number|undefined
 })=>{
   const [frameWidth, setFrameWidth] = useState<number>(5)
   const [commentState, setCommentState] = useState<CommentInterface>(comment)
@@ -54,7 +56,7 @@ export const AdvancedEvaluationCommentPanelListElement = ({chosenCommentId, upda
   }, [])
 
   return(
-  <div>
+  <div style={{backgroundColor: highlightedCommentId === comment.id ? comment.color+"80" : "white"}}>
     <input type={"checkbox"} checked={comment.id === chosenCommentId} onChange={() => handleCommentChoice()}/>
     <div>
       <input

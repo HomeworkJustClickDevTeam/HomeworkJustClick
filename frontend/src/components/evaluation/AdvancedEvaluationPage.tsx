@@ -39,7 +39,14 @@ export default function AdvancedEvaluationPage() {
   const commentsImageState = useGetCommentsImageByFile(file?.postgresId, "")
   const advancedEvaluationImageAreaRef:any = useRef()
   const {comments: commentsTextState, setComments: setCommentsTextState} = useGetCommentsTextByFile(file?.postgresId, "")
+  const [highlightedCommentId, setHighlightedCommentId] = useState<number|undefined>(undefined)
 
+  const handleCommentHighlight = (commentId:number) => {
+    setHighlightedCommentId(commentId)
+    setTimeout(() => {
+      setHighlightedCommentId(undefined)
+    }, 2000)
+  }
   const handleNewCommentTextCreation =  async () =>{
     if(chosenComment === undefined) return
     const checkNewRanges = async (updatedComment:AdvancedEvaluationTextCommentInterface, selectedComment:AdvancedEvaluationTextCommentInterface) => {
@@ -279,6 +286,7 @@ export default function AdvancedEvaluationPage() {
         <AdvancedEvaluationCommentPanel
           chosenCommentId={chosenComment?.id}
           height={availableHeight}
+          highlightedCommentId={highlightedCommentId}
           setChosenComment={setChosenComment}
           updateCommentsLists={updateCommentsLists}
           handleCommentRemoval={handleCommentRemoval}
@@ -297,6 +305,7 @@ export default function AdvancedEvaluationPage() {
             : (image !== undefined && drawnCommentsRef?.current !== undefined && drawnCommentsRef?.current !== null ?
               <AdvancedEvaluationImageArea
                 ref={advancedEvaluationImageAreaRef}
+                handleCommentHighlight={handleCommentHighlight}
                 width = {availableWidth}
                 height = {availableHeight}
                 editable={true}

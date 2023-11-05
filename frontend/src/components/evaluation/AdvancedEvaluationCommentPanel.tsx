@@ -7,10 +7,11 @@ import { CommentCreateInterface } from "../../types/CommentCreateInterface"
 import { createCommentWithUserPostgresService } from "../../services/postgresDatabaseServices"
 
 export const AdvancedEvaluationCommentPanel = (
-  {updateCommentsLists, chosenCommentId, fileType, rightPanelUserComments, setRightPanelUserComments, handleCommentRemoval, height, setChosenComment}:{
+  {highlightedCommentId, updateCommentsLists, chosenCommentId, fileType, rightPanelUserComments, setRightPanelUserComments, handleCommentRemoval, height, setChosenComment}:{
     setChosenComment: (comment:CommentInterface|undefined)=>void,
     updateCommentsLists: (comment: CommentInterface, commentWidth?:number) => void,
     chosenCommentId:number|undefined,
+    highlightedCommentId:number|undefined,
     fileType:"txt"|"img",
     height:number|undefined,
     rightPanelUserComments: CommentInterface[],
@@ -58,6 +59,7 @@ export const AdvancedEvaluationCommentPanel = (
       return(
         <div key={comment.id}>
           <AdvancedEvaluationCommentPanelListElement
+            highlightedCommentId={highlightedCommentId}
             chosenCommentId={chosenCommentId}
             fileType={fileType}
             handleCommentRemoval={handleCommentRemoval}
