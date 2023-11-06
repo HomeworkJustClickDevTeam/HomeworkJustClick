@@ -38,7 +38,7 @@ export default function AdvancedEvaluationPage() {
   const {availableHeight, availableWidth} = useGetSolutionAreaSizeAvailable()
   const commentsImageState = useGetCommentsImageByFile(file?.postgresId, "")
   const advancedEvaluationImageAreaRef = useRef<any>()
-  const {comments: commentsTextState, setComments: setCommentsTextState} = useGetCommentsTextByFile(file?.postgresId, "")
+  const {comments: commentsTextState, setComments: setCommentsTextState} = useGetCommentsTextByFile(file?.postgresId, "?page=0&size=50")
   const [highlightedCommentId, setHighlightedCommentId] = useState<number|undefined>(undefined)
   const handleCommentHighlighting = (commentId:number) => {
     setHighlightedCommentId(commentId)
@@ -48,15 +48,18 @@ export default function AdvancedEvaluationPage() {
   }
   const handleNewCommentTextCreation =  async () =>{
     if(chosenComment === undefined) return
-    const checkNewRanges = async (updatedComment:AdvancedEvaluationTextCommentInterface, selectedComment:AdvancedEvaluationTextCommentInterface) => {
+    const checkNewRanges = async (updatedComment:AdvancedEvaluationTextCommentInterface, selectedComment: AdvancedEvaluationTextCommentInterface, oldComment:AdvancedEvaluationTextCommentInterface) => {
       if(updatedComment.highlightStart<=updatedComment.highlightEnd){
         const response = await changeCommentTextPostgresService(updatedComment)
         if(response?.status === 200)
           return [updatedComment, selectedComment]
-        else return Promise.reject("something went wrong with changing old comment text")
+        else return [oldComment]
       }
       else{
-        return [selectedComment]
+        const response = await deleteCommentTextPostgresService(updatedComment.id.toString())
+        if(response?.status === 200)
+          return [selectedComment]
+        else return [oldComment]
       }
     }
     const selection = window.getSelection()
@@ -71,71 +74,89 @@ export default function AdvancedEvaluationPage() {
         }
         const response = await createCommentTextWithFilePostgresService(newComment)
         if(response?.status !== 201) return
-        const selectedComment = response.data
+        const selectedComment:AdvancedEvaluationTextCommentInterface = {
+          commentId: response.data.commentId,
+          fileId: response.data.file.id,
+          color: response.data.color,
+          highlightStart: response.data.highlightStart,
+          highlightEnd: response.data.highlightEnd,
+          id: response.data.id
+        }
         const newComments: AdvancedEvaluationTextCommentInterface[] = []
         if (commentsTextState.length === 0) {
           newComments.push(selectedComment)
         } else {
-          await Promise.all(commentsTextState.map( async (oldComment) => {
-            if (oldComment.highlightStart < selectedComment.highlightStart && oldComment.highlightStart < selectedComment.highlightEnd && oldComment.highlightEnd > selectedComment.highlightStart && oldComment.highlightEnd < selectedComment.highlightEnd) {
-              const updatedComment = { ...oldComment, highlightEnd: selectedComment.highlightStart - 1 }
-              const newRanges = await checkNewRanges(updatedComment, selectedComment)
-              newComments.push(...newRanges)
-            } else if (oldComment.highlightStart > selectedComment.highlightStart && oldComment.highlightStart < selectedComment.highlightEnd && oldComment.highlightEnd > selectedComment.highlightStart && oldComment.highlightEnd > selectedComment.highlightEnd) {
-              const updatedComment = {
-                ...oldComment,
-                highlightStart: selectedComment.highlightEnd + 1
+          const tempComments:AdvancedEvaluationTextCommentInterface[][] = (await Promise.all(commentsTextState.flatMap( async (oldComment) => {
+            if(oldComment.commentId === selectedComment.commentId){
+              if (selectedComment.highlightStart < oldComment.highlightStart &&
+                  selectedComment.highlightEnd >= oldComment.highlightStart &&
+                  selectedComment.highlightStart < oldComment.highlightEnd &&
+                  selectedComment.highlightEnd < oldComment.highlightEnd){//--SS--OS--SE--OE--
+                  const updatedComment = {...oldComment, highlightStart: selectedComment.highlightStart}
+                  const deleteResponse = await deleteCommentTextPostgresService(oldComment.id.toString())
+                  if(deleteResponse?.status === 200){
+                    const updateResponse = await changeCommentTextPostgresService(updatedComment)
+                    if(updateResponse?.status === 200)
+                      return [updatedComment]
+                  }
+                  return [oldComment]
+                }
+              else if (selectedComment.highlightStart > oldComment.highlightStart &&
+                selectedComment.highlightEnd > oldComment.highlightStart &&
+                selectedComment.highlightStart <= oldComment.highlightEnd &&
+                selectedComment.highlightEnd > oldComment.highlightEnd){//--OS--SS--OE--SE--
+                const updatedComment = {...oldComment, highlightEnd: selectedComment.highlightEnd}
+                const deleteResponse = await deleteCommentTextPostgresService(oldComment.id.toString())
+                if(deleteResponse?.status === 200){
+                  const updateResponse = await changeCommentTextPostgresService(updatedComment)
+                  if(updateResponse?.status === 200)
+                    return [updatedComment]
+                }
+                return [oldComment]
               }
-              const newRanges = await checkNewRanges(updatedComment, selectedComment)
-              newComments.push(...newRanges)
-            } else if (oldComment.highlightStart > selectedComment.highlightStart && oldComment.highlightStart < selectedComment.highlightEnd && oldComment.highlightEnd > selectedComment.highlightStart && oldComment.highlightEnd < selectedComment.highlightEnd) {
-              newComments.push(selectedComment)
-            } else if (oldComment.highlightStart < selectedComment.highlightStart && oldComment.highlightStart < selectedComment.highlightEnd && oldComment.highlightEnd > selectedComment.highlightStart && oldComment.highlightEnd > selectedComment.highlightEnd) {
-              newComments.push(selectedComment)
-            } else if (oldComment.highlightStart < selectedComment.highlightStart && oldComment.highlightStart < selectedComment.highlightEnd && oldComment.highlightEnd === selectedComment.highlightStart && oldComment.highlightEnd < selectedComment.highlightEnd) {
-              const updatedComment = { ...oldComment, highlightEnd: oldComment.highlightEnd - 1 }
-              const newRanges = await checkNewRanges(updatedComment, selectedComment)
-              newComments.push(...newRanges)
-            } else if (oldComment.highlightStart > selectedComment.highlightStart && oldComment.highlightStart === selectedComment.highlightEnd && oldComment.highlightEnd > selectedComment.highlightStart && oldComment.highlightEnd > selectedComment.highlightEnd) {
-              const updatedComment = { ...oldComment, highlightStart: oldComment.highlightStart + 1 }
-              const newRanges = await checkNewRanges(updatedComment, selectedComment)
-              newComments.push(...newRanges)
-            } else if (oldComment.highlightStart < selectedComment.highlightStart && oldComment.highlightStart < selectedComment.highlightEnd && oldComment.highlightEnd > selectedComment.highlightStart && oldComment.highlightEnd === selectedComment.highlightEnd) {
-              const updatedComment = {
-                ...oldComment,
-                highlightEnd: selectedComment.highlightStart - 1
-              }
-              const newRanges = await checkNewRanges(updatedComment, selectedComment)
-              newComments.push(...newRanges)
-            } else if (oldComment.highlightStart === selectedComment.highlightStart && oldComment.highlightStart < selectedComment.highlightEnd && oldComment.highlightEnd > selectedComment.highlightStart && oldComment.highlightEnd > selectedComment.highlightEnd) {
-              const updatedComment = {
-                ...oldComment,
-                highlightStart: selectedComment.highlightEnd + 1
-              }
-              const newRanges = await checkNewRanges(updatedComment, selectedComment)
-              newComments.push(...newRanges)
-            } else if (oldComment.highlightStart > selectedComment.highlightStart && oldComment.highlightStart === selectedComment.highlightEnd && oldComment.highlightEnd > selectedComment.highlightStart && oldComment.highlightEnd > selectedComment.highlightEnd) {
-              const updatedComment = {
-                ...oldComment,
-                highlightStart: selectedComment.highlightEnd + 1
-              }
-              const newRanges = await checkNewRanges(updatedComment, selectedComment)
-              newComments.push(...newRanges)
-            } else if (oldComment.highlightStart > selectedComment.highlightStart && oldComment.highlightStart === selectedComment.highlightEnd && oldComment.highlightEnd > selectedComment.highlightStart && oldComment.highlightEnd > selectedComment.highlightEnd) {
-              const updatedComment = {
-                ...oldComment,
-                highlightStart: selectedComment.highlightEnd + 1
-              }
-              const newRanges = await checkNewRanges(updatedComment, selectedComment)
-              newComments.push(...newRanges)
-            } else if (oldComment.highlightStart === selectedComment.highlightStart && oldComment.highlightStart === selectedComment.highlightEnd && oldComment.highlightEnd === selectedComment.highlightStart && oldComment.highlightEnd === selectedComment.highlightEnd) {
-              newComments.push(selectedComment)
-              console.log(newComments)
-              return
-            } else {
-              newComments.push(selectedComment, oldComment)
             }
-          }))
+            else{
+              if((selectedComment.highlightStart < oldComment.highlightStart &&
+                  selectedComment.highlightEnd < oldComment.highlightStart) //--SS--SE--OS--OE--
+                ||
+                (selectedComment.highlightStart > oldComment.highlightStart &&
+                  selectedComment.highlightEnd > oldComment.highlightEnd)){//--OS--OE--SS--SE--
+                return [oldComment, selectedComment]
+              }
+              else if (selectedComment.highlightStart < oldComment.highlightStart &&
+                selectedComment.highlightEnd >= oldComment.highlightStart &&
+                selectedComment.highlightStart < oldComment.highlightEnd &&
+                selectedComment.highlightEnd < oldComment.highlightEnd){//--SS--OS--SE--OE--
+                const updatedComment = {...oldComment, highlightStart: selectedComment.highlightEnd+1}
+                return await checkNewRanges(updatedComment,selectedComment,oldComment)
+              }
+              else if ((selectedComment.highlightStart === oldComment.highlightStart &&
+                  selectedComment.highlightEnd === oldComment.highlightEnd)//EQUAL
+                ||
+                (selectedComment.highlightStart > oldComment.highlightStart &&
+                  selectedComment.highlightStart < oldComment.highlightEnd &&
+                  selectedComment.highlightEnd > oldComment.highlightStart &&
+                  selectedComment.highlightEnd < oldComment.highlightEnd)//--OS--SS--SE--OE--
+                ||
+                (selectedComment.highlightStart < oldComment.highlightStart &&
+                  selectedComment.highlightStart < selectedComment.highlightEnd &&
+                  selectedComment.highlightEnd > oldComment.highlightStart &&
+                  selectedComment.highlightEnd > oldComment.highlightStart)){//--SS--OS--OE--SE--
+                const response = await deleteCommentTextPostgresService(oldComment.id.toString())
+                if(response?.status === 200) return [selectedComment]
+                else return [oldComment]
+              }
+              else if (selectedComment.highlightStart>oldComment.highlightStart &&
+                selectedComment.highlightEnd > oldComment.highlightStart &&
+                selectedComment.highlightStart <= oldComment.highlightEnd &&
+                selectedComment.highlightEnd > oldComment.highlightEnd){//--OS--SS--OE--SE--
+                const updatedComment = {...oldComment, highlightEnd: selectedComment.highlightStart -1}
+                return await checkNewRanges(updatedComment,selectedComment,oldComment)
+              }
+            }
+            return [oldComment]
+          })))
+          newComments.push(...tempComments.flat(3))
         }
         selection?.removeAllRanges()
         setCommentsTextState(newComments)
@@ -272,7 +293,7 @@ export default function AdvancedEvaluationPage() {
     }
   }, [file])
   useEffect(() => {
-    if(commentsImageState !== undefined && commentsImageState !== null){
+    if(commentsImageState !== undefined && commentsImageState !== null && advancedEvaluationImageAreaRef?.current !== undefined && advancedEvaluationImageAreaRef?.current !== null){
       drawnCommentsRef.current = commentsImageState
       advancedEvaluationImageAreaRef.current.drawOnCanvas()
     }
@@ -293,6 +314,7 @@ export default function AdvancedEvaluationPage() {
         {(file.format === "txt"
             ? (<AdvancedEvaluationTextArea
               editable={true}
+              chosenComment={chosenComment}
               handleCommentHighlighting={handleCommentHighlighting}
               handleNewCommentTextCreation={handleNewCommentTextCreation}
               setComments={setCommentsTextState}
