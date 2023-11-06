@@ -1,5 +1,5 @@
 import { CommentInterface } from "../../types/CommentInterface"
-import React, { MutableRefObject, useEffect, useImperativeHandle, useRef, useState } from "react"
+import React, { MutableRefObject, useEffect, useImperativeHandle, useLayoutEffect, useRef, useState } from "react"
 import { AdvancedEvaluationImageCommentInterface } from "../../types/AdvancedEvaluationImageCommentInterface"
 import { useWindowSize } from "../customHooks/useWindowSize"
 import { CanvasActionsType } from "../../types/CanvasActionsType"
@@ -539,7 +539,7 @@ export const AdvancedEvaluationImageArea = React.forwardRef<any, AdvancedEvaluat
     }
   }
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     canvasContext.current = canvasRef.current?.getContext("2d")
     drawOnCanvas()
   }, [])

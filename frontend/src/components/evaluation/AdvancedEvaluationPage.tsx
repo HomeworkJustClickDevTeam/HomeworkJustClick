@@ -1,4 +1,4 @@
-import { MutableRefObject, useEffect, useRef, useState } from "react"
+import { MutableRefObject, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react"
 import { useLocation } from "react-router-dom"
 import { useGetFiles } from "../customHooks/useGetFiles"
 import { AdvancedEvaluationCommentPanel } from "./AdvancedEvaluationCommentPanel"
@@ -33,11 +33,11 @@ export default function AdvancedEvaluationPage() {
   const [image, setImage] = useState<HTMLImageElement|undefined>(undefined)
   const [chosenComment, setChosenComment] = useState<CommentInterface|undefined>(undefined)
   const [chosenCommentFrameWidth, setChosenCommentFrameWidth] = useState<number>(5)
-  const drawnCommentsRef = useRef<AdvancedEvaluationImageCommentInterface[]|null>(null)
+  const drawnCommentsRef = useRef<AdvancedEvaluationImageCommentInterface[]>([])
   const {comments: rightPanelUserComments,setComments: setRightPanelUserComments} = useGetCommentsByUser(userState?.id, "")
   const {availableHeight, availableWidth} = useGetSolutionAreaSizeAvailable()
   const commentsImageState = useGetCommentsImageByFile(file?.postgresId, "")
-  const advancedEvaluationImageAreaRef:any = useRef()
+  const advancedEvaluationImageAreaRef = useRef<any>()
   const {comments: commentsTextState, setComments: setCommentsTextState} = useGetCommentsTextByFile(file?.postgresId, "")
   const [highlightedCommentId, setHighlightedCommentId] = useState<number|undefined>(undefined)
   const handleCommentHighlighting = (commentId:number) => {
@@ -226,7 +226,7 @@ export default function AdvancedEvaluationPage() {
       setCommentsTextState(textCommentsTemp)
     }
     const commentImageRemoval = async () => {
-      if(drawnCommentsRef?.current !== undefined && drawnCommentsRef?.current !== null && file.format !== "txt" && advancedEvaluationImageAreaRef.current !== undefined && advancedEvaluationImageAreaRef.current!==null) {
+      if(drawnCommentsRef?.current !== undefined && drawnCommentsRef?.current !== null && file.format !== "txt" && advancedEvaluationImageAreaRef?.current !== undefined && advancedEvaluationImageAreaRef?.current!==null) {
         const drawnCommentsTemp = await Promise.all(drawnCommentsRef.current.filter(async commentImage => {
           if (commentImage.commentId === comment.id) {
             try {
@@ -274,11 +274,9 @@ export default function AdvancedEvaluationPage() {
   useEffect(() => {
     if(commentsImageState !== undefined && commentsImageState !== null){
       drawnCommentsRef.current = commentsImageState
-    }
-    if(advancedEvaluationImageAreaRef?.current !== undefined && advancedEvaluationImageAreaRef?.current !== null)
       advancedEvaluationImageAreaRef.current.drawOnCanvas()
+    }
   }, [commentsImageState])
-
   if(file)
     return (
       <div id={"advancedEvaluationPageDiv"}>
