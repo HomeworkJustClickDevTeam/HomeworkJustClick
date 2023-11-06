@@ -230,4 +230,24 @@ public class CommentFileTextController {
     public void deleteCommentFileText(@PathVariable Integer id) {
         service.deleteCommentFileText(id);
     }
+
+    @DeleteMapping("/byCommentFile/{commentId}/{fileId}")
+    @Operation(
+            summary = "Deletes commentFileText with given commentId and fileId",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK.",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Jwt token invalid",
+                            content = @Content
+                    )
+            }
+    )
+    public void deleteCommentFileTextsByCommentIdAndFileId(@PathVariable Integer commentId, @PathVariable Integer fileId) {
+        service.deleteCommentFileTextsByCommentIdAndFileId(commentId, fileId);
+    }
 }
