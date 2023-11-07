@@ -45,7 +45,7 @@ postgresqlDatabaseJSON.interceptors.response.use((response)=> {
   return response
 }, async (error)=>{
   const originalRequest = error.config
-  if(error !== undefined && error.response.status === 403 && !originalRequest._retry){
+  if(error.response.status === 403 && !originalRequest._retry){
     originalRequest._retry = true
     localStorage.removeItem("user")
     window.dispatchEvent(new Event('storage'))
@@ -114,6 +114,19 @@ export const createFileWithAssignmentPostgresService = async (
       format: format,
       name: name,
     })
+}
+export const createFilesWithAssignmentPostgresService = async (
+    mongoId: string,
+    format: any,
+    name: string,
+    assignmentId: string
+) => {
+  return await postgresqlDatabaseJSON
+      .post(`file/withAssignment/${assignmentId}`, {
+        mongo_id: mongoId,
+        format: format,
+        name: name,
+      })
 }
 
 export const createFileWithSolutionPostgresService = async (

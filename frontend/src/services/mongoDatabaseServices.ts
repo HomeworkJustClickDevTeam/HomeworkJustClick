@@ -45,6 +45,11 @@ export const postFileMongoService = (file: FormData) => {
   return mongoDatabaseServices.post("file", file)
 }
 
+export const postFilesMongoService = (fileList:FormData) => {
+    console.log(fileList.get('file0'))
+    return mongoDatabaseServices.post('fileList',fileList)
+}
+
 export const getFileMongoService = (
   mongoId: string,
   config?: AxiosRequestConfig
