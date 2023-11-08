@@ -1,0 +1,1 @@
+export type CanvasActionsType = "commentHolding"|"commentCreating"|"hovering"|"commentResizing"|"commentDeleting"

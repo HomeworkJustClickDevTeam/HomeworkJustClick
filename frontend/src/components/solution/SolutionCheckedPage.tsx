@@ -3,7 +3,7 @@ import { AssignmentInterface } from "../../types/AssignmentInterface"
 import { SolutionInterface } from "../../types/SolutionInterface"
 import { useGetEvaluationBySolution } from "../customHooks/useGetEvaluationBySolution"
 
-export default function SolutionChecked(props: {
+export default function SolutionCheckedPage(props: {
   solution: SolutionInterface
   assignment: AssignmentInterface
 }) {

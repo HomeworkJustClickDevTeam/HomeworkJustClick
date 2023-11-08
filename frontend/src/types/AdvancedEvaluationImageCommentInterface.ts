@@ -1,8 +1,6 @@
 import { CommentInterface } from "./CommentInterface"
+import { AdvancedEvaluationImageCommentCreateInterface } from "./AdvancedEvaluationImageCommentCreateInterface"
 
-export interface AdvancedEvaluationImageCommentInterface extends CommentInterface {
-  leftTopXY: number[]
-  leftBottomXY: number[]
-  rightTopXY: number[]
-  rightBottomXY: number[]
+export interface AdvancedEvaluationImageCommentInterface extends AdvancedEvaluationImageCommentCreateInterface {
+  id:number
 }

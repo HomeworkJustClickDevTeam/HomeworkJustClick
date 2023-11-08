@@ -2,7 +2,7 @@ import { SolutionFile } from "./SolutionFile"
 import { AssignmentInterface } from "../../types/AssignmentInterface"
 import { SolutionInterface } from "../../types/SolutionInterface"
 
-export default function SolutionUnchecked(props: {
+export default function SolutionUncheckedPage(props: {
   solution: SolutionInterface
   assignment: AssignmentInterface
 }) {
