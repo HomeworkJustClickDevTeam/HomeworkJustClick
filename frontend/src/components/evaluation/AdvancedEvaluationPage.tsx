@@ -13,9 +13,14 @@ import { useAppSelector } from "../../types/HooksRedux"
 import { selectUserState } from "../../redux/userStateSlice"
 import {
   changeCommentImagePostgresService,
-  changeCommentPostgresService, changeCommentTextPostgresService, createCommentTextWithFilePostgresService,
+  changeCommentPostgresService,
+  changeCommentTextPostgresService,
+  createCommentTextWithFilePostgresService,
+  deleteCommentImageByCommentFilePostgresService,
   deleteCommentImagePostgresService,
-  deleteCommentPostgresService, deleteCommentTextPostgresService
+  deleteCommentPostgresService,
+  deleteCommentTextByCommentFilePostgresService,
+  deleteCommentTextPostgresService
 } from "../../services/postgresDatabaseServices"
 import { Simulate } from "react-dom/test-utils"
 import error = Simulate.error
@@ -232,36 +237,28 @@ export default function AdvancedEvaluationPage() {
   }
   const handleCommentRemoval = async (comment:CommentInterface) => {
     const commentTextRemoval = async () => {
-      const textCommentsTemp = await Promise.all(commentsTextState.filter(async (commentText)=> {
-        if(commentText.commentId === comment.id){
-          try {
-            const response = await deleteCommentTextPostgresService(commentText.id.toString())
-            return !(response !== null && response !== undefined && response.status === 200) //if request went okay remove comment - filter false
-          }catch (error){
-            console.log(error)
-            return true
-          }
+      try {
+        const response = await deleteCommentTextByCommentFilePostgresService(comment.id.toString(), file.postgresId.toString())
+        if(response?.status === 200){
+          const textCommentsTemp = commentsTextState.filter(commentText=> !(commentText.commentId === comment.id))
+          setCommentsTextState(textCommentsTemp)
         }
-        return true
-      }))
-      setCommentsTextState(textCommentsTemp)
+      }catch (error){
+        console.log(error)
+      }
     }
     const commentImageRemoval = async () => {
       if(drawnCommentsRef?.current !== undefined && drawnCommentsRef?.current !== null && file.format !== "txt" && advancedEvaluationImageAreaRef?.current !== undefined && advancedEvaluationImageAreaRef?.current!==null) {
-        const drawnCommentsTemp = await Promise.all(drawnCommentsRef.current.filter(async commentImage => {
-          if (commentImage.commentId === comment.id) {
-            try {
-              const response = await deleteCommentImagePostgresService(commentImage.id.toString())
-              return !(response !== null && response !== undefined && response.status === 200) //if request went okay remove comment - filter false
-            } catch (error) {
-              console.log(error)
-              return true
-            }
+        try {
+          const response = await deleteCommentImageByCommentFilePostgresService(comment.id.toString(), file.postgresId.toString())
+          if(response?.status === 200){
+            const drawnCommentsTemp = drawnCommentsRef.current.filter( commentImage => !(commentImage.commentId === comment.id))
+            drawnCommentsRef.current = drawnCommentsTemp
+            advancedEvaluationImageAreaRef.current.drawOnCanvas()
           }
-          return true
-        }))
-        drawnCommentsRef.current = drawnCommentsTemp
-        advancedEvaluationImageAreaRef.current.drawOnCanvas()
+        }catch (error){
+          console.log(error)
+        }
       }
     }
     try {

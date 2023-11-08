@@ -346,6 +346,16 @@ export const deleteAssignmentPostgresService = async (assignmentId: string) => {
     .delete(`/assignment/${assignmentId}`)
 }
 
+export const deleteCommentTextByCommentFilePostgresService = async (commentId: string, fileId: string) => {
+  return await postgresqlDatabaseJSON
+    .delete(`/comment_file_text/byCommentFile/${commentId}/${fileId}`)
+}
+
+export const deleteCommentImageByCommentFilePostgresService = async (commentId: string, fileId: string) => {
+  return await postgresqlDatabaseJSON
+    .delete(`/comment_file_img/byCommentFile/${commentId}/${fileId}`)
+}
+
 export const deleteFilePostgresService = async (fileId: string) => {
   return await postgresqlDatabaseJSON.delete(`file/${fileId}`)
 }
