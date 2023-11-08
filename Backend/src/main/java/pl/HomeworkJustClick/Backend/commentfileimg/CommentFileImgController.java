@@ -20,6 +20,15 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @SecurityRequirement(name = "Bearer Authentication")
 @Tag(name = "Comment file img", description = "Comment file img related calls.")
+@ApiResponse(
+        responseCode = "403",
+        description = "Something is wrong with the token.",
+        content = @Content()
+)
+@ApiResponse(
+        responseCode = "200",
+        description = "OK."
+)
 public class CommentFileImgController {
     private final CommentFileImgService service;
 
@@ -42,7 +51,7 @@ public class CommentFileImgController {
             },
             parameters = {
                     @Parameter(name = "page", example = "0", description = "default = 0"),
-                    @Parameter(name = "size", example = "10", description = "default = 20"),
+                    @Parameter(name = "size", example = "20", description = "default = 10"),
                     @Parameter(name = "sort", example = "id,desc", description = "default = id,asc")
             }
     )
@@ -101,7 +110,7 @@ public class CommentFileImgController {
             },
             parameters = {
                     @Parameter(name = "page", example = "0", description = "default = 0"),
-                    @Parameter(name = "size", example = "10", description = "default = 20"),
+                    @Parameter(name = "size", example = "20", description = "default = 10"),
                     @Parameter(name = "sort", example = "id,desc", description = "default = id,asc")
             }
     )
@@ -133,7 +142,7 @@ public class CommentFileImgController {
             },
             parameters = {
                     @Parameter(name = "page", example = "0", description = "default = 0"),
-                    @Parameter(name = "size", example = "10", description = "default = 20"),
+                    @Parameter(name = "size", example = "20", description = "default = 10"),
                     @Parameter(name = "sort", example = "id,desc", description = "default = id,asc")
             }
     )
@@ -229,5 +238,25 @@ public class CommentFileImgController {
     )
     public void deleteCommentFileImg(@PathVariable Integer id) {
         service.deleteCommentFileImg(id);
+    }
+
+    @DeleteMapping("/byCommentFile/{commentId}/{fileId}")
+    @Operation(
+            summary = "Deletes commentFileImg with given commentId and fileId",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK.",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Jwt token invalid",
+                            content = @Content
+                    )
+            }
+    )
+    public void deleteCommentFileImgsByCommentIdAndFileId(@PathVariable Integer commentId, @PathVariable Integer fileId) {
+        service.deleteCommentFileImgsByCommentIdAndFileId(commentId, fileId);
     }
 }
