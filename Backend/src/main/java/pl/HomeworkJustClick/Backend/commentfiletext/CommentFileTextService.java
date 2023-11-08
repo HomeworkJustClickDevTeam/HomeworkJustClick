@@ -63,6 +63,11 @@ public class CommentFileTextService {
         repository.delete(commentFileText);
     }
 
+    public void deleteCommentFileTextsByCommentIdAndFileId(Integer commentId, Integer fileId) {
+        var commentFileTextsToDelete = repository.findCommentFileTextsByCommentIdAndFileId(commentId, fileId);
+        repository.deleteAll(commentFileTextsToDelete);
+    }
+
     private void setRelationFields(CommentFileText commentFileText, CommentFileTextDto commentFileTextDto) {
         var comment = commentService.findById(commentFileTextDto.getCommentId());
         var file = fileService.findById(commentFileTextDto.getFileId());

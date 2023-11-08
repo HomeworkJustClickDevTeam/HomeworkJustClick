@@ -168,6 +168,31 @@ public class CommentFileTextControllerTest extends BaseTestEntity {
                 .andReturn();
     }
 
+    @Test
+    void shouldDeleteCommentFileTextsByCommentIdAndFileId() throws Exception {
+        var commentFileTexts = commentFileTextRepository.findAll();
+        var firstCommentFileText = commentFileTexts.get(0);
+        var comment = firstCommentFileText.getComment();
+        var file = firstCommentFileText.getFile();
+        var secondCommentFileText = commentFileTexts.get(1);
+        secondCommentFileText.setComment(comment);
+        secondCommentFileText.setFile(file);
+        commentFileTextRepository.save(secondCommentFileText);
+        mockMvc.perform(delete("/api/comment_file_text/byCommentFile/" + comment.getId() + "/" + file.getId()))
+                .andExpect(status().isOk())
+                .andReturn();
+        assertEquals(commentFileTexts.size() - 2, commentFileTextRepository.findAll().size());
+    }
+
+    @Test
+    void shouldNotDeleteCommentFileTextsByNotExistingCommentIdAndFileId() throws Exception {
+        var commentFileTexts = commentFileTextRepository.findAll();
+        mockMvc.perform(delete("/api/comment_file_text/byCommentFile/999/999"))
+                .andExpect(status().isOk())
+                .andReturn();
+        assertEquals(commentFileTexts.size(), commentFileTextRepository.findAll().size());
+    }
+
     private CommentFileTextDto createCommentFileTextDto(Integer highlightStart, Integer highlightEnd, String color, Integer commentId, Integer fileId) {
         return CommentFileTextDto.builder()
                 .highlightStart(highlightStart)

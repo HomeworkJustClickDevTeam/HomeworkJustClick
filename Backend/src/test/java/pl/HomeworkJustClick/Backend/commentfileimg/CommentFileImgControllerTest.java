@@ -185,6 +185,31 @@ public class CommentFileImgControllerTest extends BaseTestEntity {
                 .andReturn();
     }
 
+    @Test
+    void shouldDeleteCommentFileImgByCommentIdAndFileId() throws Exception {
+        var commentFileImgs = commentFileImgRepository.findAll();
+        var firstCommentFileImg = commentFileImgs.get(0);
+        var comment = firstCommentFileImg.getComment();
+        var file = firstCommentFileImg.getFile();
+        var secondCommentFileImg = commentFileImgs.get(1);
+        secondCommentFileImg.setComment(comment);
+        secondCommentFileImg.setFile(file);
+        commentFileImgRepository.save(secondCommentFileImg);
+        mockMvc.perform(delete("/api/comment_file_img/byCommentFile/" + comment.getId() + "/" + file.getId()))
+                .andExpect(status().isOk())
+                .andReturn();
+        assertEquals(commentFileImgs.size() - 2, commentFileImgRepository.findAll().size());
+    }
+
+    @Test
+    void shouldNotDeleteCommentFileImgByNotExistingCommentIdAndFileId() throws Exception {
+        var commentFileImgs = commentFileImgRepository.findAll();
+        mockMvc.perform(delete("/api/comment_file_img/byCommentFile/999/999"))
+                .andExpect(status().isOk())
+                .andReturn();
+        assertEquals(commentFileImgs.size(), commentFileImgRepository.findAll().size());
+    }
+
     private CommentFileImgDto createCommentImgDto(Integer leftTopX, Integer leftTopY, Integer width, Integer height, Integer lineWidth, Integer imgWidth, Integer imgHeight, String color, Integer commentId, Integer fileId) {
         if (commentId == 1) {
             commentId = commentRepository.findAll().get(0).getId();
