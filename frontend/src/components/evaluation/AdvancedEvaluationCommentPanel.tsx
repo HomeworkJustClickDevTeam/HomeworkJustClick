@@ -42,6 +42,7 @@ export const AdvancedEvaluationCommentPanel = (
                 counter:response.data.counter,
                 lastUsedDate: response.data.lastUsedDate},
                 ...tempComments])
+              setNewCommentDescription("")
             }
           })
           .catch((error) => console.log(error))

@@ -80,7 +80,7 @@ export default function AdvancedEvaluationPage() {
         const response = await createCommentTextWithFilePostgresService(newComment)
         if(response?.status !== 201) return
         const selectedComment:AdvancedEvaluationTextCommentInterface = {
-          commentId: response.data.commentId,
+          commentId: response.data.comment.id,
           fileId: response.data.file.id,
           color: response.data.color,
           highlightStart: response.data.highlightStart,
@@ -92,76 +92,75 @@ export default function AdvancedEvaluationPage() {
           newComments.push(selectedComment)
         } else {
           const tempComments:AdvancedEvaluationTextCommentInterface[][] = (await Promise.all(commentsTextState.flatMap( async (oldComment) => {
-            if(oldComment.commentId === selectedComment.commentId){
-              if (selectedComment.highlightStart < oldComment.highlightStart &&
-                  selectedComment.highlightEnd >= oldComment.highlightStart &&
-                  selectedComment.highlightStart < oldComment.highlightEnd &&
-                  selectedComment.highlightEnd < oldComment.highlightEnd){//--SS--OS--SE--OE--
-                  const updatedComment = {...oldComment, highlightStart: selectedComment.highlightStart}
-                  const deleteResponse = await deleteCommentTextPostgresService(oldComment.id.toString())
-                  if(deleteResponse?.status === 200){
-                    const updateResponse = await changeCommentTextPostgresService(updatedComment)
-                    if(updateResponse?.status === 200)
-                      return [updatedComment]
-                  }
-                  return [oldComment]
-                }
-              else if (selectedComment.highlightStart > oldComment.highlightStart &&
-                selectedComment.highlightEnd > oldComment.highlightStart &&
-                selectedComment.highlightStart <= oldComment.highlightEnd &&
-                selectedComment.highlightEnd > oldComment.highlightEnd){//--OS--SS--OE--SE--
-                const updatedComment = {...oldComment, highlightEnd: selectedComment.highlightEnd}
-                const deleteResponse = await deleteCommentTextPostgresService(oldComment.id.toString())
-                if(deleteResponse?.status === 200){
-                  const updateResponse = await changeCommentTextPostgresService(updatedComment)
-                  if(updateResponse?.status === 200)
-                    return [updatedComment]
-                }
-                return [oldComment]
+            console.log(selectedComment, oldComment)
+            if (oldComment.commentId === selectedComment.commentId &&
+              selectedComment.highlightStart < oldComment.highlightStart &&
+              selectedComment.highlightEnd >= oldComment.highlightStart &&
+              selectedComment.highlightStart < oldComment.highlightEnd &&
+              selectedComment.highlightEnd < oldComment.highlightEnd){//--SS--OS--SE--OE--
+              const updatedComment = {...oldComment, highlightStart: selectedComment.highlightStart}
+              const deleteResponse = await deleteCommentTextPostgresService(selectedComment.id.toString())
+              if(deleteResponse?.status === 200){
+                const updateResponse = await changeCommentTextPostgresService(updatedComment)
+                if(updateResponse?.status === 200)
+                  return [updatedComment]
               }
+              return [oldComment]
             }
-            else{
-              if((selectedComment.highlightStart < oldComment.highlightStart &&
-                  selectedComment.highlightEnd < oldComment.highlightStart) //--SS--SE--OS--OE--
-                ||
-                (selectedComment.highlightStart > oldComment.highlightStart &&
-                  selectedComment.highlightEnd > oldComment.highlightEnd)){//--OS--OE--SS--SE--
-                return [oldComment, selectedComment]
+            else if (oldComment.commentId === selectedComment.commentId &&
+              selectedComment.highlightStart > oldComment.highlightStart &&
+              selectedComment.highlightEnd > oldComment.highlightStart &&
+              selectedComment.highlightStart <= oldComment.highlightEnd &&
+              selectedComment.highlightEnd > oldComment.highlightEnd){//--OS--SS--OE--SE--
+              const updatedComment = {...oldComment, highlightEnd: selectedComment.highlightEnd}
+              const deleteResponse = await deleteCommentTextPostgresService(selectedComment.id.toString())
+              if(deleteResponse?.status === 200){
+                const updateResponse = await changeCommentTextPostgresService(updatedComment)
+                if(updateResponse?.status === 200)
+                  return [updatedComment]
               }
-              else if (selectedComment.highlightStart < oldComment.highlightStart &&
-                selectedComment.highlightEnd >= oldComment.highlightStart &&
+              return [oldComment]
+            }
+            else if((selectedComment.highlightStart < oldComment.highlightStart &&
+                selectedComment.highlightEnd < oldComment.highlightStart) //--SS--SE--OS--OE--
+              ||
+              (selectedComment.highlightStart > oldComment.highlightStart &&
+                selectedComment.highlightEnd > oldComment.highlightEnd)){//--OS--OE--SS--SE--
+              return [oldComment, selectedComment]
+            }
+            else if (selectedComment.highlightStart < oldComment.highlightStart &&
+              selectedComment.highlightEnd >= oldComment.highlightStart &&
+              selectedComment.highlightStart < oldComment.highlightEnd &&
+              selectedComment.highlightEnd < oldComment.highlightEnd){//--SS--OS--SE--OE--
+              const updatedComment = {...oldComment, highlightStart: selectedComment.highlightEnd+1}
+              return await checkNewRanges(updatedComment,selectedComment,oldComment)
+            }
+            else if ((selectedComment.highlightStart === oldComment.highlightStart &&
+                selectedComment.highlightEnd === oldComment.highlightEnd)//EQUAL
+              ||
+              (selectedComment.highlightStart > oldComment.highlightStart &&
                 selectedComment.highlightStart < oldComment.highlightEnd &&
-                selectedComment.highlightEnd < oldComment.highlightEnd){//--SS--OS--SE--OE--
-                const updatedComment = {...oldComment, highlightStart: selectedComment.highlightEnd+1}
-                return await checkNewRanges(updatedComment,selectedComment,oldComment)
-              }
-              else if ((selectedComment.highlightStart === oldComment.highlightStart &&
-                  selectedComment.highlightEnd === oldComment.highlightEnd)//EQUAL
-                ||
-                (selectedComment.highlightStart > oldComment.highlightStart &&
-                  selectedComment.highlightStart < oldComment.highlightEnd &&
-                  selectedComment.highlightEnd > oldComment.highlightStart &&
-                  selectedComment.highlightEnd < oldComment.highlightEnd)//--OS--SS--SE--OE--
-                ||
-                (selectedComment.highlightStart < oldComment.highlightStart &&
-                  selectedComment.highlightStart < selectedComment.highlightEnd &&
-                  selectedComment.highlightEnd > oldComment.highlightStart &&
-                  selectedComment.highlightEnd > oldComment.highlightStart)){//--SS--OS--OE--SE--
-                const response = await deleteCommentTextPostgresService(oldComment.id.toString())
-                if(response?.status === 200) return [selectedComment]
-                else return [oldComment]
-              }
-              else if (selectedComment.highlightStart>oldComment.highlightStart &&
                 selectedComment.highlightEnd > oldComment.highlightStart &&
-                selectedComment.highlightStart <= oldComment.highlightEnd &&
-                selectedComment.highlightEnd > oldComment.highlightEnd){//--OS--SS--OE--SE--
-                const updatedComment = {...oldComment, highlightEnd: selectedComment.highlightStart -1}
-                return await checkNewRanges(updatedComment,selectedComment,oldComment)
-              }
+                selectedComment.highlightEnd < oldComment.highlightEnd)//--OS--SS--SE--OE--
+              ||
+              (selectedComment.highlightStart < oldComment.highlightStart &&
+                selectedComment.highlightStart < selectedComment.highlightEnd &&
+                selectedComment.highlightEnd > oldComment.highlightStart &&
+                selectedComment.highlightEnd > oldComment.highlightStart)){//--SS--OS--OE--SE--
+              const response = await deleteCommentTextPostgresService(oldComment.id.toString())
+              if(response?.status === 200) return [selectedComment]
+              else return [oldComment]
             }
-            return [oldComment]
-          })))
-          newComments.push(...tempComments.flat(3))
+            else if (selectedComment.highlightStart>oldComment.highlightStart &&
+              selectedComment.highlightEnd > oldComment.highlightStart &&
+              selectedComment.highlightStart <= oldComment.highlightEnd &&
+              selectedComment.highlightEnd > oldComment.highlightEnd){//--OS--SS--OE--SE--
+              const updatedComment = {...oldComment, highlightEnd: selectedComment.highlightStart -1}
+              return await checkNewRanges(updatedComment,selectedComment,oldComment)
+            }
+          return [oldComment]
+      })))
+      newComments.push(...tempComments.flat(3))
         }
         selection?.removeAllRanges()
         setCommentsTextState(newComments)
