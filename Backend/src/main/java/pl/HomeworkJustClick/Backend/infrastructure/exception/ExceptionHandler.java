@@ -25,4 +25,16 @@ public class ExceptionHandler {
         body.put("path", ((ServletWebRequest) request).getRequest().getRequestURI());
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler(value = {InvalidArgumentException.class})
+    public ResponseEntity<Object> invalidArgumentException(InvalidArgumentException ex, WebRequest request) {
+        ex.printStackTrace();
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", 400);
+        body.put("error", "Bad request");
+        body.put("message", ex.getMessage());
+        body.put("path", ((ServletWebRequest) request).getRequest().getRequestURI());
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
 }

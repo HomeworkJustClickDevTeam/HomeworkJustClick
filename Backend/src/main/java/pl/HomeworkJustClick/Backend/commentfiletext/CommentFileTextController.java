@@ -20,6 +20,15 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @SecurityRequirement(name = "Bearer Authentication")
 @Tag(name = "Comment file text", description = "Comment file text related calls.")
+@ApiResponse(
+        responseCode = "403",
+        description = "Something is wrong with the token.",
+        content = @Content()
+)
+@ApiResponse(
+        responseCode = "200",
+        description = "OK."
+)
 public class CommentFileTextController {
     private final CommentFileTextService service;
 
@@ -42,7 +51,7 @@ public class CommentFileTextController {
             },
             parameters = {
                     @Parameter(name = "page", example = "0", description = "default = 0"),
-                    @Parameter(name = "size", example = "10", description = "default = 20"),
+                    @Parameter(name = "size", example = "20", description = "default = 10"),
                     @Parameter(name = "sort", example = "id,desc", description = "default = id,asc")
             }
     )
@@ -101,7 +110,7 @@ public class CommentFileTextController {
             },
             parameters = {
                     @Parameter(name = "page", example = "0", description = "default = 0"),
-                    @Parameter(name = "size", example = "10", description = "default = 20"),
+                    @Parameter(name = "size", example = "20", description = "default = 10"),
                     @Parameter(name = "sort", example = "id,desc", description = "default = id,asc")
             }
     )
@@ -133,7 +142,7 @@ public class CommentFileTextController {
             },
             parameters = {
                     @Parameter(name = "page", example = "0", description = "default = 0"),
-                    @Parameter(name = "size", example = "10", description = "default = 20"),
+                    @Parameter(name = "size", example = "20", description = "default = 10"),
                     @Parameter(name = "sort", example = "id,desc", description = "default = id,asc")
             }
     )
@@ -229,5 +238,25 @@ public class CommentFileTextController {
     )
     public void deleteCommentFileText(@PathVariable Integer id) {
         service.deleteCommentFileText(id);
+    }
+
+    @DeleteMapping("/byCommentFile/{commentId}/{fileId}")
+    @Operation(
+            summary = "Deletes commentFileText with given commentId and fileId",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK.",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Jwt token invalid",
+                            content = @Content
+                    )
+            }
+    )
+    public void deleteCommentFileTextsByCommentIdAndFileId(@PathVariable Integer commentId, @PathVariable Integer fileId) {
+        service.deleteCommentFileTextsByCommentIdAndFileId(commentId, fileId);
     }
 }
