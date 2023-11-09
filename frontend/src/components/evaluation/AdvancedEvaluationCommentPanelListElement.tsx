@@ -32,6 +32,12 @@ export const AdvancedEvaluationCommentPanelListElement = (
   const handleEditButtonBehaviour = async () => {
     if(!commentReadonly){
       changeCommentPostgresService(commentState)
+        .then(()=>{
+          fileType === "txt" ?
+            updateCommentsLists(commentState)
+            :
+            updateCommentsLists(commentState, frameWidth)
+        })
         .catch((error)=> console.log(error))
     }
     setCommentReadonly(prevState => !prevState)
@@ -66,14 +72,6 @@ export const AdvancedEvaluationCommentPanelListElement = (
              id={"commentDescription"}
              key={commentState.id}
              readOnly={commentReadonly}
-             onClick={() => {
-               commentReadonly && (
-                 fileType === "txt" ?
-                   updateCommentsLists(commentState)
-                   :
-                   updateCommentsLists(commentState, frameWidth)
-               )
-             }}
              defaultValue={commentState.description}></input>
       <button id={"editButton"} onClick={() => handleEditButtonBehaviour()}>
         {commentReadonly ? "Edytuj kometarz":"Ok"}
