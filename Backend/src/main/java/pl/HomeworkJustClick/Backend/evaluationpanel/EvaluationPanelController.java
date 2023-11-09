@@ -15,7 +15,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import pl.HomeworkJustClick.Backend.comment.CommentResponseDto;
 
 @RestController
 @RequiredArgsConstructor
@@ -90,33 +89,6 @@ public class EvaluationPanelController {
         return service.createEvaluationPanel(evaluationPanelDto);
     }
 
-    @PostMapping("/use/{id}")
-    @Operation(
-            summary = "Updates evaluation panel lastUsedDate and increments counter",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "OK.",
-                            content = @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = CommentResponseDto.class))
-                    ),
-                    @ApiResponse(
-                            responseCode = "404",
-                            description = "Evaluation panel not found",
-                            content = @Content
-                    ),
-                    @ApiResponse(
-                            responseCode = "403",
-                            description = "Jwt token invalid",
-                            content = @Content
-                    )
-            }
-    )
-    public EvaluationPanelResponseDto updateEvaluationPanelCounterAndLastUsedDate(@PathVariable Integer id) {
-        return service.updateEvaluationPanelCounterAndLastUsedDate(id);
-    }
-
     @DeleteMapping("{id}")
     @Operation(
             summary = "Deletes evaluation panel by id",
@@ -128,7 +100,7 @@ public class EvaluationPanelController {
                     ),
                     @ApiResponse(
                             responseCode = "404",
-                            description = "Comment not found",
+                            description = "Evaluation panel not found",
                             content = @Content
                     ),
                     @ApiResponse(

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import pl.HomeworkJustClick.Backend.assignment.AssignmentService;
 import pl.HomeworkJustClick.Backend.evaluationpanel.EvaluationPanelResponseDto;
 import pl.HomeworkJustClick.Backend.evaluationpanel.EvaluationPanelService;
+import pl.HomeworkJustClick.Backend.evaluationpanel.EvaluationPanelUtilsService;
 import pl.HomeworkJustClick.Backend.infrastructure.exception.EntityNotFoundException;
 import pl.HomeworkJustClick.Backend.infrastructure.exception.InvalidArgumentException;
 
@@ -15,6 +16,7 @@ public class EvaluationPanelAssignmentService {
     private final EvaluationPanelAssignmentMapper mapper;
     private final AssignmentService assignmentService;
     private final EvaluationPanelService evaluationPanelService;
+    private final EvaluationPanelUtilsService evaluationPanelUtilsService;
 
     public EvaluationPanelAssignment findById(Integer id) {
         return repository.findById(id)
@@ -38,6 +40,7 @@ public class EvaluationPanelAssignmentService {
         validateDto(evaluationPanelAssignmentDto);
         var evaluationPanelAssignment = mapper.map(evaluationPanelAssignmentDto);
         setRelationFields(evaluationPanelAssignment, evaluationPanelAssignmentDto);
+        evaluationPanelUtilsService.updateEvaluationPanel(evaluationPanelAssignmentDto.getEvaluationPanelId());
         var savedEvaluationPanelAssignment = repository.save(evaluationPanelAssignment);
         var evaluationPanelAssignmentResponseDto = mapper.map(savedEvaluationPanelAssignment);
         evaluationPanelAssignmentResponseDto.setEvaluationPanel(evaluationPanelService.getEvaluationPanelResponseDtoById(savedEvaluationPanelAssignment.getEvaluationPanel().getId()));

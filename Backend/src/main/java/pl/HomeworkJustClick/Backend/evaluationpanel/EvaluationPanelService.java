@@ -16,7 +16,6 @@ import pl.HomeworkJustClick.Backend.infrastructure.exception.EntityNotFoundExcep
 import pl.HomeworkJustClick.Backend.infrastructure.exception.InvalidArgumentException;
 import pl.HomeworkJustClick.Backend.user.UserService;
 
-import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -87,13 +86,6 @@ public class EvaluationPanelService {
         var evaluationPanelButtons = evaluationPanelButtonService.save(savedEvaluationPanel, savedButtonsList);
         savedEvaluationPanel.setEvaluationPanelButtons(evaluationPanelButtons);
         return createEvaluationPanelResponseDto(savedEvaluationPanel);
-    }
-
-    public EvaluationPanelResponseDto updateEvaluationPanelCounterAndLastUsedDate(Integer id) {
-        var evaluationPanel = findById(id);
-        evaluationPanel.setCounter(evaluationPanel.getCounter() + 1);
-        evaluationPanel.setLastUsedDate(OffsetDateTime.now());
-        return mapper.map(repository.save(evaluationPanel));
     }
 
     private EvaluationPanelResponseDto createEvaluationPanelResponseDto(EvaluationPanel evaluationPanel) {
