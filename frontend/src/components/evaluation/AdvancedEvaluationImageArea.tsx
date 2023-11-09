@@ -531,10 +531,10 @@ export const AdvancedEvaluationImageArea = React.forwardRef<any, AdvancedEvaluat
         }
       scaleCommentsToImageDimensions()
       for (const comment of drawnComments.current) {
-        canvasContext.current.strokeStyle = comment.color
+        canvasContext.current.fillStyle = comment.color
         canvasContext.current.lineWidth = comment.lineWidth
-        canvasContext.current.globalAlpha = 0.5
-        canvasContext.current.strokeRect(comment.leftTopX, comment.leftTopY, comment.width, comment.height)
+        canvasContext.current.globalAlpha = 0.2
+        canvasContext.current.fillRect(comment.leftTopX, comment.leftTopY, comment.width, comment.height)
       }
     }
   }

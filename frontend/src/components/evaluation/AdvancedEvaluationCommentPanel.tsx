@@ -20,6 +20,7 @@ export const AdvancedEvaluationCommentPanel = (
 
   const [newCommentDescription, setNewCommentDescription] = useState<string|undefined>(undefined)
   const userState = useAppSelector(selectUserState)
+  const [sortButtonState, setSortButtonState] = useState<"usageFrequency"|"lastUsed"|"alphabetic">("lastUsed")
 
   const handleNewCommentCreation = async (event:React.FormEvent<HTMLButtonElement>) => {
     event.preventDefault()
@@ -49,6 +50,16 @@ export const AdvancedEvaluationCommentPanel = (
       }
     }
   }
+  // const sortComments = ():CommentInterface[] => {
+  //   switch(sortButtonState){
+  //     case "lastUsed":
+  //       return rightPanelUserComments.sort((comment1, comment2) => comment2.lastUsedDate - comment1.lastUsedDate as Date)
+  //     case "alphabetic":
+  //       break
+  //     case "usageFrequency":
+  //       break
+  //   }
+  // }
 
 
   return <div id={"commentPanel"} style={{float:"right", height:height !== undefined ? height.toString() : "100%", overflow:"scroll"}}>

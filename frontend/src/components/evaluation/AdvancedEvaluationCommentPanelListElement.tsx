@@ -26,7 +26,7 @@ export const AdvancedEvaluationCommentPanelListElement = (
       setChosenComment(undefined)
     }
     else {
-      setChosenComment(comment)
+      setChosenComment(commentState)
     }
   }
   const handleEditButtonBehaviour = async () => {
@@ -86,8 +86,9 @@ export const AdvancedEvaluationCommentPanelListElement = (
         <input
           id={"colorPicker"}
           value={commentState.color}
-          onChange={(event) =>
+          onChange={(event) =>{
             setCommentState((prevState)=>({...prevState, color:event.target.value}))}
+          }
           type={"color"}/>
         <button type={"submit"}>Potwierdz zmiane koloru</button>
       </form>
