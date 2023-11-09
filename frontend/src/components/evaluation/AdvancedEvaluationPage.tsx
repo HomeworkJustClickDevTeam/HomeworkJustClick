@@ -1,5 +1,5 @@
-import { MutableRefObject, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react"
-import { useLocation } from "react-router-dom"
+import React, { MutableRefObject, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import { useGetFiles } from "../customHooks/useGetFiles"
 import { AdvancedEvaluationCommentPanel } from "./AdvancedEvaluationCommentPanel"
 import { AdvancedEvaluationTextArea } from "./AdvancedEvaluationTextArea"
@@ -29,11 +29,13 @@ import { useGetCommentsImageByFile } from "../customHooks/useGetCommentsImageByF
 import { AdvancedEvaluationTextCommentCreateInterface } from "../../types/AdvancedEvaluationTextCommentCreateInterface"
 import { AdvancedEvaluationTextCommentInterface } from "../../types/AdvancedEvaluationTextCommentInterface"
 import { useGetCommentsTextByFile } from "../customHooks/useGetCommentsTextByFile"
+import { selectGroup } from "../../redux/groupSlice"
 
 export default function AdvancedEvaluationPage() {
   let {state} = useLocation()
+  const group = useAppSelector(selectGroup)
   const userState = useAppSelector(selectUserState)
-  const file = useGetFiles(state, 'solution')[0]
+  const file = useGetFiles(state.solutionExtended.id, 'solution')[0]
   const [fileText, setFileText] = useState("")
   const [image, setImage] = useState<HTMLImageElement|undefined>(undefined)
   const [chosenComment, setChosenComment] = useState<CommentInterface|undefined>(undefined)
@@ -45,6 +47,7 @@ export default function AdvancedEvaluationPage() {
   const advancedEvaluationImageAreaRef = useRef<any>()
   const {comments: commentsTextState, setComments: setCommentsTextState} = useGetCommentsTextByFile(file?.postgresId, "?page=0&size=50")
   const [highlightedCommentId, setHighlightedCommentId] = useState<number|undefined>(undefined)
+  const navigate = useNavigate()
   const handleCommentHighlighting = (commentId:number) => {
     setHighlightedCommentId(commentId)
     setTimeout(() => {
@@ -295,6 +298,10 @@ export default function AdvancedEvaluationPage() {
   if(file)
     return (
       <div id={"advancedEvaluationPageDiv"}>
+        {group?.id !== undefined && userState?.id !== undefined &&
+        <div style={{width: "100%"}}>
+          <Link to = {`/group/${state.solutionExtended.assignment.groupId}/solution/${state.solutionExtended.user.id}/${state.solutionExtended.assignment.id}`} state={{solution: state.solutionExtended}}>Wróć</Link>
+        </div>}
         <AdvancedEvaluationCommentPanel
           chosenCommentId={chosenComment?.id}
           height={availableHeight}
