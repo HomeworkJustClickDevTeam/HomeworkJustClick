@@ -43,6 +43,9 @@ public class Comment {
     @Column(name = "counter")
     private Integer counter;
 
+    @Column(name = "visible")
+    private Boolean visible;
+
     @OneToMany(
             mappedBy = "comment",
             orphanRemoval = true,

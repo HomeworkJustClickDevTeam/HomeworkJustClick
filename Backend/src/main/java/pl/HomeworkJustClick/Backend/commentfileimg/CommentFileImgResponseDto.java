@@ -17,7 +17,6 @@ public class CommentFileImgResponseDto implements Serializable {
     private Integer leftTopY;
     private Integer width;
     private Integer height;
-    private Integer lineWidth;
     private Integer imgWidth;
     private Integer imgHeight;
     private String color;
