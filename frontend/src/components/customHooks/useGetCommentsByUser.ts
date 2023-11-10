@@ -3,6 +3,7 @@ import { CommentInterface } from "../../types/CommentInterface"
 import { useAppDispatch } from "../../types/HooksRedux"
 import { setIsLoading } from "../../redux/isLoadingSlice"
 import { getCommentsByUserPostgresService } from "../../services/postgresDatabaseServices"
+import { parseISO } from "date-fns"
 
 export const useGetCommentsByUser = (userId: number|undefined|null, params:string) => {
   const [comments, setComments] = useState<CommentInterface[]>([])
@@ -13,19 +14,36 @@ export const useGetCommentsByUser = (userId: number|undefined|null, params:strin
     if(userId !== undefined && userId !== null) {
       dispatch(setIsLoading(true))
       getCommentsByUserPostgresService(userId.toString(), params)
-        .then((response) => {
+        .then(async (response) => {
           if (response !== null && response !== undefined){
-            let commentsFromServer:CommentInterface[] = []
+            const commentsFromServer:CommentInterface[] = []
             for(const commentFromServer of response.data.content){
               commentsFromServer.push({
                 title:commentFromServer.title,
                 description: commentFromServer.description,
                 color:commentFromServer.color,
                 userId:commentFromServer.user.id,
-                lastUsedDate: commentFromServer.lastUsedDate,
+                lastUsedDate: parseISO(commentFromServer.lastUsedDate),
                 counter: commentFromServer.counter,
                 id: commentFromServer.id
               })
+            }
+            console.log(response.data.totalPages)
+            for(let pageNumber = 1; pageNumber < response.data.totalPages; pageNumber++) {
+              const response = await getCommentsByUserPostgresService(userId.toString(), `?page=${pageNumber}&${params}`)
+              if (response?.status === 200) {
+                for (const commentFromServer of response.data.content) {
+                  commentsFromServer.push({
+                    title: commentFromServer.title,
+                    description: commentFromServer.description,
+                    color: commentFromServer.color,
+                    userId: commentFromServer.user.id,
+                    lastUsedDate: parseISO(commentFromServer.lastUsedDate),
+                    counter: commentFromServer.counter,
+                    id: commentFromServer.id
+                  })
+                }
+              }
             }
             if(mounted){setComments(commentsFromServer)}
           }

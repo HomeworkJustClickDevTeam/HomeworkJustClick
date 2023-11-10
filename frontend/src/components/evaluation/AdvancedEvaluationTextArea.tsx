@@ -26,7 +26,7 @@ export const AdvancedEvaluationTextArea = ({fileText, width, height, comments, s
     let newArray = Array<undefined|string>(fileText.length)
     newArray.fill(undefined, 0, fileText.length)
     commentsList.forEach((comment)=>{
-      newArray.fill(comment.color, comment.highlightStart, comment.highlightEnd+1)
+      if(comment.highlightStart <= comment.highlightEnd) newArray.fill(comment.color, comment.highlightStart, comment.highlightEnd+1)
     })
     return newArray
   }

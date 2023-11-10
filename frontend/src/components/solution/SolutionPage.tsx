@@ -62,7 +62,7 @@ function SolutionPage() {
           {solutionExtended.id && (
             <Link
               to={`/advancedEvaluation`}
-              state={solutionExtended.id}
+              state={{solutionExtended: solutionExtended}}
               className="absolute underline font-semibold bottom-0 left-0 mb-2 ml-4"
             >
               Zaawansowane Sprawdzanie

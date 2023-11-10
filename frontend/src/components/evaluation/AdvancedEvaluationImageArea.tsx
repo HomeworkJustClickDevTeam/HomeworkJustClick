@@ -18,7 +18,6 @@ interface AdvancedEvaluationImageAreaInterface{
   image: HTMLImageElement,
   editable:boolean,
   chosenComment?: CommentInterface|undefined,
-  chosenCommentFrameWidth?:number|undefined,
   drawnComments:MutableRefObject<AdvancedEvaluationImageCommentInterface[]>
   fileId:number
   handleCommentHighlighting:(commentId: number) => void
@@ -29,7 +28,6 @@ export const AdvancedEvaluationImageArea = React.forwardRef<any, AdvancedEvaluat
                                                                                                           editable,
                                                                                                           image,
                                                                                                           chosenComment,
-                                                                                                          chosenCommentFrameWidth,
                                                                                                           drawnComments,
                                                                                                           width,
                                                                                                           height}, advancedEvaluationImageAreaRef) =>{
@@ -149,11 +147,10 @@ export const AdvancedEvaluationImageArea = React.forwardRef<any, AdvancedEvaluat
     return false
   }
   const handleNewCommentCreation = (mouseX:number, mouseY:number) =>{
-    if(chosenComment !== undefined && canvasRef.current !== undefined && canvasRef.current !== null && chosenCommentFrameWidth!==undefined){
+    if(chosenComment !== undefined && canvasRef.current !== undefined && canvasRef.current !== null){
       let newComment:AdvancedEvaluationImageCommentInterface = {
-        id:-1, color: chosenComment.color, fileId: fileId,commentId:chosenComment.id, leftTopX: mouseX, leftTopY:mouseY, width: 1, height:1, lineWidth: chosenCommentFrameWidth, imgHeight:canvasRef.current.height, imgWidth:canvasRef.current.width}
+        id:-1, color: chosenComment.color, fileId: fileId,commentId:chosenComment.id, leftTopX: mouseX, leftTopY:mouseY, width: 1, height:1, imgHeight:canvasRef.current.height, imgWidth:canvasRef.current.width}
       commentIndex.current = drawnComments.current.push(newComment) - 1
-
     }
   }
   const handleCommentSizeChangeWhileItBeingCreated = (mouseX:number, mouseY:number) => {
@@ -306,40 +303,40 @@ export const AdvancedEvaluationImageArea = React.forwardRef<any, AdvancedEvaluat
         hoveredComment.leftTopY + hoveredComment.height
       ]
       if(clickedCommentIndex === i) continue
-      if ((hoveredCommentLeftTopXY[0] - hoveredComment.lineWidth <= mouseX) && (mouseX <= hoveredCommentLeftTopXY[0]  + hoveredComment.lineWidth) &&
-        (hoveredCommentLeftTopXY[1]  - hoveredComment.lineWidth <= mouseY) && (mouseY <= hoveredCommentLeftTopXY[1]  + hoveredComment.lineWidth)) {//left top corner hovered
+      if ((hoveredCommentLeftTopXY[0] - 2 <= mouseX) && (mouseX <= hoveredCommentLeftTopXY[0]  + 2) &&
+        (hoveredCommentLeftTopXY[1]  - 2 <= mouseY) && (mouseY <= hoveredCommentLeftTopXY[1]  + 2)) {//left top corner hovered
         commentAction.current = "leftTopCornerHovered"
         return i
-      } else if ((hoveredCommentRightTopXY[0] - hoveredComment.lineWidth <= mouseX) && (mouseX <= hoveredCommentRightTopXY[0] + hoveredComment.lineWidth) &&
-        (hoveredCommentRightTopXY[1] - hoveredComment.lineWidth <= mouseY) && (mouseY <= hoveredCommentRightTopXY[1] + hoveredComment.lineWidth)) {
+      } else if ((hoveredCommentRightTopXY[0] - 2 <= mouseX) && (mouseX <= hoveredCommentRightTopXY[0] + 2) &&
+        (hoveredCommentRightTopXY[1] - 2 <= mouseY) && (mouseY <= hoveredCommentRightTopXY[1] + 2)) {
         commentAction.current = "rightTopCornerHovered"
         return i
-      } else if ((hoveredCommentLeftBottomXY[0] - hoveredComment.lineWidth <= mouseX) && (mouseX <= hoveredCommentLeftBottomXY[0] + hoveredComment.lineWidth) &&
-        (hoveredCommentLeftBottomXY[1] - hoveredComment.lineWidth <= mouseY) && (mouseY <= hoveredCommentLeftBottomXY[1] + hoveredComment.lineWidth)) {
+      } else if ((hoveredCommentLeftBottomXY[0] - 2 <= mouseX) && (mouseX <= hoveredCommentLeftBottomXY[0] + 2) &&
+        (hoveredCommentLeftBottomXY[1] - 2 <= mouseY) && (mouseY <= hoveredCommentLeftBottomXY[1] + 2)) {
         commentAction.current = "leftBottomCornerHovered"
         return i
-      } else if ((hoveredCommentRightBottomXY[0] - hoveredComment.lineWidth <= mouseX) && (mouseX <= hoveredCommentRightBottomXY[0] + hoveredComment.lineWidth) &&
-        (hoveredCommentRightBottomXY[1] - hoveredComment.lineWidth <= mouseY) && (mouseY <= hoveredCommentRightBottomXY[1] + hoveredComment.lineWidth)) {
+      } else if ((hoveredCommentRightBottomXY[0] - 2 <= mouseX) && (mouseX <= hoveredCommentRightBottomXY[0] + 2) &&
+        (hoveredCommentRightBottomXY[1] - 2 <= mouseY) && (mouseY <= hoveredCommentRightBottomXY[1] + 2)) {
         commentAction.current = "rightBottomCornerHovered"
         return i
-      } else if ((hoveredCommentLeftTopXY[0]  + hoveredComment.lineWidth <= mouseX) && (mouseX <= hoveredCommentRightTopXY[0] - hoveredComment.lineWidth) &&
-        (hoveredCommentRightTopXY[1] - hoveredComment.lineWidth <= mouseY) && (mouseY <= hoveredCommentRightTopXY[1] + hoveredComment.lineWidth)) {
+      } else if ((hoveredCommentLeftTopXY[0]  + 2 <= mouseX) && (mouseX <= hoveredCommentRightTopXY[0] - 2) &&
+        (hoveredCommentRightTopXY[1] - 2 <= mouseY) && (mouseY <= hoveredCommentRightTopXY[1] + 2)) {
         commentAction.current = "topLineHovered"
         return i
-      } else if ((hoveredCommentLeftBottomXY[0] + hoveredComment.lineWidth <= mouseX) && (mouseX <= hoveredCommentRightBottomXY[0] - hoveredComment.lineWidth) &&
-        (hoveredCommentRightBottomXY[1] - hoveredComment.lineWidth <= mouseY) && (mouseY <= hoveredCommentRightBottomXY[1] + hoveredComment.lineWidth)) {
+      } else if ((hoveredCommentLeftBottomXY[0] + 2 <= mouseX) && (mouseX <= hoveredCommentRightBottomXY[0] - 2) &&
+        (hoveredCommentRightBottomXY[1] - 2 <= mouseY) && (mouseY <= hoveredCommentRightBottomXY[1] + 2)) {
         commentAction.current = "bottomLineHovered"
         return i
-      } else if ((hoveredCommentLeftTopXY[0]  - hoveredComment.lineWidth <= mouseX) && (mouseX <= hoveredCommentLeftTopXY[0]  + hoveredComment.lineWidth) &&
-        (hoveredCommentLeftTopXY[1]  + hoveredComment.lineWidth <= mouseY) && (mouseY <= hoveredCommentLeftBottomXY[1] - hoveredComment.lineWidth)) {
+      } else if ((hoveredCommentLeftTopXY[0]  - 2 <= mouseX) && (mouseX <= hoveredCommentLeftTopXY[0]  + 2) &&
+        (hoveredCommentLeftTopXY[1]  + 2 <= mouseY) && (mouseY <= hoveredCommentLeftBottomXY[1] - 2)) {
         commentAction.current = "leftLineHovered"
         return i
-      } else if ((hoveredCommentRightTopXY[0] - hoveredComment.lineWidth <= mouseX) && (mouseX <= hoveredCommentRightTopXY[0] + hoveredComment.lineWidth) &&
-        (hoveredCommentRightTopXY[1] + hoveredComment.lineWidth <= mouseY) && (mouseY <= hoveredCommentRightBottomXY[1] - hoveredComment.lineWidth)) {
+      } else if ((hoveredCommentRightTopXY[0] - 2 <= mouseX) && (mouseX <= hoveredCommentRightTopXY[0] + 2) &&
+        (hoveredCommentRightTopXY[1] + 2 <= mouseY) && (mouseY <= hoveredCommentRightBottomXY[1] - 2)) {
         commentAction.current = "rightLineHovered"
         return i
-      } else if ((hoveredCommentLeftTopXY[0]  + hoveredComment.lineWidth <= mouseX) && (mouseX <= hoveredCommentRightBottomXY[0] - hoveredComment.lineWidth) &&
-        (hoveredCommentLeftTopXY[1]  + hoveredComment.lineWidth <= mouseY) && (mouseY <= hoveredCommentRightBottomXY[1] - hoveredComment.lineWidth)) {
+      } else if ((hoveredCommentLeftTopXY[0]  + 2 <= mouseX) && (mouseX <= hoveredCommentRightBottomXY[0] - 2) &&
+        (hoveredCommentLeftTopXY[1]  + 2 <= mouseY) && (mouseY <= hoveredCommentRightBottomXY[1] - 2)) {
         commentAction.current = "centerHovered"
         return i
       }
@@ -397,6 +394,7 @@ export const AdvancedEvaluationImageArea = React.forwardRef<any, AdvancedEvaluat
     return draw
   }
   const handleMouseMove = (event:React.MouseEvent) => {
+    console.log(canvasAction, commentAction)
     event.preventDefault()
     event.stopPropagation()
     if(!editable) return
@@ -511,7 +509,6 @@ export const AdvancedEvaluationImageArea = React.forwardRef<any, AdvancedEvaluat
     const { mouseXOnCanvas, mouseYOnCanvas } = calculateCoordsOnCanvas(event.clientX, event.clientY)
     setPartOfCommentHovered(mouseXOnCanvas, mouseYOnCanvas)
     handleCursorAppearanceChange()
-    console.log(drawnComments.current, canvasAction.current)
   }
   const drawOnCanvas = () => {
     if(canvasContext.current!==null && canvasContext.current!==undefined){
@@ -531,10 +528,9 @@ export const AdvancedEvaluationImageArea = React.forwardRef<any, AdvancedEvaluat
         }
       scaleCommentsToImageDimensions()
       for (const comment of drawnComments.current) {
-        canvasContext.current.strokeStyle = comment.color
-        canvasContext.current.lineWidth = comment.lineWidth
-        canvasContext.current.globalAlpha = 0.5
-        canvasContext.current.strokeRect(comment.leftTopX, comment.leftTopY, comment.width, comment.height)
+        canvasContext.current.fillStyle = comment.color
+        canvasContext.current.globalAlpha = 0.2
+        canvasContext.current.fillRect(comment.leftTopX, comment.leftTopY, comment.width, comment.height)
       }
     }
   }

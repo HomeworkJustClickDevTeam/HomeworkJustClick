@@ -6,7 +6,7 @@ import AssignmentModifyPage from "./AssignmentModifyPage"
 import SolutionAddPage from "../solution/SolutionAddPage"
 
 import SolutionCheckedPage from "../solution/SolutionCheckedPage"
-import SolutionUncheckedPage from "../solution/SolutionUncheckedPage"
+import SolutionUncheckedStudentPage from "../solution/SolutionUncheckedStudentPage"
 import { AssignmentInterface } from "../../types/AssignmentInterface"
 import { SolutionInterface } from "../../types/SolutionInterface"
 import { selectUserState } from "../../redux/userStateSlice"
@@ -40,7 +40,7 @@ function AssignmentSpecPage() {
       ) : (uncheckedSolution === undefined) ? (
         <SolutionCheckedPage assignment={assignment as AssignmentInterface} solution={checkedSolution as SolutionInterface}/>
       ) : (
-        <SolutionUncheckedPage assignment={assignment as AssignmentInterface} solution={uncheckedSolution as SolutionInterface}/>
+        <SolutionUncheckedStudentPage assignment={assignment as AssignmentInterface} solution={uncheckedSolution as SolutionInterface}/>
       ))}
     </div>
   )

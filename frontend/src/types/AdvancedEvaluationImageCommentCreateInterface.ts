@@ -3,7 +3,6 @@ export interface AdvancedEvaluationImageCommentCreateInterface{
   leftTopY: number
   width: number
   height: number
-  lineWidth: number
   imgHeight: number
   imgWidth:number
   color:string

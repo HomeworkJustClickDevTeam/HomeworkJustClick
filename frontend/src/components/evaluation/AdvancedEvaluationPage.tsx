@@ -1,5 +1,5 @@
-import { MutableRefObject, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react"
-import { useLocation } from "react-router-dom"
+import React, { MutableRefObject, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import { useGetFiles } from "../customHooks/useGetFiles"
 import { AdvancedEvaluationCommentPanel } from "./AdvancedEvaluationCommentPanel"
 import { AdvancedEvaluationTextArea } from "./AdvancedEvaluationTextArea"
@@ -29,15 +29,16 @@ import { useGetCommentsImageByFile } from "../customHooks/useGetCommentsImageByF
 import { AdvancedEvaluationTextCommentCreateInterface } from "../../types/AdvancedEvaluationTextCommentCreateInterface"
 import { AdvancedEvaluationTextCommentInterface } from "../../types/AdvancedEvaluationTextCommentInterface"
 import { useGetCommentsTextByFile } from "../customHooks/useGetCommentsTextByFile"
+import { selectGroup } from "../../redux/groupSlice"
 
 export default function AdvancedEvaluationPage() {
   let {state} = useLocation()
+  const group = useAppSelector(selectGroup)
   const userState = useAppSelector(selectUserState)
-  const file = useGetFiles(state, 'solution')[0]
+  const file = useGetFiles(state.solutionExtended.id, 'solution')[0]
   const [fileText, setFileText] = useState("")
   const [image, setImage] = useState<HTMLImageElement|undefined>(undefined)
   const [chosenComment, setChosenComment] = useState<CommentInterface|undefined>(undefined)
-  const [chosenCommentFrameWidth, setChosenCommentFrameWidth] = useState<number>(5)
   const drawnCommentsRef = useRef<AdvancedEvaluationImageCommentInterface[]>([])
   const {comments: rightPanelUserComments,setComments: setRightPanelUserComments} = useGetCommentsByUser(userState?.id, "")
   const {availableHeight, availableWidth} = useGetSolutionAreaSizeAvailable()
@@ -45,26 +46,25 @@ export default function AdvancedEvaluationPage() {
   const advancedEvaluationImageAreaRef = useRef<any>()
   const {comments: commentsTextState, setComments: setCommentsTextState} = useGetCommentsTextByFile(file?.postgresId, "?page=0&size=50")
   const [highlightedCommentId, setHighlightedCommentId] = useState<number|undefined>(undefined)
+  const navigate = useNavigate()
   const handleCommentHighlighting = (commentId:number) => {
-    setHighlightedCommentId(commentId)
-    setTimeout(() => {
-      setHighlightedCommentId(undefined)
-    }, 2000)
+    if(highlightedCommentId === undefined){
+      setHighlightedCommentId(commentId)
+      setTimeout(() => {
+        setHighlightedCommentId(undefined)
+      }, 2000)
+    }
   }
   const handleNewCommentTextCreation =  async () =>{
     if(chosenComment === undefined) return
-    const checkNewRanges = async (updatedComment:AdvancedEvaluationTextCommentInterface, selectedComment: AdvancedEvaluationTextCommentInterface, oldComment:AdvancedEvaluationTextCommentInterface) => {
+    const checkNewRanges = async (updatedComment:AdvancedEvaluationTextCommentInterface) => {
       if(updatedComment.highlightStart<=updatedComment.highlightEnd){
         const response = await changeCommentTextPostgresService(updatedComment)
-        if(response?.status === 200)
-          return [updatedComment, selectedComment]
-        else return [oldComment]
+        return response?.status === 200;
       }
       else{
-        const response = await deleteCommentTextPostgresService(updatedComment.id.toString())
-        if(response?.status === 200)
-          return [selectedComment]
-        else return [oldComment]
+        await deleteCommentTextPostgresService(updatedComment.id.toString())
+        return true
       }
     }
     const selection = window.getSelection()
@@ -79,7 +79,7 @@ export default function AdvancedEvaluationPage() {
         }
         const response = await createCommentTextWithFilePostgresService(newComment)
         if(response?.status !== 201) return
-        const selectedComment:AdvancedEvaluationTextCommentInterface = {
+        let selectedComment:AdvancedEvaluationTextCommentInterface = {
           commentId: response.data.comment.id,
           fileId: response.data.file.id,
           color: response.data.color,
@@ -91,49 +91,51 @@ export default function AdvancedEvaluationPage() {
         if (commentsTextState.length === 0) {
           newComments.push(selectedComment)
         } else {
-          const tempComments:AdvancedEvaluationTextCommentInterface[][] = (await Promise.all(commentsTextState.flatMap( async (oldComment) => {
-            console.log(selectedComment, oldComment)
+          for(const oldComment of commentsTextState) {
             if (oldComment.commentId === selectedComment.commentId &&
               selectedComment.highlightStart < oldComment.highlightStart &&
               selectedComment.highlightEnd >= oldComment.highlightStart &&
               selectedComment.highlightStart < oldComment.highlightEnd &&
               selectedComment.highlightEnd < oldComment.highlightEnd){//--SS--OS--SE--OE--
-              const updatedComment = {...oldComment, highlightStart: selectedComment.highlightStart}
-              const deleteResponse = await deleteCommentTextPostgresService(selectedComment.id.toString())
+              const updatedComment = {...selectedComment, highlightEnd: oldComment.highlightEnd}
+              const deleteResponse = await deleteCommentTextPostgresService(oldComment.id.toString())
               if(deleteResponse?.status === 200){
                 const updateResponse = await changeCommentTextPostgresService(updatedComment)
-                if(updateResponse?.status === 200)
-                  return [updatedComment]
+                if(updateResponse?.status === 200) selectedComment = updatedComment
               }
-              return [oldComment]
+              else{
+                newComments.push(oldComment)
+              }
             }
             else if (oldComment.commentId === selectedComment.commentId &&
               selectedComment.highlightStart > oldComment.highlightStart &&
               selectedComment.highlightEnd > oldComment.highlightStart &&
               selectedComment.highlightStart <= oldComment.highlightEnd &&
               selectedComment.highlightEnd > oldComment.highlightEnd){//--OS--SS--OE--SE--
-              const updatedComment = {...oldComment, highlightEnd: selectedComment.highlightEnd}
-              const deleteResponse = await deleteCommentTextPostgresService(selectedComment.id.toString())
+              const updatedComment = {...selectedComment, highlightStart: oldComment.highlightStart}
+              const deleteResponse = await deleteCommentTextPostgresService(oldComment.id.toString())
               if(deleteResponse?.status === 200){
                 const updateResponse = await changeCommentTextPostgresService(updatedComment)
-                if(updateResponse?.status === 200)
-                  return [updatedComment]
+                if(updateResponse?.status === 200) selectedComment = updatedComment
               }
-              return [oldComment]
+              else{
+                newComments.push(oldComment)
+              }
             }
             else if((selectedComment.highlightStart < oldComment.highlightStart &&
                 selectedComment.highlightEnd < oldComment.highlightStart) //--SS--SE--OS--OE--
               ||
               (selectedComment.highlightStart > oldComment.highlightStart &&
                 selectedComment.highlightEnd > oldComment.highlightEnd)){//--OS--OE--SS--SE--
-              return [oldComment, selectedComment]
+              newComments.push(oldComment)
             }
             else if (selectedComment.highlightStart < oldComment.highlightStart &&
               selectedComment.highlightEnd >= oldComment.highlightStart &&
               selectedComment.highlightStart < oldComment.highlightEnd &&
               selectedComment.highlightEnd < oldComment.highlightEnd){//--SS--OS--SE--OE--
               const updatedComment = {...oldComment, highlightStart: selectedComment.highlightEnd+1}
-              return await checkNewRanges(updatedComment,selectedComment,oldComment)
+              if(await checkNewRanges(updatedComment)) newComments.push(updatedComment)
+              else newComments.push(oldComment)
             }
             else if ((selectedComment.highlightStart === oldComment.highlightStart &&
                 selectedComment.highlightEnd === oldComment.highlightEnd)//EQUAL
@@ -148,20 +150,20 @@ export default function AdvancedEvaluationPage() {
                 selectedComment.highlightEnd > oldComment.highlightStart &&
                 selectedComment.highlightEnd > oldComment.highlightStart)){//--SS--OS--OE--SE--
               const response = await deleteCommentTextPostgresService(oldComment.id.toString())
-              if(response?.status === 200) return [selectedComment]
-              else return [oldComment]
+              if(response?.status !== 200) newComments.push(oldComment)
             }
             else if (selectedComment.highlightStart>oldComment.highlightStart &&
               selectedComment.highlightEnd > oldComment.highlightStart &&
               selectedComment.highlightStart <= oldComment.highlightEnd &&
               selectedComment.highlightEnd > oldComment.highlightEnd){//--OS--SS--OE--SE--
               const updatedComment = {...oldComment, highlightEnd: selectedComment.highlightStart -1}
-              return await checkNewRanges(updatedComment,selectedComment,oldComment)
+              if(await checkNewRanges(updatedComment)) newComments.push(updatedComment)
+              else newComments.push(oldComment)
             }
-          return [oldComment]
-      })))
-      newComments.push(...tempComments.flat(3))
+            else newComments.push(oldComment)
+          }
         }
+        newComments.push(selectedComment)
         selection?.removeAllRanges()
         setCommentsTextState(newComments)
       }
@@ -172,11 +174,10 @@ export default function AdvancedEvaluationPage() {
   const updateCommentsLists = async (clickedComment:CommentInterface, clickedCommentWidth?:number) => {
     const updateImageList = async () => {
       if (drawnCommentsRef?.current !== undefined && drawnCommentsRef?.current !== null && clickedCommentWidth !== undefined && advancedEvaluationImageAreaRef.current !== undefined && advancedEvaluationImageAreaRef.current !== null) {
-        setChosenCommentFrameWidth(clickedCommentWidth)
         const drawnCommentsTemp = await Promise.all(drawnCommentsRef.current.map(async (commentImage) => {
           if(commentImage.commentId === clickedComment.id){
             try {
-              const updatedComment = { ...commentImage, color: clickedComment.color, lineWidth: clickedCommentWidth } as AdvancedEvaluationImageCommentInterface
+              const updatedComment = { ...commentImage, color: clickedComment.color } as AdvancedEvaluationImageCommentInterface
               const response = await changeCommentImagePostgresService(updatedComment)
               if (response !== undefined && response !== null && response.data !== undefined && response.status === 200) {
                 return updatedComment
@@ -297,6 +298,10 @@ export default function AdvancedEvaluationPage() {
   if(file)
     return (
       <div id={"advancedEvaluationPageDiv"}>
+        {group?.id !== undefined && userState?.id !== undefined &&
+        <div style={{width: "100%"}} id={"backButtonDiv"}>
+          <Link to = {`/group/${state.solutionExtended.assignment.groupId}/solution/${state.solutionExtended.user.id}/${state.solutionExtended.assignment.id}`} state={{solution: state.solutionExtended}}>Wróć</Link>
+        </div>}
         <AdvancedEvaluationCommentPanel
           chosenCommentId={chosenComment?.id}
           height={availableHeight}
@@ -326,7 +331,6 @@ export default function AdvancedEvaluationPage() {
                 height = {availableHeight}
                 editable={true}
                 drawnComments={drawnCommentsRef as MutableRefObject<AdvancedEvaluationImageCommentInterface[]>}
-                chosenCommentFrameWidth={chosenCommentFrameWidth}
                 image={image}
                 fileId={file.postgresId}
                 chosenComment={chosenComment}></AdvancedEvaluationImageArea>

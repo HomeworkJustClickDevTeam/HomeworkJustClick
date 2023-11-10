@@ -7,11 +7,12 @@ export const useGetSolutionAreaSizeAvailable = () => {
   const [availableHeight, setAvailableHeight] = useState<number|undefined>(undefined)
 
   useEffect(() => {
-    const commentPanelWidth = document.getElementById("commentPanel")?.clientWidth
-    const headerHeight = document.getElementById("headerLoggedIn")?.clientHeight
+    const commentPanelWidth = document.getElementById("commentPanelDiv")?.clientWidth
+    const backButtonHeight = document.getElementById("backButtonDiv")?.clientHeight
+    const headerHeight = document.getElementById("headerLoggedInSection")?.clientHeight
     commentPanelWidth !== undefined && setAvailableWidth(windowWidth-commentPanelWidth)
-    headerHeight !== undefined && setAvailableHeight(windowHeight-headerHeight)
-  }, [windowWidth, windowHeight, document.getElementById("commentPanel")?.clientWidth, document.getElementById("headerLoggedIn")?.clientHeight])
+    headerHeight !== undefined && backButtonHeight !== undefined && setAvailableHeight(windowHeight-headerHeight-backButtonHeight)
+  }, [windowWidth, document.getElementById("backButtonDiv")?.clientHeight, windowHeight, document.getElementById("commentPanel")?.clientWidth, document.getElementById("headerLoggedIn")?.clientHeight])
 
   return {availableHeight: availableHeight, availableWidth:availableWidth}
 }
