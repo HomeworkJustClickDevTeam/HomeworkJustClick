@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -148,25 +148,6 @@ public class EvaluationPanelControllerTest extends BaseTestEntity {
     @Test
     void shouldNotDeleteNotExistingEvaluationPanel() throws Exception {
         mockMvc.perform(delete("/api/evaluation_panel/" + 999))
-                .andExpect(status().isNotFound())
-                .andReturn();
-    }
-
-    @Test
-    void shouldUpdateDateAndCounterInEvaluationPanel() throws Exception {
-        var evaluationPanel = evaluationPanelRepository.findAll().get(0);
-        var id = evaluationPanel.getId();
-        mockMvc.perform(post("/api/evaluation_panel/use/" + id))
-                .andExpect(status().isOk())
-                .andReturn();
-        var updatedEvaluationPanel = evaluationPanelRepository.findById(id).get();
-        assertEquals(evaluationPanel.getCounter() + 1, (int) updatedEvaluationPanel.getCounter());
-        assertTrue(evaluationPanel.getLastUsedDate().isBefore(updatedEvaluationPanel.getLastUsedDate()));
-    }
-
-    @Test
-    void shouldNotUpdateDateAndCounterInNotExistingEvaluationPanel() throws Exception {
-        mockMvc.perform(post("/api/evaluation_panel/use/" + 999))
                 .andExpect(status().isNotFound())
                 .andReturn();
     }

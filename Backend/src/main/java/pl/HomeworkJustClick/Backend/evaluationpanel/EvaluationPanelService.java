@@ -5,6 +5,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.HomeworkJustClick.Backend.evaluationbutton.EvaluationButton;
 import pl.HomeworkJustClick.Backend.evaluationbutton.EvaluationButtonDto;
 import pl.HomeworkJustClick.Backend.evaluationbutton.EvaluationButtonMapper;
@@ -15,7 +16,6 @@ import pl.HomeworkJustClick.Backend.infrastructure.exception.EntityNotFoundExcep
 import pl.HomeworkJustClick.Backend.infrastructure.exception.InvalidArgumentException;
 import pl.HomeworkJustClick.Backend.user.UserService;
 
-import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -33,6 +33,21 @@ public class EvaluationPanelService {
     public EvaluationPanel findById(Integer id) {
         return repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("EvaluationPanel with id = " + id + " not found"));
+    }
+
+    public EvaluationPanelResponseDto getEvaluationPanelResponseDtoById(Integer id) {
+        var evaluationPanel = repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("EvaluationPanel with id = " + id + " not found"));
+        return createEvaluationPanelResponseDto(evaluationPanel);
+    }
+
+    @Transactional
+    public List<EvaluationPanelResponseDto> getEvaluationPanelsListByUserId(Integer userId) {
+        var evaluationPanels = repository.findAllByUserId(userId);
+        var evaluationPanelResponseDtoList = new ArrayList<EvaluationPanelResponseDto>();
+        evaluationPanels.forEach(evaluationPanel ->
+                evaluationPanelResponseDtoList.add(createEvaluationPanelResponseDto(evaluationPanel)));
+        return evaluationPanelResponseDtoList;
     }
 
     public Slice<EvaluationPanelResponseDto> getEvaluationPanelsByUserId(Integer userId, Pageable pageable) {
@@ -71,13 +86,6 @@ public class EvaluationPanelService {
         var evaluationPanelButtons = evaluationPanelButtonService.save(savedEvaluationPanel, savedButtonsList);
         savedEvaluationPanel.setEvaluationPanelButtons(evaluationPanelButtons);
         return createEvaluationPanelResponseDto(savedEvaluationPanel);
-    }
-
-    public EvaluationPanelResponseDto updateEvaluationPanelCounterAndLastUsedDate(Integer id) {
-        var evaluationPanel = findById(id);
-        evaluationPanel.setCounter(evaluationPanel.getCounter() + 1);
-        evaluationPanel.setLastUsedDate(OffsetDateTime.now());
-        return mapper.map(repository.save(evaluationPanel));
     }
 
     private EvaluationPanelResponseDto createEvaluationPanelResponseDto(EvaluationPanel evaluationPanel) {
