@@ -10,7 +10,7 @@ function HeaderLoggedInState() {
   const homePageIn = useAppSelector(selectHomePageIn)
   const userState = useAppSelector(selectUserState)
   return (
-    <section id={"headerLoggedIn"} className='relative flex h-16 text-white font-lato font-normal bg-main_blue items-center select-none'>
+    <section id={"headerLoggedInSection"} className='relative flex h-16 text-white font-lato font-normal bg-main_blue items-center select-none'>
       {!homePageIn && (
         <Link className='absolute flex pl-[3vw] w-[9vw] hover:bg-hover_blue h-full items-center' to="#"
               onClick={() => navigate(-1)}>

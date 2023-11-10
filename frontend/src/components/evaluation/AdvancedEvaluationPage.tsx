@@ -297,7 +297,7 @@ export default function AdvancedEvaluationPage() {
     return (
       <div id={"advancedEvaluationPageDiv"}>
         {group?.id !== undefined && userState?.id !== undefined &&
-        <div style={{width: "100%"}}>
+        <div style={{width: "100%"}} id={"backButtonDiv"}>
           <Link to = {`/group/${state.solutionExtended.assignment.groupId}/solution/${state.solutionExtended.user.id}/${state.solutionExtended.assignment.id}`} state={{solution: state.solutionExtended}}>Wróć</Link>
         </div>}
         <AdvancedEvaluationCommentPanel
