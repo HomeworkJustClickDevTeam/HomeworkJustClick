@@ -1,4 +1,4 @@
-package pl.HomeworkJustClick.HomeworkJustClick;
+package pl.HomeworkJustClick.HomeworkJustClick.file;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 

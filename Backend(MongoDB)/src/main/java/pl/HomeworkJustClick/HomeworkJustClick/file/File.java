@@ -1,4 +1,4 @@
-package pl.HomeworkJustClick.HomeworkJustClick;
+package pl.HomeworkJustClick.HomeworkJustClick.file;
 
 import jakarta.validation.constraints.Size;
 import lombok.Getter;

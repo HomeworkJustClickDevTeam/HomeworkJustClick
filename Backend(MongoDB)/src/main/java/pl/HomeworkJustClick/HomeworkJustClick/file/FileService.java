@@ -1,10 +1,13 @@
-package pl.HomeworkJustClick.HomeworkJustClick;
+package pl.HomeworkJustClick.HomeworkJustClick.file;
 
+import lombok.RequiredArgsConstructor;
 import org.bson.BsonBinarySubType;
 import org.bson.types.Binary;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import pl.HomeworkJustClick.HomeworkJustClick.infrastructure.exception.FileNotFoundException;
+import pl.HomeworkJustClick.HomeworkJustClick.infrastructure.exception.JwtNotValidException;
+import pl.HomeworkJustClick.HomeworkJustClick.infrastructure.rest.PostgresClientService;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,19 +15,21 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class FileService {
+    private final FileRepository fileRepository;
+    private final PostgresClientService postgresClientService;
 
-    @Autowired
-    FileRepository fileRepository;
-
-    public FileResponseDto addFile(String title, String format, MultipartFile file) throws IOException {
+    public FileResponseDto addFile(String title, String format, MultipartFile file, String jwtToken) throws IOException {
+        checkToken(jwtToken);
         File _file = new File(title, format);
         _file.setFile(new Binary(BsonBinarySubType.BINARY, file.getBytes()));
         _file = fileRepository.insert(_file);
         return FileResponseDto.builder().id(_file.getId()).name(_file.getName()).format(_file.getFormat()).build();
     }
 
-    public List<FileResponseDto> addFileList(List<MultipartFile> fileList) throws IOException {
+    public List<FileResponseDto> addFileList(List<MultipartFile> fileList, String jwtToken) throws IOException {
+        checkToken(jwtToken);
         List<FileResponseDto> responseList = new ArrayList<>();
         fileList.forEach(file -> {
             String title = file.getOriginalFilename();
@@ -41,16 +46,22 @@ public class FileService {
         return responseList;
     }
 
-    public Optional<File> getFile(String id) {
+    public Optional<File> getFile(String id, String token) {
+        checkToken(token);
         return fileRepository.findById(id);
     }
 
-    public Boolean deleteFile(String id) {
-        if(fileRepository.existsById(id)) {
-            fileRepository.deleteById(id);
-            return true;
-        } else  {
-            return false;
+    public void deleteFile(String id, String token) {
+        checkToken(token);
+        var file = fileRepository.findById(id)
+                .orElseThrow(() -> new FileNotFoundException("File not found"));
+        fileRepository.delete(file);
+    }
+
+    private void checkToken(String token) {
+        var valid = postgresClientService.checkToken(token);
+        if (!valid) {
+            throw new JwtNotValidException("Jwt token not valid!");
         }
     }
 }
