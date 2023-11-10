@@ -28,7 +28,6 @@ export const useGetCommentsByUser = (userId: number|undefined|null, params:strin
                 id: commentFromServer.id
               })
             }
-            console.log(response.data.totalPages)
             for(let pageNumber = 1; pageNumber < response.data.totalPages; pageNumber++) {
               const response = await getCommentsByUserPostgresService(userId.toString(), `?page=${pageNumber}&${params}`)
               if (response?.status === 200) {
@@ -58,7 +57,7 @@ export const useGetCommentsByUser = (userId: number|undefined|null, params:strin
     }
     return () => {mounted = false}
 
-  }, [userId])
+  }, [userId, params])
 
   return {comments, setComments}
 }

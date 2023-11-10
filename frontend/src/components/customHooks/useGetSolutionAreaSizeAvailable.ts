@@ -10,7 +10,7 @@ export const useGetSolutionAreaSizeAvailable = () => {
     const commentPanelWidth = document.getElementById("commentPanelDiv")?.clientWidth
     const backButtonHeight = document.getElementById("backButtonDiv")?.clientHeight
     const headerHeight = document.getElementById("headerLoggedInSection")?.clientHeight
-    commentPanelWidth !== undefined && setAvailableWidth(windowWidth-commentPanelWidth)
+    commentPanelWidth !== undefined && setAvailableWidth(windowWidth-commentPanelWidth-10)
     headerHeight !== undefined && backButtonHeight !== undefined && setAvailableHeight(windowHeight-headerHeight-backButtonHeight)
   }, [windowWidth, document.getElementById("backButtonDiv")?.clientHeight, windowHeight, document.getElementById("commentPanel")?.clientWidth, document.getElementById("headerLoggedIn")?.clientHeight])
 
