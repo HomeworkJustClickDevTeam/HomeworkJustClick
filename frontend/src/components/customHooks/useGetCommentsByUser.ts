@@ -3,6 +3,7 @@ import { CommentInterface } from "../../types/CommentInterface"
 import { useAppDispatch } from "../../types/HooksRedux"
 import { setIsLoading } from "../../redux/isLoadingSlice"
 import { getCommentsByUserPostgresService } from "../../services/postgresDatabaseServices"
+import { parseISO } from "date-fns"
 
 export const useGetCommentsByUser = (userId: number|undefined|null, params:string) => {
   const [comments, setComments] = useState<CommentInterface[]>([])
@@ -22,7 +23,7 @@ export const useGetCommentsByUser = (userId: number|undefined|null, params:strin
                 description: commentFromServer.description,
                 color:commentFromServer.color,
                 userId:commentFromServer.user.id,
-                lastUsedDate: commentFromServer.lastUsedDate,
+                lastUsedDate: parseISO(commentFromServer.lastUsedDate),
                 counter: commentFromServer.counter,
                 id: commentFromServer.id
               })
@@ -37,7 +38,7 @@ export const useGetCommentsByUser = (userId: number|undefined|null, params:strin
                     description: commentFromServer.description,
                     color: commentFromServer.color,
                     userId: commentFromServer.user.id,
-                    lastUsedDate: commentFromServer.lastUsedDate,
+                    lastUsedDate: parseISO(commentFromServer.lastUsedDate),
                     counter: commentFromServer.counter,
                     id: commentFromServer.id
                   })

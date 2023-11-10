@@ -48,10 +48,12 @@ export default function AdvancedEvaluationPage() {
   const [highlightedCommentId, setHighlightedCommentId] = useState<number|undefined>(undefined)
   const navigate = useNavigate()
   const handleCommentHighlighting = (commentId:number) => {
-    setHighlightedCommentId(commentId)
-    setTimeout(() => {
-      setHighlightedCommentId(undefined)
-    }, 2000)
+    if(highlightedCommentId === undefined){
+      setHighlightedCommentId(commentId)
+      setTimeout(() => {
+        setHighlightedCommentId(undefined)
+      }, 2000)
+    }
   }
   const handleNewCommentTextCreation =  async () =>{
     if(chosenComment === undefined) return
@@ -175,7 +177,7 @@ export default function AdvancedEvaluationPage() {
         const drawnCommentsTemp = await Promise.all(drawnCommentsRef.current.map(async (commentImage) => {
           if(commentImage.commentId === clickedComment.id){
             try {
-              const updatedComment = { ...commentImage, color: clickedComment.color, lineWidth: clickedCommentWidth } as AdvancedEvaluationImageCommentInterface
+              const updatedComment = { ...commentImage, color: clickedComment.color } as AdvancedEvaluationImageCommentInterface
               const response = await changeCommentImagePostgresService(updatedComment)
               if (response !== undefined && response !== null && response.data !== undefined && response.status === 200) {
                 return updatedComment

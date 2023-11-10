@@ -7,6 +7,7 @@ import { CommentCreateInterface } from "../../types/CommentCreateInterface"
 import { createCommentWithUserPostgresService } from "../../services/postgresDatabaseServices"
 import { ca } from "date-fns/locale"
 import { type } from "os"
+import { parseISO } from "date-fns"
 
 
 type sortButtonStateType = "usageFrequencyAsc"|"lastUsedAsc"|"alphabetic"|"usageFrequencyDesc"|"lastUsedDesc"
@@ -45,7 +46,7 @@ export const AdvancedEvaluationCommentPanel = (
                 ...newComment,
                 id:response.data.id,
                 counter:response.data.counter,
-                lastUsedDate: response.data.lastUsedDate},
+                lastUsedDate: parseISO(response.data.lastUsedDate)},
                 ...tempComments])
               setNewCommentDescription("")
             }
@@ -55,22 +56,22 @@ export const AdvancedEvaluationCommentPanel = (
     }
   }
   const sortComments = ():CommentInterface[] => {
+    let tempComments = [...rightPanelUserComments]
     switch(sortButtonState){
       case "lastUsedDesc":
-        return rightPanelUserComments.sort((comment1, comment2) => +(comment2.lastUsedDate) - +(comment1.lastUsedDate))
+        return tempComments.sort((comment1, comment2) => +(comment2.lastUsedDate) - +(comment1.lastUsedDate))
       case "alphabetic":
-        return rightPanelUserComments.sort((comment1, comment2)=>(comment1.description<comment2.description) ? -1 : 1)
+        return tempComments.sort((comment1, comment2)=>(comment1.description<comment2.description) ? -1 : 1)
       case "usageFrequencyDesc":
-        return rightPanelUserComments.sort((comment1, comment2)=> comment1.counter - comment2.counter)
+        return tempComments.sort((comment1, comment2)=> comment1.counter - comment2.counter)
       case "lastUsedAsc":
-        return rightPanelUserComments.sort((comment1, comment2) => +(comment1.lastUsedDate) - +(comment2.lastUsedDate))
+        return tempComments.sort((comment1, comment2) => +(comment1.lastUsedDate) - +(comment2.lastUsedDate))
       case "usageFrequencyAsc":
-        return rightPanelUserComments.sort((comment1, comment2)=> comment2.counter - comment1.counter)
+        return tempComments.sort((comment1, comment2)=> comment2.counter - comment1.counter)
       default:
-        return rightPanelUserComments
+        return tempComments
     }
   }
-  console.log(rightPanelUserComments)
   return <div id={"commentPanelDiv"} style={{float:"right", height:height !== undefined ? height.toString() : "100%", overflow:"scroll"}}>
     Dodaj nowy komentarz:<br/>
       <input onChange={(event) => setNewCommentDescription(event.target.value)}/>

@@ -303,40 +303,40 @@ export const AdvancedEvaluationImageArea = React.forwardRef<any, AdvancedEvaluat
         hoveredComment.leftTopY + hoveredComment.height
       ]
       if(clickedCommentIndex === i) continue
-      if ((hoveredCommentLeftTopXY[0] - hoveredComment.lineWidth <= mouseX) && (mouseX <= hoveredCommentLeftTopXY[0]  + hoveredComment.lineWidth) &&
-        (hoveredCommentLeftTopXY[1]  - hoveredComment.lineWidth <= mouseY) && (mouseY <= hoveredCommentLeftTopXY[1]  + hoveredComment.lineWidth)) {//left top corner hovered
+      if ((hoveredCommentLeftTopXY[0] - 2 <= mouseX) && (mouseX <= hoveredCommentLeftTopXY[0]  + 2) &&
+        (hoveredCommentLeftTopXY[1]  - 2 <= mouseY) && (mouseY <= hoveredCommentLeftTopXY[1]  + 2)) {//left top corner hovered
         commentAction.current = "leftTopCornerHovered"
         return i
-      } else if ((hoveredCommentRightTopXY[0] - hoveredComment.lineWidth <= mouseX) && (mouseX <= hoveredCommentRightTopXY[0] + hoveredComment.lineWidth) &&
-        (hoveredCommentRightTopXY[1] - hoveredComment.lineWidth <= mouseY) && (mouseY <= hoveredCommentRightTopXY[1] + hoveredComment.lineWidth)) {
+      } else if ((hoveredCommentRightTopXY[0] - 2 <= mouseX) && (mouseX <= hoveredCommentRightTopXY[0] + 2) &&
+        (hoveredCommentRightTopXY[1] - 2 <= mouseY) && (mouseY <= hoveredCommentRightTopXY[1] + 2)) {
         commentAction.current = "rightTopCornerHovered"
         return i
-      } else if ((hoveredCommentLeftBottomXY[0] - hoveredComment.lineWidth <= mouseX) && (mouseX <= hoveredCommentLeftBottomXY[0] + hoveredComment.lineWidth) &&
-        (hoveredCommentLeftBottomXY[1] - hoveredComment.lineWidth <= mouseY) && (mouseY <= hoveredCommentLeftBottomXY[1] + hoveredComment.lineWidth)) {
+      } else if ((hoveredCommentLeftBottomXY[0] - 2 <= mouseX) && (mouseX <= hoveredCommentLeftBottomXY[0] + 2) &&
+        (hoveredCommentLeftBottomXY[1] - 2 <= mouseY) && (mouseY <= hoveredCommentLeftBottomXY[1] + 2)) {
         commentAction.current = "leftBottomCornerHovered"
         return i
-      } else if ((hoveredCommentRightBottomXY[0] - hoveredComment.lineWidth <= mouseX) && (mouseX <= hoveredCommentRightBottomXY[0] + hoveredComment.lineWidth) &&
-        (hoveredCommentRightBottomXY[1] - hoveredComment.lineWidth <= mouseY) && (mouseY <= hoveredCommentRightBottomXY[1] + hoveredComment.lineWidth)) {
+      } else if ((hoveredCommentRightBottomXY[0] - 2 <= mouseX) && (mouseX <= hoveredCommentRightBottomXY[0] + 2) &&
+        (hoveredCommentRightBottomXY[1] - 2 <= mouseY) && (mouseY <= hoveredCommentRightBottomXY[1] + 2)) {
         commentAction.current = "rightBottomCornerHovered"
         return i
-      } else if ((hoveredCommentLeftTopXY[0]  + hoveredComment.lineWidth <= mouseX) && (mouseX <= hoveredCommentRightTopXY[0] - hoveredComment.lineWidth) &&
-        (hoveredCommentRightTopXY[1] - hoveredComment.lineWidth <= mouseY) && (mouseY <= hoveredCommentRightTopXY[1] + hoveredComment.lineWidth)) {
+      } else if ((hoveredCommentLeftTopXY[0]  + 2 <= mouseX) && (mouseX <= hoveredCommentRightTopXY[0] - 2) &&
+        (hoveredCommentRightTopXY[1] - 2 <= mouseY) && (mouseY <= hoveredCommentRightTopXY[1] + 2)) {
         commentAction.current = "topLineHovered"
         return i
-      } else if ((hoveredCommentLeftBottomXY[0] + hoveredComment.lineWidth <= mouseX) && (mouseX <= hoveredCommentRightBottomXY[0] - hoveredComment.lineWidth) &&
-        (hoveredCommentRightBottomXY[1] - hoveredComment.lineWidth <= mouseY) && (mouseY <= hoveredCommentRightBottomXY[1] + hoveredComment.lineWidth)) {
+      } else if ((hoveredCommentLeftBottomXY[0] + 2 <= mouseX) && (mouseX <= hoveredCommentRightBottomXY[0] - 2) &&
+        (hoveredCommentRightBottomXY[1] - 2 <= mouseY) && (mouseY <= hoveredCommentRightBottomXY[1] + 2)) {
         commentAction.current = "bottomLineHovered"
         return i
-      } else if ((hoveredCommentLeftTopXY[0]  - hoveredComment.lineWidth <= mouseX) && (mouseX <= hoveredCommentLeftTopXY[0]  + hoveredComment.lineWidth) &&
-        (hoveredCommentLeftTopXY[1]  + hoveredComment.lineWidth <= mouseY) && (mouseY <= hoveredCommentLeftBottomXY[1] - hoveredComment.lineWidth)) {
+      } else if ((hoveredCommentLeftTopXY[0]  - 2 <= mouseX) && (mouseX <= hoveredCommentLeftTopXY[0]  + 2) &&
+        (hoveredCommentLeftTopXY[1]  + 2 <= mouseY) && (mouseY <= hoveredCommentLeftBottomXY[1] - 2)) {
         commentAction.current = "leftLineHovered"
         return i
-      } else if ((hoveredCommentRightTopXY[0] - hoveredComment.lineWidth <= mouseX) && (mouseX <= hoveredCommentRightTopXY[0] + hoveredComment.lineWidth) &&
-        (hoveredCommentRightTopXY[1] + hoveredComment.lineWidth <= mouseY) && (mouseY <= hoveredCommentRightBottomXY[1] - hoveredComment.lineWidth)) {
+      } else if ((hoveredCommentRightTopXY[0] - 2 <= mouseX) && (mouseX <= hoveredCommentRightTopXY[0] + 2) &&
+        (hoveredCommentRightTopXY[1] + 2 <= mouseY) && (mouseY <= hoveredCommentRightBottomXY[1] - 2)) {
         commentAction.current = "rightLineHovered"
         return i
-      } else if ((hoveredCommentLeftTopXY[0]  + hoveredComment.lineWidth <= mouseX) && (mouseX <= hoveredCommentRightBottomXY[0] - hoveredComment.lineWidth) &&
-        (hoveredCommentLeftTopXY[1]  + hoveredComment.lineWidth <= mouseY) && (mouseY <= hoveredCommentRightBottomXY[1] - hoveredComment.lineWidth)) {
+      } else if ((hoveredCommentLeftTopXY[0]  + 2 <= mouseX) && (mouseX <= hoveredCommentRightBottomXY[0] - 2) &&
+        (hoveredCommentLeftTopXY[1]  + 2 <= mouseY) && (mouseY <= hoveredCommentRightBottomXY[1] - 2)) {
         commentAction.current = "centerHovered"
         return i
       }
@@ -509,7 +509,6 @@ export const AdvancedEvaluationImageArea = React.forwardRef<any, AdvancedEvaluat
     const { mouseXOnCanvas, mouseYOnCanvas } = calculateCoordsOnCanvas(event.clientX, event.clientY)
     setPartOfCommentHovered(mouseXOnCanvas, mouseYOnCanvas)
     handleCursorAppearanceChange()
-    console.log(drawnComments.current, canvasAction.current)
   }
   const drawOnCanvas = () => {
     if(canvasContext.current!==null && canvasContext.current!==undefined){

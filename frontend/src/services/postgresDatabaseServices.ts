@@ -3,7 +3,7 @@ import { AssignmentInterface } from "../types/AssignmentInterface"
 import { AssignmentToSendInterface } from "../types/AssignmentToSendInterface"
 import { EvaluationInterface } from "../types/EvaluationInterface"
 import { GroupCreateInterface } from "../types/GroupCreateInterface"
-import { SolutionToSendInterface } from "../types/SolutionToSendInterface"
+import { SolutionCreateInterface } from "../types/SolutionCreateInterface"
 import { LoginUserInterface } from "../types/LoginUserInterface"
 import { UserRegisterInterface } from "../types/UserRegisterInterface"
 import { CredentialsInterface } from "../types/CredentialsInterface"
@@ -170,7 +170,7 @@ export const addStudentToGroupPostgresService = async (userId: string, groupId: 
   return await postgresqlDatabaseJSON.post(`/group/addStudent/${userId}/${groupId}`)
 }
 
-export const createSolutionWithUserAndAssignmentPostgresService = async (userId: string, assignmentId: string, solution: SolutionToSendInterface) => {
+export const createSolutionWithUserAndAssignmentPostgresService = async (userId: string, assignmentId: string, solution: SolutionCreateInterface) => {
   return await postgresqlDatabaseJSON
     .post(
       `/solution/withUserAndAssignment/${userId}/${assignmentId}`,

@@ -9,7 +9,7 @@ import { AssignmentFile } from "../assignments/AssignmentFile"
 import { format } from "date-fns"
 import { AssignmentPropsInterface } from "../../types/AssignmentPropsInterface"
 import { SolutionInterface } from "../../types/SolutionInterface"
-import { SolutionToSendInterface } from "../../types/SolutionToSendInterface"
+import { SolutionCreateInterface } from "../../types/SolutionCreateInterface"
 import { setIsLoading } from "../../redux/isLoadingSlice"
 import { selectUserState } from "../../redux/userStateSlice"
 import { useAppDispatch, useAppSelector } from "../../types/HooksRedux"
@@ -28,7 +28,7 @@ function SolutionAddPage({assignment}: AssignmentPropsInterface) {
   const userState = useAppSelector(selectUserState)
   const [file, setFile] = useState<File>()
   const files = useGetFiles(assignment.id, 'assignment')
-  const [solution] = useState<SolutionToSendInterface>({
+  const [solution] = useState<SolutionCreateInterface>({
     creationDatetime: new Date().toISOString(),
     comment: "",
     lastModifiedDatetime: new Date().toISOString(),

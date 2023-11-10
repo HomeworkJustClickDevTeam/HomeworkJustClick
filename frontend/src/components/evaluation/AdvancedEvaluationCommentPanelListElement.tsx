@@ -19,6 +19,7 @@ export const AdvancedEvaluationCommentPanelListElement = (
   const [commentReadonly, setCommentReadonly] = useState(true)
 
   const handleCommentChoice = () => {
+    console.log("CLICKED")
     if(chosenCommentId === comment.id) {
       setChosenComment(undefined)
     }
@@ -38,8 +39,10 @@ export const AdvancedEvaluationCommentPanelListElement = (
   }
 
   return(
-  <div style={{backgroundColor: highlightedCommentId === comment.id ? comment.color+"80" : "white"}}>
-    <input type={"checkbox"} checked={comment.id === chosenCommentId} onChange={() => handleCommentChoice()}/>
+  <div style={
+    {backgroundColor: highlightedCommentId === comment.id ? comment.color+"80" : "white",
+      border:chosenCommentId === comment.id ? "4px solid #6D8DFF" : "none"}}
+      onClick={()=>handleCommentChoice()}>
     <div>
       <input
             onChange={(event) => {!commentReadonly &&
