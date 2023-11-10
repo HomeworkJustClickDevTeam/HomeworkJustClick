@@ -21,6 +21,7 @@ public class CommentMapper {
                 .lastUsedDate(OffsetDateTime.now())
                 .counter(0)
                 .user(userService.findById(commentDto.getUserId()))
+                .visible(true)
                 .build();
     }
 

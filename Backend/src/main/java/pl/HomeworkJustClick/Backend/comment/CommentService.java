@@ -27,7 +27,7 @@ public class CommentService {
     }
 
     public Slice<CommentResponseDto> getCommentsByUser(Integer userId, Pageable pageable) {
-        return repository.getCommentsByUserId(userId, pageable)
+        return repository.getCommentsByUserIdAndVisible(userId, true, pageable)
                 .map(mapper::map);
     }
 
@@ -43,6 +43,7 @@ public class CommentService {
 
     public void deleteComment(int commentId) {
         var comment = findById(commentId);
-        repository.delete(comment);
+        comment.setVisible(false);
+        repository.save(comment);
     }
 }

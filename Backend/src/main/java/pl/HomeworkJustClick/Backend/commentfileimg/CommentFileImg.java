@@ -28,8 +28,6 @@ public class CommentFileImg {
     private Integer width;
     @Column(name = "height")
     private Integer height;
-    @Column(name = "line_width")
-    private Integer lineWidth;
     @Column(name = "img_width")
     private Integer imgWidth;
     @Column(name = "img_height")
