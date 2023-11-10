@@ -3,6 +3,7 @@ package pl.HomeworkJustClick.Backend.evaluationpanel;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import pl.HomeworkJustClick.Backend.evaluationpanelassignment.EvaluationPanelAssignment;
 import pl.HomeworkJustClick.Backend.evaluationpanelbutton.EvaluationPanelButton;
 import pl.HomeworkJustClick.Backend.user.User;
 
@@ -43,4 +44,11 @@ public class EvaluationPanel {
     )
     @JsonIgnore
     private List<EvaluationPanelButton> evaluationPanelButtons = new ArrayList<>();
+    @OneToMany(
+            mappedBy = "evaluationPanel",
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    @JsonIgnore
+    private List<EvaluationPanelAssignment> evaluationPanelAssignments = new ArrayList<>();
 }

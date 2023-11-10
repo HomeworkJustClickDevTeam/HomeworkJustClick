@@ -1,7 +1,6 @@
-package pl.HomeworkJustClick.Backend.evaluationpanel;
+package pl.HomeworkJustClick.Backend.evaluationpanelassignment;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -9,28 +8,24 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/evaluation_panel")
+@RequestMapping("/api/evaluation_panel_assignment")
 @SecurityRequirement(name = "Bearer Authentication")
-@Tag(name = "Evaluation panel", description = "Evaluation panel related calls.")
-public class EvaluationPanelController {
-    private final EvaluationPanelService service;
+@Tag(name = "Evaluation panel assignment", description = "Evaluation panel assignment related calls.")
+public class EvaluationPanelAssignmentController {
+    private final EvaluationPanelAssignmentService service;
 
-    @GetMapping("/byUserId/{userId}")
+    @GetMapping("{userId}/{assignmentId}")
     @Operation(
-            summary = "Returns paged list of evaluation panels by user id.",
+            summary = "Returns evaluation panel assignment by user id and assignment id.",
             responses = {
                     @ApiResponse(
                             responseCode = "404",
-                            description = "No evaluation panel with this userId in the DB.",
+                            description = "No evaluation panel assignment with this userId and assignmentId in the DB.",
                             content = @Content
                     ),
                     @ApiResponse(
@@ -38,39 +33,34 @@ public class EvaluationPanelController {
                             description = "OK.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = EvaluationPanelResponseDto.class))
+                                    schema = @Schema(implementation = EvaluationPanelAssignmentResponseDto.class))
                     ),
                     @ApiResponse(
                             responseCode = "403",
                             description = "Jwt token invalid",
                             content = @Content
                     )
-            },
-            parameters = {
-                    @Parameter(name = "page", example = "0", description = "default = 0"),
-                    @Parameter(name = "size", example = "20", description = "default = 10"),
-                    @Parameter(name = "sort", example = "counter,desc", description = "default = lastUsedDate,desc")
             }
     )
-    public Slice<EvaluationPanelResponseDto> getEvaluationPanelsByUserId(@PathVariable Integer userId, @Parameter(hidden = true) @PageableDefault(sort = "lastUsedDate", direction = Sort.Direction.DESC) Pageable pageable) {
-        return service.getEvaluationPanelsByUserId(userId, pageable);
+    public EvaluationPanelAssignmentResponseDto getEvaluationPanelAssignmentByUserIdAndAssignmentId(@PathVariable Integer userId, @PathVariable Integer assignmentId) {
+        return service.getEvaluationPanelAssignmentByUserIdAndAssignmentId(userId, assignmentId);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(
-            summary = "Creates evaluation panel",
+            summary = "Creates evaluation panel assignment",
             responses = {
                     @ApiResponse(
                             responseCode = "201",
                             description = "Created",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = EvaluationPanelResponseDto.class))
+                                    schema = @Schema(implementation = EvaluationPanelAssignmentResponseDto.class))
                     ),
                     @ApiResponse(
                             responseCode = "404",
-                            description = "User not found",
+                            description = "Evaluation panel or assignment not found",
                             content = @Content
                     ),
                     @ApiResponse(
@@ -85,13 +75,13 @@ public class EvaluationPanelController {
                     )
             }
     )
-    public EvaluationPanelResponseDto createEvaluationPanel(@RequestBody @Valid EvaluationPanelDto evaluationPanelDto) {
-        return service.createEvaluationPanel(evaluationPanelDto);
+    public EvaluationPanelAssignmentResponseDto createEvaluationPanelAssignment(@RequestBody @Valid EvaluationPanelAssignmentDto evaluationPanelAssignmentDto) {
+        return service.createEvaluationPanelAssignment(evaluationPanelAssignmentDto);
     }
 
     @DeleteMapping("{id}")
     @Operation(
-            summary = "Deletes evaluation panel by id",
+            summary = "Deletes evaluation panel assignment by id",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -100,7 +90,7 @@ public class EvaluationPanelController {
                     ),
                     @ApiResponse(
                             responseCode = "404",
-                            description = "Evaluation panel not found",
+                            description = "Evaluation panel assignment not found",
                             content = @Content
                     ),
                     @ApiResponse(
@@ -110,24 +100,24 @@ public class EvaluationPanelController {
                     )
             }
     )
-    public void deleteEvaluationPanel(@PathVariable Integer id) {
-        service.deleteEvaluationPanel(id);
+    public void deleteEvaluationPanelAssignment(@PathVariable Integer id) {
+        service.deleteEvaluationPanelAssignment(id);
     }
 
     @PutMapping("{id}")
     @Operation(
-            summary = "Updates evaluation panel",
+            summary = "Updates evaluation panel assignment",
             responses = {
                     @ApiResponse(
-                            responseCode = "200",
-                            description = "OK.",
+                            responseCode = "201",
+                            description = "Created",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = EvaluationPanelResponseDto.class))
+                                    schema = @Schema(implementation = EvaluationPanelAssignmentResponseDto.class))
                     ),
                     @ApiResponse(
                             responseCode = "404",
-                            description = "Evaluation panel or user not found",
+                            description = "Evaluation panel or assignment not found",
                             content = @Content
                     ),
                     @ApiResponse(
@@ -142,7 +132,7 @@ public class EvaluationPanelController {
                     )
             }
     )
-    public EvaluationPanelResponseDto updateEvaluationPanel(@PathVariable Integer id, @RequestBody @Valid EvaluationPanelDto evaluationPanelDto) {
-        return service.updateEvaluationPanel(id, evaluationPanelDto);
+    public EvaluationPanelAssignmentResponseDto updateEvaluationPanelAssignment(@PathVariable Integer id, @RequestBody @Valid EvaluationPanelAssignmentDto evaluationPanelAssignmentDto) {
+        return service.updateEvaluationPanelAssignment(id, evaluationPanelAssignmentDto);
     }
 }

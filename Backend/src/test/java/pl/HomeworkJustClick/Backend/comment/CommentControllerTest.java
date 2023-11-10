@@ -88,7 +88,7 @@ public class CommentControllerTest extends BaseTestEntity {
     @Test
     void shouldGetAllUserComments() throws Exception {
         var userId = commentRepository.findAll().get(0).getUser().getId();
-        var commentsSize = commentRepository.getCommentsByUserId(userId, Pageable.ofSize(20)).getTotalElements();
+        var commentsSize = commentRepository.getCommentsByUserIdAndVisible(userId, true, Pageable.ofSize(20)).getTotalElements();
         mockMvc.perform(get("/api/comment/byUser/" + userId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.numberOfElements").value(commentsSize))
@@ -182,7 +182,7 @@ public class CommentControllerTest extends BaseTestEntity {
         mockMvc.perform(delete("/api/comment/" + commentId))
                 .andExpect(status().isOk())
                 .andReturn();
-        assertFalse(commentRepository.findById(commentId).isPresent());
+        assertFalse(commentRepository.findById(commentId).get().getVisible());
     }
 
     @Test

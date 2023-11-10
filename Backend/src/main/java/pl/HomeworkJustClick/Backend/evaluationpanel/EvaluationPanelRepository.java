@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface EvaluationPanelRepository extends JpaRepository<EvaluationPanel, Integer> {
     List<EvaluationPanel> findAllByUserId(Integer userId, Pageable pageable);
+
+    List<EvaluationPanel> findAllByUserId(Integer userId);
 }

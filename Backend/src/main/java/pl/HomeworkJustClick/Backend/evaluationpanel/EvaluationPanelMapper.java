@@ -8,7 +8,7 @@ import java.time.OffsetDateTime;
 @Component
 @RequiredArgsConstructor
 public class EvaluationPanelMapper {
-    EvaluationPanel map(EvaluationPanelDto evaluationPanelDto) {
+    public EvaluationPanel map(EvaluationPanelDto evaluationPanelDto) {
         return EvaluationPanel.builder()
                 .name(evaluationPanelDto.getName())
                 .width(evaluationPanelDto.getWidth())
@@ -17,7 +17,7 @@ public class EvaluationPanelMapper {
                 .build();
     }
 
-    EvaluationPanelResponseDto map(EvaluationPanel evaluationPanel) {
+    public EvaluationPanelResponseDto map(EvaluationPanel evaluationPanel) {
         return EvaluationPanelResponseDto.builder()
                 .id(evaluationPanel.getId())
                 .name(evaluationPanel.getName())
