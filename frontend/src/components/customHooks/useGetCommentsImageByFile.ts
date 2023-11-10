@@ -27,7 +27,6 @@ export const useGetCommentsImageByFile = (fileId: number|undefined|null, params:
                 leftTopY: commentFromServer.leftTopY,
                 width: commentFromServer.width,
                 height: commentFromServer.height,
-                lineWidth: commentFromServer.lineWidth,
                 imgHeight: commentFromServer.imgHeight,
                 imgWidth: commentFromServer.imgWidth,
                 color: commentFromServer.color,

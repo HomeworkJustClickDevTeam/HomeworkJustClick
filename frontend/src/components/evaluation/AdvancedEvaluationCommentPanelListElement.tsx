@@ -6,7 +6,7 @@ import { Simulate } from "react-dom/test-utils"
 import error = Simulate.error
 
 export const AdvancedEvaluationCommentPanelListElement = (
-  {highlightedCommentId, chosenCommentId, updateCommentsLists, fileType, setChosenComment, comment, handleCommentRemoval}:{
+  {highlightedCommentId, chosenCommentId, updateCommentsLists, setChosenComment, comment, handleCommentRemoval}:{
   setChosenComment: (comment:CommentInterface|undefined)=>void,
   updateCommentsLists: (comment: CommentInterface, commentWidth?:number) => void,
   comment:CommentInterface,
@@ -15,10 +15,7 @@ export const AdvancedEvaluationCommentPanelListElement = (
   chosenCommentId:number|undefined
   highlightedCommentId:number|undefined
 })=>{
-  const [frameWidth, setFrameWidth] = useState<number>(5)
   const [commentState, setCommentState] = useState<CommentInterface>(comment)
-  const canvasRef = useRef<HTMLCanvasElement|null>(null)
-  const canvasContext = useRef(canvasRef.current?.getContext("2d"))
   const [commentReadonly, setCommentReadonly] = useState(true)
 
   const handleCommentChoice = () => {
@@ -33,33 +30,12 @@ export const AdvancedEvaluationCommentPanelListElement = (
     if(!commentReadonly){
       changeCommentPostgresService(commentState)
         .then(()=>{
-          fileType === "txt" ?
-            updateCommentsLists(commentState)
-            :
-            updateCommentsLists(commentState, frameWidth)
+          updateCommentsLists(commentState)
         })
         .catch((error)=> console.log(error))
     }
     setCommentReadonly(prevState => !prevState)
   }
-  const handleSliderChange = (event:React.ChangeEvent<HTMLInputElement>) => {
-    setFrameWidth(+event.target.value)
-  }
-
-  useEffect(() => {
-    const drawWidthPreviewOnCanvas = () => {
-      if(canvasContext.current!==null && canvasContext.current!==undefined && canvasRef.current!==null && canvasRef.current!==undefined) {
-        canvasContext.current.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height)
-        canvasContext.current.strokeStyle = commentState.color
-        canvasContext.current.lineWidth = frameWidth
-        canvasContext.current.strokeRect(5, 5,canvasRef.current.width - 10 , 20)
-      }
-    }
-    drawWidthPreviewOnCanvas()
-  }, [frameWidth, commentState.color])
-  useEffect(() => {
-    canvasContext.current = canvasRef.current?.getContext("2d")
-  }, [])
 
   return(
   <div style={{backgroundColor: highlightedCommentId === comment.id ? comment.color+"80" : "white"}}>
@@ -79,10 +55,7 @@ export const AdvancedEvaluationCommentPanelListElement = (
       <form
         onSubmit={(event) => {
           event.preventDefault()
-          fileType === "txt" ?
-            updateCommentsLists(commentState)
-            :
-            updateCommentsLists(commentState, frameWidth)}}>
+          updateCommentsLists(commentState)}}>
         <input
           id={"colorPicker"}
           value={commentState.color}
@@ -94,18 +67,6 @@ export const AdvancedEvaluationCommentPanelListElement = (
       </form>
 
     </div><br/>
-    {fileType === "img" &&
-      <div>
-        <canvas id={"frameWidthPreview"} ref={canvasRef} height={35}></canvas>
-        <input type={"range"}
-               min={1}
-               max={10}
-               value={frameWidth}
-               onChange={(event) => handleSliderChange(event)}
-               onMouseUp={() => { updateCommentsLists(commentState, frameWidth)}}/><br/>
-        Szerokość: {frameWidth}
-      </div>
-    }
     <button onClick={() => handleCommentRemoval(commentState)} type={"button"}>Usuń komentarz</button>
     <hr/>
   </div>)

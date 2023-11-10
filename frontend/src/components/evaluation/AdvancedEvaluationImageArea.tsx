@@ -18,7 +18,6 @@ interface AdvancedEvaluationImageAreaInterface{
   image: HTMLImageElement,
   editable:boolean,
   chosenComment?: CommentInterface|undefined,
-  chosenCommentFrameWidth?:number|undefined,
   drawnComments:MutableRefObject<AdvancedEvaluationImageCommentInterface[]>
   fileId:number
   handleCommentHighlighting:(commentId: number) => void
@@ -29,7 +28,6 @@ export const AdvancedEvaluationImageArea = React.forwardRef<any, AdvancedEvaluat
                                                                                                           editable,
                                                                                                           image,
                                                                                                           chosenComment,
-                                                                                                          chosenCommentFrameWidth,
                                                                                                           drawnComments,
                                                                                                           width,
                                                                                                           height}, advancedEvaluationImageAreaRef) =>{
@@ -149,11 +147,10 @@ export const AdvancedEvaluationImageArea = React.forwardRef<any, AdvancedEvaluat
     return false
   }
   const handleNewCommentCreation = (mouseX:number, mouseY:number) =>{
-    if(chosenComment !== undefined && canvasRef.current !== undefined && canvasRef.current !== null && chosenCommentFrameWidth!==undefined){
+    if(chosenComment !== undefined && canvasRef.current !== undefined && canvasRef.current !== null){
       let newComment:AdvancedEvaluationImageCommentInterface = {
-        id:-1, color: chosenComment.color, fileId: fileId,commentId:chosenComment.id, leftTopX: mouseX, leftTopY:mouseY, width: 1, height:1, lineWidth: chosenCommentFrameWidth, imgHeight:canvasRef.current.height, imgWidth:canvasRef.current.width}
+        id:-1, color: chosenComment.color, fileId: fileId,commentId:chosenComment.id, leftTopX: mouseX, leftTopY:mouseY, width: 1, height:1, imgHeight:canvasRef.current.height, imgWidth:canvasRef.current.width}
       commentIndex.current = drawnComments.current.push(newComment) - 1
-
     }
   }
   const handleCommentSizeChangeWhileItBeingCreated = (mouseX:number, mouseY:number) => {
@@ -532,7 +529,6 @@ export const AdvancedEvaluationImageArea = React.forwardRef<any, AdvancedEvaluat
       scaleCommentsToImageDimensions()
       for (const comment of drawnComments.current) {
         canvasContext.current.fillStyle = comment.color
-        canvasContext.current.lineWidth = comment.lineWidth
         canvasContext.current.globalAlpha = 0.2
         canvasContext.current.fillRect(comment.leftTopX, comment.leftTopY, comment.width, comment.height)
       }

@@ -39,7 +39,6 @@ export default function AdvancedEvaluationPage() {
   const [fileText, setFileText] = useState("")
   const [image, setImage] = useState<HTMLImageElement|undefined>(undefined)
   const [chosenComment, setChosenComment] = useState<CommentInterface|undefined>(undefined)
-  const [chosenCommentFrameWidth, setChosenCommentFrameWidth] = useState<number>(5)
   const drawnCommentsRef = useRef<AdvancedEvaluationImageCommentInterface[]>([])
   const {comments: rightPanelUserComments,setComments: setRightPanelUserComments} = useGetCommentsByUser(userState?.id, "")
   const {availableHeight, availableWidth} = useGetSolutionAreaSizeAvailable()
@@ -173,7 +172,6 @@ export default function AdvancedEvaluationPage() {
   const updateCommentsLists = async (clickedComment:CommentInterface, clickedCommentWidth?:number) => {
     const updateImageList = async () => {
       if (drawnCommentsRef?.current !== undefined && drawnCommentsRef?.current !== null && clickedCommentWidth !== undefined && advancedEvaluationImageAreaRef.current !== undefined && advancedEvaluationImageAreaRef.current !== null) {
-        setChosenCommentFrameWidth(clickedCommentWidth)
         const drawnCommentsTemp = await Promise.all(drawnCommentsRef.current.map(async (commentImage) => {
           if(commentImage.commentId === clickedComment.id){
             try {
@@ -331,7 +329,6 @@ export default function AdvancedEvaluationPage() {
                 height = {availableHeight}
                 editable={true}
                 drawnComments={drawnCommentsRef as MutableRefObject<AdvancedEvaluationImageCommentInterface[]>}
-                chosenCommentFrameWidth={chosenCommentFrameWidth}
                 image={image}
                 fileId={file.postgresId}
                 chosenComment={chosenComment}></AdvancedEvaluationImageArea>
