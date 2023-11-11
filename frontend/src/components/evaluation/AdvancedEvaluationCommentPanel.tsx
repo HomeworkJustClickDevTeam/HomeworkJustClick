@@ -14,7 +14,7 @@ import { sortButtonStateType } from "../../types/sortButtonStateType"
 export const AdvancedEvaluationCommentPanel = (
   {highlightedCommentId, sortButtonState, updateCommentsLists, setSortButtonState, chosenCommentId, fileType, rightPanelUserComments, setRightPanelUserComments, handleCommentRemoval, height, setChosenComment}:{
     setChosenComment: (comment:CommentInterface|undefined)=>void,
-    updateCommentsLists: (comment: CommentInterface, commentWidth?:number) => void,
+    updateCommentsLists: (comment: CommentInterface) => void,
     chosenCommentId:number|undefined,
     setSortButtonState:(buttonState:sortButtonStateType) => void,
     highlightedCommentId:number|undefined,

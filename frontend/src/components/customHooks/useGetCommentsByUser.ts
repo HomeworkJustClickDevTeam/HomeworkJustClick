@@ -5,7 +5,7 @@ import { setIsLoading } from "../../redux/isLoadingSlice"
 import { getCommentsByUserPostgresService } from "../../services/postgresDatabaseServices"
 import { parseISO } from "date-fns"
 
-export const useGetCommentsByUser = (userId: number|undefined|null, params:string) => {
+export const useGetCommentsByUser = (userId: number|undefined|null, params:string, manualRefresher?:any) => {
   const [comments, setComments] = useState<CommentInterface[]>([])
   const dispatch = useAppDispatch()
 
@@ -13,25 +13,14 @@ export const useGetCommentsByUser = (userId: number|undefined|null, params:strin
     let mounted = true
     if(userId !== undefined && userId !== null) {
       dispatch(setIsLoading(true))
-      getCommentsByUserPostgresService(userId.toString(), params)
+      getCommentsByUserPostgresService(userId.toString(), "")
         .then(async (response) => {
           if (response !== null && response !== undefined){
             const commentsFromServer:CommentInterface[] = []
-            for(const commentFromServer of response.data.content){
-              commentsFromServer.push({
-                title:commentFromServer.title,
-                description: commentFromServer.description,
-                color:commentFromServer.color,
-                userId:commentFromServer.user.id,
-                lastUsedDate: parseISO(commentFromServer.lastUsedDate),
-                counter: commentFromServer.counter,
-                id: commentFromServer.id
-              })
-            }
-            for(let pageNumber = 1; pageNumber < response.data.totalPages; pageNumber++) {
-              const response = await getCommentsByUserPostgresService(userId.toString(), `?page=${pageNumber}&${params}`)
-              if (response?.status === 200) {
-                for (const commentFromServer of response.data.content) {
+            for(let pageNumber = 0; pageNumber < response.data.totalPages; pageNumber++) {
+              const responsePaged = await getCommentsByUserPostgresService(userId.toString(), `?page=${pageNumber}&${params}`)
+              if (responsePaged?.status === 200) {
+                for (const commentFromServer of responsePaged.data.content) {
                   commentsFromServer.push({
                     title: commentFromServer.title,
                     description: commentFromServer.description,
@@ -57,7 +46,7 @@ export const useGetCommentsByUser = (userId: number|undefined|null, params:strin
     }
     return () => {mounted = false}
 
-  }, [userId, params])
+  }, [userId, params, manualRefresher])
 
   return {comments, setComments}
 }

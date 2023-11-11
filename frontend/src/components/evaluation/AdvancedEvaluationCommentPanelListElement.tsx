@@ -8,7 +8,7 @@ import error = Simulate.error
 export const AdvancedEvaluationCommentPanelListElement = (
   {highlightedCommentId, chosenCommentId, updateCommentsLists, setChosenComment, comment, handleCommentRemoval}:{
   setChosenComment: (comment:CommentInterface|undefined)=>void,
-  updateCommentsLists: (comment: CommentInterface, commentWidth?:number) => void,
+  updateCommentsLists: (comment: CommentInterface) => void,
   comment:CommentInterface,
   fileType:"txt"|"img",
   handleCommentRemoval: (commentToBeRemoved:CommentInterface)=>void
@@ -19,7 +19,6 @@ export const AdvancedEvaluationCommentPanelListElement = (
   const [commentReadonly, setCommentReadonly] = useState(true)
 
   const handleCommentChoice = () => {
-    console.log("CLICKED")
     if(chosenCommentId === comment.id) {
       setChosenComment(undefined)
     }
