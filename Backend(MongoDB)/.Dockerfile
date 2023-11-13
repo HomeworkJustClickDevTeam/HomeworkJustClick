@@ -8,4 +8,4 @@ WORKDIR /app
 EXPOSE 8082
 
 
-CMD ["java", "-jar", "homeworkJustClickMongoService.jar"]
+CMD ["java", "-jar", "target/HomeworkJustClick-0.0.1-SNAPSHOT.jar"]
