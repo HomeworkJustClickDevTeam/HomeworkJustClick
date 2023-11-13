@@ -8,5 +8,4 @@ WORKDIR /app
 EXPOSE 8080
 
 
-
 CMD ["java", "-jar", "target/HomeworkJustClick-0.0.1-SNAPSHOT.jar"]
