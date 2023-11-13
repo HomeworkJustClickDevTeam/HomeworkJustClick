@@ -6,7 +6,7 @@ services:
     environment:
       POSTGRES_PASSWORD: 123
     ports:
-      - "5032:5032"
+      - "5432:5432"
 
   backend_mongo:
     container_name: homework_just_click_mongo_api
