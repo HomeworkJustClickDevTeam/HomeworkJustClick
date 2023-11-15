@@ -30,23 +30,29 @@ import { AdvancedEvaluationTextCommentCreateInterface } from "../../types/Advanc
 import { AdvancedEvaluationTextCommentInterface } from "../../types/AdvancedEvaluationTextCommentInterface"
 import { useGetCommentsTextByFile } from "../customHooks/useGetCommentsTextByFile"
 import { selectGroup } from "../../redux/groupSlice"
+import { sortButtonStateType } from "../../types/sortButtonStateType"
+
+
 
 export default function AdvancedEvaluationPage() {
   let {state} = useLocation()
   const group = useAppSelector(selectGroup)
   const userState = useAppSelector(selectUserState)
+  const [refreshRightPanelUserComments, setRefreshRightPanelUserComments] = useState(false)
+  const [sortButtonState, setSortButtonState] = useState<sortButtonStateType>("lastUsedDate,desc")
   const file = useGetFiles(state.solutionExtended.id, 'solution')[0]
   const [fileText, setFileText] = useState("")
   const [image, setImage] = useState<HTMLImageElement|undefined>(undefined)
   const [chosenComment, setChosenComment] = useState<CommentInterface|undefined>(undefined)
   const drawnCommentsRef = useRef<AdvancedEvaluationImageCommentInterface[]>([])
-  const {comments: rightPanelUserComments,setComments: setRightPanelUserComments} = useGetCommentsByUser(userState?.id, "")
+  const {comments: rightPanelUserComments,setComments: setRightPanelUserComments} = useGetCommentsByUser(userState?.id, `size=10&sort=${sortButtonState}`, refreshRightPanelUserComments)
   const {availableHeight, availableWidth} = useGetSolutionAreaSizeAvailable()
   const commentsImageState = useGetCommentsImageByFile(file?.postgresId, "")
   const advancedEvaluationImageAreaRef = useRef<any>()
-  const {comments: commentsTextState, setComments: setCommentsTextState} = useGetCommentsTextByFile(file?.postgresId, "?page=0&size=50")
+  const {comments: commentsTextState, setComments: setCommentsTextState} = useGetCommentsTextByFile(file?.postgresId, "")
   const [highlightedCommentId, setHighlightedCommentId] = useState<number|undefined>(undefined)
-  const navigate = useNavigate()
+
+
   const handleCommentHighlighting = (commentId:number) => {
     if(highlightedCommentId === undefined){
       setHighlightedCommentId(commentId)
@@ -91,7 +97,7 @@ export default function AdvancedEvaluationPage() {
         if (commentsTextState.length === 0) {
           newComments.push(selectedComment)
         } else {
-          for(const oldComment of commentsTextState) {
+          for (const oldComment of commentsTextState) {
             if (oldComment.commentId === selectedComment.commentId &&
               selectedComment.highlightStart < oldComment.highlightStart &&
               selectedComment.highlightEnd >= oldComment.highlightStart &&
@@ -162,18 +168,20 @@ export default function AdvancedEvaluationPage() {
             }
             else newComments.push(oldComment)
           }
+          newComments.push(selectedComment)
         }
-        newComments.push(selectedComment)
         selection?.removeAllRanges()
         setCommentsTextState(newComments)
+        setRefreshRightPanelUserComments(prevState => !prevState)
+        setSortButtonState("lastUsedDate,desc")
       }
     }catch (error){
       console.log(error)
     }
   }
-  const updateCommentsLists = async (clickedComment:CommentInterface, clickedCommentWidth?:number) => {
+  const updateCommentsLists = async (clickedComment:CommentInterface) => {
     const updateImageList = async () => {
-      if (drawnCommentsRef?.current !== undefined && drawnCommentsRef?.current !== null && clickedCommentWidth !== undefined && advancedEvaluationImageAreaRef.current !== undefined && advancedEvaluationImageAreaRef.current !== null) {
+      if (drawnCommentsRef?.current !== undefined && drawnCommentsRef?.current !== null && advancedEvaluationImageAreaRef.current !== undefined && advancedEvaluationImageAreaRef.current !== null) {
         const drawnCommentsTemp = await Promise.all(drawnCommentsRef.current.map(async (commentImage) => {
           if(commentImage.commentId === clickedComment.id){
             try {
@@ -303,6 +311,8 @@ export default function AdvancedEvaluationPage() {
           <Link to = {`/group/${state.solutionExtended.assignment.groupId}/solution/${state.solutionExtended.user.id}/${state.solutionExtended.assignment.id}`} state={{solution: state.solutionExtended}}>Wróć</Link>
         </div>}
         <AdvancedEvaluationCommentPanel
+          setSortButtonState={setSortButtonState}
+          sortButtonState={sortButtonState}
           chosenCommentId={chosenComment?.id}
           height={availableHeight}
           highlightedCommentId={highlightedCommentId}
@@ -329,6 +339,8 @@ export default function AdvancedEvaluationPage() {
                 handleCommentHighlighting={handleCommentHighlighting}
                 width = {availableWidth}
                 height = {availableHeight}
+                setRefreshRightPanelUserComments={setRefreshRightPanelUserComments}
+                setSortButtonState ={setSortButtonState}
                 editable={true}
                 drawnComments={drawnCommentsRef as MutableRefObject<AdvancedEvaluationImageCommentInterface[]>}
                 image={image}

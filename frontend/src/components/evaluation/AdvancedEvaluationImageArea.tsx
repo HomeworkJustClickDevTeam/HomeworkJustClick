@@ -11,18 +11,23 @@ import {
   createCommentImageWithFilePostgresService,
   deleteCommentImagePostgresService
 } from "../../services/postgresDatabaseServices"
+import { sortButtonStateType } from "../../types/sortButtonStateType"
 
 interface AdvancedEvaluationImageAreaInterface{
   width:number|undefined,
   height:number|undefined,
+  setSortButtonState:(buttonState:React.SetStateAction<sortButtonStateType>) => void,
   image: HTMLImageElement,
   editable:boolean,
   chosenComment?: CommentInterface|undefined,
   drawnComments:MutableRefObject<AdvancedEvaluationImageCommentInterface[]>
   fileId:number
   handleCommentHighlighting:(commentId: number) => void
+  setRefreshRightPanelUserComments: (refresher:React.SetStateAction<boolean>) => void
 }
 export const AdvancedEvaluationImageArea = React.forwardRef<any, AdvancedEvaluationImageAreaInterface>(({
+                                                                                                          setSortButtonState,
+                                                                                                          setRefreshRightPanelUserComments,
                                                                                                           handleCommentHighlighting,
                                                                                                           fileId,
                                                                                                           editable,
@@ -118,6 +123,8 @@ export const AdvancedEvaluationImageArea = React.forwardRef<any, AdvancedEvaluat
         const response = await createCommentImageWithFilePostgresService(drawnComments.current[commentIndex.current])
         if (response?.data !== undefined && response?.data !== null && response?.status === 201) {
           drawnComments.current[commentIndex.current].id = response.data.id
+          setRefreshRightPanelUserComments(prevState => !prevState)
+          setSortButtonState("lastUsedDate,desc")
         }
         else{
           drawnComments.current.splice(commentIndex.current, 1)

@@ -17,20 +17,28 @@ export const useGetCommentsTextByFile = (fileId: number|undefined|null, params:s
     let mounted = true
     if(fileId !== undefined && fileId !== null) {
       dispatch(setIsLoading(true))
-      getCommentsTextByFilePostgresService(fileId.toString(), params)
-        .then((response) => {
-          if (response !== null && response !== undefined){
-            let commentsFromServer:AdvancedEvaluationTextCommentInterface[] = []
-            for(const commentFromServer of response.data.content){
-              commentsFromServer.push({
-                id: commentFromServer.id,
-                fileId:commentFromServer.file.id,
-                highlightEnd:commentFromServer.highlightEnd,
-                highlightStart: commentFromServer.highlightStart,
-                color: commentFromServer.color,
-                commentId: commentFromServer.comment.id})
+      getCommentsTextByFilePostgresService(fileId.toString(), "")
+        .then(async (response) => {
+          if (response !== null && response !== undefined) {
+            const commentsFromServer: AdvancedEvaluationTextCommentInterface[] = []
+            for (let pageNumber = 0; pageNumber < response.data.totalPages; pageNumber++) {
+              const responsePaged = await getCommentsTextByFilePostgresService(fileId.toString(), `?page=${pageNumber}&${params}`)
+              if (responsePaged?.status === 200) {
+                for (const commentFromServer of responsePaged.data.content) {
+                  commentsFromServer.push({
+                    id: commentFromServer.id,
+                    fileId: commentFromServer.file.id,
+                    highlightEnd: commentFromServer.highlightEnd,
+                    highlightStart: commentFromServer.highlightStart,
+                    color: commentFromServer.color,
+                    commentId: commentFromServer.comment.id
+                  })
+                }
+              }
             }
-            if(mounted){setComments(commentsFromServer)}
+            if (mounted) {
+              setComments(commentsFromServer)
+            }
           }
         })
         .catch((error)=> {
