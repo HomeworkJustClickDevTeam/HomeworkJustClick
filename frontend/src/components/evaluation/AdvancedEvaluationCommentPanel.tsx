@@ -1,65 +1,92 @@
 import { CommentInterface } from "../../types/CommentInterface"
 import React, { MutableRefObject, useState } from "react"
 import { AdvancedEvaluationCommentPanelListElement } from "./AdvancedEvaluationCommentPanelListElement"
+import { useAppSelector } from "../../types/HooksRedux"
+import { selectUserState } from "../../redux/userStateSlice"
+import { CommentCreateInterface } from "../../types/CommentCreateInterface"
+import { createCommentWithUserPostgresService } from "../../services/postgresDatabaseServices"
+import { ca } from "date-fns/locale"
+import { type } from "os"
+import { parseISO } from "date-fns"
+import { sortButtonStateType } from "../../types/sortButtonStateType"
+
 
 export const AdvancedEvaluationCommentPanel = (
-  {setChosenComment, chosenComment, commentPanelRef, setChosenCommentFrameWidth}:{
-    setChosenComment:(comment:CommentInterface|undefined) => void,
-    chosenComment:CommentInterface|undefined,
-    commentPanelRef: MutableRefObject<HTMLDivElement|null>,
-    setChosenCommentFrameWidth:(commentWidth:number|undefined) => void}) => {
+  {highlightedCommentId, sortButtonState, updateCommentsLists, setSortButtonState, chosenCommentId, fileType, rightPanelUserComments, setRightPanelUserComments, handleCommentRemoval, height, setChosenComment}:{
+    setChosenComment: (comment:CommentInterface|undefined)=>void,
+    updateCommentsLists: (comment: CommentInterface) => void,
+    chosenCommentId:number|undefined,
+    setSortButtonState:(buttonState:sortButtonStateType) => void,
+    highlightedCommentId:number|undefined,
+    sortButtonState: sortButtonStateType,
+    fileType:"txt"|"img",
+    height:number|undefined,
+    rightPanelUserComments: CommentInterface[],
+    setRightPanelUserComments: (comments:CommentInterface[]) => void,
+    handleCommentRemoval:(comment:CommentInterface)=>void}) => {
 
   const [newCommentDescription, setNewCommentDescription] = useState<string|undefined>(undefined)
-  const [rightPanelComments, setRightPanelComments] = useState<CommentInterface[]>([
-    {color:'#ff0000', id:0, description: "tutaj komentarz"},
-    {color:'#0068ff', id:1, description: "tutaj inny komentraz"},
-    {color:'#fffb00', id:2, description: "ostatni komentarz"}])
+  const userState = useAppSelector(selectUserState)
 
-  const handleNewCommentCreation = (event:React.FormEvent<HTMLButtonElement>) => {
+  const handleNewCommentCreation = async (event:React.FormEvent<HTMLButtonElement>) => {
     event.preventDefault()
     if(newCommentDescription !== undefined)
     {
-      const newId = Math.max(...rightPanelComments.map(comment => comment.id)) + 1
-      const newComment:CommentInterface = {
-        description: newCommentDescription,
-        id: newId,
-        color: '#fffb00'
+      if(userState?.id !== null && userState?.id !== undefined){
+        const newComment:CommentCreateInterface = {
+          description: newCommentDescription,
+          title:"",
+          color: "#" + Math.floor(Math.random()*16777215).toString(16), //random color
+          userId:userState.id
+        }
+        createCommentWithUserPostgresService(newComment)
+          .then((response) => {
+            if(response.data !== undefined && response.data !== null && response.status === 201){
+              const tempComments = rightPanelUserComments
+              setRightPanelUserComments([{
+                ...newComment,
+                id:response.data.id,
+                counter:response.data.counter,
+                lastUsedDate: parseISO(response.data.lastUsedDate)},
+                ...tempComments])
+              setNewCommentDescription("")
+            }
+          })
+          .catch((error) => console.log(error))
       }
-      setRightPanelComments((prevState)=>([newComment, ...prevState]))
     }
-
   }
-  const handleCommentRemoval = (commentId:number) => {
-    const newComments = rightPanelComments.filter(comment => comment.id !== commentId)
-    setRightPanelComments(newComments)
-  }
-  const handleCommentClick = (clickedComment:CommentInterface, clickedCommentWidth:number) => {
-      setChosenComment(clickedComment)
-      setChosenCommentFrameWidth(clickedCommentWidth)
-      const newComments = rightPanelComments.map(comment => {
-        if(comment.id === clickedComment?.id) return clickedComment
-        else return comment
-      })
-      setRightPanelComments(newComments)
-
-  }
-
-  return <div ref={commentPanelRef} id={"commentPanel"} className='float-right h-full'>
+  return (
+    <div id={"commentPanelDiv"} style={{float:"right", height:height !== undefined ? height.toString() : "100%", overflow:"scroll"}}>
       <p className='text-center underline underline-offset-4 mb-4'>KOMENTARZE</p>
-        Dodaj nowy komentarz:<br/>
+      Dodaj nowy komentarz:<br/>
       <div className='inline-flex w-full pb-4'>
-          <input className='border border-black rounded-sm mr-2 w-full pl-1.5' onChange={(event) => {setNewCommentDescription(event.target.value) }}/>
-      <button type={"button"} className='w-24 ml-auto mr-2 bg-main_blue text-white px-2 py-1 rounded-md' onClick={(event) => {handleNewCommentCreation(event);
-      }}>Dodaj +</button></div><br/><hr/>
-      <div>
-          <p className='pt-2'>Wybierz komentarz: </p>
-            {rightPanelComments.map((comment) => {
-        return(<AdvancedEvaluationCommentPanelListElement
-        handleCommentRemoval={handleCommentRemoval}
-        comment={comment}
-        handleCommentClick={handleCommentClick}
-        key={comment.id}></AdvancedEvaluationCommentPanelListElement>)
-        })}
+        <input className='border border-black rounded-sm mr-2 w-full pl-1.5' onChange={(event) => setNewCommentDescription(event.target.value)}/>
+        <button className='w-24 ml-auto mr-2 bg-main_blue text-white px-2 py-1 rounded-md' type={"button"} onClick={(event) => handleNewCommentCreation(event)}>Dodaj</button><br/><hr/>
+      </div>
+    <div>
+      <p className='pt-2'>Wybierz komentarz: </p>
+      <label htmlFor={"sortDropdown"}>Sortuj:</label>
+      <select defaultValue={sortButtonState} onChange={(event) => setSortButtonState(event.target.value as sortButtonStateType)} name={"sortDropdown"} id={"sortDropdown"}>
+        <option value={"description,desc"}>Alfabetycznie</option>
+        <option value={"counter,desc"}>Najczęściej używane</option>
+        <option value={"counter,asc"}> Najrzadziej używane</option>
+        <option value={"lastUsedDate,desc"}>Ostatnio używane </option>
+      </select>
+      <br/>
+      {rightPanelUserComments.map((comment) => {
+        return(
+          <div key={comment.id}>
+            <AdvancedEvaluationCommentPanelListElement
+              highlightedCommentId={highlightedCommentId}
+              chosenCommentId={chosenCommentId}
+              fileType={fileType}
+              handleCommentRemoval={handleCommentRemoval}
+              comment={comment}
+              setChosenComment={setChosenComment}
+              updateCommentsLists={updateCommentsLists}></AdvancedEvaluationCommentPanelListElement>
+          </div>)}
+        )}
     </div>
-    </div>
+    </div>)
 }

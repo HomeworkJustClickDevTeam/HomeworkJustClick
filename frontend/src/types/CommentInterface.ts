@@ -1,5 +1,7 @@
-export interface CommentInterface{
-  id: number
-  color: string
-  description: string
+import { CommentCreateInterface } from "./CommentCreateInterface"
+
+export interface CommentInterface extends CommentCreateInterface{
+  lastUsedDate: Date
+  counter: number
+  id:number
 }

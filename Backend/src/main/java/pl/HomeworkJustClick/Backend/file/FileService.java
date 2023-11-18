@@ -5,7 +5,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.HomeworkJustClick.Backend.assignment.AssignmentRepository;
-import pl.HomeworkJustClick.Backend.infrastructure.exception.file.FileNotFoundException;
+import pl.HomeworkJustClick.Backend.infrastructure.exception.EntityNotFoundException;
 import pl.HomeworkJustClick.Backend.solution.SolutionRepository;
 
 import java.util.List;
@@ -33,7 +33,7 @@ public class FileService {
 
     public File findById(Integer id) {
         return fileRepository.findById(id)
-                .orElseThrow(() -> new FileNotFoundException("File not found"));
+                .orElseThrow(() -> new EntityNotFoundException("File with id = " + id + " not found"));
     }
 
     @Transactional

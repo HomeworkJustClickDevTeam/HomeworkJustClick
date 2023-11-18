@@ -34,14 +34,17 @@ public class Comment {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "defaultColor")
-    private Integer defaultColor;
+    @Column(name = "color")
+    private String color;
 
     @Column(name = "lastUsedDate")
     private OffsetDateTime lastUsedDate;
 
     @Column(name = "counter")
     private Integer counter;
+
+    @Column(name = "visible")
+    private Boolean visible;
 
     @OneToMany(
             mappedBy = "comment",
@@ -72,11 +75,11 @@ public class Comment {
     @JsonIgnore
     private User user;
 
-    public Comment(String title, String description, User user, Integer defaultColor, OffsetDateTime lastUsedDate) {
+    public Comment(String title, String description, User user, String color, OffsetDateTime lastUsedDate) {
         this.title = title;
         this.description = description;
         this.user = user;
-        this.defaultColor = defaultColor;
+        this.color = color;
         this.lastUsedDate = lastUsedDate;
     }
 }

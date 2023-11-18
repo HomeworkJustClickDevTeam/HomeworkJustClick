@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import pl.HomeworkJustClick.Backend.evaluationpanelassignment.EvaluationPanelAssignment;
 import pl.HomeworkJustClick.Backend.file.File;
 import pl.HomeworkJustClick.Backend.group.Group;
 import pl.HomeworkJustClick.Backend.solution.Solution;
@@ -82,6 +83,14 @@ public class Assignment {
     @Column(name = "auto_penalty")
     @Schema(example = "50")
     private Integer auto_penalty;
+
+    @OneToMany(
+            mappedBy = "assignment",
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    @JsonIgnore
+    private List<EvaluationPanelAssignment> evaluationPanelAssignments = new ArrayList<>();
 
     public Assignment(User user, Group group, String taskDescription, OffsetDateTime creationDatetime, OffsetDateTime lastModifiedDatetime, OffsetDateTime completionDatetime, String title, Boolean visible, int max_points, int auto_penalty) {
         this.user = user;

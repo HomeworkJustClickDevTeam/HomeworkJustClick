@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import pl.HomeworkJustClick.Backend.comment.CommentService;
 import pl.HomeworkJustClick.Backend.comment.CommentUtilsService;
 import pl.HomeworkJustClick.Backend.file.FileService;
-import pl.HomeworkJustClick.Backend.infrastructure.exception.commentfiletext.CommentFileTextNotFoundException;
+import pl.HomeworkJustClick.Backend.infrastructure.exception.EntityNotFoundException;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +20,7 @@ public class CommentFileTextService {
 
     public CommentFileText findById(Integer id) {
         return repository.findById(id)
-                .orElseThrow(() -> new CommentFileTextNotFoundException("CommentFileText not found"));
+                .orElseThrow(() -> new EntityNotFoundException("CommentFileText with id = " + id + " not found"));
     }
 
     public Slice<CommentFileTextResponseDto> getCommentFileTexts(Pageable pageable) {
@@ -63,6 +63,11 @@ public class CommentFileTextService {
         repository.delete(commentFileText);
     }
 
+    public void deleteCommentFileTextsByCommentIdAndFileId(Integer commentId, Integer fileId) {
+        var commentFileTextsToDelete = repository.findCommentFileTextsByCommentIdAndFileId(commentId, fileId);
+        repository.deleteAll(commentFileTextsToDelete);
+    }
+
     private void setRelationFields(CommentFileText commentFileText, CommentFileTextDto commentFileTextDto) {
         var comment = commentService.findById(commentFileTextDto.getCommentId());
         var file = fileService.findById(commentFileTextDto.getFileId());
@@ -72,7 +77,7 @@ public class CommentFileTextService {
 
     private void checkColor(CommentFileText commentFileText) {
         if (commentFileText.getColor() == null) {
-            commentFileText.setColor(commentFileText.getComment().getDefaultColor());
+            commentFileText.setColor(commentFileText.getComment().getColor());
         }
     }
 }

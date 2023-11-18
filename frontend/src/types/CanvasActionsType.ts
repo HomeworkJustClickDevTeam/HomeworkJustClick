@@ -1,1 +1,1 @@
-export type CanvasActionsType = "commentDragging"|"commentCreating"|"hovering"|"commentResizing"|"commentDeleting"
+export type CanvasActionsType = "commentHolding"|"commentCreating"|"hovering"|"commentResizing"|"commentDeleting"
