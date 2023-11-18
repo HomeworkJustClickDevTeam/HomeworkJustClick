@@ -9,6 +9,7 @@ import { ca } from "date-fns/locale"
 import { type } from "os"
 import { parseISO } from "date-fns"
 import { sortButtonStateType } from "../../types/sortButtonStateType"
+import { FaSort } from "react-icons/fa";
 
 
 export const AdvancedEvaluationCommentPanel = (
@@ -65,15 +66,19 @@ export const AdvancedEvaluationCommentPanel = (
         <button className='w-24 ml-auto mr-2 bg-main_blue text-white px-2 py-1 rounded-md' type={"button"} onClick={(event) => handleNewCommentCreation(event)}>Dodaj</button><br/><hr/>
       </div>
     <section >
-      <p className='pt-2'>Wybierz komentarz: </p>
-      <label htmlFor={"sortDropdown"}>Sortuj:</label>
-      <select defaultValue={sortButtonState} onChange={(event) => setSortButtonState(event.target.value as sortButtonStateType)} name={"sortDropdown"} id={"sortDropdown"}>
-        <option value={"description,desc"}>Alfabetycznie</option>
-        <option value={"counter,desc"}>Najczęściej używane</option>
-        <option value={"counter,asc"}> Najrzadziej używane</option>
-        <option value={"lastUsedDate,desc"}>Ostatnio używane </option>
-      </select>
+      <p className='pt-1 pb-1 font-semibold'>Wybierz komentarz: </p>
+        <section className='border border-border_gray rounded-md w-fit px-2 flex'>
+          <label htmlFor={"sortDropdown"} className='flex'> <FaSort className='mt-1'/>Sortuj:</label>
+          <select defaultValue={sortButtonState} onChange={(event) => setSortButtonState(event.target.value as sortButtonStateType)} name={"sortDropdown"} id={"sortDropdown"}>
+            <option value={"description,desc"}>Alfabetycznie</option>
+            <option value={"counter,desc"}>Najczęściej używane</option>
+            <option value={"counter,asc"}> Najrzadziej używane</option>
+            <option value={"lastUsedDate,desc"}>Ostatnio używane </option>
+          </select>
+
+        </section>
       <br/>
+        <hr className='mr-8 mb-2'/>
       <div className='overflow-y-scroll mx-4'>{rightPanelUserComments.map((comment) => {
         return(
           <div key={comment.id} >
