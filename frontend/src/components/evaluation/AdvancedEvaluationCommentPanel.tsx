@@ -57,14 +57,14 @@ export const AdvancedEvaluationCommentPanel = (
     }
   }
   return (
-    <div id={"commentPanelDiv"} style={{float:"right", height:height !== undefined ? height.toString() : "100%", overflow:"scroll"}}>
+    <div id={"commentPanelDiv"} style={{float:"right", height:height !== undefined ? height.toString() : "100%"}}>
       <p className='text-center underline underline-offset-4 mb-4'>KOMENTARZE</p>
       Dodaj nowy komentarz:<br/>
       <div className='inline-flex w-full pb-4'>
         <input className='border border-black rounded-sm mr-2 w-full pl-1.5' onChange={(event) => setNewCommentDescription(event.target.value)}/>
         <button className='w-24 ml-auto mr-2 bg-main_blue text-white px-2 py-1 rounded-md' type={"button"} onClick={(event) => handleNewCommentCreation(event)}>Dodaj</button><br/><hr/>
       </div>
-    <div>
+    <section >
       <p className='pt-2'>Wybierz komentarz: </p>
       <label htmlFor={"sortDropdown"}>Sortuj:</label>
       <select defaultValue={sortButtonState} onChange={(event) => setSortButtonState(event.target.value as sortButtonStateType)} name={"sortDropdown"} id={"sortDropdown"}>
@@ -74,9 +74,9 @@ export const AdvancedEvaluationCommentPanel = (
         <option value={"lastUsedDate,desc"}>Ostatnio używane </option>
       </select>
       <br/>
-      {rightPanelUserComments.map((comment) => {
+      <div className='overflow-y-scroll mx-4'>{rightPanelUserComments.map((comment) => {
         return(
-          <div key={comment.id}>
+          <div key={comment.id} >
             <AdvancedEvaluationCommentPanelListElement
               highlightedCommentId={highlightedCommentId}
               chosenCommentId={chosenCommentId}
@@ -86,7 +86,7 @@ export const AdvancedEvaluationCommentPanel = (
               setChosenComment={setChosenComment}
               updateCommentsLists={updateCommentsLists}></AdvancedEvaluationCommentPanelListElement>
           </div>)}
-        )}
-    </div>
+      )}</div>
+    </section>
     </div>)
 }

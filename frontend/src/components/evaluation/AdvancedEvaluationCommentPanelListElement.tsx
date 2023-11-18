@@ -38,10 +38,12 @@ export const AdvancedEvaluationCommentPanelListElement = (
   }
 
   return(
-  <div style={
-    {backgroundColor: highlightedCommentId === comment.id ? comment.color+"80" : "white",
-      border:chosenCommentId === comment.id ? "4px solid #6D8DFF" : "none"}}
-      onClick={()=>handleCommentChoice()}>
+      <div className="pb-1 select-none" onClick={()=>handleCommentChoice()}>
+  <div style={{backgroundColor: highlightedCommentId === comment.id ? comment.color+"80" : "white",
+      border:chosenCommentId === comment.id ? "4px solid #6D8DFF" : "none",  margin: "4px 0px 0px 0px", padding: "5px 4px"}
+  }
+       // borderBottom: chosenCommentId === comment.id ? "4px solid #6D8DFF" : "2px solid black",
+      >
     <div>
       <input
             onChange={(event) => {!commentReadonly &&
@@ -65,11 +67,15 @@ export const AdvancedEvaluationCommentPanelListElement = (
             setCommentState((prevState)=>({...prevState, color:event.target.value}))}
           }
           type={"color"}/>
-        <button type={"submit"}>Potwierdz zmiane koloru</button>
+        <button type={"submit"}>Potwierdź zmianę koloru</button>
       </form>
 
     </div><br/>
     <button onClick={() => handleCommentRemoval(commentState)} type={"button"}>Usuń komentarz</button>
-    <hr/>
-  </div>)
+
+  </div>
+        <hr className='mt-2'/>
+      </div>
+
+)
 }
