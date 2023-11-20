@@ -31,6 +31,7 @@ import { AdvancedEvaluationTextCommentInterface } from "../../types/AdvancedEval
 import { useGetCommentsTextByFile } from "../customHooks/useGetCommentsTextByFile"
 import { selectGroup } from "../../redux/groupSlice"
 import { sortButtonStateType } from "../../types/sortButtonStateType"
+import { useTimeout } from "../customHooks/useTimeout"
 
 
 
@@ -51,14 +52,13 @@ export default function AdvancedEvaluationPage() {
   const advancedEvaluationImageAreaRef = useRef<any>()
   const {comments: commentsTextState, setComments: setCommentsTextState} = useGetCommentsTextByFile(file?.postgresId, "")
   const [highlightedCommentId, setHighlightedCommentId] = useState<number|undefined>(undefined)
+  const {reset: resetHighlighting} = useTimeout(() => setHighlightedCommentId(undefined), 2000)
 
 
   const handleCommentHighlighting = (commentId:number) => {
     if(highlightedCommentId === undefined){
       setHighlightedCommentId(commentId)
-      setTimeout(() => {
-        setHighlightedCommentId(undefined)
-      }, 2000)
+      resetHighlighting()
     }
   }
   const handleNewCommentTextCreation =  async () =>{
