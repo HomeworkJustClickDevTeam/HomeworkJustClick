@@ -129,20 +129,30 @@ public class CommentControllerTest extends BaseTestEntity {
     @ParameterizedTest
     @MethodSource("prepareValidData")
     void shouldUpdateComment(String title, String description, String color, Integer userId) throws Exception {
-        var commentId = commentRepository.findAll().get(0).getId();
+        var comment = commentRepository.findAll().get(0);
         var commentDto = createCommentDto(title, description, color, userId);
         var body = objectMapper.writeValueAsString(commentDto);
-        mockMvc.perform(put("/api/comment/" + commentId)
+        var response = mockMvc.perform(put("/api/comment/" + comment.getId())
                         .content(body)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
                 .andReturn();
-        var updatedComment = commentRepository.findById(commentId).get();
+        var updatedCommentId = objectMapper.readValue(response.getResponse().getContentAsString(), CommentResponseDto.class).getId();
+        var notVisibleComment = commentRepository.findById(comment.getId()).get();
+        assertEquals(notVisibleComment.getTitle(), comment.getTitle());
+        assertEquals(notVisibleComment.getDescription(), comment.getDescription());
+        assertEquals(notVisibleComment.getColor(), comment.getColor());
+        assertEquals(notVisibleComment.getUser().getId(), comment.getUser().getId());
+        assertFalse(notVisibleComment.getVisible());
+        assertEquals(notVisibleComment.getCounter(), comment.getCounter());
+        var updatedComment = commentRepository.findById(updatedCommentId).get();
         assertEquals(updatedComment.getTitle(), commentDto.getTitle());
         assertEquals(updatedComment.getDescription(), commentDto.getDescription());
         assertEquals(updatedComment.getColor(), commentDto.getColor());
         assertEquals(updatedComment.getUser().getId(), commentDto.getUserId());
+        assertEquals(updatedComment.getVisible(), comment.getVisible());
+        assertEquals(updatedComment.getCounter(), comment.getCounter());
     }
 
     @ParameterizedTest
