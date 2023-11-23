@@ -644,4 +644,16 @@ public class SolutionService {
         response.sort(Comparator.comparing(SolutionResponseCalendarDto::getCreationDateTime));
         return response;
     }
+
+    public Optional<Solution> getSolutionByEvaluationId(Integer evaluationId) {
+        var x = solutionRepository.getSolutionByEvaluationId(evaluationId);
+        return x;
+    }
+
+    public Boolean checkIfSolutionWasLate(Solution solution) {
+        if (solution.getAssignment().getCompletionDatetime().isBefore(solution.getCreationDatetime())) {
+            return true;
+        }
+        return false;
+    }
 }

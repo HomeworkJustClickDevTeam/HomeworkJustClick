@@ -19,4 +19,13 @@ public class UserMapper {
                 .verified(user.isVerified())
                 .build();
     }
+
+    public UserSimpleResponseDto map2SimpleResponseDto(User user) {
+        return UserSimpleResponseDto.builder()
+                .id(user.getId())
+                .firstname(user.getFirstname())
+                .lastname(user.getLastname())
+                .index(user.getIndex())
+                .build();
+    }
 }
