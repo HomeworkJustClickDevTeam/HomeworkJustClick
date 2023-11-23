@@ -37,11 +37,8 @@ public class CommentService {
 
     public CommentResponseDto updateComment(CommentDto commentDto, int commentId) {
         var comment = findById(commentId);
-        deleteComment(comment.getId());
-        var updatedComment = mapper.map(commentDto);
-        updatedComment.setCounter(comment.getCounter());
-        updatedComment.setLastUsedDate(comment.getLastUsedDate());
-        return mapper.map(repository.save(updatedComment));
+        mapper.map(comment, commentDto);
+        return mapper.map(repository.save(comment));
     }
 
     public void deleteComment(int commentId) {
