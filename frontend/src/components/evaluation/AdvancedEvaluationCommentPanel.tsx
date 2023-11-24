@@ -73,7 +73,7 @@ export const AdvancedEvaluationCommentPanel = (
           <select defaultValue={sortButtonState} onChange={(event) => setSortButtonState(event.target.value as sortButtonStateType)} name={"sortDropdown"} id={"sortDropdown"}>
             <option value={"description,desc"}>Alfabetycznie</option>
             <option value={"counter,desc"}>Najczęściej używane</option>
-            <option value={"counter,asc"}> Najrzadziej używane</option>
+            <option value={"counter,desc"}> Najrzadziej używane</option>
             <option value={"lastUsedDate,desc"}>Ostatnio używane </option>
           </select>
 
