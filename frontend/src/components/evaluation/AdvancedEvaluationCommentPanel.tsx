@@ -26,12 +26,12 @@ export const AdvancedEvaluationCommentPanel = (
     setRightPanelUserComments: (comments:CommentInterface[]) => void,
     handleCommentRemoval:(comment:CommentInterface)=>void}) => {
 
-  const [newCommentDescription, setNewCommentDescription] = useState<string|undefined>(undefined)
+  const [newCommentDescription, setNewCommentDescription] = useState<string>("")
   const userState = useAppSelector(selectUserState)
 
   const handleNewCommentCreation = async (event:React.FormEvent<HTMLButtonElement>) => {
     event.preventDefault()
-    if(newCommentDescription !== undefined)
+    if(newCommentDescription.length > 0)
     {
       if(userState?.id !== null && userState?.id !== undefined){
         const newComment:CommentCreateInterface = {
