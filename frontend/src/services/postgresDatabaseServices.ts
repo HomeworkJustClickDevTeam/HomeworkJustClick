@@ -10,7 +10,7 @@ import { CredentialsInterface } from "../types/CredentialsInterface"
 import { getUser } from "./otherServices"
 
 const postgresqlDatabaseJSON = axios.create({
-  baseURL: "http://homework_just_click_backend_api/api",
+  baseURL: "http://homework_just_click_backend_api/api:8000",
   timeout: 8000,
   headers: {
     "Access-Control-Allow-Origin": "http://localhost:3000",
@@ -19,10 +19,10 @@ const postgresqlDatabaseJSON = axios.create({
 })
 
 const postgresqlDatabaseTextPlain = axios.create({
-  baseURL: "http://homework_just_click_backend_api/api",
+  baseURL: "http://homework_just_click_backend_api/api:8000",
   timeout: 8000,
   headers: {
-    "Access-Control-Allow-Origin": "http://homework_just_click_frontend",
+    "Access-Control-Allow-Origin": "http://localhost:3000",
     "Content-Type": "text/plain",
   },
 })
