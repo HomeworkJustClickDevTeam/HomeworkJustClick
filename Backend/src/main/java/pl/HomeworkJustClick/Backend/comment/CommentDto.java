@@ -22,8 +22,9 @@ public class CommentDto implements Serializable {
     @NotEmpty
     private String description;
     @Schema(example = "1")
-    @NonNull
-    private Integer defaultColor;
+    @NotEmpty
+    @Size(max = 10)
+    private String color;
     @NonNull
     private Integer userId;
 }

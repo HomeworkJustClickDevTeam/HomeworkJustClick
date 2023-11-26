@@ -88,7 +88,7 @@ public class CommentFileTextControllerTest extends BaseTestEntity {
 
     @Test
     void shouldCreateCommentFileText() throws Exception {
-        var commentFileTextDto = createCommentFileTextDto(100, 100, 1, commentRepository.findAll().get(0).getId(), fileRepository.findAll().get(0).getId());
+        var commentFileTextDto = createCommentFileTextDto(100, 100, "#ffffff", commentRepository.findAll().get(0).getId(), fileRepository.findAll().get(0).getId());
         var body = objectMapper.writeValueAsString(commentFileTextDto);
         mockMvc.perform(post("/api/comment_file_text")
                         .content(body)
@@ -105,7 +105,7 @@ public class CommentFileTextControllerTest extends BaseTestEntity {
 
     @Test
     void shouldNotCreateCommentFileText() throws Exception {
-        var commentFileTextDto = createCommentFileTextDto(100, 100, 1, 999, 999);
+        var commentFileTextDto = createCommentFileTextDto(100, 100, "#ffffff", 999, 999);
         var body = objectMapper.writeValueAsString(commentFileTextDto);
         mockMvc.perform(post("/api/comment_file_text")
                         .content(body)
@@ -118,7 +118,7 @@ public class CommentFileTextControllerTest extends BaseTestEntity {
     @Test
     void shouldUpdateCommentFileText() throws Exception {
         var commentFileText = commentFileTextRepository.findAll().get(0);
-        var commentFileTextDto = createCommentFileTextDto(100, 100, 1, commentRepository.findAll().get(0).getId(), fileRepository.findAll().get(0).getId());
+        var commentFileTextDto = createCommentFileTextDto(100, 100, "#ffffff", commentRepository.findAll().get(0).getId(), fileRepository.findAll().get(0).getId());
         var body = objectMapper.writeValueAsString(commentFileTextDto);
         mockMvc.perform(put("/api/comment_file_text/" + commentFileText.getId())
                         .content(body)
@@ -142,7 +142,7 @@ public class CommentFileTextControllerTest extends BaseTestEntity {
     @Test
     void shouldNotUpdateCommentFileText() throws Exception {
         var commentFileText = commentFileTextRepository.findAll().get(0);
-        var commentFileTextDto = createCommentFileTextDto(100, 100, 1, 999, 999);
+        var commentFileTextDto = createCommentFileTextDto(100, 100, "#ffffff", 999, 999);
         var body = objectMapper.writeValueAsString(commentFileTextDto);
         mockMvc.perform(put("/api/comment_file_text/" + commentFileText.getId())
                         .content(body)
@@ -168,7 +168,32 @@ public class CommentFileTextControllerTest extends BaseTestEntity {
                 .andReturn();
     }
 
-    private CommentFileTextDto createCommentFileTextDto(Integer highlightStart, Integer highlightEnd, Integer color, Integer commentId, Integer fileId) {
+    @Test
+    void shouldDeleteCommentFileTextsByCommentIdAndFileId() throws Exception {
+        var commentFileTexts = commentFileTextRepository.findAll();
+        var firstCommentFileText = commentFileTexts.get(0);
+        var comment = firstCommentFileText.getComment();
+        var file = firstCommentFileText.getFile();
+        var secondCommentFileText = commentFileTexts.get(1);
+        secondCommentFileText.setComment(comment);
+        secondCommentFileText.setFile(file);
+        commentFileTextRepository.save(secondCommentFileText);
+        mockMvc.perform(delete("/api/comment_file_text/byCommentFile/" + comment.getId() + "/" + file.getId()))
+                .andExpect(status().isOk())
+                .andReturn();
+        assertEquals(commentFileTexts.size() - 2, commentFileTextRepository.findAll().size());
+    }
+
+    @Test
+    void shouldNotDeleteCommentFileTextsByNotExistingCommentIdAndFileId() throws Exception {
+        var commentFileTexts = commentFileTextRepository.findAll();
+        mockMvc.perform(delete("/api/comment_file_text/byCommentFile/999/999"))
+                .andExpect(status().isOk())
+                .andReturn();
+        assertEquals(commentFileTexts.size(), commentFileTextRepository.findAll().size());
+    }
+
+    private CommentFileTextDto createCommentFileTextDto(Integer highlightStart, Integer highlightEnd, String color, Integer commentId, Integer fileId) {
         return CommentFileTextDto.builder()
                 .highlightStart(highlightStart)
                 .highlightEnd(highlightEnd)

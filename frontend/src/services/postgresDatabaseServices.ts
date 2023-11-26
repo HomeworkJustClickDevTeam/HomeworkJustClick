@@ -3,11 +3,17 @@ import { AssignmentInterface } from "../types/AssignmentInterface"
 import { AssignmentToSendInterface } from "../types/AssignmentToSendInterface"
 import { EvaluationInterface } from "../types/EvaluationInterface"
 import { GroupCreateInterface } from "../types/GroupCreateInterface"
-import { SolutionToSendInterface } from "../types/SolutionToSendInterface"
+import { SolutionCreateInterface } from "../types/SolutionCreateInterface"
 import { LoginUserInterface } from "../types/LoginUserInterface"
 import { UserRegisterInterface } from "../types/UserRegisterInterface"
 import { CredentialsInterface } from "../types/CredentialsInterface"
 import { getUser } from "./otherServices"
+import { CommentCreateInterface } from "../types/CommentCreateInterface"
+import { AdvancedEvaluationTextCommentCreateInterface } from "../types/AdvancedEvaluationTextCommentCreateInterface"
+import { CommentInterface } from "../types/CommentInterface"
+import { AdvancedEvaluationImageCommentInterface } from "../types/AdvancedEvaluationImageCommentInterface"
+import { AdvancedEvaluationTextCommentInterface } from "../types/AdvancedEvaluationTextCommentInterface"
+import { AdvancedEvaluationImageCommentCreateInterface } from "../types/AdvancedEvaluationImageCommentCreateInterface"
 
 const postgresqlDatabaseJSON = axios.create({
   baseURL: "http://homework_just_click_backend_api/api:8000",
@@ -131,6 +137,17 @@ export const createFileWithAssignmentPostgresService = async (
   )
 }
 
+export const createCommentWithUserPostgresService = async (comment:CommentCreateInterface) =>{
+  return await postgresqlDatabaseJSON.post("/comment", comment)
+}
+
+export const createCommentTextWithFilePostgresService = async (comment:AdvancedEvaluationTextCommentCreateInterface) =>{
+  return await postgresqlDatabaseJSON.post("/comment_file_text", comment)
+}
+
+export const createCommentImageWithFilePostgresService = async (comment:AdvancedEvaluationImageCommentCreateInterface) => {
+  return await postgresqlDatabaseJSON.post("/comment_file_img", comment)
+}
 export const createFileWithSolutionPostgresService = async (
   mongoId: string,
   format: any,
@@ -177,6 +194,11 @@ export const changePasswordPostgresService = async (
   newCredentials: CredentialsInterface
 ) => {
   return await postgresqlDatabaseJSON.post("/changePassword", newCredentials)
+
+
+export const changePasswordPostgresService = async (newCredentials: CredentialsInterface) => {
+  return await postgresqlDatabaseJSON
+    .post("/changePassword", newCredentials)
 }
 
 export const addStudentToGroupPostgresService = async (
@@ -197,6 +219,12 @@ export const createSolutionWithUserAndAssignmentPostgresService = async (
     `/solution/withUserAndAssignment/${userId}/${assignmentId}`,
     solution
   )
+export const createSolutionWithUserAndAssignmentPostgresService = async (userId: string, assignmentId: string, solution: SolutionCreateInterface) => {
+  return await postgresqlDatabaseJSON
+    .post(
+      `/solution/withUserAndAssignment/${userId}/${assignmentId}`,
+      solution
+    )
 }
 
 export const getFilesByAssignmentPostgresService = async (
@@ -337,6 +365,21 @@ export const getUserRoleInGroupPostgresService = async (
   return await postgresqlDatabaseJSON.get(
     `/group/userCheckWithRole/${userId}/${groupId}`
   )
+export const getCommentsByUserPostgresService = async (userId: string, params: string) =>{
+  return await postgresqlDatabaseJSON.get(`/comment/byUser/${userId}?${params}`)
+}
+
+export const getCommentsTextByFilePostgresService = async (fileId: string, params: string) => {
+  return await postgresqlDatabaseJSON.get(`/comment_file_text/byFileId/${fileId}?${params}`)
+}
+
+export const getCommentsImageByFilePostgresService = async (fileId: string, params: string) => {
+  return await postgresqlDatabaseJSON.get(`/comment_file_img/byFileId/${fileId}?${params}`)
+}
+
+export const getUserRoleInGroupPostgresService = async (userId: string, groupId: string) => {
+  return await postgresqlDatabaseJSON
+    .get(`/group/userCheckWithRole/${userId}/${groupId}`)
 }
 
 export const changeAssignmentPostgresService = async (
@@ -376,6 +419,15 @@ export const changeUserIndexPostgresService = async (
 ) => {
   return await postgresqlDatabaseJSON.put(`/user/index/${userId}`, index)
 }
+export const changeCommentPostgresService = async (comment:CommentInterface) => {
+  return await postgresqlDatabaseJSON.put(`/comment/${comment.id}`, comment)
+}
+export const changeCommentImagePostgresService = async (comment:AdvancedEvaluationImageCommentInterface) => {
+  return await postgresqlDatabaseJSON.put(`/comment_file_img/${comment.id}`, comment)
+}
+export const changeCommentTextPostgresService = async (comment:AdvancedEvaluationTextCommentInterface) => {
+  return await postgresqlDatabaseJSON.put(`/comment_file_text/${comment.id}`, comment)
+}
 
 export const changeGroupNamePostgresService = async (
   groupId: string,
@@ -398,12 +450,32 @@ export const deleteAssignmentPostgresService = (assignmentId: string) => {
   return postgresqlDatabaseJSON.delete(`/assignment/${assignmentId}`)
 }
 
+export const deleteCommentTextByCommentFilePostgresService = async (commentId: string, fileId: string) => {
+  return await postgresqlDatabaseJSON
+    .delete(`/comment_file_text/byCommentFile/${commentId}/${fileId}`)
+}
+
+export const deleteCommentImageByCommentFilePostgresService = async (commentId: string, fileId: string) => {
+  return await postgresqlDatabaseJSON
+    .delete(`/comment_file_img/byCommentFile/${commentId}/${fileId}`)
+}
+
 export const deleteFilePostgresService = async (fileId: string) => {
   return await postgresqlDatabaseJSON.delete(`file/${fileId}`)
 }
 
 export const deleteGroupPostgresService = async (groupId: string) => {
   return await postgresqlDatabaseJSON.delete("/group/" + groupId)
+}
+export const deleteCommentImagePostgresService = async (commentId:string) => {
+  return await postgresqlDatabaseJSON.delete(`/comment_file_img/${commentId}`)
+}
+
+export const deleteCommentTextPostgresService = async (commentId:string) => {
+  return await postgresqlDatabaseJSON.delete(`/comment_file_text/${commentId}`)
+}
+export const deleteCommentPostgresService = async (commentId:string) =>{
+  return await postgresqlDatabaseJSON.delete(`comment/${commentId}`)
 }
 
 export const deleteStudentInGroupPostgresService = async (

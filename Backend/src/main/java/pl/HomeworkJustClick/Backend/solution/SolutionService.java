@@ -550,6 +550,7 @@ public class SolutionService {
                 .title(assignment.getTitle())
                 .visible(assignment.getVisible())
                 .max_points(assignment.getMax_points())
+                .auto_penalty(assignment.getAuto_penalty())
                 .build();
 
         return SolutionResponseExtendedDto.builder()

@@ -1,12 +1,12 @@
 import { useLocation, useParams } from "react-router-dom"
 import React from "react"
 
-import AssignmentModify from "./AssignmentModify"
+import AssignmentModifyPage from "./AssignmentModifyPage"
 
-import SolutionAdd from "../solution/SolutionAdd"
+import SolutionAddPage from "../solution/SolutionAddPage"
 
-import SolutionChecked from "../solution/SolutionChecked"
-import SolutionUnchecked from "../solution/SolutionUnchecked"
+import SolutionCheckedPage from "../solution/SolutionCheckedPage"
+import SolutionUncheckedStudentPage from "../solution/SolutionUncheckedStudentPage"
 import { AssignmentInterface } from "../../types/AssignmentInterface"
 import { SolutionInterface } from "../../types/SolutionInterface"
 import { selectUserState } from "../../redux/userStateSlice"
@@ -34,13 +34,13 @@ function AssignmentSpecPage() {
   return (
     <div>
       {((role === "Teacher") ? (
-        <AssignmentModify assignment={assignment as AssignmentInterface} setAssignment={setAssignment}/>
+        <AssignmentModifyPage assignment={assignment as AssignmentInterface} setAssignment={setAssignment}/>
       ) : (checkedSolution === undefined && uncheckedSolution === undefined && role === "Student") ? (
-        <SolutionAdd assignment={assignment as AssignmentInterface}/>
+        <SolutionAddPage assignment={assignment as AssignmentInterface}/>
       ) : (uncheckedSolution === undefined) ? (
-        <SolutionChecked assignment={assignment as AssignmentInterface} solution={checkedSolution as SolutionInterface}/>
+        <SolutionCheckedPage assignment={assignment as AssignmentInterface} solution={checkedSolution as SolutionInterface}/>
       ) : (
-        <SolutionUnchecked assignment={assignment as AssignmentInterface} solution={uncheckedSolution as SolutionInterface}/>
+        <SolutionUncheckedStudentPage assignment={assignment as AssignmentInterface} solution={uncheckedSolution as SolutionInterface}/>
       ))}
     </div>
   )

@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import pl.HomeworkJustClick.Backend.assignment.Assignment;
 import pl.HomeworkJustClick.Backend.comment.Comment;
 import pl.HomeworkJustClick.Backend.evaluation.Evaluation;
+import pl.HomeworkJustClick.Backend.evaluationpanel.EvaluationPanel;
 import pl.HomeworkJustClick.Backend.groupstudent.GroupStudent;
 import pl.HomeworkJustClick.Backend.groupteacher.GroupTeacher;
 import pl.HomeworkJustClick.Backend.infrastructure.enums.Role;
@@ -129,6 +130,14 @@ public class User implements UserDetails {
     )
     @JsonIgnore
     private List<GroupTeacher> groupTeachers = new ArrayList<>();
+
+    @OneToMany(
+            mappedBy = "user",
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    @JsonIgnore
+    private List<EvaluationPanel> evaluationPanels = new ArrayList<>();
 
     @Override
     @Schema(example = "exampleman1231")
