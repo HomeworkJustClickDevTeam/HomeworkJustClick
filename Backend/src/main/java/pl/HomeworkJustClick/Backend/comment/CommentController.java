@@ -93,11 +93,6 @@ public class CommentController {
             summary = "Returns paged list of comments by it's assignmentId.",
             responses = {
                     @ApiResponse(
-                            responseCode = "404",
-                            description = "No comment with this assignmentId in the DB.",
-                            content = @Content
-                    ),
-                    @ApiResponse(
                             responseCode = "200",
                             description = "OK.",
                             content = @Content(
@@ -134,7 +129,7 @@ public class CommentController {
                     ),
                     @ApiResponse(
                             responseCode = "404",
-                            description = "User not found",
+                            description = "Assignment not found",
                             content = @Content
                     ),
                     @ApiResponse(
@@ -166,7 +161,7 @@ public class CommentController {
                     ),
                     @ApiResponse(
                             responseCode = "404",
-                            description = "Comment or user not found",
+                            description = "Comment or assignment not found",
                             content = @Content
                     ),
                     @ApiResponse(
