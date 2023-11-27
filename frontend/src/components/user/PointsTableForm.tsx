@@ -1,8 +1,6 @@
 import { Button, Table } from "../../types/Table.model"
 import { ChangeEvent, FormEvent, useEffect, useState } from "react"
-import { createEvaluationPanel } from "../../services/postgresDatabaseServices"
-import { Simulate } from "react-dom/test-utils"
-import error = Simulate.error
+import { createEvaluationPanelService } from "../../services/postgresDatabaseServices"
 import { useAppSelector } from "../../types/HooksRedux"
 import { selectUserState } from "../../redux/userStateSlice"
 
@@ -11,6 +9,7 @@ export default function PointsTableForm(props: {
   table?: Table
 }) {
   const userState = useAppSelector(selectUserState)
+  const [isEditForm, setIsEditForm] = useState<boolean>(false)
   const [table, setTable] = useState<Table>(new Table("", [], 0, userState?.id))
   useEffect(() => {
     if (props.table) {
@@ -19,16 +18,18 @@ export default function PointsTableForm(props: {
         ...prevState,
         userId: userState?.id,
       }))
+      setIsEditForm(true)
     }
-    console.log(userState?.id)
   }, [])
 
   const handleSubmit = (event: FormEvent) => {
-    console.log(table)
     event.preventDefault()
-    createEvaluationPanel(table)
-      .then(() => resetAndHideForm())
-      .catch((error) => console.log(error))
+    if (!isEditForm) {
+      createEvaluationPanelService(table)
+        .then(() => resetAndHideForm())
+        .catch((error) => console.log(error))
+    } else {
+    }
   }
   const handleValueChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target
@@ -62,6 +63,16 @@ export default function PointsTableForm(props: {
     props.setIsFormHidden(true)
   }
 
+  const deleteEvaluationTable = () => {}
+
+  const getPoints = (points: Button[]): string => {
+    if (points) {
+      const pointsNumber = points.map((button) => button.points)
+      return pointsNumber.join(", ")
+    }
+    return ""
+  }
+
   return (
     <div>
       <h1>NOWA TABELA</h1>
@@ -72,11 +83,16 @@ export default function PointsTableForm(props: {
             name="name"
             type="text"
             onChange={handleValueChange}
-            placeholder={"Nazwa tabeli oceniania"}
+            value={isEditForm ? table.name : undefined}
           />
         </label>
         <label>Punkty: </label>
-        <input name="buttons" type="text" onChange={handlePointsTableChange} />
+        <input
+          name="buttons"
+          type="text"
+          onChange={handlePointsTableChange}
+          value={isEditForm ? getPoints(table.buttons) : undefined}
+        />
         <label>
           Wiersze w tabeli (max 5):
           <input
@@ -84,23 +100,27 @@ export default function PointsTableForm(props: {
             name="width"
             max="5"
             onChange={handleValueChange}
+            value={isEditForm ? table.width : undefined}
           />
         </label>
         <button
           type="submit"
           className="mr-6 mt-4 px-10 py-1 rounded-lg bg-main_blue text-white hover:bg-hover_blue hover:shadow-md active:shadow-none"
         >
-          {" "}
-          Zapisz{" "}
+          {isEditForm ? "Edytuj" : "Zapisz"}
         </button>
       </form>
-      <button
-        onClick={() => handleCancel()}
-        className="mr-6 mb-4 px-4 py-1 rounded-lg bg-berry_red text-white"
-      >
-        {" "}
-        X{" "}
-      </button>
+      {!isEditForm ? (
+        <button
+          onClick={() => handleCancel()}
+          className="mr-6 mb-4 px-4 py-1 rounded-lg bg-berry_red text-white"
+        >
+          {" "}
+          X{" "}
+        </button>
+      ) : (
+        <button onClick={() => deleteEvaluationTable()}> Usuń</button>
+      )}
     </div>
   )
 }

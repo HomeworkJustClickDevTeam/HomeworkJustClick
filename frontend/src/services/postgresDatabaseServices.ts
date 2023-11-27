@@ -522,6 +522,13 @@ export const deleteTeacherInGroupPostgresService = async (
   )
 }
 
-export const createEvaluationPanel = async (evaluationPanel: Table) => {
+export const createEvaluationPanelService = async (evaluationPanel: Table) => {
   return await postgresqlDatabaseJSON.post("/evaluation_panel", evaluationPanel)
+}
+export const getEvaluationTableByUserIdService = async (
+  userId: string | number
+) => {
+  return await postgresqlDatabaseJSON.get(
+    `/evaluation_panel/byUserId/${userId}`
+  )
 }

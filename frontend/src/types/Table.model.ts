@@ -1,7 +1,7 @@
 export class Table {
   constructor(
     public name: string,
-    public buttons: number[],
+    public buttons: Button[],
     public width: number,
     public userId: number | undefined,
     public id?: number
