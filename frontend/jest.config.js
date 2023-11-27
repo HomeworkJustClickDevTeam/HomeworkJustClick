@@ -3,12 +3,11 @@
  * https://jestjs.io/docs/configuration
  */
 
-import type {Config} from 'jest';
-
-const config: Config = {
+/** @type {import('jest').Config} */
+const config = {
   // All imported modules in your tests should be mocked automatically
   // automock: false,
-
+  setupFiles: ['./jest.polyfills.js'],
   // Stop running tests after `n` failures
   // bail: 0,
 
@@ -20,13 +19,26 @@ const config: Config = {
 
   // Indicates whether the coverage information should be collected while executing the test
   collectCoverage: true,
+  preset: "ts-jest",
+  testEnvironment: 'jsdom',
+  transform: {
+    '^.+\\.ts?$': 'ts-jest'
+  },
+  moduleNameMapper: {
+    '^.+.(svg)$': 'jest-transform-stub',
+    ".+\\.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$"
+      : "jest-transform-stub"
+  },
+  transformIgnorePatterns: ['<rootDir>/node_modules/'],
 
   // An array of glob patterns indicating a set of files for which coverage information should be collected
   // collectCoverageFrom: undefined,
 
   // The directory where Jest should output its coverage files
   coverageDirectory: "coverage",
-
+  testEnvironmentOptions: {
+    customExportConditions: [''],
+  },
   // An array of regexp pattern strings used to skip coverage collection
   // coveragePathIgnorePatterns: [
   //   "\\\\node_modules\\\\"
@@ -196,4 +208,4 @@ const config: Config = {
   // watchman: true,
 };
 
-export default config;
+module.exports = config;

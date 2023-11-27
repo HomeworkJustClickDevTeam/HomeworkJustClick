@@ -30,7 +30,7 @@ export const useGetUserGroups = (userId:number|undefined|null, filter: 'student'
             if(mounted){setGroups(response.data)}
           }
         }catch (error:any) {
-          if(error !== null && error!== undefined && error.response.status === 404){
+          if(error !== null && error!== undefined && error.response?.status === 404){
             if(mounted){setGroups([])}
           }
           else{

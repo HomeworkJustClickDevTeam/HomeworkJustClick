@@ -1,10 +1,9 @@
-import axios from "axios"
 import { AssignmentInterface } from "../types/AssignmentInterface"
 import { AssignmentToSendInterface } from "../types/AssignmentToSendInterface"
 import { EvaluationInterface } from "../types/EvaluationInterface"
 import { GroupCreateInterface } from "../types/GroupCreateInterface"
 import { SolutionCreateInterface } from "../types/SolutionCreateInterface"
-import { LoginUserInterface } from "../types/LoginUserInterface"
+import { UserLoginInterface } from "../types/UserLoginInterface"
 import { UserRegisterInterface } from "../types/UserRegisterInterface"
 import { CredentialsInterface } from "../types/CredentialsInterface"
 import { getUser } from "./otherServices"
@@ -14,6 +13,7 @@ import { CommentInterface } from "../types/CommentInterface"
 import { AdvancedEvaluationImageCommentInterface } from "../types/AdvancedEvaluationImageCommentInterface"
 import { AdvancedEvaluationTextCommentInterface } from "../types/AdvancedEvaluationTextCommentInterface"
 import { AdvancedEvaluationImageCommentCreateInterface } from "../types/AdvancedEvaluationImageCommentCreateInterface"
+import axios from "axios";
 
 const postgresqlDatabaseJSON = axios.create({
   baseURL: "http://localhost:8080/api",
@@ -100,7 +100,7 @@ export const createAssignmentWithUserAndGroupPostgresService = async (
 export const refreshToken = async (userId: number) => {
   return await postgresqlDatabaseJSON.post(`/refreshToken/${userId}`)
 }
-export const loginPostgresService = async (user: LoginUserInterface) => {
+export const loginPostgresService = async (user: UserLoginInterface) => {
   return await postgresqlDatabaseJSON.post("/auth/authenticate", user)
 }
 

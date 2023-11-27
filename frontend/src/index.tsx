@@ -8,18 +8,18 @@ import { BrowserRouter } from "react-router-dom"
 import { Provider } from "react-redux"
 import {AppStore, setupStore} from "./redux/store"
 import {getUser} from "./services/otherServices";
-import {renderWithProviders} from "./utils/test-utils";
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
-renderWithProviders(
-  <React.StrictMode>
-      <BrowserRouter>
-        <App/>
-      </BrowserRouter>
-  </React.StrictMode>,
-  {preloadedState:{userState:getUser()}}
+root.render(
+  <Provider store={setupStore({userState: getUser()})}>
+    <React.StrictMode>
+        <BrowserRouter>
+          <App/>
+        </BrowserRouter>
+    </React.StrictMode>
+  </Provider>
 );
 
 // If you want to start measuring performance in your app, pass a function

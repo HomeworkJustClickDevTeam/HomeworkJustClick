@@ -9,7 +9,7 @@ function GroupTeacherDisplayer({groupId}: { groupId: string }) {
       <ul className='flex inline-block font-semibold text-lg'>
         {teachers?.map((teacher) => (
           <GroupUserListElement isTeacher={true} userToShow={{
-            firstname: teacher.firstname as string,
+            firstname: teacher.name as string,
             lastname: teacher.lastname as string,
             id: teacher.id as number
           }} key={teacher.id}/>

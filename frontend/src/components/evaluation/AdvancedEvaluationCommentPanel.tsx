@@ -8,7 +8,7 @@ import { createCommentWithUserPostgresService } from "../../services/postgresDat
 import { ca } from "date-fns/locale"
 import { type } from "os"
 import { parseISO } from "date-fns"
-import { sortButtonStateType } from "../../types/sortButtonStateType"
+import { sortButtonStateType } from "../../types/SortButtonStateType"
 import { FaSort } from "react-icons/fa";
 
 

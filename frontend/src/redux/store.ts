@@ -1,4 +1,4 @@
-import {combineReducers, configureStore, PreloadedState} from "@reduxjs/toolkit"
+import { combineReducers, configureStore, getDefaultMiddleware, PreloadedState } from "@reduxjs/toolkit";
 import userStateReducer from "./userStateSlice"
 import roleReducer from "./roleSlice"
 import groupReducer from "./groupSlice"

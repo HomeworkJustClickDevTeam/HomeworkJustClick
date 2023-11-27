@@ -12,3 +12,4 @@ frontend/frontend.iml
 Backend(MongoDB)/target/
 
 .idea/
+*.html

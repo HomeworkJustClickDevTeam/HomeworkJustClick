@@ -2,7 +2,7 @@ import React, { ChangeEvent, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import login_left_circle from "./login_left_circle.svg"
 import login_right_circle from "./login_right_circle.svg"
-import { LoginUserInterface } from "../../types/LoginUserInterface"
+import { UserLoginInterface } from "../../types/UserLoginInterface"
 import { AppDispatch } from "../../redux/store"
 import { loginUser } from "../../services/otherServices"
 import { useAppDispatch, useAppSelector } from "../../types/HooksRedux"
@@ -10,7 +10,7 @@ import { selectUserState } from "../../redux/userStateSlice"
 
 
 const LoginPage = () => {
-  const [userProvided, setUserProvided] = useState<LoginUserInterface>({
+  const [userProvided, setUserProvided] = useState<UserLoginInterface>({
     email: "",
     password: "",
   })
@@ -33,7 +33,7 @@ const LoginPage = () => {
   }
 
   return (
-    <div className='flex w-screen flex-col items-center text-center font-lato text-sm select-none'>
+    <div data-testid="login-page" className='flex w-screen flex-col items-center text-center font-lato text-sm select-none'>
       <img className="fixed left-[7%]  bottom-[3%] scale-50 xl:scale-100 -z-50" src={login_left_circle}
            alt="Kółko po lewej stronie"></img>
       <img className="fixed right-[9%] top-[18%] scale-50 translate-x-[25%] xl:transform-none -z-50"

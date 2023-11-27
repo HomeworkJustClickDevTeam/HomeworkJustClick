@@ -7,7 +7,7 @@ import { setIsLoadingInReducer } from "./isLoadingSlice"
 type UserStateSliceType = UserInterface | null
 export const userStateSlice = createSlice({
   name: 'userState',
-  initialState: getUser() as UserStateSliceType,
+  initialState: null as UserStateSliceType,
   reducers: {
     logOut: (_) => {
       localStorage.removeItem("user")

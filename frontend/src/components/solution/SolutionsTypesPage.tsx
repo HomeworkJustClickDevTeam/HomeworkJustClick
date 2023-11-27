@@ -33,7 +33,7 @@ function SolutionsTypesPage({ type }: { type: ExtendedSolutionType }) {
             >
               <div className="flex-col pl-10 w-40 text-left">
                 <div>{solutionExtended.user.index}</div>
-                <div>{solutionExtended.user.firstname}</div>
+                <div>{solutionExtended.user.name}</div>
               </div>
               <div className="font-semibold underline text-left w-[40%]">
                 {solutionExtended.assignment.title}
