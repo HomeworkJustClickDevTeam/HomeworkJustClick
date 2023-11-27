@@ -17,7 +17,6 @@ export const useGetFiles = (filterId: number|undefined|null, filter:"assignment"
     const fetchData = async () => {
       let response = null
       if(filterId !== undefined && filterId !== null) {
-
         try {
           if(filter === "solution"){
             response = await getFilesBySolutionPostgresService(filterId)
@@ -55,7 +54,7 @@ export const useGetFiles = (filterId: number|undefined|null, filter:"assignment"
             }
           }
         }catch (error:any) {
-          if(error !== null && error!== undefined && error.response.status === 404){
+          if(error !== null && error!== undefined && error.response !== null && error.response!==undefined && error.response.status === 404){
             if(mounted){setFiles([])}
           }
           else{

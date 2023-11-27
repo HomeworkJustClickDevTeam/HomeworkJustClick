@@ -43,6 +43,12 @@ function SolutionPage() {
         <span className="font-semibold">Opis zadania: </span>
         {solutionExtended.assignment.taskDescription}
       </div>
+      {solutionExtended.comment.length > 0 && (
+        <div className="text-border_gray">
+          <span className="font-semibold">Komentarz ucznia: </span>
+          {solutionExtended.comment}
+        </div>
+      )}
       <div className="absolute right-0 top-0 mr-8 mt-2 flex flex-col">
         <div className="mb-4 font-semibold">Punkty:</div>
         <div className="ml-20 font-bold text-xl ">
@@ -62,7 +68,7 @@ function SolutionPage() {
           {solutionExtended.id && (
             <Link
               to={`/advancedEvaluation`}
-              state={solutionExtended.id}
+              state={{ solutionExtended: solutionExtended }}
               className="absolute underline font-semibold bottom-0 left-0 mb-2 ml-4"
             >
               Zaawansowane Sprawdzanie

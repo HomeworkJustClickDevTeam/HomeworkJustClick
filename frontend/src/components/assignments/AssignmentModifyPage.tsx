@@ -15,7 +15,7 @@ interface AssignmentModifyPropsInterface extends AssignmentPropsInterface {
   setAssignment: (assignment: (prevState: any) => any) => void
 }
 
-function AssignmentModify({
+function AssignmentModifyPage({
   assignment,
   setAssignment,
 }: AssignmentModifyPropsInterface) {
@@ -65,13 +65,13 @@ function AssignmentModify({
     event.preventDefault()
     changeAssignmentPostgresService(assignment)
       .then(() => setToSend(true))
-      .catch((e) => console.log(e))
+      .catch((error) => console.log(error))
   }
 
   function handleDelete(event: React.FormEvent) {
     deleteAssignmentPostgresService(assignment.id.toString())
       .then(() => navigate(`/group/${group?.id}/assignments/`))
-      .catch((e) => console.log("TUTAJ", e))
+      .catch((error) => console.log(error))
   }
 
   return (
@@ -161,15 +161,11 @@ function AssignmentModify({
         assignmentId={assignment.id}
         setToNavigate={setToNavigate}
       />
-
-      <button
-        onClick={(e) => handleDelete(e)}
-        className="absolute bottom-0 right-0 mr-6 mb-4 px-4 py-1 rounded-lg bg-berry_red text-white"
-      >
-        Usuń Zadanie
+      <button onClick={(event) => handleDelete(event)}
+              className='absolute bottom-0 right-0 mr-6 mb-4 px-4 py-1 rounded-lg bg-berry_red text-white'>Usuń Zadanie
       </button>
     </div>
   )
 }
 
-export default AssignmentModify
+export default AssignmentModifyPage

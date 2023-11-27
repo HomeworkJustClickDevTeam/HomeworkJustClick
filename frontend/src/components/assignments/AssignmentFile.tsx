@@ -12,12 +12,15 @@ export function AssignmentFile(props: { assignmentId: number }) {
     }
   }
   return (
-      <>
-        {files.map((file) => {
-          return(<button key={file.name} onClick={handleDownload}>{file.name}</button>)
-        })}
-      </>
-    )
-
-
+    <>
+      <h1>Załączniki</h1>
+      {files.map((file) => {
+        return (
+          <button key={file.name} onClick={handleDownload}>
+            {file.name}
+          </button>
+        )
+      })}
+    </>
+  )
 }

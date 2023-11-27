@@ -2,16 +2,14 @@ package pl.HomeworkJustClick.Backend.comment;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import pl.HomeworkJustClick.Backend.user.UserMapper;
-import pl.HomeworkJustClick.Backend.user.UserService;
+import pl.HomeworkJustClick.Backend.assignment.AssignmentMapper;
 
 import java.time.OffsetDateTime;
 
 @Component
 @RequiredArgsConstructor
 public class CommentMapper {
-    private final UserService userService;
-    private final UserMapper userMapper;
+    private final AssignmentMapper assignmentMapper;
 
     public Comment map(CommentDto commentDto) {
         return Comment.builder()
@@ -20,7 +18,6 @@ public class CommentMapper {
                 .color(commentDto.getColor())
                 .lastUsedDate(OffsetDateTime.now())
                 .counter(0)
-                .user(userService.findById(commentDto.getUserId()))
                 .visible(true)
                 .build();
     }
@@ -33,7 +30,7 @@ public class CommentMapper {
                 .color(comment.getColor())
                 .lastUsedDate(comment.getLastUsedDate())
                 .counter(comment.getCounter())
-                .user(userMapper.map(comment.getUser()))
+                .assignment(assignmentMapper.map(comment.getAssignment()))
                 .build();
     }
 
@@ -45,7 +42,7 @@ public class CommentMapper {
                 .color(comment.getColor())
                 .lastUsedDate(comment.getLastUsedDate())
                 .counter(comment.getCounter())
-                .userId(comment.getUser().getId())
+                .assignmentId(comment.getAssignment().getId())
                 .build();
     }
 
@@ -53,6 +50,5 @@ public class CommentMapper {
         target.setTitle(source.getTitle());
         target.setDescription(source.getDescription());
         target.setColor(source.getColor());
-        target.setUser(userService.findById(source.getUserId()));
     }
 }

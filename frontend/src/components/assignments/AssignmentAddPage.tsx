@@ -77,6 +77,7 @@ function AssignmentAddPage() {
           if (response !== undefined) {
             setIdAssignment(response.data.id)
             setToSend(true)
+            navigate(-1)
           }
         })
     }
