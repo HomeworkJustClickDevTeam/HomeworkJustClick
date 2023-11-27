@@ -11,14 +11,14 @@ import { setupServer } from "msw/node";
 import '@testing-library/jest-dom';
 import React from "react";
 import App from "../../App";
+
 const server = setupServer(...loginPageHandler)
 beforeAll(() => server.listen())
+afterEach(()=> server.resetHandlers())
+afterAll(() => server.close())
 beforeEach(()=> {
   jest.clearAllMocks()
 })
-afterEach(()=> server.resetHandlers())
-afterAll(() => server.close())
-
 
 describe("check if user can login with page navigation", ()=> {
   it("checks if login page renders correctly", () => {
@@ -60,6 +60,5 @@ describe("check if user can login with page navigation", ()=> {
     expect(pageNavigation).toBeInstanceOf(Array)
     expect(pageNavigation).toHaveLength(2)
   })
-
 })
 

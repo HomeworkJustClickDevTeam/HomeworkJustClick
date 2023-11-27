@@ -74,7 +74,7 @@ export const loginPageHandler = [
 
     await delay(100)
     return HttpResponse.json({
-        token: "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkYWR3YUB3ZGEuY29tIiwiaWF0IjoxNzAwOTkwNjkyLCJleHAiOjE3MDA5OTQyOTJ9.B22HfZ1nIWfmHB66lt0vppGE86eERfTM-f61GG--v0LB-7dulmb4H11Q3niO4NYSJncEE5JzRhoBHhdraIP3og",
+        token: "eyJhbGc3ZGEuY29tIiwiaWF0IjoxNzAwOTkwNjkyLCJleHAiOjE3MDA5OTQyOTJ9.B22HfZ1nIWfmHB66lt0vppGE86eERfTM-f61GG--v0LB-7dulmb4H11Q3niO4NYSJncEE5JzRhoBHhdraIP3og",
         id: 1,
         role: "USER",
         message: "ok",
