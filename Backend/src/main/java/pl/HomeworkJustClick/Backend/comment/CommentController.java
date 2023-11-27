@@ -53,7 +53,7 @@ public class CommentController {
             },
             parameters = {
                     @Parameter(name = "page", example = "0", description = "default = 0"),
-                    @Parameter(name = "size", example = "10", description = "default = 20"),
+                    @Parameter(name = "size", example = "20", description = "default = 10"),
                     @Parameter(name = "sort", example = "counter,desc", description = "default = lastUsedDate,desc")
             }
     )
@@ -90,11 +90,11 @@ public class CommentController {
 
     @GetMapping("/byAssignment/{assignmentId}")
     @Operation(
-            summary = "Returns paged list of comments by it's id.",
+            summary = "Returns paged list of comments by it's assignmentId.",
             responses = {
                     @ApiResponse(
                             responseCode = "404",
-                            description = "No comment with this userId in the DB.",
+                            description = "No comment with this assignmentId in the DB.",
                             content = @Content
                     ),
                     @ApiResponse(
@@ -112,7 +112,7 @@ public class CommentController {
             },
             parameters = {
                     @Parameter(name = "page", example = "0", description = "default = 0"),
-                    @Parameter(name = "size", example = "10", description = "default = 20"),
+                    @Parameter(name = "size", example = "20", description = "default = 10"),
                     @Parameter(name = "sort", example = "counter,desc", description = "default = lastUsedDate,desc")
             }
     )
