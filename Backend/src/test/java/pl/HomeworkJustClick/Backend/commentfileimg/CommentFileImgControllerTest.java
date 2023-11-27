@@ -10,9 +10,9 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.jdbc.Sql;
 import pl.HomeworkJustClick.Backend.BaseTestEntity;
+import pl.HomeworkJustClick.Backend.assignment.AssignmentRepository;
 import pl.HomeworkJustClick.Backend.comment.CommentRepository;
 import pl.HomeworkJustClick.Backend.file.FileRepository;
-import pl.HomeworkJustClick.Backend.user.UserRepository;
 
 import java.nio.charset.StandardCharsets;
 import java.util.stream.Stream;
@@ -50,7 +50,7 @@ public class CommentFileImgControllerTest extends BaseTestEntity {
     FileRepository fileRepository;
 
     @Autowired
-    UserRepository userRepository;
+    AssignmentRepository assignmentRepository;
 
     private static Stream<Arguments> prepareValidData() {
         return Stream.of(
@@ -107,8 +107,8 @@ public class CommentFileImgControllerTest extends BaseTestEntity {
 
     @Test
     void shouldGetInvisibleCommentWhenGettingCommentFileImgByFile() throws Exception {
-        var user = userRepository.findAll().get(0);
-        var comment = commentRepository.getCommentsByUserIdAndVisible(user.getId(), false, Pageable.ofSize(20)).getContent().get(0);
+        var assignment = assignmentRepository.findAll().get(1);
+        var comment = commentRepository.getCommentsByAssignmentIdAndVisible(assignment.getId(), false, Pageable.ofSize(20)).getContent().get(0);
         var commentFileImg = commentFileImgRepository.getCommentFileImgsByCommentId(comment.getId(), Pageable.ofSize(20)).getContent().get(0);
         var file = commentFileImg.getFile();
         mockMvc.perform(get("/api/comment_file_img/byFileId/" + file.getId()))

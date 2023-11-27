@@ -53,7 +53,7 @@ public class CommentController {
             },
             parameters = {
                     @Parameter(name = "page", example = "0", description = "default = 0"),
-                    @Parameter(name = "size", example = "20", description = "default = 10"),
+                    @Parameter(name = "size", example = "10", description = "default = 20"),
                     @Parameter(name = "sort", example = "counter,desc", description = "default = lastUsedDate,desc")
             }
     )
@@ -88,9 +88,9 @@ public class CommentController {
         return service.getCommentById(commentId);
     }
 
-    @GetMapping("/byUser/{userId}")
+    @GetMapping("/byAssignment/{assignmentId}")
     @Operation(
-            summary = "Returns paged list of comments by user id.",
+            summary = "Returns paged list of comments by it's id.",
             responses = {
                     @ApiResponse(
                             responseCode = "404",
@@ -112,12 +112,12 @@ public class CommentController {
             },
             parameters = {
                     @Parameter(name = "page", example = "0", description = "default = 0"),
-                    @Parameter(name = "size", example = "20", description = "default = 10"),
+                    @Parameter(name = "size", example = "10", description = "default = 20"),
                     @Parameter(name = "sort", example = "counter,desc", description = "default = lastUsedDate,desc")
             }
     )
-    public Slice<CommentResponseDto> getCommentsByUser(@PathVariable Integer userId, @Parameter(hidden = true) @PageableDefault(sort = "lastUsedDate", direction = Sort.Direction.DESC) Pageable pageable) {
-        return service.getCommentsByUser(userId, pageable);
+    public Slice<CommentResponseDto> getCommentsByAssignment(@PathVariable Integer assignmentId, @Parameter(hidden = true) @PageableDefault(sort = "lastUsedDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        return service.getCommentsByAssignment(assignmentId, pageable);
     }
 
     @PostMapping

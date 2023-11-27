@@ -3,7 +3,7 @@ package pl.HomeworkJustClick.Backend.comment;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
-import pl.HomeworkJustClick.Backend.user.UserResponseDto;
+import pl.HomeworkJustClick.Backend.assignment.AssignmentResponseDto;
 
 import java.time.OffsetDateTime;
 
@@ -23,5 +23,5 @@ public class CommentResponseDto {
     private String color;
     private OffsetDateTime lastUsedDate;
     private Integer counter;
-    private UserResponseDto user;
+    private AssignmentResponseDto assignment;
 }

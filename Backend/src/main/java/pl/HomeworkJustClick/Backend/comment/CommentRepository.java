@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Integer> {
-    Page<Comment> getCommentsByUserIdAndVisible(Integer userId, Boolean visible, Pageable pageable);
+    Page<Comment> getCommentsByAssignmentIdAndVisible(Integer assignmentId, Boolean visible, Pageable pageable);
 }

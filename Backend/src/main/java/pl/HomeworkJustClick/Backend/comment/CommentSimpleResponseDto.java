@@ -24,5 +24,5 @@ public class CommentSimpleResponseDto {
     @Schema(example = "1")
     private Integer counter;
     @Schema(example = "1")
-    private Integer userId;
+    private Integer assignmentId;
 }
