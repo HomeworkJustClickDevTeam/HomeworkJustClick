@@ -22,4 +22,5 @@ public class AssignmentReportResponseDto {
     private List<Integer> hist;
     private List<Integer> studentsHist;
     private List<AssignmentReportStudentResponseDto> students;
+    private String description;
 }

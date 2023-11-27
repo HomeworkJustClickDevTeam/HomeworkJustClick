@@ -13,4 +13,5 @@ public class AssignmentReportStudentResponseDto {
     private Double result;
     private Double resultPercent;
     private Boolean late;
+    private String description;
 }
