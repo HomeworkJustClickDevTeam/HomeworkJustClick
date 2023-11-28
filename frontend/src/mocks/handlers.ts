@@ -61,7 +61,7 @@ export const homePageHandlers = [
   http.get('http://localhost:8080/api/groups/userCheckWithRole/:userId/:groupId', async ({params}) => {
     const {userId, groupId} = params
     await delay(100)
-    if(userId === '3' && groupId === '1'){
+    if(userId === '3'){
       return new Response("Teacher")
     }
     else
