@@ -1,6 +1,10 @@
 package pl.HomeworkJustClick.Backend.report;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.HomeworkJustClick.Backend.assignment.AssignmentMapper;
@@ -14,12 +18,19 @@ import pl.HomeworkJustClick.Backend.solution.SolutionService;
 import pl.HomeworkJustClick.Backend.user.UserMapper;
 import pl.HomeworkJustClick.Backend.user.UserService;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.net.MalformedURLException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -93,6 +104,110 @@ public class ReportService {
                 .build();
     }
 
+    @Transactional
+    public ResponseEntity<UrlResource> createGroupCsvReport(GroupReportDto groupReportDto) throws IOException {
+        var groupReport = createGroupReport(groupReportDto);
+        var dataLines = new ArrayList<String[]>();
+        var header = new ArrayList<>(List.of("nazwa zadania", "liczba punktów do zdobycia", "średni wynik", "średni wynik %", "najwyższy wynik", "najwyższy wynik %", "najniższy wynik", "najniższy wynik %"));
+        var end = new ArrayList<>(List.of("suma", "0", "0", "0", "0", "0", "0", "0"));
+        var hist = groupReport.getAssignments().get(0).getHist();
+        if (hist.get(0) != 0) {
+            hist.add(0);
+        }
+        if (hist.get(hist.size() - 1) != 100) {
+            hist.add(100);
+        }
+        Collections.sort(hist);
+        for (int i = 0; i < hist.size() - 1; i++) {
+            header.add(hist.get(i) + "-" + hist.get(i + 1));
+            end.add("0");
+        }
+        var students = userService.getStudentsByGroup(groupReportDto.getGroupId());
+        students.forEach(student -> {
+            header.add(student.getFirstname() + " " + student.getLastname() + " " + student.getIndex());
+            end.add("0");
+            header.add(student.getFirstname() + " " + student.getLastname() + " " + student.getIndex() + " %");
+            end.add("0");
+        });
+        dataLines.add(header.toArray(new String[0]));
+        var endLine = end.toArray(new String[0]);
+        groupReport.getAssignments().forEach(assignment -> {
+            var line = new String[header.size()];
+            line[0] = assignment.getAssignment().getTitle();
+            line[1] = String.valueOf(assignment.getAssignment().getMax_points());
+            endLine[1] = String.valueOf(Double.parseDouble(endLine[1]) + assignment.getAssignment().getMax_points());
+            line[2] = String.valueOf(assignment.getAvgResult());
+            endLine[2] = String.valueOf(Double.parseDouble(endLine[2]) + assignment.getAvgResult());
+            line[3] = String.valueOf(assignment.getAvgResultPercent());
+            endLine[3] = String.valueOf(Double.parseDouble(endLine[3]) + assignment.getAvgResultPercent());
+            line[4] = String.valueOf(assignment.getMaxResult());
+            endLine[4] = String.valueOf(Double.parseDouble(endLine[4]) + assignment.getMaxResult());
+            line[5] = String.valueOf(assignment.getMaxResultPercent());
+            endLine[5] = String.valueOf(Double.parseDouble(endLine[5]) + assignment.getMaxResultPercent());
+            line[6] = String.valueOf(assignment.getMinResult());
+            endLine[6] = String.valueOf(Double.parseDouble(endLine[6]) + assignment.getMinResult());
+            line[7] = String.valueOf(assignment.getMinResultPercent());
+            endLine[7] = String.valueOf(Double.parseDouble(endLine[7]) + assignment.getMinResultPercent());
+            for (int i = 8; i < 8 + hist.size() - 1; i++) {
+                line[i] = String.valueOf(assignment.getStudentsHist().get(i - 8));
+                endLine[i] = String.valueOf(Double.parseDouble(endLine[i]) + assignment.getStudentsHist().get(i - 8));
+            }
+            var j = 0;
+            for (int i = 8 + hist.size() - 1; i < header.size(); i += 2) {
+                line[i] = String.valueOf(assignment.getStudents().get(j).getResult());
+                endLine[i] = String.valueOf(Double.parseDouble(endLine[i]) + assignment.getStudents().get(j).getResult());
+                line[i + 1] = String.valueOf(assignment.getStudents().get(j).getResultPercent());
+                endLine[i + 1] = String.valueOf(Double.parseDouble(endLine[i + 1]) + assignment.getStudents().get(j).getResultPercent());
+                j += 1;
+            }
+            dataLines.add(line);
+        });
+        endLine[3] = String.valueOf(roundDouble(Double.parseDouble(endLine[3]) / (dataLines.size() - 1)));
+        endLine[5] = String.valueOf(roundDouble(Double.parseDouble(endLine[5]) / (dataLines.size() - 1)));
+        endLine[7] = String.valueOf(roundDouble(Double.parseDouble(endLine[7]) / (dataLines.size() - 1)));
+        for (int i = 8 + hist.size(); i < header.size(); i += 2) {
+            endLine[i] = String.valueOf(roundDouble(Double.parseDouble(endLine[i]) / (dataLines.size() - 1)));
+        }
+        dataLines.add(endLine);
+//        var fileName = groupReport.getGroup().getName().replace(" ", "_") + "_" + LocalDateTime.now() + "_raport.csv";
+        var fileName = "raport.csv";
+        File csvOutputFile = new File(fileName);
+        csvOutputFile.createNewFile();
+        try (PrintWriter pw = new PrintWriter(csvOutputFile)) {
+            dataLines.stream()
+                    .map(this::convertToCSV)
+                    .forEach(pw::println);
+        }
+        return generateResponse(fileName);
+    }
+
+    private ResponseEntity<UrlResource> generateResponse(String fileName) throws MalformedURLException {
+        var path = Paths.get(fileName);
+        var resource = new UrlResource(path.toUri());
+        return ResponseEntity.ok()
+                .contentType(MediaType.TEXT_PLAIN)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName)
+                .body(resource);
+    }
+
+    private String convertToCSV(String[] data) {
+        return Stream.of(data)
+                .map(this::escapeSpecialCharacters)
+                .collect(Collectors.joining(","));
+    }
+
+    private String escapeSpecialCharacters(String data) {
+        if (data == null) {
+            throw new IllegalArgumentException("Input data cannot be null");
+        }
+        String escapedData = data.replaceAll("\\R", " ");
+        if (data.contains(",") || data.contains("\"") || data.contains("'")) {
+            data = data.replace("\"", "\"\"");
+            escapedData = "\"" + data + "\"";
+        }
+        return escapedData;
+    }
+
     private Double calculateMaxResult(List<AssignmentReportStudentResponseDto> evaluations) {
         return evaluations.stream().max(Comparator.comparing(AssignmentReportStudentResponseDto::getResult)).orElseThrow().getResult();
     }
@@ -123,14 +238,18 @@ public class ReportService {
         }
         for (AssignmentReportStudentResponseDto studentResult : studentResults) {
             for (int j = 0; j < histSize - 1; j++) {
-                if (studentResult.getResult() != 0 && studentResult.getResult() > hist.get(j) && studentResult.getResult() <= hist.get(j + 1)) {
+                if (studentResult.getResultPercent() != 0 && studentResult.getResultPercent() > hist.get(j) && studentResult.getResultPercent() <= hist.get(j + 1)) {
                     var current = histResponse.get(j);
                     histResponse.set(j, current + 1);
                 }
             }
-            if (studentResult.getResult() == 0) {
+            if (studentResult.getResultPercent() == 0) {
                 var current = histResponse.get(0);
                 histResponse.set(0, current + 1);
+            }
+            if (studentResult.getResultPercent() > hist.get(histSize - 1)) {
+                var current = histResponse.get(histSize - 1);
+                histResponse.set(histSize - 1, current + 1);
             }
         }
         return histResponse;
@@ -167,16 +286,14 @@ public class ReportService {
                             .build()
             );
         });
-        studentsFromGroup.forEach(student -> {
-            assignmentReportStudentResponseDtoList.add(
-                    AssignmentReportStudentResponseDto.builder()
-                            .student(userMapper.map2SimpleResponseDto(student))
-                            .result((double) 0)
-                            .resultPercent((double) 0)
-                            .description("Nie wysłano rozwiązania")
-                            .build()
-            );
-        });
+        studentsFromGroup.forEach(student -> assignmentReportStudentResponseDtoList.add(
+                AssignmentReportStudentResponseDto.builder()
+                        .student(userMapper.map2SimpleResponseDto(student))
+                        .result((double) 0)
+                        .resultPercent((double) 0)
+                        .description("Nie wysłano rozwiązania")
+                        .build()
+        ));
         return assignmentReportStudentResponseDtoList;
     }
 
