@@ -1,15 +1,22 @@
 import { Button, Table } from "../../types/Table.model"
 import { ChangeEvent, FormEvent, useEffect, useState } from "react"
-import { createEvaluationPanelService } from "../../services/postgresDatabaseServices"
+import {
+  createEvaluationPanelService,
+  deleteEvaluationPanelService,
+  updateEvaluationPanelService,
+} from "../../services/postgresDatabaseServices"
 import { useAppSelector } from "../../types/HooksRedux"
 import { selectUserState } from "../../redux/userStateSlice"
 
 export default function PointsTableForm(props: {
   setIsFormHidden: (isFormHidden: boolean) => void
+  tables: Table[] | undefined
+  setEvaluationTable: (evaluationTable: Table[]) => void
   table?: Table
 }) {
   const userState = useAppSelector(selectUserState)
   const [isEditForm, setIsEditForm] = useState<boolean>(false)
+  const [pointsInString, setPointsInString] = useState<string>("")
   const [table, setTable] = useState<Table>(new Table("", [], 0, userState?.id))
   useEffect(() => {
     if (props.table) {
@@ -18,6 +25,7 @@ export default function PointsTableForm(props: {
         ...prevState,
         userId: userState?.id,
       }))
+      setPointsInString(getPoints(props.table.buttons))
       setIsEditForm(true)
     }
   }, [])
@@ -26,9 +34,18 @@ export default function PointsTableForm(props: {
     event.preventDefault()
     if (!isEditForm) {
       createEvaluationPanelService(table)
-        .then(() => resetAndHideForm())
+        .then(() => {
+          updateTableView()
+          resetAndHideForm()
+        })
         .catch((error) => console.log(error))
     } else {
+      updateEvaluationPanelService(table)
+        .then(() => {
+          updateTableView()
+          resetAndHideForm()
+        })
+        .catch(() => {})
     }
   }
   const handleValueChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -48,6 +65,10 @@ export default function PointsTableForm(props: {
 
     const buttonArray = numbersArray.map((number) => new Button(number))
 
+    if (isEditForm) {
+      setPointsInString(value)
+    }
+
     setTable((prevState) => ({
       ...prevState,
       [name]: buttonArray,
@@ -63,7 +84,13 @@ export default function PointsTableForm(props: {
     props.setIsFormHidden(true)
   }
 
-  const deleteEvaluationTable = () => {}
+  const deleteEvaluationTable = () => {
+    deleteEvaluationPanelService(table?.id as number)
+      .then(() => {
+        deleteTableFromView()
+      })
+      .catch(() => {})
+  }
 
   const getPoints = (points: Button[]): string => {
     if (points) {
@@ -71,6 +98,26 @@ export default function PointsTableForm(props: {
       return pointsNumber.join(", ")
     }
     return ""
+  }
+
+  const updateTableView = () => {
+    let newTable: Table[] | undefined = props.tables
+    if (isEditForm) {
+      newTable = newTable?.map((tableFromList) =>
+        tableFromList.id === table.id ? table : tableFromList
+      )
+    } else {
+      newTable?.push(table)
+    }
+    props.setEvaluationTable(newTable as Table[])
+  }
+
+  const deleteTableFromView = () => {
+    let newTable = props.tables
+    newTable = newTable?.filter(
+      (tableFromTables) => tableFromTables.id !== table.id
+    )
+    props.setEvaluationTable(newTable as Table[])
   }
 
   return (
@@ -91,7 +138,7 @@ export default function PointsTableForm(props: {
           name="buttons"
           type="text"
           onChange={handlePointsTableChange}
-          value={isEditForm ? getPoints(table.buttons) : undefined}
+          value={isEditForm ? pointsInString : undefined}
         />
         <label>
           Wiersze w tabeli (max 5):

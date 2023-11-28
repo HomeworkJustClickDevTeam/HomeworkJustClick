@@ -532,3 +532,18 @@ export const getEvaluationTableByUserIdService = async (
     `/evaluation_panel/byUserId/${userId}`
   )
 }
+
+export const updateEvaluationPanelService = async (evaluationPanel: Table) => {
+  return await postgresqlDatabaseJSON.put(
+    `/evaluation_panel/${evaluationPanel.id}`,
+    evaluationPanel
+  )
+}
+
+export const deleteEvaluationPanelService = async (
+  evaluationPanelId: number | string
+) => {
+  return await postgresqlDatabaseJSON.delete(
+    `/evaluation_panel/${evaluationPanelId}`
+  )
+}
