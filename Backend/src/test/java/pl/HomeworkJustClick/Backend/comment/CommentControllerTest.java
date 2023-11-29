@@ -10,7 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.jdbc.Sql;
 import pl.HomeworkJustClick.Backend.BaseTestEntity;
-import pl.HomeworkJustClick.Backend.user.UserRepository;
+import pl.HomeworkJustClick.Backend.assignment.AssignmentRepository;
 
 import java.nio.charset.StandardCharsets;
 import java.util.stream.Stream;
@@ -41,7 +41,7 @@ public class CommentControllerTest extends BaseTestEntity {
     CommentRepository commentRepository;
 
     @Autowired
-    UserRepository userRepository;
+    AssignmentRepository assignmentRepository;
 
     private static Stream<Arguments> prepareValidData() {
         return Stream.of(
@@ -86,10 +86,10 @@ public class CommentControllerTest extends BaseTestEntity {
     }
 
     @Test
-    void shouldGetAllUserComments() throws Exception {
-        var userId = commentRepository.findAll().get(0).getUser().getId();
-        var commentsSize = commentRepository.getCommentsByUserIdAndVisible(userId, true, Pageable.ofSize(20)).getTotalElements();
-        mockMvc.perform(get("/api/comment/byUser/" + userId))
+    void shouldGetAllCommentsByAssignment() throws Exception {
+        var assignmentId = commentRepository.findAll().get(0).getAssignment().getId();
+        var commentsSize = commentRepository.getCommentsByAssignmentIdAndVisible(assignmentId, true, Pageable.ofSize(20)).getTotalElements();
+        mockMvc.perform(get("/api/comment/byAssignment/" + assignmentId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.numberOfElements").value(commentsSize))
                 .andReturn();
@@ -97,8 +97,8 @@ public class CommentControllerTest extends BaseTestEntity {
 
     @ParameterizedTest
     @MethodSource("prepareValidData")
-    void shouldCreateComment(String title, String description, String color, Integer userId) throws Exception {
-        var commentDto = createCommentDto(title, description, color, userId);
+    void shouldCreateComment(String title, String description, String color, Integer assignmentId) throws Exception {
+        var commentDto = createCommentDto(title, description, color, assignmentId);
         var body = objectMapper.writeValueAsString(commentDto);
         mockMvc.perform(post("/api/comment")
                         .content(body)
@@ -109,14 +109,14 @@ public class CommentControllerTest extends BaseTestEntity {
                 .andExpect(jsonPath("$.description").value(commentDto.getDescription()))
                 .andExpect(jsonPath("$.color").value(commentDto.getColor()))
                 .andExpect(jsonPath("$.counter").value(0))
-                .andExpect(jsonPath("$.user.id").value(commentDto.getUserId()))
+                .andExpect(jsonPath("$.assignment.id").value(commentDto.getAssignmentId()))
                 .andReturn();
     }
 
     @ParameterizedTest
     @MethodSource("prepareInvalidData")
-    void shouldNotCreateComment(String title, String description, String color, Integer userId) throws Exception {
-        var commentDto = createCommentDto(title, description, color, userId);
+    void shouldNotCreateComment(String title, String description, String color, Integer assignmentId) throws Exception {
+        var commentDto = createCommentDto(title, description, color, assignmentId);
         var body = objectMapper.writeValueAsString(commentDto);
         mockMvc.perform(post("/api/comment")
                         .content(body)
@@ -128,9 +128,9 @@ public class CommentControllerTest extends BaseTestEntity {
 
     @ParameterizedTest
     @MethodSource("prepareValidData")
-    void shouldUpdateComment(String title, String description, String color, Integer userId) throws Exception {
+    void shouldUpdateComment(String title, String description, String color, Integer assignmentId) throws Exception {
         var commentId = commentRepository.findAll().get(0).getId();
-        var commentDto = createCommentDto(title, description, color, userId);
+        var commentDto = createCommentDto(title, description, color, assignmentId);
         var body = objectMapper.writeValueAsString(commentDto);
         mockMvc.perform(put("/api/comment/" + commentId)
                         .content(body)
@@ -142,14 +142,14 @@ public class CommentControllerTest extends BaseTestEntity {
         assertEquals(updatedComment.getTitle(), commentDto.getTitle());
         assertEquals(updatedComment.getDescription(), commentDto.getDescription());
         assertEquals(updatedComment.getColor(), commentDto.getColor());
-        assertEquals(updatedComment.getUser().getId(), commentDto.getUserId());
+        assertEquals(updatedComment.getAssignment().getId(), commentDto.getAssignmentId());
     }
 
     @ParameterizedTest
     @MethodSource("prepareInvalidData")
-    void shouldNotUpdateComment(String title, String description, String color, Integer userId) throws Exception {
+    void shouldNotUpdateComment(String title, String description, String color, Integer assignmentId) throws Exception {
         var commentId = commentRepository.findAll().get(0).getId();
-        var commentDto = createCommentDto(title, description, color, userId);
+        var commentDto = createCommentDto(title, description, color, assignmentId);
         var body = objectMapper.writeValueAsString(commentDto);
         mockMvc.perform(put("/api/comment/" + commentId)
                         .content(body)
@@ -161,7 +161,7 @@ public class CommentControllerTest extends BaseTestEntity {
         assertNotEquals(updatedComment.getTitle(), commentDto.getTitle());
         assertNotEquals(updatedComment.getDescription(), commentDto.getDescription());
         assertNotEquals(updatedComment.getColor(), commentDto.getColor());
-        assertNotEquals(updatedComment.getUser().getId(), commentDto.getUserId());
+        assertNotEquals(updatedComment.getAssignment().getId(), commentDto.getAssignmentId());
     }
 
     @Test
@@ -192,15 +192,15 @@ public class CommentControllerTest extends BaseTestEntity {
                 .andReturn();
     }
 
-    private CommentDto createCommentDto(String title, String description, String color, Integer userId) {
-        if (userId == 1) {
-            userId = userRepository.findAll().get(0).getId();
+    private CommentDto createCommentDto(String title, String description, String color, Integer assignmentId) {
+        if (assignmentId == 1) {
+            assignmentId = assignmentRepository.findAll().get(0).getId();
         }
         return CommentDto.builder()
                 .title(title)
                 .description(description)
                 .color(color)
-                .userId(userId)
+                .assignmentId(assignmentId)
                 .build();
     }
 }

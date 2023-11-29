@@ -180,7 +180,7 @@ public class SolutionRepositoryTest {
 
 
         //when
-        List<Solution> actual = solutionRepository.getSolutionsByAssignmentId(assignment.getId());
+        List<Solution> actual = solutionRepository.findAllByAssignmentId(assignment.getId());
 
         //then
         assertEquals(expectedList, actual);
@@ -222,7 +222,7 @@ public class SolutionRepositoryTest {
 
 
         //when
-        List<Solution> actual = solutionRepository.getSolutionsByAssignmentId(assignment2.getId());
+        List<Solution> actual = solutionRepository.findAllByAssignmentId(assignment2.getId());
 
         //then
         assertEquals(expectedList, actual);
@@ -264,7 +264,7 @@ public class SolutionRepositoryTest {
 
 
         //when
-        List<Solution> actual = solutionRepository.getSolutionsByAssignmentId(assignment2.getId()+1);
+        List<Solution> actual = solutionRepository.findAllByAssignmentId(assignment2.getId() + 1);
 
         //then
         assertEquals(expectedList, actual);

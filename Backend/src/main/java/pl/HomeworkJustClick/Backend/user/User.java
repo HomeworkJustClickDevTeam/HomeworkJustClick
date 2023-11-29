@@ -10,7 +10,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import pl.HomeworkJustClick.Backend.assignment.Assignment;
-import pl.HomeworkJustClick.Backend.comment.Comment;
 import pl.HomeworkJustClick.Backend.evaluation.Evaluation;
 import pl.HomeworkJustClick.Backend.evaluationpanel.EvaluationPanel;
 import pl.HomeworkJustClick.Backend.groupstudent.GroupStudent;
@@ -101,13 +100,6 @@ public class User implements UserDetails {
     )
     @JsonIgnore
     private List<Evaluation> evaluations = new ArrayList<>();
-
-    @OneToMany(
-            mappedBy = "user",
-            fetch = FetchType.LAZY
-    )
-    @JsonIgnore
-    private List<Comment> comments = new ArrayList<>();
 
     @JsonIgnore
     @Override

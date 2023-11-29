@@ -5,4 +5,5 @@ export interface SolutionExtendedInterface {
   id: number
   user: UserInterface
   assignment: AssignmentInterface
+  comment: string
 }
