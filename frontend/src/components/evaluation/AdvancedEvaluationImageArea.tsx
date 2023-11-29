@@ -11,7 +11,7 @@ import {
   createCommentImageWithFilePostgresService,
   deleteCommentImagePostgresService
 } from "../../services/postgresDatabaseServices"
-import { sortButtonStateType } from "../../types/sortButtonStateType"
+import { sortButtonStateType } from "../../types/SortButtonStateType"
 
 interface AdvancedEvaluationImageAreaInterface{
   width:number|undefined,

@@ -30,7 +30,7 @@ import { AdvancedEvaluationTextCommentCreateInterface } from "../../types/Advanc
 import { AdvancedEvaluationTextCommentInterface } from "../../types/AdvancedEvaluationTextCommentInterface"
 import { useGetCommentsTextByFile } from "../customHooks/useGetCommentsTextByFile"
 import { selectGroup } from "../../redux/groupSlice"
-import { sortButtonStateType } from "../../types/sortButtonStateType"
+import { sortButtonStateType } from "../../types/SortButtonStateType"
 import { useUpdateEffect } from "usehooks-ts"
 
 

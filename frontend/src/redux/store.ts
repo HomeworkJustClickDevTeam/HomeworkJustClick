@@ -1,23 +1,27 @@
-import { configureStore } from "@reduxjs/toolkit"
+import { combineReducers, configureStore, getDefaultMiddleware, PreloadedState } from "@reduxjs/toolkit";
 import userStateReducer from "./userStateSlice"
 import roleReducer from "./roleSlice"
 import groupReducer from "./groupSlice"
 import isLoadingReducer from "./isLoadingSlice"
 import homePageInReducer from "./homePageInSlice"
-import { getUser } from "../services/otherServices"
 
 
-export const store = configureStore({
-  reducer: {
-    userState: userStateReducer,
-    role: roleReducer,
-    group: groupReducer,
-    isLoading: isLoadingReducer,
-    homePageIn: homePageInReducer
-  },
-  preloadedState: {userState: getUser()}
+
+const rootReducer = combineReducers({
+  userState: userStateReducer,
+  role: roleReducer,
+  group: groupReducer,
+  isLoading: isLoadingReducer,
+  homePageIn: homePageInReducer
 })
+export const setupStore = (preloadedState?: PreloadedState<RootState>) =>{
+  return configureStore({
+    reducer: rootReducer,
+    preloadedState
+  })
+}
 
 
-export type RootState = ReturnType<typeof store.getState>
-export type AppDispatch = typeof store.dispatch
+export type RootState = ReturnType<typeof rootReducer>
+export type AppStore = ReturnType<typeof setupStore>
+export type AppDispatch = AppStore['dispatch']

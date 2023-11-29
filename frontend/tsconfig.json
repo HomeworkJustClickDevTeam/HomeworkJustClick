@@ -1,6 +1,14 @@
 {
+  "ts-node": {
+    // these options are overrides used only by ts-node
+    "compilerOptions": {
+      "module": "commonjs",
+      "baseUrl": "src"
+    },
+  },
   "compilerOptions": {
     "target": "es2015",
+    "types": ["node", "jest"],
     "lib": [
       "dom",
       "dom.iterable",
@@ -18,7 +26,8 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "baseUrl": "src"
   },
   "include": [
     "src"

@@ -1,0 +1,86 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`checks if register page renders correctly 1`] = `
+<div
+  className="flex w-screen flex-col font-lato font-normal text-sm select-none"
+>
+  <img
+    alt="Kółko po lewej stronie"
+    className="fixed left-[4%]  bottom-[6%] scale-50 xl:scale-100 -z-50"
+    src={
+      {
+        "process": [Function],
+      }
+    }
+  />
+  <div
+    className="flex justify-center items-center text-center flex-col"
+  >
+    <h1
+      className="mt-16 mb-16 text-4xl xl:text-[64px] ml-[7%]"
+    >
+      Dołącz do nas!
+      <img
+        alt="Kółko smile"
+        className="relative right-0  scale-50 translate-x-[25%] xl:transform-none -z-50 inline-block pl-10"
+        src={
+          {
+            "process": [Function],
+          }
+        }
+      />
+    </h1>
+    <form
+      className="flex flex-col text-center items-center"
+      onSubmit={[Function]}
+    >
+      <input
+        className="border-b-2 border-b-light_gray mb-12 text-center placeholder:text-light_gray placeholder:text-[12px] w-60 xl:text-[20px] xl:placeholder:text-[20px] xl:w-[320px]"
+        name="firstname"
+        onChange={[Function]}
+        placeholder="Imię"
+        type="text"
+        value=""
+      />
+      <input
+        className="border-b-2 border-b-light_gray mb-12 text-center placeholder:text-light_gray placeholder:text-[12px] w-60 xl:text-[20px] xl:placeholder:text-[20px] xl:w-[320px]"
+        name="lastname"
+        onChange={[Function]}
+        placeholder="Nazwisko"
+        type="text"
+        value=""
+      />
+      <input
+        className="border-b-2 border-b-light_gray mb-12 text-center placeholder:text-light_gray placeholder:text-[12px] w-60 xl:text-[20px] xl:placeholder:text-[20px] xl:w-[320px]"
+        name="email"
+        onChange={[Function]}
+        placeholder="Adres e-mail"
+        type="email"
+        value=""
+      />
+      <input
+        className="border-b-2 border-b-light_gray mb-12 text-center placeholder:text-light_gray placeholder:text-[12px] w-60 xl:text-[20px] xl:placeholder:text-[20px] xl:w-[320px]"
+        name="password"
+        onChange={[Function]}
+        placeholder="Hasło"
+        type="password"
+        value=""
+      />
+      <input
+        className="border-b-2 border-b-light_gray mb-12 text-center placeholder:text-light_gray placeholder:text-[12px] w-60 xl:text-[20px] xl:placeholder:text-[20px] xl:w-[320px]"
+        name="secondPassword"
+        onChange={[Function]}
+        placeholder="Powtórz hasło jeszcze raz"
+        type="password"
+        value=""
+      />
+      <button
+        className=" bg-main_blue w-40 h-8 rounded-[5px] xl:rounded-[10px] xl:w-[288px] xl:h-[56px] text-white xl:text-[28px] hover:bg-hover_blue hover:shadow-md active:shadow-none"
+        type="submit"
+      >
+        Zajerestruj się
+      </button>
+    </form>
+  </div>
+</div>
+`;
