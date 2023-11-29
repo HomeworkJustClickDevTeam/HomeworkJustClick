@@ -170,7 +170,7 @@ public class SolutionService {
     }
 
     public List<SolutionResponseDto> getSolutionsByAssignmentId(int id) {
-        List<Solution> solutions = solutionRepository.getSolutionsByAssignmentId(id);
+        List<Solution> solutions = solutionRepository.findAllByAssignmentId(id);
         List<SolutionResponseDto> solutionResponsDtos = new ArrayList<>();
         for(Solution solution : solutions) {
             solutionResponsDtos.add(SolutionResponseDto.builder()
@@ -217,7 +217,7 @@ public class SolutionService {
     }
 
     public List<SolutionResponseDto> getLateSolutionsByAssignment(int assignment_id) {
-        List<Solution> solutions = solutionRepository.getSolutionsByAssignmentId(assignment_id);
+        List<Solution> solutions = solutionRepository.findAllByAssignmentId(assignment_id);
         List<Solution> lateSolutions = new ArrayList<>();
         solutions.forEach(solution -> {
             if(solution.getAssignment().getCompletionDatetime().isBefore(solution.getCreationDatetime())) {
@@ -347,7 +347,7 @@ public class SolutionService {
     }
 
     public List<SolutionResponseExtendedDto> getSolutionsByAssignmentIdExtended(int id) {
-        List<Solution> solutions = solutionRepository.getSolutionsByAssignmentId(id);
+        List<Solution> solutions = solutionRepository.findAllByAssignmentId(id);
         List<SolutionResponseExtendedDto> solutionResponses = new ArrayList<>();
         for(Solution solution : solutions) {
             solutionResponses.add(buildSolutionResponseExtended(solution));
@@ -386,7 +386,7 @@ public class SolutionService {
     }
 
     public List<SolutionResponseExtendedDto> getLateSolutionsByAssignmentExtended(int assignment_id) {
-        List<Solution> solutions = solutionRepository.getSolutionsByAssignmentId(assignment_id);
+        List<Solution> solutions = solutionRepository.findAllByAssignmentId(assignment_id);
         List<Solution> lateSolutions = new ArrayList<>();
         solutions.forEach(solution -> {
             if(solution.getAssignment().getCompletionDatetime().isBefore(solution.getCreationDatetime())) {
@@ -643,5 +643,20 @@ public class SolutionService {
         }
         response.sort(Comparator.comparing(SolutionResponseCalendarDto::getCreationDateTime));
         return response;
+    }
+
+    public Optional<Solution> getSolutionByEvaluationId(Integer evaluationId) {
+        return solutionRepository.getSolutionByEvaluationId(evaluationId);
+    }
+
+    public Boolean checkIfSolutionWasLate(Solution solution) {
+        if (solution.getAssignment().getCompletionDatetime().isBefore(solution.getCreationDatetime())) {
+            return true;
+        }
+        return false;
+    }
+
+    public List<Solution> getSolutionsModelsByAssignmentId(Integer assignmentId) {
+        return solutionRepository.findAllByAssignmentId(assignmentId);
     }
 }

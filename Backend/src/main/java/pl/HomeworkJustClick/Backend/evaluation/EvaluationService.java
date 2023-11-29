@@ -225,6 +225,10 @@ public class EvaluationService {
         return responseList;
     }
 
+    public List<Evaluation> getEvaluationsByAssignment(Integer assignmentId) {
+        return evaluationRepository.getEvaluationsByAssignment(assignmentId);
+    }
+
     public List<EvaluationResponseDto> getAllEvaluationsByAssignment(int assignment_id) {
         List<Evaluation> evaluationList = evaluationRepository.getEvaluationsByAssignment(assignment_id);
         List<EvaluationResponseDto> responseList = new ArrayList<>();
