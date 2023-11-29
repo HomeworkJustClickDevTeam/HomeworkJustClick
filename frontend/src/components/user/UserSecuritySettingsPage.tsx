@@ -24,7 +24,8 @@ export default function UserSecuritySettingsPage(): JSX.Element {
   }
   return (
     <form onSubmit={handleSubmit}>
-      <label htmlFor="emailVerification">Email: </label>
+        <div className='pb-12'>
+      <section className='py-1'><label htmlFor="emailVerification">Email: </label>
       <input type="email" id="emailVerification" name="password"
              onChange={
                (event) => {
@@ -33,8 +34,10 @@ export default function UserSecuritySettingsPage(): JSX.Element {
                      ...prevState,
                      "email": event.target.value
                    }))
-               }}/>
+               }} className='pl-1 border-b solid black focus:border focus:border-solid'/>
       <br/>
+      </section>
+            <section className='py-1'>
       <label htmlFor="oldPassword">Stare hasło: </label>
       <input type="password" id="oldPassword" name="password"
              onChange={
@@ -44,8 +47,10 @@ export default function UserSecuritySettingsPage(): JSX.Element {
                    "password": event.target.value
                  }))
                }
-             }/>
+             } className='pl-1 border-b solid black focus:border focus:border-solid'/>
       <br/>
+            </section>
+            <section className='py-1'>
       <label htmlFor="newPassword">Nowe hasło: </label>
       <input type="password" id="newPassword" name="password"
              onChange={
@@ -55,13 +60,16 @@ export default function UserSecuritySettingsPage(): JSX.Element {
                    "newPassword": event.target.value
                  }))
                }
-             }/>
+             } className='pl-1 border-b solid black focus:border focus:border-solid'/>
       <br/>
+            </section>
+            <section className='py-1'>
       <label htmlFor="newPasswordApproval">Potwierdź nowe hasło: </label>
       <input type="password" id="newPasswordApproval" name="passwordApproval" onChange={(event) => {
         setNewPasswordApproval(event.target.value)
-      }}/><br/>
-      <input type="submit" value="Potwierdź"/>
-    </form>
+      }} className='pl-1 border-b solid black mb-2 focus:border focus:border-solid'/><br/></section>
+        <button type="submit" className='absolute bg-main_blue text-white rounded-md text-sm p-1 active:mt-0.5 active:shadow-md'>Potwierdź</button>
+    </div>
+      </form>
   )
 }

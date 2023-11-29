@@ -18,7 +18,7 @@ function AssignmentAddPage() {
     title: "",
     completionDatetime: new Date(),
     taskDescription: "",
-    visible: false,
+    visible: true,
     max_points: 1,
     auto_penalty: 50,
   })

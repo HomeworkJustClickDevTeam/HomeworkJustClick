@@ -35,6 +35,7 @@ export default function UserAppearanceSettingsPage() {
                 name="index"
                 checked={color === i}
                 onChange={handleColorChange}
+
               />
               {i}
             </label>
