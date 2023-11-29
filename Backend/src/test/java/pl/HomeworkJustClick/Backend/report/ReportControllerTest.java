@@ -12,7 +12,7 @@ import pl.HomeworkJustClick.Backend.group.GroupRepository;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WithMockUser
@@ -43,7 +43,7 @@ public class ReportControllerTest extends BaseTestEntity {
                 .hist(List.of(0, 50, 60, 70, 80, 90, 100))
                 .build();
         var body = objectMapper.writeValueAsString(assignmentReportDto);
-        mockMvc.perform(get("/api/report/assignment")
+        mockMvc.perform(post("/api/report/assignment")
                         .content(body)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -62,7 +62,7 @@ public class ReportControllerTest extends BaseTestEntity {
                 .hist(List.of(0, 50, 60, 70, 80, 90, 100))
                 .build();
         var body = objectMapper.writeValueAsString(groupReportDto);
-        mockMvc.perform(get("/api/report/group")
+        mockMvc.perform(post("/api/report/group")
                         .content(body)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -81,7 +81,7 @@ public class ReportControllerTest extends BaseTestEntity {
                 .hist(List.of(0, 50, 60, 70, 80, 90, 100))
                 .build();
         var body = objectMapper.writeValueAsString(assignmentReportDto);
-        mockMvc.perform(get("/api/report/assignment_csv")
+        mockMvc.perform(post("/api/report/assignment_csv")
                         .content(body)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -100,7 +100,7 @@ public class ReportControllerTest extends BaseTestEntity {
                 .hist(List.of(0, 50, 60, 70, 80, 90, 100))
                 .build();
         var body = objectMapper.writeValueAsString(groupReportDto);
-        mockMvc.perform(get("/api/report/group_csv")
+        mockMvc.perform(post("/api/report/group_csv")
                         .content(body)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
