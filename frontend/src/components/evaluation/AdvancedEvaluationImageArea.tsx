@@ -401,7 +401,6 @@ export const AdvancedEvaluationImageArea = React.forwardRef<any, AdvancedEvaluat
     return draw
   }
   const handleMouseMove = (event:React.MouseEvent) => {
-    console.log(canvasAction, commentAction)
     event.preventDefault()
     event.stopPropagation()
     if(!editable) return

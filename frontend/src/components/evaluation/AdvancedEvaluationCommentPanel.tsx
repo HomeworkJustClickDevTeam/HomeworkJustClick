@@ -26,12 +26,12 @@ export const AdvancedEvaluationCommentPanel = (
     setRightPanelUserComments: (comments:CommentInterface[]) => void,
     handleCommentRemoval:(comment:CommentInterface)=>void}) => {
 
-  const [newCommentDescription, setNewCommentDescription] = useState<string|undefined>(undefined)
+  const [newCommentDescription, setNewCommentDescription] = useState<string>("")
   const userState = useAppSelector(selectUserState)
 
   const handleNewCommentCreation = async (event:React.FormEvent<HTMLButtonElement>) => {
     event.preventDefault()
-    if(newCommentDescription !== undefined)
+    if(newCommentDescription.length > 0)
     {
       if(userState?.id !== null && userState?.id !== undefined){
         const newComment:CommentCreateInterface = {
@@ -65,6 +65,7 @@ export const AdvancedEvaluationCommentPanel = (
         <input className='border border-black rounded-sm mr-2 w-full pl-1.5' onChange={(event) => setNewCommentDescription(event.target.value)}/>
         <button className='w-24 ml-auto mr-2 bg-main_blue text-white px-2 py-1 rounded-md' type={"button"} onClick={(event) => handleNewCommentCreation(event)}>Dodaj</button><br/><hr/>
       </div>
+
     <section >
       <p className='pt-1 pb-1 font-semibold'>Wybierz komentarz: </p>
         <section className='border border-border_gray rounded-md w-fit px-2 flex'>

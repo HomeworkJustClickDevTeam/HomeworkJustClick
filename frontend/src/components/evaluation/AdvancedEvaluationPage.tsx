@@ -31,6 +31,7 @@ import { AdvancedEvaluationTextCommentInterface } from "../../types/AdvancedEval
 import { useGetCommentsTextByFile } from "../customHooks/useGetCommentsTextByFile"
 import { selectGroup } from "../../redux/groupSlice"
 import { sortButtonStateType } from "../../types/sortButtonStateType"
+import { useUpdateEffect } from "usehooks-ts"
 
 
 
@@ -53,13 +54,9 @@ export default function AdvancedEvaluationPage() {
   const [highlightedCommentId, setHighlightedCommentId] = useState<number|undefined>(undefined)
 
 
+
   const handleCommentHighlighting = (commentId:number) => {
-    if(highlightedCommentId === undefined){
       setHighlightedCommentId(commentId)
-      setTimeout(() => {
-        setHighlightedCommentId(undefined)
-      }, 2000)
-    }
   }
   const handleNewCommentTextCreation =  async () =>{
     if(chosenComment === undefined) return
@@ -303,6 +300,12 @@ export default function AdvancedEvaluationPage() {
       advancedEvaluationImageAreaRef.current.drawOnCanvas()
     }
   }, [commentsImageState])
+  useUpdateEffect(()=>{
+    if(highlightedCommentId !== undefined){
+      const timeoutId = setTimeout(()=> setHighlightedCommentId(undefined), 2000)
+      return () => clearTimeout(timeoutId)
+    }
+  }, [highlightedCommentId])
   if(file)
     return (
       <div id={"advancedEvaluationPageDiv"}>
