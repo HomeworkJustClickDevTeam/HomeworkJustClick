@@ -21,7 +21,7 @@ export default function UserGeneralSettingsPage() {
 
   return (
     <>
-      <form onSubmit={handleIndexSubmit}>
+      <form onSubmit={handleIndexSubmit} className='py-2'>
         <label htmlFor="index">Indeks: </label>
         <input
           type="number"
@@ -29,8 +29,9 @@ export default function UserGeneralSettingsPage() {
           name="index"
           defaultValue={index}
           onChange={(e) => setIndex(+e.target.value)}
+          className='pl-2 w-24'
         />
-        <input type="submit" value="Potwierdź"/>
+        <button type="submit" className='absolute bg-main_blue text-white rounded-md text-sm p-1 ml-2 active:mt-0.5 active:shadow-md'>Potwierdź</button>
       </form>
     </>
   )

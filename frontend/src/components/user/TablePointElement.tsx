@@ -19,10 +19,10 @@ export default function TablePointElement(props: {
   }
 
   return (
-    <div>
-      <h1>{props.table.name}</h1>
-      <p>({showPointsButton()})</p>
-      <button onClick={() => showEditForm()}> EDIT</button>
+    <div className='border border-solid my-2 rounded-md max-w-[350px] pl-2 pb-1'>
+      <h1 className='mt-1'>{props.table.name}</h1>
+      <p>Punkty tabeli: <span className=''>[{showPointsButton()}]</span></p>
+      <button onClick={() => showEditForm()} className=' underline text-main_blue'> EDYTUJ</button>
       {!isEditFormHidden && (
         <PointsTableForm
           table={props.table}
