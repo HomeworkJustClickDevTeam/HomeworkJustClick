@@ -88,15 +88,10 @@ public class CommentController {
         return service.getCommentById(commentId);
     }
 
-    @GetMapping("/byUser/{userId}")
+    @GetMapping("/byAssignment/{assignmentId}")
     @Operation(
-            summary = "Returns paged list of comments by user id.",
+            summary = "Returns paged list of comments by it's assignmentId.",
             responses = {
-                    @ApiResponse(
-                            responseCode = "404",
-                            description = "No comment with this userId in the DB.",
-                            content = @Content
-                    ),
                     @ApiResponse(
                             responseCode = "200",
                             description = "OK.",
@@ -116,8 +111,8 @@ public class CommentController {
                     @Parameter(name = "sort", example = "counter,desc", description = "default = lastUsedDate,desc")
             }
     )
-    public Slice<CommentResponseDto> getCommentsByUser(@PathVariable Integer userId, @Parameter(hidden = true) @PageableDefault(sort = "lastUsedDate", direction = Sort.Direction.DESC) Pageable pageable) {
-        return service.getCommentsByUser(userId, pageable);
+    public Slice<CommentResponseDto> getCommentsByAssignment(@PathVariable Integer assignmentId, @Parameter(hidden = true) @PageableDefault(sort = "lastUsedDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        return service.getCommentsByAssignment(assignmentId, pageable);
     }
 
     @PostMapping
@@ -134,7 +129,7 @@ public class CommentController {
                     ),
                     @ApiResponse(
                             responseCode = "404",
-                            description = "User not found",
+                            description = "Assignment not found",
                             content = @Content
                     ),
                     @ApiResponse(
@@ -166,7 +161,7 @@ public class CommentController {
                     ),
                     @ApiResponse(
                             responseCode = "404",
-                            description = "Comment or user not found",
+                            description = "Comment or assignment not found",
                             content = @Content
                     ),
                     @ApiResponse(

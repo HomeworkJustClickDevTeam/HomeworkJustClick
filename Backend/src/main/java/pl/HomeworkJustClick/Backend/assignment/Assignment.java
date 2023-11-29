@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import pl.HomeworkJustClick.Backend.comment.Comment;
 import pl.HomeworkJustClick.Backend.evaluationpanelassignment.EvaluationPanelAssignment;
 import pl.HomeworkJustClick.Backend.file.File;
 import pl.HomeworkJustClick.Backend.group.Group;
@@ -91,6 +92,13 @@ public class Assignment {
     )
     @JsonIgnore
     private List<EvaluationPanelAssignment> evaluationPanelAssignments = new ArrayList<>();
+
+    @OneToMany(
+            mappedBy = "assignment",
+            fetch = FetchType.LAZY
+    )
+    @JsonIgnore
+    private List<Comment> comments = new ArrayList<>();
 
     public Assignment(User user, Group group, String taskDescription, OffsetDateTime creationDatetime, OffsetDateTime lastModifiedDatetime, OffsetDateTime completionDatetime, String title, Boolean visible, int max_points, int auto_penalty) {
         this.user = user;

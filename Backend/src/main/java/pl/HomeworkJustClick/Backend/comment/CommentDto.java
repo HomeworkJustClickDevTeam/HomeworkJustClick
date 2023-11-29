@@ -26,5 +26,5 @@ public class CommentDto implements Serializable {
     @Size(max = 10)
     private String color;
     @NonNull
-    private Integer userId;
+    private Integer assignmentId;
 }

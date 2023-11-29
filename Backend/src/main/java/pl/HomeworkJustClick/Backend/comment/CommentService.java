@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
+import pl.HomeworkJustClick.Backend.assignment.AssignmentService;
 import pl.HomeworkJustClick.Backend.infrastructure.exception.EntityNotFoundException;
 
 @Service
@@ -11,6 +12,7 @@ import pl.HomeworkJustClick.Backend.infrastructure.exception.EntityNotFoundExcep
 public class CommentService {
     private final CommentRepository repository;
     private final CommentMapper mapper;
+    private final AssignmentService assignmentService;
 
     public Comment findById(Integer id) {
         return repository.findById(id)
@@ -26,18 +28,21 @@ public class CommentService {
         return mapper.map(findById(commentId));
     }
 
-    public Slice<CommentResponseDto> getCommentsByUser(Integer userId, Pageable pageable) {
-        return repository.getCommentsByUserIdAndVisible(userId, true, pageable)
+    public Slice<CommentResponseDto> getCommentsByAssignment(Integer assignmentId, Pageable pageable) {
+        return repository.getCommentsByAssignmentIdAndVisible(assignmentId, true, pageable)
                 .map(mapper::map);
     }
 
     public CommentResponseDto createComment(CommentDto commentDto) {
-        return mapper.map(repository.save(mapper.map(commentDto)));
+        var comment = mapper.map(commentDto);
+        setRelationFields(commentDto, comment);
+        return mapper.map(repository.save(comment));
     }
 
     public CommentResponseDto updateComment(CommentDto commentDto, int commentId) {
         var comment = findById(commentId);
         mapper.map(comment, commentDto);
+        setRelationFields(commentDto, comment);
         return mapper.map(repository.save(comment));
     }
 
@@ -45,5 +50,9 @@ public class CommentService {
         var comment = findById(commentId);
         comment.setVisible(false);
         repository.save(comment);
+    }
+
+    private void setRelationFields(CommentDto commentDto, Comment comment) {
+        comment.setAssignment(assignmentService.findById(commentDto.getAssignmentId()));
     }
 }
