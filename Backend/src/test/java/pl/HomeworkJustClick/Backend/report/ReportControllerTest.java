@@ -51,7 +51,6 @@ public class ReportControllerTest extends BaseTestEntity {
                 .andReturn();
     }
 
-
     @Test
     void shouldGetGroupReport() throws Exception {
         var groupReportDto = GroupReportDto.builder()
@@ -64,6 +63,25 @@ public class ReportControllerTest extends BaseTestEntity {
                 .build();
         var body = objectMapper.writeValueAsString(groupReportDto);
         mockMvc.perform(get("/api/report/group")
+                        .content(body)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isOk())
+                .andReturn();
+    }
+
+    @Test
+    void shouldGetAssignmentReportCsv() throws Exception {
+        var assignmentReportDto = AssignmentReportDto.builder()
+                .assignmentId(assignmentRepository.findAll().get(0).getId())
+                .maxResult(true)
+                .minResult(true)
+                .avgResult(true)
+                .late(true)
+                .hist(List.of(0, 50, 60, 70, 80, 90, 100))
+                .build();
+        var body = objectMapper.writeValueAsString(assignmentReportDto);
+        mockMvc.perform(get("/api/report/assignment_csv")
                         .content(body)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))

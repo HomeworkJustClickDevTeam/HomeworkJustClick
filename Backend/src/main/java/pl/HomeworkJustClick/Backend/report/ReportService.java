@@ -108,8 +108,35 @@ public class ReportService {
     public ResponseEntity<UrlResource> createGroupCsvReport(GroupReportDto groupReportDto) throws IOException {
         var groupReport = createGroupReport(groupReportDto);
         var dataLines = new ArrayList<String[]>();
-        var header = new ArrayList<>(List.of("nazwa zadania", "liczba punktów do zdobycia", "średni wynik", "średni wynik %", "najwyższy wynik", "najwyższy wynik %", "najniższy wynik", "najniższy wynik %"));
-        var end = new ArrayList<>(List.of("suma", "0", "0", "0", "0", "0", "0", "0"));
+        var headerLength = 2;
+        var header = new ArrayList<>(List.of("nazwa zadania", "liczba punktów do zdobycia"));
+        var end = new ArrayList<>(List.of("suma", "0"));
+        if (groupReportDto.getAvgResult()) {
+            header.add("średni wynik");
+            header.add("średni wynik %");
+            end.add("0");
+            end.add("0");
+            headerLength += 2;
+        }
+        if (groupReportDto.getMaxResult()) {
+            header.add("najwyższy wynik");
+            header.add("najwyższy wynik %");
+            end.add("0");
+            end.add("0");
+            headerLength += 2;
+        }
+        if (groupReportDto.getMinResult()) {
+            header.add("najniższy wynik");
+            header.add("najniższy wynik %");
+            end.add("0");
+            end.add("0");
+            headerLength += 2;
+        }
+        if (groupReportDto.getLate()) {
+            header.add("liczba spóżnionych");
+            end.add("0");
+            headerLength += 1;
+        }
         var hist = groupReport.getAssignments().get(0).getHist();
         if (hist.get(0) != 0) {
             hist.add(0);
@@ -131,29 +158,44 @@ public class ReportService {
         });
         dataLines.add(header.toArray(new String[0]));
         var endLine = end.toArray(new String[0]);
+        int finalHeaderLength = headerLength;
         groupReport.getAssignments().forEach(assignment -> {
             var line = new String[header.size()];
             line[0] = assignment.getAssignment().getTitle();
             line[1] = String.valueOf(assignment.getAssignment().getMax_points());
             endLine[1] = String.valueOf(Double.parseDouble(endLine[1]) + assignment.getAssignment().getMax_points());
-            line[2] = String.valueOf(assignment.getAvgResult());
-            endLine[2] = String.valueOf(Double.parseDouble(endLine[2]) + assignment.getAvgResult());
-            line[3] = String.valueOf(assignment.getAvgResultPercent());
-            endLine[3] = String.valueOf(Double.parseDouble(endLine[3]) + assignment.getAvgResultPercent());
-            line[4] = String.valueOf(assignment.getMaxResult());
-            endLine[4] = String.valueOf(Double.parseDouble(endLine[4]) + assignment.getMaxResult());
-            line[5] = String.valueOf(assignment.getMaxResultPercent());
-            endLine[5] = String.valueOf(Double.parseDouble(endLine[5]) + assignment.getMaxResultPercent());
-            line[6] = String.valueOf(assignment.getMinResult());
-            endLine[6] = String.valueOf(Double.parseDouble(endLine[6]) + assignment.getMinResult());
-            line[7] = String.valueOf(assignment.getMinResultPercent());
-            endLine[7] = String.valueOf(Double.parseDouble(endLine[7]) + assignment.getMinResultPercent());
-            for (int i = 8; i < 8 + hist.size() - 1; i++) {
-                line[i] = String.valueOf(assignment.getStudentsHist().get(i - 8));
-                endLine[i] = String.valueOf(Double.parseDouble(endLine[i]) + assignment.getStudentsHist().get(i - 8));
+            var k = 2;
+            if (groupReportDto.getAvgResult()) {
+                line[k] = String.valueOf(assignment.getAvgResult());
+                endLine[k] = String.valueOf(Double.parseDouble(endLine[k]) + assignment.getAvgResult());
+                line[k + 1] = String.valueOf(assignment.getAvgResultPercent());
+                endLine[k + 1] = String.valueOf(Double.parseDouble(endLine[k + 1]) + assignment.getAvgResultPercent());
+                k += 2;
+            }
+            if (groupReportDto.getMaxResult()) {
+                line[k] = String.valueOf(assignment.getMaxResult());
+                endLine[k] = String.valueOf(Double.parseDouble(endLine[k]) + assignment.getMaxResult());
+                line[k + 1] = String.valueOf(assignment.getMaxResultPercent());
+                endLine[k + 1] = String.valueOf(Double.parseDouble(endLine[k + 1]) + assignment.getMaxResultPercent());
+                k += 2;
+            }
+            if (groupReportDto.getMinResult()) {
+                line[k] = String.valueOf(assignment.getMinResult());
+                endLine[k] = String.valueOf(Double.parseDouble(endLine[k + 1]) + assignment.getMinResult());
+                line[k + 1] = String.valueOf(assignment.getMinResultPercent());
+                endLine[k + 1] = String.valueOf(Double.parseDouble(endLine[k + 1]) + assignment.getMinResultPercent());
+                k += 2;
+            }
+            if (groupReportDto.getLate()) {
+                line[k] = String.valueOf(assignment.getLate());
+                endLine[k] = String.valueOf(Double.parseDouble(endLine[k]) + assignment.getLate());
+            }
+            for (int i = finalHeaderLength; i < finalHeaderLength + hist.size() - 1; i++) {
+                line[i] = String.valueOf(assignment.getStudentsHist().get(i - finalHeaderLength));
+                endLine[i] = String.valueOf(Double.parseDouble(endLine[i]) + assignment.getStudentsHist().get(i - finalHeaderLength));
             }
             var j = 0;
-            for (int i = 8 + hist.size() - 1; i < header.size(); i += 2) {
+            for (int i = finalHeaderLength + hist.size() - 1; i < header.size(); i += 2) {
                 line[i] = String.valueOf(assignment.getStudents().get(j).getResult());
                 endLine[i] = String.valueOf(Double.parseDouble(endLine[i]) + assignment.getStudents().get(j).getResult());
                 line[i + 1] = String.valueOf(assignment.getStudents().get(j).getResultPercent());
@@ -162,14 +204,105 @@ public class ReportService {
             }
             dataLines.add(line);
         });
-        endLine[3] = String.valueOf(roundDouble(Double.parseDouble(endLine[3]) / (dataLines.size() - 1)));
-        endLine[5] = String.valueOf(roundDouble(Double.parseDouble(endLine[5]) / (dataLines.size() - 1)));
-        endLine[7] = String.valueOf(roundDouble(Double.parseDouble(endLine[7]) / (dataLines.size() - 1)));
-        for (int i = 8 + hist.size(); i < header.size(); i += 2) {
+        if (finalHeaderLength >= 5) {
+            endLine[3] = String.valueOf(roundDouble(Double.parseDouble(endLine[3]) / (dataLines.size() - 1)));
+        }
+        if (finalHeaderLength >= 7) {
+            endLine[5] = String.valueOf(roundDouble(Double.parseDouble(endLine[5]) / (dataLines.size() - 1)));
+        }
+        if (finalHeaderLength >= 9) {
+            endLine[7] = String.valueOf(roundDouble(Double.parseDouble(endLine[7]) / (dataLines.size() - 1)));
+        }
+        for (int i = finalHeaderLength + hist.size(); i < header.size(); i += 2) {
             endLine[i] = String.valueOf(roundDouble(Double.parseDouble(endLine[i]) / (dataLines.size() - 1)));
         }
         dataLines.add(endLine);
-//        var fileName = groupReport.getGroup().getName().replace(" ", "_") + "_" + LocalDateTime.now() + "_raport.csv";
+        var fileName = "raport.csv";
+        File csvOutputFile = new File(fileName);
+        csvOutputFile.createNewFile();
+        try (PrintWriter pw = new PrintWriter(csvOutputFile)) {
+            dataLines.stream()
+                    .map(this::convertToCSV)
+                    .forEach(pw::println);
+        }
+        return generateResponse(fileName);
+    }
+
+    @Transactional
+    public ResponseEntity<UrlResource> createAssignmentCsvReport(AssignmentReportDto assignmentReportDto) throws IOException {
+        var assignmentReport = createAssignmentReport(assignmentReportDto);
+        var dataLines = new ArrayList<String[]>();
+        var headerLength = 2;
+        var header = new ArrayList<>(List.of("nazwa zadania", "liczba punktów do zdobycia"));
+        if (assignmentReportDto.getAvgResult()) {
+            header.add("średni wynik");
+            header.add("średni wynik %");
+            headerLength += 2;
+        }
+        if (assignmentReportDto.getMaxResult()) {
+            header.add("najwyższy wynik");
+            header.add("najwyższy wynik %");
+            headerLength += 2;
+        }
+        if (assignmentReportDto.getMinResult()) {
+            header.add("najniższy wynik");
+            header.add("najniższy wynik %");
+            headerLength += 2;
+        }
+        if (assignmentReportDto.getLate()) {
+            header.add("liczba spóżnionych");
+            headerLength += 1;
+        }
+        var hist = assignmentReport.getHist();
+        if (hist.get(0) != 0) {
+            hist.add(0);
+        }
+        if (hist.get(hist.size() - 1) != 100) {
+            hist.add(100);
+        }
+        Collections.sort(hist);
+        for (int i = 0; i < hist.size() - 1; i++) {
+            header.add(hist.get(i) + "-" + hist.get(i + 1));
+        }
+        var students = userService.getStudentsByGroup(assignmentReport.getAssignment().getGroupId());
+        students.forEach(student -> {
+            header.add(student.getFirstname() + " " + student.getLastname() + " " + student.getIndex());
+            header.add(student.getFirstname() + " " + student.getLastname() + " " + student.getIndex() + " %");
+        });
+        dataLines.add(header.toArray(new String[0]));
+        int finalHeaderLength = headerLength;
+        var line = new String[header.size()];
+        line[0] = assignmentReport.getAssignment().getTitle();
+        line[1] = String.valueOf(assignmentReport.getAssignment().getMax_points());
+        var k = 2;
+        if (assignmentReportDto.getAvgResult()) {
+            line[k] = String.valueOf(assignmentReport.getAvgResult());
+            line[k + 1] = String.valueOf(assignmentReport.getAvgResultPercent());
+            k += 2;
+        }
+        if (assignmentReportDto.getMaxResult()) {
+            line[k] = String.valueOf(assignmentReport.getMaxResult());
+            line[k + 1] = String.valueOf(assignmentReport.getMaxResultPercent());
+            k += 2;
+        }
+        if (assignmentReportDto.getMinResult()) {
+            line[k] = String.valueOf(assignmentReport.getMinResult());
+            line[k + 1] = String.valueOf(assignmentReport.getMinResultPercent());
+            k += 2;
+        }
+        if (assignmentReportDto.getLate()) {
+            line[k] = String.valueOf(assignmentReport.getLate());
+        }
+        for (int i = finalHeaderLength; i < finalHeaderLength + hist.size() - 1; i++) {
+            line[i] = String.valueOf(assignmentReport.getStudentsHist().get(i - finalHeaderLength));
+        }
+        var j = 0;
+        for (int i = finalHeaderLength + hist.size() - 1; i < header.size(); i += 2) {
+            line[i] = String.valueOf(assignmentReport.getStudents().get(j).getResult());
+            line[i + 1] = String.valueOf(assignmentReport.getStudents().get(j).getResultPercent());
+            j += 1;
+        }
+        dataLines.add(line);
         var fileName = "raport.csv";
         File csvOutputFile = new File(fileName);
         csvOutputFile.createNewFile();

@@ -32,4 +32,9 @@ public class ReportController {
     public ResponseEntity<UrlResource> getGroupReportCsv(@RequestBody GroupReportDto groupReportDto) throws IOException {
         return service.createGroupCsvReport(groupReportDto);
     }
+
+    @GetMapping("/assignment_csv")
+    public ResponseEntity<UrlResource> getAssignmentReportCsv(@RequestBody AssignmentReportDto assignmentReportDto) throws IOException {
+        return service.createAssignmentCsvReport(assignmentReportDto);
+    }
 }
