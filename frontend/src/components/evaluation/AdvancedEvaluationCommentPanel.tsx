@@ -8,8 +8,8 @@ import { createCommentWithUserPostgresService } from "../../services/postgresDat
 import { ca } from "date-fns/locale"
 import { type } from "os"
 import { parseISO } from "date-fns"
-import { sortButtonStateType } from "../../types/SortButtonStateType"
 import { FaSort } from "react-icons/fa";
+import {SortButtonStateType} from "../../types/SortButtonStateType";
 
 
 export const AdvancedEvaluationCommentPanel = (
@@ -17,9 +17,9 @@ export const AdvancedEvaluationCommentPanel = (
     setChosenComment: (comment:CommentInterface|undefined)=>void,
     updateCommentsLists: (comment: CommentInterface) => void,
     chosenCommentId:number|undefined,
-    setSortButtonState:(buttonState:sortButtonStateType) => void,
+    setSortButtonState:(buttonState:SortButtonStateType) => void,
     highlightedCommentId:number|undefined,
-    sortButtonState: sortButtonStateType,
+    sortButtonState: SortButtonStateType,
     fileType:"txt"|"img",
     height:number|undefined,
     rightPanelUserComments: CommentInterface[],
@@ -70,7 +70,7 @@ export const AdvancedEvaluationCommentPanel = (
       <p className='pt-1 pb-1 font-semibold'>Wybierz komentarz: </p>
         <section className='border border-border_gray rounded-md w-fit px-2 flex'>
           <label htmlFor={"sortDropdown"} className='flex'> <FaSort className='mt-1'/>Sortuj:</label>
-          <select defaultValue={sortButtonState} onChange={(event) => setSortButtonState(event.target.value as sortButtonStateType)} name={"sortDropdown"} id={"sortDropdown"}>
+          <select defaultValue={sortButtonState} onChange={(event) => setSortButtonState(event.target.value as SortButtonStateType)} name={"sortDropdown"} id={"sortDropdown"}>
             <option value={"description,desc"}>Alfabetycznie</option>
             <option value={"counter,desc"}>Najczęściej używane</option>
             <option value={"counter,desc"}> Najrzadziej używane</option>

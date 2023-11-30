@@ -30,7 +30,7 @@ import { AdvancedEvaluationTextCommentCreateInterface } from "../../types/Advanc
 import { AdvancedEvaluationTextCommentInterface } from "../../types/AdvancedEvaluationTextCommentInterface"
 import { useGetCommentsTextByFile } from "../customHooks/useGetCommentsTextByFile"
 import { selectGroup } from "../../redux/groupSlice"
-import { sortButtonStateType } from "../../types/SortButtonStateType"
+import { SortButtonStateType } from "../../types/SortButtonStateType"
 import { useUpdateEffect } from "usehooks-ts"
 
 
@@ -40,7 +40,7 @@ export default function AdvancedEvaluationPage() {
   const group = useAppSelector(selectGroup)
   const userState = useAppSelector(selectUserState)
   const [refreshRightPanelUserComments, setRefreshRightPanelUserComments] = useState(false)
-  const [sortButtonState, setSortButtonState] = useState<sortButtonStateType>("lastUsedDate,desc")
+  const [sortButtonState, setSortButtonState] = useState<SortButtonStateType>("lastUsedDate,desc")
   const file = useGetFiles(state.solutionExtended.id, 'solution')[0]
   const [fileText, setFileText] = useState("")
   const [image, setImage] = useState<HTMLImageElement|undefined>(undefined)
@@ -343,7 +343,7 @@ export default function AdvancedEvaluationPage() {
                 width = {availableWidth}
                 height = {availableHeight}
                 setRefreshRightPanelUserComments={setRefreshRightPanelUserComments}
-                setSortButtonState ={setSortButtonState}
+                setSortButtonState={setSortButtonState}
                 editable={true}
                 drawnComments={drawnCommentsRef as MutableRefObject<AdvancedEvaluationImageCommentInterface[]>}
                 image={image}
