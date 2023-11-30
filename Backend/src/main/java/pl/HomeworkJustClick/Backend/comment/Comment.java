@@ -8,6 +8,7 @@ import pl.HomeworkJustClick.Backend.assignment.Assignment;
 import pl.HomeworkJustClick.Backend.commentevaluation.CommentEvaluation;
 import pl.HomeworkJustClick.Backend.commentfileimg.CommentFileImg;
 import pl.HomeworkJustClick.Backend.commentfiletext.CommentFileText;
+import pl.HomeworkJustClick.Backend.user.User;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -75,11 +76,9 @@ public class Comment {
     @JsonIgnore
     private Assignment assignment;
 
-    public Comment(String title, String description, Assignment assignment, String color, OffsetDateTime lastUsedDate) {
-        this.title = title;
-        this.description = description;
-        this.assignment = assignment;
-        this.color = color;
-        this.lastUsedDate = lastUsedDate;
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "comment_user_id_fk"))
+    @JsonIgnore
+    private User user;
+
 }

@@ -6,6 +6,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import pl.HomeworkJustClick.Backend.assignment.AssignmentService;
 import pl.HomeworkJustClick.Backend.infrastructure.exception.EntityNotFoundException;
+import pl.HomeworkJustClick.Backend.user.UserService;
 
 @Service
 @RequiredArgsConstructor
@@ -13,6 +14,7 @@ public class CommentService {
     private final CommentRepository repository;
     private final CommentMapper mapper;
     private final AssignmentService assignmentService;
+    private final UserService userService;
 
     public Comment findById(Integer id) {
         return repository.findById(id)
@@ -30,6 +32,16 @@ public class CommentService {
 
     public Slice<CommentResponseDto> getCommentsByAssignment(Integer assignmentId, Pageable pageable) {
         return repository.getCommentsByAssignmentIdAndVisible(assignmentId, true, pageable)
+                .map(mapper::map);
+    }
+
+    public Slice<CommentResponseDto> getCommentsByUser(Integer userId, Pageable pageable) {
+        return repository.getCommentsByUserIdAndVisible(userId, true, pageable)
+                .map(mapper::map);
+    }
+
+    public Slice<CommentResponseDto> getCommentsByUserAndAssignment(Integer userId, Integer assignmentId, Pageable pageable) {
+        return repository.getCommentsByUserIdAndAssignmentIdAndVisible(userId, assignmentId, true, pageable)
                 .map(mapper::map);
     }
 
@@ -54,5 +66,6 @@ public class CommentService {
 
     private void setRelationFields(CommentDto commentDto, Comment comment) {
         comment.setAssignment(assignmentService.findById(commentDto.getAssignmentId()));
+        comment.setUser(userService.findById(commentDto.getUserId()));
     }
 }

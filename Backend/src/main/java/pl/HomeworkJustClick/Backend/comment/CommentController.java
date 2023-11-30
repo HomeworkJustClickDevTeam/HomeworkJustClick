@@ -115,6 +115,60 @@ public class CommentController {
         return service.getCommentsByAssignment(assignmentId, pageable);
     }
 
+    @GetMapping("/byUser/{userId}")
+    @Operation(
+            summary = "Returns paged list of comments by it's userId.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = CommentResponseDto.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Jwt token invalid",
+                            content = @Content
+                    )
+            },
+            parameters = {
+                    @Parameter(name = "page", example = "0", description = "default = 0"),
+                    @Parameter(name = "size", example = "20", description = "default = 10"),
+                    @Parameter(name = "sort", example = "counter,desc", description = "default = lastUsedDate,desc")
+            }
+    )
+    public Slice<CommentResponseDto> getCommentsByUser(@PathVariable Integer userId, @Parameter(hidden = true) @PageableDefault(sort = "lastUsedDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        return service.getCommentsByUser(userId, pageable);
+    }
+
+    @GetMapping("/byUserAndAssignment/{userId}/{assignmentId}")
+    @Operation(
+            summary = "Returns paged list of comments by it's userId and assignmentId.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = CommentResponseDto.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Jwt token invalid",
+                            content = @Content
+                    )
+            },
+            parameters = {
+                    @Parameter(name = "page", example = "0", description = "default = 0"),
+                    @Parameter(name = "size", example = "20", description = "default = 10"),
+                    @Parameter(name = "sort", example = "counter,desc", description = "default = lastUsedDate,desc")
+            }
+    )
+    public Slice<CommentResponseDto> getCommentsByUserAndAssignment(@PathVariable Integer userId, @PathVariable Integer assignmentId, @Parameter(hidden = true) @PageableDefault(sort = "lastUsedDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        return service.getCommentsByUserAndAssignment(userId, assignmentId, pageable);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(
