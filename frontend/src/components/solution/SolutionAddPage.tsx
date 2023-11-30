@@ -16,8 +16,8 @@ function SolutionAddPage({ assignment }: AssignmentPropsInterface) {
   const navigate = useNavigate()
   useAppDispatch()
   const userState = useAppSelector(selectUserState)
-  const [file, setFile] = useState<File>()
-  const files = useGetFiles(assignment.id, "assignment")
+  const [files, setFiles] = useState<File[]>([])
+  const assigmentFiles = useGetFiles(assignment.id, "assignment")
   const [solution, setSolution] = useState<SolutionCreateInterface>({
     creationDatetime: new Date().toISOString(),
     comment: "",
@@ -26,9 +26,13 @@ function SolutionAddPage({ assignment }: AssignmentPropsInterface) {
 
   function handleChangeFile(e: ChangeEvent<HTMLInputElement>) {
     e.preventDefault()
-    if (e.target.files) {
-      setFile(e.target.files[0])
+    const selectedFiles = Array.from(e.target.files || [])
+
+    if (selectedFiles.length + files.length > 5) {
+      alert("Maksymalna liczba plików to 5")
+      return
     }
+    setFiles((prevFiles) => [...prevFiles, ...selectedFiles])
   }
 
   function handleChangeComment(event: ChangeEvent<HTMLInputElement>) {
@@ -41,42 +45,42 @@ function SolutionAddPage({ assignment }: AssignmentPropsInterface) {
 
   function handleUploadClick(e: React.MouseEvent<HTMLElement>) {
     e.preventDefault()
-    if (!file) {
+    if (!files) {
       return
     } else {
       if (userState) {
-        const formData = new FormData()
-        formData.append("file", file)
-        let mongoResponse: any = undefined
-        let postgresResponse: any = undefined
-        postFileMongoService(formData)
-          .then((r) => {
-            mongoResponse = r.data
-            return createSolutionWithUserAndAssignmentPostgresService(
-              userState?.id.toString(),
-              assignment.id.toString(),
-              solution
-            )
-          })
-          .then((r) => {
-            postgresResponse = r.data
-            if (mongoResponse !== undefined && postgresResponse !== undefined) {
-              return createFileWithSolutionPostgresService(
-                mongoResponse.id as string,
-                mongoResponse.format as string,
-                mongoResponse.name as string,
-                postgresResponse.id as number
-              )
-            } else {
-              return Promise.reject(
-                "Something went wrong with getting file to the dbs and getting data from them."
-              )
-            }
-          })
-          .then(() => {
-            navigate(-1)
-          })
-          .catch((e) => console.log(e))
+        // const formData = new FormData()
+        // formData.append("file", file)
+        // let mongoResponse: any = undefined
+        // let postgresResponse: any = undefined
+        // postFileMongoService(formData)
+        //   .then((r) => {
+        //     mongoResponse = r.data
+        //     return createSolutionWithUserAndAssignmentPostgresService(
+        //       userState?.id.toString(),
+        //       assignment.id.toString(),
+        //       solution
+        //     )
+        //   })
+        //   .then((r) => {
+        //     postgresResponse = r.data
+        //     if (mongoResponse !== undefined && postgresResponse !== undefined) {
+        //       return createFileWithSolutionPostgresService(
+        //         mongoResponse.id as string,
+        //         mongoResponse.format as string,
+        //         mongoResponse.name as string,
+        //         postgresResponse.id as number
+        //       )
+        //     } else {
+        //       return Promise.reject(
+        //         "Something went wrong with getting file to the dbs and getting data from them."
+        //       )
+        //     }
+        //   })
+        //   .then(() => {
+        //     navigate(-1)
+        //   })
+        //   .catch((e) => console.log(e))
       }
     }
   }
@@ -91,11 +95,23 @@ function SolutionAddPage({ assignment }: AssignmentPropsInterface) {
         <span className="font-semibold">Data ukończenia: </span>
         {format(assignment.completionDatetime, "dd.MM.yyyy, HH:mm")}
       </div>
-      {files.length > 0 && <AssignmentFile assignmentId={assignment.id} />}
+      {assigmentFiles.length > 0 && (
+        <AssignmentFile assignmentId={assignment.id} />
+      )}
       <label>
         Moje rozwiązania:
-        <input name="file" type="file" onChange={(e) => handleChangeFile(e)} />
-        <div> {file && `${file.name} - ${file.type}`}</div>
+        <input
+          name="file"
+          type="file"
+          onChange={(e) => handleChangeFile(e)}
+          multiple
+          disabled={files?.length === 5}
+        />
+        <div>
+          {files.map((file, index) => (
+            <div key={index}>{`${file.name} - ${file.type}`}</div>
+          ))}
+        </div>
       </label>
       <label>
         Komentarz do zadania:
