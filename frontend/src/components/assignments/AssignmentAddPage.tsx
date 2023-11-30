@@ -9,6 +9,8 @@ import { selectGroup } from "../../redux/groupSlice"
 import { useSelector } from "react-redux"
 import { selectUserState } from "../../redux/userStateSlice"
 import { useAppSelector } from "../../types/HooksRedux"
+import {AssignmentSettingsPage} from "./AssignmentSettingsPage";
+import {useGetEvaluationTable} from "../customHooks/useGetEvaluationTable";
 
 function AssignmentAddPage() {
   const navigate = useNavigate()
@@ -24,14 +26,10 @@ function AssignmentAddPage() {
   })
   const [toSend, setToSend] = useState<boolean>(false)
   const [idAssignment, setIdAssignment] = useState<number>()
-  const [toNavigate, setToNavigate] = useState<boolean>(false)
   const group = useSelector(selectGroup)
+  const {evaluationTable} = useGetEvaluationTable(userState?.id)
+  const [chosenEvaluationTable, setChosenEvaluationTable] = useState<number>(-1)
 
-  useEffect(() => {
-    if (toNavigate) {
-      navigate(`/group/${group?.id}/assignments/`)
-    }
-  }, [toNavigate])
 
   const handleTextChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target
@@ -84,89 +82,18 @@ function AssignmentAddPage() {
   }
 
   return (
-    <div className="relative flex flex-col mx-[7.5%] mt-4 border border-border_gray border-1 rounded-md pt-4 px-4 h-80">
-      <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-        <label className="pr-3">
-          Tytuł:
-          <input
-            name="title"
-            type="text"
-            onChange={handleTextChange}
-            placeholder="Nazwa zadania"
-            className="pl-1 ml-2 border-b-2 border-b-light_gray w-64"
-          />
-        </label>
-        <label>
-          Opis zadania:
-          <input
-            name="taskDescription"
-            type="text"
-            onChange={handleTextChange}
-            placeholder="Opis zadania"
-            className="pl-1 ml-2 border-b-2 border-b-light_gray w-80"
-          />
-        </label>
-        <label>
-          {" "}
-          Maksymalne punkty:
-          <input
-            name="max_points"
-            type="number"
-            onChange={handleNumberChange}
-            min="1"
-            max="10"
-            className="pl-1 ml-2 border-b-2 border-b-light_gray cursor-pointer w-12"
-          />
-        </label>
-        <label>
-          {" "}
-          Kara za wysłanie po terminie (%)
-          <input
-            name="auto_penalty"
-            type="number"
-            onChange={handleNumberChange}
-            min="0"
-            max="100"
-            step="25"
-            className="pl-1 ml-2 border-b-2 border-b-light_gray cursor-pointer w-12"
-          />
-        </label>
-        <label className="flex">
-          <p className="w-36">Data wykonania: </p>
-          <ReactDatePicker
-            name="completionDatetime"
-            selected={assignment.completionDatetime}
-            onChange={handleDateChange}
-            showTimeSelect
-            timeFormat="HH:mm"
-            timeIntervals={15}
-            dateFormat="yyyy-MM-dd HH:mm"
-            className="pl-1 ml-2 border-b-2 border-b-light_gray w-36 cursor-pointer"
-          />
-        </label>
-        <label>
-          Widoczne:
-          <input
-            name="visible"
-            type="checkbox"
-            checked={assignment.visible}
-            onChange={handleCheckboxChange}
-          />
-        </label>
-        <button
-          type="submit"
-          className="absolute top-0 right-0 mr-6 mt-4 px-6 py-1 rounded-lg bg-main_blue text-white hover:bg-hover_blue hover:shadow-md active:shadow-none"
-        >
-          Utwórz zadanie
-        </button>
-      </form>
-      <p className="mt-4 mb-2">Dodaj pliki: </p>
-      <AssignmentAddFile
-        toSend={toSend}
-        idAssignment={idAssignment}
-        setToNavigate={setToNavigate}
-      />
-    </div>
+    <AssignmentSettingsPage handleSubmit={handleSubmit}
+                            handleTextChange={handleTextChange}
+                            handleNumberChange={handleNumberChange}
+                            assignment={assignment}
+                            handleDateChange={handleDateChange}
+                            handleCheckboxChange={handleCheckboxChange}
+                            toSend={toSend}
+                            setAssignment={setAssignment} evaluationTable={evaluationTable}
+                            chosenEvaluationTable={chosenEvaluationTable}
+                            setChosenEvaluationTable={setChosenEvaluationTable}
+                            group={group}
+                            newAssignmentId={idAssignment}/>
   )
 }
 

@@ -15,6 +15,7 @@ import { AdvancedEvaluationTextCommentInterface } from "../types/AdvancedEvaluat
 import { AdvancedEvaluationImageCommentCreateInterface } from "../types/AdvancedEvaluationImageCommentCreateInterface"
 import axios from "axios";
 import { Table } from "../types/Table.model"
+import {EvaluationPanelAssignmentCreateInterface} from "../types/EvaluationPanelAssignmentCreateInterface";
 
 
 const postgresqlDatabaseJSON = axios.create({
@@ -539,6 +540,11 @@ export const updateEvaluationPanelService = async (evaluationPanel: Table) => {
     `/evaluation_panel/${evaluationPanel.id}`,
     evaluationPanel
   )
+}
+
+export const addEvaluationPanelToAssignment = async (evaluationPanelAssignment: EvaluationPanelAssignmentCreateInterface)=> {
+  return await postgresqlDatabaseJSON
+    .post('/evaluation_panel_assignment', evaluationPanelAssignment)
 }
 
 export const deleteEvaluationPanelService = async (

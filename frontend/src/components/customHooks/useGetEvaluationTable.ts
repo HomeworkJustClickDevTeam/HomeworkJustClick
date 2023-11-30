@@ -5,7 +5,7 @@ import { setIsLoading } from "../../redux/isLoadingSlice"
 import { getEvaluationTableByUserIdService } from "../../services/postgresDatabaseServices"
 
 export const useGetEvaluationTable = (userId: number | undefined | null) => {
-  const [evaluationTable, setEvaluationTable] = useState<Table[]>()
+  const [evaluationTable, setEvaluationTable] = useState<Table[]>([])
   const dispatch = useAppDispatch()
 
   useEffect(() => {
