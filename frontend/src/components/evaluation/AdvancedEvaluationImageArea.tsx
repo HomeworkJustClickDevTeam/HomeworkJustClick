@@ -11,12 +11,12 @@ import {
   createCommentImageWithFilePostgresService,
   deleteCommentImagePostgresService
 } from "../../services/postgresDatabaseServices"
-import { sortButtonStateType } from "../../types/SortButtonStateType"
+import { SortButtonStateType } from "../../types/SortButtonStateType"
 
 interface AdvancedEvaluationImageAreaInterface{
   width:number|undefined,
   height:number|undefined,
-  setSortButtonState:(buttonState:React.SetStateAction<sortButtonStateType>) => void,
+  setSortButtonState:(buttonState:React.SetStateAction<SortButtonStateType>) => void,
   image: HTMLImageElement,
   editable:boolean,
   chosenComment?: CommentInterface|undefined,

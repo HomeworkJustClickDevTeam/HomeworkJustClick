@@ -1,1 +1,1 @@
-export type sortButtonStateType = "counter,asc"|"description,desc"|"counter,desc"|"lastUsedDate,desc"
+export type SortButtonStateType = "counter,asc"|"description,desc"|"counter,desc"|"lastUsedDate,desc"
