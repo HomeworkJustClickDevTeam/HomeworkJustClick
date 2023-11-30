@@ -1,7 +1,7 @@
 import { useLocation, useParams } from "react-router-dom"
 import React from "react"
 
-import AssignmentModifyPage from "./AssignmentModifyPage"
+import AssignmentModifySettingsPageWrapper from "./AssignmentModifySettingsPageWrapper"
 
 import SolutionAddPage from "../solution/SolutionAddPage"
 
@@ -34,7 +34,7 @@ function AssignmentSpecPage() {
   return (
     <div>
       {((role === "Teacher") ? (
-        <AssignmentModifyPage assignment={assignment as AssignmentInterface} setAssignment={setAssignment}/>
+        <AssignmentModifySettingsPageWrapper assignment={assignment as AssignmentInterface} setAssignment={setAssignment}/>
       ) : (checkedSolution === undefined && uncheckedSolution === undefined && role === "Student") ? (
         <SolutionAddPage assignment={assignment as AssignmentInterface}/>
       ) : (uncheckedSolution === undefined) ? (

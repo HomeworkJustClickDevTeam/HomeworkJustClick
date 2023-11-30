@@ -15,6 +15,8 @@ import { AdvancedEvaluationTextCommentInterface } from "../types/AdvancedEvaluat
 import { AdvancedEvaluationImageCommentCreateInterface } from "../types/AdvancedEvaluationImageCommentCreateInterface"
 import axios from "axios";
 import { Table } from "../types/Table.model"
+import {EvaluationPanelAssignmentCreateInterface} from "../types/EvaluationPanelAssignmentCreateInterface";
+import {EvaluationPanelAssignmentInterface} from "../types/EvaluationPanelAssignmentInterface";
 
 
 const postgresqlDatabaseJSON = axios.create({
@@ -539,6 +541,28 @@ export const updateEvaluationPanelService = async (evaluationPanel: Table) => {
     `/evaluation_panel/${evaluationPanel.id}`,
     evaluationPanel
   )
+}
+
+export const addEvaluationPanelToAssignmentPostgresService = async (evaluationPanelAssignment: EvaluationPanelAssignmentCreateInterface)=> {
+  return await postgresqlDatabaseJSON
+    .post('/evaluation_panel_assignment', evaluationPanelAssignment)
+}
+
+export const changeEvaluationPanelAssignmentPostgresService = async (evaluationPanelAssignment: EvaluationPanelAssignmentInterface)=> {
+  return await postgresqlDatabaseJSON
+    .put(`/evaluation_panel_assignment/${evaluationPanelAssignment.id}`,
+      {evaluationPanelId: evaluationPanelAssignment.evaluationPanelId,
+        assignmentId:evaluationPanelAssignment.assignmentId})
+}
+
+export const deleteEvaluationPanelAssignmentPostgresService = async (evaluationPanelAssignmentId: string)=> {
+  return await postgresqlDatabaseJSON
+    .delete(`/evaluation_panel_assignment/${evaluationPanelAssignmentId}`)
+}
+
+export const getEvaluationPanelAssignmentPostgresService = async (assignmentId: string, userId:string)=> {
+  return await postgresqlDatabaseJSON
+    .get(`/evaluation_panel_assignment/${userId}/${assignmentId}`)
 }
 
 export const deleteEvaluationPanelService = async (
