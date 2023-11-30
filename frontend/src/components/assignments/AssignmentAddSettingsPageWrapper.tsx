@@ -1,6 +1,9 @@
 import { useNavigate } from "react-router-dom"
 import React, { ChangeEvent, useEffect, useState } from "react"
-import { createAssignmentWithUserAndGroupPostgresService } from "../../services/postgresDatabaseServices"
+import {
+  addEvaluationPanelToAssignmentPostgresService,
+  createAssignmentWithUserAndGroupPostgresService
+} from "../../services/postgresDatabaseServices"
 import ReactDatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import { AssignmentAddFile } from "./AssignmentAddFile"
@@ -27,40 +30,8 @@ function AssignmentAddSettingsPageWrapper() {
   const [toSend, setToSend] = useState<boolean>(false)
   const [idAssignment, setIdAssignment] = useState<number>()
   const group = useSelector(selectGroup)
-  const {evaluationTable} = useGetEvaluationTable(userState?.id)
+  const {evaluationTable} = useGetEvaluationTable(userState!.id)
   const [chosenEvaluationTable, setChosenEvaluationTable] = useState<number>(-1)
-
-
-  const handleTextChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target
-    setAssignment((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }))
-  }
-
-  const handleNumberChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target
-    setAssignment((prevState) => ({
-      ...prevState,
-      [name]: parseInt(value),
-    }))
-  }
-
-  const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { name, checked } = event.target
-    setAssignment((prevState) => ({
-      ...prevState,
-      [name]: checked,
-    }))
-  }
-
-  const handleDateChange = (date: Date) => {
-    setAssignment((prevState) => ({
-      ...prevState,
-      completionDatetime: date,
-    }))
-  }
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
@@ -70,24 +41,22 @@ function AssignmentAddSettingsPageWrapper() {
         group?.id as unknown as string,
         assignment
       )
-        .catch((error) => console.log(error))
         .then((response) => {
           if (response !== undefined) {
             setIdAssignment(response.data.id)
             setToSend(true)
-            navigate(-1)
+            if(chosenEvaluationTable !== -1)
+              return addEvaluationPanelToAssignmentPostgresService({assignmentId: response.data.id, evaluationPanelId: chosenEvaluationTable})
           }
         })
+        .then(()=> navigate(-1))
+        .catch((error) => console.log(error))
     }
   }
 
   return (
     <AssignmentSettingsPage handleSubmit={handleSubmit}
-                            handleTextChange={handleTextChange}
-                            handleNumberChange={handleNumberChange}
                             assignment={assignment}
-                            handleDateChange={handleDateChange}
-                            handleCheckboxChange={handleCheckboxChange}
                             toSend={toSend}
                             setAssignment={setAssignment} evaluationTable={evaluationTable}
                             chosenEvaluationTable={chosenEvaluationTable}

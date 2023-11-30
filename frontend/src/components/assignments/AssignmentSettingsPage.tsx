@@ -10,12 +10,8 @@ import {AssignmentAddFile} from "./AssignmentAddFile";
 
 interface AssignmentSettingsPagePropsInterface{
   handleSubmit: (event: React.FormEvent) => void,
-  handleTextChange: (event: React.ChangeEvent<HTMLInputElement>) => void,
-  handleNumberChange: (event: React.ChangeEvent<HTMLInputElement>) => void,
   assignment: AssignmentInterface|AssignmentToSendInterface,
   chosenEvaluationTable:number,
-  handleDateChange: (date:Date) => void,
-  handleCheckboxChange: (event: React.ChangeEvent<HTMLInputElement>) => void,
   toSend: boolean,
   handleDelete?:(event: React.FormEvent) => void,
   setChosenEvaluationTable:(tableId: number)=>void,
@@ -26,13 +22,9 @@ interface AssignmentSettingsPagePropsInterface{
 }
 
 export const AssignmentSettingsPage = ({handleSubmit,
-                                         handleTextChange,
                                          assignment,
                                          chosenEvaluationTable,
-                                         handleNumberChange,
-                                         handleDateChange,
                                          handleDelete,
-                                         handleCheckboxChange,
                                          toSend,
                                          setChosenEvaluationTable,
                                          evaluationTable,
@@ -42,6 +34,39 @@ export const AssignmentSettingsPage = ({handleSubmit,
 
   const [toNavigate, setToNavigate] = useState<boolean>(false)
   const navigate = useNavigate()
+
+
+  const handleTextChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target
+    setAssignment((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }))
+  }
+  const handleNumberChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target
+    setAssignment((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }))
+  }
+
+  const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = event.target
+    setAssignment((prevState) => ({
+      ...prevState,
+      [name]: checked,
+    }))
+  }
+
+  const handleDateChange = (date: Date) => {
+    setAssignment((prevState) => ({
+      ...prevState,
+      completionDatetime: date,
+    }))
+  }
+
+
 
   useEffect(() => {
     if (toNavigate) {
@@ -109,7 +134,7 @@ export const AssignmentSettingsPage = ({handleSubmit,
           />
         </label>
         <label>Wybierz tabelę
-          <select onChange={(event) => handleTableChange(event)} defaultValue={chosenEvaluationTable}>
+          <select onChange={(event) => handleTableChange(event)} value={chosenEvaluationTable}>
             {evaluationTables()}
           </select>
         </label>

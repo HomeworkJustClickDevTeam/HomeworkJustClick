@@ -1,4 +1,4 @@
 export interface EvaluationPanelAssignmentCreateInterface{
-  evaluationId: number
+  evaluationPanelId: number
   assignmentId: number
 }
