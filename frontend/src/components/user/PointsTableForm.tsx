@@ -7,6 +7,7 @@ import {
 } from "../../services/postgresDatabaseServices"
 import { useAppSelector } from "../../types/HooksRedux"
 import { selectUserState } from "../../redux/userStateSlice"
+import { AxiosResponse } from "axios"
 
 export default function PointsTableForm(props: {
   setIsFormHidden: (isFormHidden: boolean) => void
@@ -34,7 +35,8 @@ export default function PointsTableForm(props: {
     event.preventDefault()
     if (!isEditForm) {
       createEvaluationPanelService(table)
-        .then(() => {
+        .then((response: AxiosResponse<Table>) => {
+          table.id = response.data.id
           updateTableView()
           resetAndHideForm()
         })
@@ -85,11 +87,13 @@ export default function PointsTableForm(props: {
   }
 
   const deleteEvaluationTable = () => {
-    deleteEvaluationPanelService(table?.id as number)
-      .then(() => {
-        deleteTableFromView()
-      })
-      .catch(() => {})
+    if (table.id) {
+      deleteEvaluationPanelService(table.id)
+        .then(() => {
+          deleteTableFromView()
+        })
+        .catch(() => {})
+    }
   }
 
   const getPoints = (points: Button[]): string => {
@@ -107,6 +111,7 @@ export default function PointsTableForm(props: {
         tableFromList.id === table.id ? table : tableFromList
       )
     } else {
+      console.log(table)
       newTable?.push(table)
     }
     props.setEvaluationTable(newTable as Table[])
