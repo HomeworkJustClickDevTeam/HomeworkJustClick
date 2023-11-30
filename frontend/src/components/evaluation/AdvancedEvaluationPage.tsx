@@ -343,7 +343,7 @@ export default function AdvancedEvaluationPage() {
                 width = {availableWidth}
                 height = {availableHeight}
                 setRefreshRightPanelUserComments={setRefreshRightPanelUserComments}
-                setSortButtonState ={setSortButtonState}
+                setSortButtonState={setSortButtonState}
                 editable={true}
                 drawnComments={drawnCommentsRef as MutableRefObject<AdvancedEvaluationImageCommentInterface[]>}
                 image={image}
