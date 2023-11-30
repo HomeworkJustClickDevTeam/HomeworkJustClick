@@ -27,4 +27,6 @@ public class CommentDto implements Serializable {
     private String color;
     @NonNull
     private Integer assignmentId;
+    @NonNull
+    private Integer userId;
 }

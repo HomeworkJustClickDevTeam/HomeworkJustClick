@@ -3,6 +3,7 @@ package pl.HomeworkJustClick.Backend.comment;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import pl.HomeworkJustClick.Backend.assignment.AssignmentMapper;
+import pl.HomeworkJustClick.Backend.user.UserMapper;
 
 import java.time.OffsetDateTime;
 
@@ -10,6 +11,7 @@ import java.time.OffsetDateTime;
 @RequiredArgsConstructor
 public class CommentMapper {
     private final AssignmentMapper assignmentMapper;
+    private final UserMapper userMapper;
 
     public Comment map(CommentDto commentDto) {
         return Comment.builder()
@@ -31,6 +33,7 @@ public class CommentMapper {
                 .lastUsedDate(comment.getLastUsedDate())
                 .counter(comment.getCounter())
                 .assignment(assignmentMapper.map(comment.getAssignment()))
+                .user(userMapper.map2SimpleResponseDto(comment.getUser()))
                 .build();
     }
 
@@ -43,6 +46,7 @@ public class CommentMapper {
                 .lastUsedDate(comment.getLastUsedDate())
                 .counter(comment.getCounter())
                 .assignmentId(comment.getAssignment().getId())
+                .userId(comment.getUser().getId())
                 .build();
     }
 
