@@ -11,20 +11,33 @@ import { parseISO } from "date-fns"
 import { FaSort } from "react-icons/fa";
 import {SortButtonStateType} from "../../types/SortButtonStateType";
 
-
+interface AdvancedEvaluationCommentPanelPropsInterface{
+  setChosenComment: (comment:CommentInterface|undefined)=>void,
+  updateCommentsLists: (comment: CommentInterface) => void,
+  chosenCommentId:number|undefined,
+  setSortButtonState:(buttonState:SortButtonStateType) => void,
+  highlightedCommentId:number|undefined,
+  sortButtonState: SortButtonStateType,
+  fileType:"txt"|"img",
+  height:number|undefined,
+  rightPanelUserComments: CommentInterface[],
+  setRightPanelUserComments: (comments:CommentInterface[]) => void,
+  handleCommentRemoval:(comment:CommentInterface)=>void,
+  assignmentId: number
+}
 export const AdvancedEvaluationCommentPanel = (
-  {highlightedCommentId, sortButtonState, updateCommentsLists, setSortButtonState, chosenCommentId, fileType, rightPanelUserComments, setRightPanelUserComments, handleCommentRemoval, height, setChosenComment}:{
-    setChosenComment: (comment:CommentInterface|undefined)=>void,
-    updateCommentsLists: (comment: CommentInterface) => void,
-    chosenCommentId:number|undefined,
-    setSortButtonState:(buttonState:SortButtonStateType) => void,
-    highlightedCommentId:number|undefined,
-    sortButtonState: SortButtonStateType,
-    fileType:"txt"|"img",
-    height:number|undefined,
-    rightPanelUserComments: CommentInterface[],
-    setRightPanelUserComments: (comments:CommentInterface[]) => void,
-    handleCommentRemoval:(comment:CommentInterface)=>void}) => {
+  {assignmentId,
+    highlightedCommentId,
+    sortButtonState,
+    updateCommentsLists,
+    setSortButtonState,
+    chosenCommentId,
+    fileType,
+    rightPanelUserComments,
+    setRightPanelUserComments,
+    handleCommentRemoval,
+    height,
+    setChosenComment}:AdvancedEvaluationCommentPanelPropsInterface) => {
 
   const [newCommentDescription, setNewCommentDescription] = useState<string>("")
   const userState = useAppSelector(selectUserState)
@@ -38,7 +51,8 @@ export const AdvancedEvaluationCommentPanel = (
           description: newCommentDescription,
           title:"",
           color: "#" + Math.floor(Math.random()*16777215).toString(16), //random color
-          userId:userState.id
+          userId:userState.id,
+          assignmentId:assignmentId
         }
         createCommentWithUserPostgresService(newComment)
           .then((response) => {
@@ -73,7 +87,7 @@ export const AdvancedEvaluationCommentPanel = (
           <select defaultValue={sortButtonState} onChange={(event) => setSortButtonState(event.target.value as SortButtonStateType)} name={"sortDropdown"} id={"sortDropdown"}>
             <option value={"description,desc"}>Alfabetycznie</option>
             <option value={"counter,desc"}>Najczęściej używane</option>
-            <option value={"counter,desc"}> Najrzadziej używane</option>
+            <option value={"counter,asc"}> Najrzadziej używane</option>
             <option value={"lastUsedDate,desc"}>Ostatnio używane </option>
           </select>
 

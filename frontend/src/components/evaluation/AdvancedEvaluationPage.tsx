@@ -8,7 +8,6 @@ import { AdvancedEvaluationImageArea } from "./AdvancedEvaluationImageArea"
 import Loading from "../animations/Loading"
 import { AdvancedEvaluationImageCommentInterface } from "../../types/AdvancedEvaluationImageCommentInterface"
 import { useGetSolutionAreaSizeAvailable } from "../customHooks/useGetSolutionAreaSizeAvailable"
-import { useGetCommentsByUser } from "../customHooks/useGetCommentsByUser"
 import { useAppSelector } from "../../types/HooksRedux"
 import { selectUserState } from "../../redux/userStateSlice"
 import {
@@ -32,6 +31,7 @@ import { useGetCommentsTextByFile } from "../customHooks/useGetCommentsTextByFil
 import { selectGroup } from "../../redux/groupSlice"
 import { SortButtonStateType } from "../../types/SortButtonStateType"
 import { useUpdateEffect } from "usehooks-ts"
+import {useGetCommentsByUserAndAssignment} from "../customHooks/useGetCommentsByUserAndAssignment";
 
 
 
@@ -46,7 +46,7 @@ export default function AdvancedEvaluationPage() {
   const [image, setImage] = useState<HTMLImageElement|undefined>(undefined)
   const [chosenComment, setChosenComment] = useState<CommentInterface|undefined>(undefined)
   const drawnCommentsRef = useRef<AdvancedEvaluationImageCommentInterface[]>([])
-  const {comments: rightPanelUserComments,setComments: setRightPanelUserComments} = useGetCommentsByUser(userState?.id, `size=10&sort=${sortButtonState}`, refreshRightPanelUserComments)
+  const {comments: rightPanelUserComments,setComments: setRightPanelUserComments} = useGetCommentsByUserAndAssignment(userState!.id, state.solutionExtended.assignment.id, `size=10&sort=${sortButtonState}`, refreshRightPanelUserComments)
   const {availableHeight, availableWidth} = useGetSolutionAreaSizeAvailable()
   const commentsImageState = useGetCommentsImageByFile(file?.postgresId, "")
   const advancedEvaluationImageAreaRef = useRef<any>()
@@ -314,6 +314,7 @@ export default function AdvancedEvaluationPage() {
           <Link to = {`/group/${state.solutionExtended.assignment.groupId}/solution/${state.solutionExtended.user.id}/${state.solutionExtended.assignment.id}`} state={{solution: state.solutionExtended}}>Wróć</Link>
         </div>}
         <AdvancedEvaluationCommentPanel
+          assignmentId={state.solutionExtended.assignment.id}
           setSortButtonState={setSortButtonState}
           sortButtonState={sortButtonState}
           chosenCommentId={chosenComment?.id}

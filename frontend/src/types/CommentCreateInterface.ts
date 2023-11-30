@@ -3,4 +3,5 @@ export interface CommentCreateInterface{
   description: string
   color: string
   userId: number
+  assignmentId:number
 }

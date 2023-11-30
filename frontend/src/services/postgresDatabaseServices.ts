@@ -364,6 +364,14 @@ export const getCommentsByUserPostgresService = async (
   return await postgresqlDatabaseJSON.get(`/comment/byUser/${userId}?${params}`)
 }
 
+export const getCommentsByUserAndAssignmentPostgresService = async (
+  userId: string,
+  assignmentId: string,
+  params: string
+) => {
+  return await postgresqlDatabaseJSON.get(`/comment/byUserAndAssignment/${userId}/${assignmentId}?${params}`)
+}
+
 export const getCommentsTextByFilePostgresService = async (
   fileId: string,
   params: string
