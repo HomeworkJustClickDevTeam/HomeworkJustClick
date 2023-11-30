@@ -10,7 +10,7 @@ import HomeGuestPage from "./components/home/HomeGuestPage"
 import GroupCreatePage from "./components/group/GroupCreatePage"
 import GroupPage from "./components/group/GroupPage"
 import AssignmentsGroupDisplayedPage from "./components/assignments/AssignmentsGroupDisplayedPage"
-import AssignmentAddPage from "./components/assignments/AssignmentAddPage"
+import AssignmentAddSettingsPageWrapper from "./components/assignments/AssignmentAddSettingsPageWrapper"
 import AssignmentSpecPage from "./components/assignments/AssignmentSpecPage"
 import GroupUsersPage from "./components/group/GroupUsersPage"
 import NotFoundPage from "./components/errors/NotFoundPage"
@@ -73,7 +73,7 @@ function App() {
             path="assignments/todo"
             element={<AssignmentsTypesPage type={"undone" as AssignmentsType}/>}
           />
-          <Route path="assignments/add" element={<AssignmentAddPage/>}/>
+          <Route path="assignments/add" element={<AssignmentAddSettingsPageWrapper/>}/>
           <Route
             path="assignment/:idAssignment"
             element={<AssignmentSpecPage/>}

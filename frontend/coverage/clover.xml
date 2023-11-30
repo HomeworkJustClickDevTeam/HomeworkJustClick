@@ -183,7 +183,7 @@
         <line num="40" count="0" type="stmt"/>
         <line num="41" count="0" type="stmt"/>
       </file>
-      <file name="AssignmentAddPage.tsx" path="C:\Users\sjule\Desktop\studia\6Sem\projektInzynierski\HomeworkJustClick\frontend\src\components\assignments\AssignmentAddPage.tsx">
+      <file name="AssignmentAddSettingsPageWrapper.tsx" path="C:\Users\sjule\Desktop\studia\6Sem\projektInzynierski\HomeworkJustClick\frontend\src\components\assignments\AssignmentAddSettingsPageWrapper.tsx">
         <metrics statements="173" coveredstatements="14" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>
@@ -501,7 +501,7 @@
         <line num="83" count="0" type="stmt"/>
         <line num="84" count="0" type="stmt"/>
       </file>
-      <file name="AssignmentModifyPage.tsx" path="C:\Users\sjule\Desktop\studia\6Sem\projektInzynierski\HomeworkJustClick\frontend\src\components\assignments\AssignmentModifyPage.tsx">
+      <file name="AssignmentModifySettingsPageWrapper.tsx" path="C:\Users\sjule\Desktop\studia\6Sem\projektInzynierski\HomeworkJustClick\frontend\src\components\assignments\AssignmentModifySettingsPageWrapper.tsx">
         <metrics statements="171" coveredstatements="19" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>

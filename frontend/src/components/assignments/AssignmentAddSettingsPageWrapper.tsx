@@ -12,7 +12,7 @@ import { useAppSelector } from "../../types/HooksRedux"
 import {AssignmentSettingsPage} from "./AssignmentSettingsPage";
 import {useGetEvaluationTable} from "../customHooks/useGetEvaluationTable";
 
-function AssignmentAddPage() {
+function AssignmentAddSettingsPageWrapper() {
   const navigate = useNavigate()
   const userState = useAppSelector(selectUserState)
 
@@ -97,4 +97,4 @@ function AssignmentAddPage() {
   )
 }
 
-export default AssignmentAddPage
+export default AssignmentAddSettingsPageWrapper
