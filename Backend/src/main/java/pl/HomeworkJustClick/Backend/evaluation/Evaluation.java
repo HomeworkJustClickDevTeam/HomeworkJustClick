@@ -62,6 +62,9 @@ public class Evaluation {
     @Schema(example = "3.5")
     private Double grade;
 
+    @Column(name = "reported")
+    private Boolean reported;
+
     @OneToMany(
             mappedBy = "evaluation",
             orphanRemoval = true,
@@ -69,7 +72,6 @@ public class Evaluation {
     )
     @JsonIgnore
     private List<CommentEvaluation> commentEvaluations = new ArrayList<>();
-
     public Evaluation(Double result, User user, Solution solution, Group group, OffsetDateTime creationDatetime, OffsetDateTime lastModifiedDatetime, Double grade) {
         this.result = result;
         this.user = user;
