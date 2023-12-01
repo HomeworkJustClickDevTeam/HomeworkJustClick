@@ -8,6 +8,9 @@ import pl.HomeworkJustClick.Backend.assignment.AssignmentService;
 import pl.HomeworkJustClick.Backend.infrastructure.exception.EntityNotFoundException;
 import pl.HomeworkJustClick.Backend.user.UserService;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class CommentService {
@@ -49,6 +52,16 @@ public class CommentService {
         var comment = mapper.map(commentDto);
         setRelationFields(commentDto, comment);
         return mapper.map(repository.save(comment));
+    }
+
+    public List<CommentResponseDto> createCommentsList(List<CommentDto> commentDtos) {
+        var response = new ArrayList<CommentResponseDto>();
+        commentDtos.forEach(commentDto -> {
+            var comment = mapper.map(commentDto);
+            setRelationFields(commentDto, comment);
+            response.add(mapper.map(repository.save(comment)));
+        });
+        return response;
     }
 
     public CommentResponseDto updateComment(CommentDto commentDto, int commentId) {
