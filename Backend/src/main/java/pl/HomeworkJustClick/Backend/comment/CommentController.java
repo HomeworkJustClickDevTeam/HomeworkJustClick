@@ -17,6 +17,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/comment")
 @SecurityRequirement(name = "Bearer Authentication")
@@ -200,6 +202,39 @@ public class CommentController {
     )
     public CommentResponseDto createComment(@RequestBody @Valid CommentDto commentDto) {
         return service.createComment(commentDto);
+    }
+
+    @PostMapping("list")
+    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(
+            summary = "Creates list of comments",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "201",
+                            description = "Created",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = CommentResponseDto.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Assignment not found",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Invalid dto",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Jwt token invalid",
+                            content = @Content
+                    )
+            }
+    )
+    public List<CommentResponseDto> createCommentList(@RequestBody @Valid List<CommentDto> commentDtos) {
+        return service.createCommentsList(commentDtos);
     }
 
     @PutMapping("{commentId}")

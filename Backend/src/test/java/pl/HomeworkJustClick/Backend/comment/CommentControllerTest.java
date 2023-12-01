@@ -14,6 +14,7 @@ import pl.HomeworkJustClick.Backend.assignment.AssignmentRepository;
 import pl.HomeworkJustClick.Backend.user.UserRepository;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -151,6 +152,48 @@ public class CommentControllerTest extends BaseTestEntity {
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().is4xxClientError())
                 .andReturn();
+    }
+
+    @Test
+    void shouldCreateCommentList() throws Exception {
+        var expectedSize = commentRepository.findAll().size() + 4;
+        var commentsList = List.of(
+                createCommentDto("title", "desc", "#ffffff", 1, 1),
+                createCommentDto("", "desc", "#ffffff", 1, 1),
+                createCommentDto(null, "desc", "#ffffff", 1, 1),
+                createCommentDto("A".repeat(255), "A".repeat(255), "A".repeat(10), 1, 1)
+        );
+        var body = objectMapper.writeValueAsString(commentsList);
+        mockMvc.perform(post("/api/comment/list")
+                        .content(body)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isCreated())
+                .andReturn();
+        assertEquals(expectedSize, commentRepository.findAll().size());
+    }
+
+    @Test
+    void shouldNotCreateCommentList() throws Exception {
+        var expectedSize = commentRepository.findAll().size();
+        var commentsList = List.of(
+                createCommentDto("title", "", "#ffffff", 1, 1),
+                createCommentDto("", "", "#ffffff", 1, 1),
+                createCommentDto("", "", "", 1, 1),
+                createCommentDto("title", "desc", "#ffffff", 999, 1),
+                createCommentDto("title", "desc", "#ffffff", 1, 999),
+                createCommentDto("A".repeat(256), "desc", "#ffffff", 1, 1),
+                createCommentDto("title", "A".repeat(256), "#ffffff", 1, 1),
+                createCommentDto("title", null, "#ffffff", 1, 1)
+        );
+        var body = objectMapper.writeValueAsString(commentsList);
+        mockMvc.perform(post("/api/comment/list")
+                        .content(body)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().is4xxClientError())
+                .andReturn();
+        assertEquals(expectedSize, commentRepository.findAll().size());
     }
 
     @ParameterizedTest
