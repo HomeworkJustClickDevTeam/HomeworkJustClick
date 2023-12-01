@@ -4,7 +4,11 @@ import { AdvancedEvaluationCommentPanelListElement } from "./AdvancedEvaluationC
 import { useAppSelector } from "../../types/HooksRedux"
 import { selectUserState } from "../../redux/userStateSlice"
 import { CommentCreateInterface } from "../../types/CommentCreateInterface"
-import { createCommentWithUserPostgresService } from "../../services/postgresDatabaseServices"
+import {
+  changeCommentPostgresService,
+  createCommentWithUserPostgresService,
+  deleteCommentPostgresService
+} from "../../services/postgresDatabaseServices"
 import { ca } from "date-fns/locale"
 import { type } from "os"
 import { parseISO } from "date-fns"
@@ -12,36 +16,60 @@ import { FaSort } from "react-icons/fa";
 import {SortButtonStateType} from "../../types/SortButtonStateType";
 
 interface AdvancedEvaluationCommentPanelPropsInterface{
-  setChosenComment: (comment:CommentInterface|undefined)=>void,
-  updateCommentsLists: (comment: CommentInterface) => void,
+  setChosenComment: React.Dispatch<React.SetStateAction<CommentInterface|undefined>>,
+  setUpdatedComment: React.Dispatch<React.SetStateAction<CommentInterface|undefined>>,
   chosenCommentId:number|undefined,
   setSortButtonState:(buttonState:SortButtonStateType) => void,
   highlightedCommentId:number|undefined,
   sortButtonState: SortButtonStateType,
-  fileType:"txt"|"img",
   height:number|undefined,
   rightPanelUserComments: CommentInterface[],
   setRightPanelUserComments: (comments:CommentInterface[]) => void,
-  handleCommentRemoval:(comment:CommentInterface)=>void,
-  assignmentId: number
+  assignmentId: number,
+  setDeletedRightPanelCommentId: React.Dispatch<React.SetStateAction<number|undefined>>
 }
 export const AdvancedEvaluationCommentPanel = (
   {assignmentId,
+    setUpdatedComment,
+    setDeletedRightPanelCommentId,
     highlightedCommentId,
     sortButtonState,
-    updateCommentsLists,
     setSortButtonState,
     chosenCommentId,
-    fileType,
     rightPanelUserComments,
     setRightPanelUserComments,
-    handleCommentRemoval,
     height,
     setChosenComment}:AdvancedEvaluationCommentPanelPropsInterface) => {
 
   const [newCommentDescription, setNewCommentDescription] = useState<string>("")
   const userState = useAppSelector(selectUserState)
-
+  const updateCommentsLists = async (changedComment:CommentInterface) => {
+    try {
+      const response = await changeCommentPostgresService(changedComment)
+      if (response !== undefined && response !== null && response.data !== undefined && response.status === 200) {
+        const newComments = rightPanelUserComments.map(comment => {
+          if (comment.id === changedComment?.id) return changedComment
+          else return comment
+        })
+        setRightPanelUserComments(newComments)
+        setUpdatedComment(changedComment)
+      }
+    }catch (error){
+      console.log(error)
+    }
+  }
+  const handleCommentRemoval = async (comment:CommentInterface) => {
+    try {
+      const response = await deleteCommentPostgresService(comment.id.toString())
+      if (response.data !== null && response.data !== undefined && response.status === 200) {
+        const userNewComments = rightPanelUserComments.filter(oldComment => oldComment.id !== comment.id)
+        setRightPanelUserComments(userNewComments)
+        setDeletedRightPanelCommentId(comment.id)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
   const handleNewCommentCreation = async (event:React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     if(newCommentDescription.length > 0)

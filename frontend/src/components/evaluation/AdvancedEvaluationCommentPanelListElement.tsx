@@ -6,16 +6,20 @@ import { MdDelete } from "react-icons/md"
 import { useTimeout, useUpdateEffect } from "usehooks-ts"
 import { delay } from "@reduxjs/toolkit/dist/utils"
 
-
-export const AdvancedEvaluationCommentPanelListElement = (
-  { highlightedCommentId, chosenCommentId, updateCommentsLists, setChosenComment, comment, handleCommentRemoval }: {
-    setChosenComment: (comment: CommentInterface | undefined) => void,
-    updateCommentsLists: (comment: CommentInterface) => void,
-    comment: CommentInterface,
-    handleCommentRemoval: (commentToBeRemoved: CommentInterface) => void
-    chosenCommentId: number | undefined
-    highlightedCommentId: number | undefined
-  }) => {
+interface AdvancedEvaluationCommentPanelListElementPropsInterface{
+  setChosenComment: (comment: CommentInterface | undefined) => void,
+  updateCommentsLists: (comment: CommentInterface) => void,
+  comment: CommentInterface,
+  handleCommentRemoval: (commentToBeRemoved: CommentInterface) => void
+  chosenCommentId: number | undefined
+  highlightedCommentId: number | undefined
+}
+export const AdvancedEvaluationCommentPanelListElement = ({ highlightedCommentId,
+                                                            chosenCommentId,
+                                                            updateCommentsLists,
+                                                            setChosenComment,
+                                                            comment,
+                                                            handleCommentRemoval }:AdvancedEvaluationCommentPanelListElementPropsInterface ) => {
   const [commentState, setCommentState] = useState<CommentInterface>(comment)
   const [commentReadonly, setCommentReadonly] = useState(true)
 
@@ -72,7 +76,6 @@ export const AdvancedEvaluationCommentPanelListElement = (
                     onClick={() => setCommentReadonly(prevState => !prevState)}>
               <FaEdit className="mt-1 mr-[2px] ml-2" />
               {commentReadonly ? "Edytuj" : "Ok"}
-
             </button>
           </div>
             <p className="mb-2 h-full">Kolor:</p>
@@ -87,10 +90,8 @@ export const AdvancedEvaluationCommentPanelListElement = (
                 onClick={() => handleCommentRemoval(commentState)} type={"button"}>
           <MdDelete className="text-berry_red mt-[4.5px]" />Usuń
         </button>
-
       </div>
       <hr className="mt-2" />
     </div>
-
   )
 }
