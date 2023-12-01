@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import pl.HomeworkJustClick.Backend.infrastructure.exception.EntityNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +16,11 @@ public class GroupService {
     private final EntityManager entityManager;
 
     private final GroupRepository groupRepository;
+
+    public Group findById(Integer id) {
+        return groupRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Group with id = " + id + " not found"));
+    }
 
     public List<Group> getAll() {
         return groupRepository.findAll();
