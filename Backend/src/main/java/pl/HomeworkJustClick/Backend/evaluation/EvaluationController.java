@@ -343,7 +343,7 @@ public class EvaluationController {
         evaluationService.delete(id);
     }
 
-    @PutMapping("/evaluation/{evaluation_id}")
+    @PutMapping("/evaluation/{evaluationId}")
     @Operation(
             summary = "Updates evaluation",
             responses = {
@@ -371,8 +371,8 @@ public class EvaluationController {
                     )
             }
     )
-    public EvaluationResponseExtendedDto update(@RequestBody @Valid EvaluationDto evaluationDto, @PathVariable Integer id) {
-        return evaluationService.update(id, evaluationDto);
+    public EvaluationResponseExtendedDto update(@RequestBody @Valid EvaluationDto evaluationDto, @PathVariable Integer evaluationId) {
+        return evaluationService.update(evaluationId, evaluationDto);
     }
 
     @PutMapping("/evaluation/result/{evaluation_id}")
