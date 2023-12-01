@@ -551,6 +551,11 @@ export const updateEvaluationPanelService = async (evaluationPanel: Table) => {
   )
 }
 
+export const createListOfCommentsPostgresService = async (commentsList:CommentCreateInterface[])=> {
+  return await postgresqlDatabaseJSON
+    .post('/comment/list', commentsList)
+}
+
 export const addEvaluationPanelToAssignmentPostgresService = async (evaluationPanelAssignment: EvaluationPanelAssignmentCreateInterface)=> {
   return await postgresqlDatabaseJSON
     .post('/evaluation_panel_assignment', evaluationPanelAssignment)

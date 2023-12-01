@@ -58,13 +58,13 @@ export const AdvancedEvaluationCommentPanel = (
       console.log(error)
     }
   }
-  const handleCommentRemoval = async (comment:CommentInterface) => {
+  const handleCommentRemoval = async (commentId:number) => {
     try {
-      const response = await deleteCommentPostgresService(comment.id.toString())
+      const response = await deleteCommentPostgresService(commentId.toString())
       if (response.data !== null && response.data !== undefined && response.status === 200) {
-        const userNewComments = rightPanelUserComments.filter(oldComment => oldComment.id !== comment.id)
+        const userNewComments = rightPanelUserComments.filter(oldComment => oldComment.id !== commentId)
         setRightPanelUserComments(userNewComments)
-        setDeletedRightPanelCommentId(comment.id)
+        setDeletedRightPanelCommentId(commentId)
       }
     } catch (error) {
       console.log(error)
@@ -128,6 +128,7 @@ export const AdvancedEvaluationCommentPanel = (
         return(
           <div key={comment.id} >
             <AdvancedEvaluationCommentPanelListElement
+              commentId={comment.id}
               highlightedCommentId={highlightedCommentId}
               chosenCommentId={chosenCommentId}
               handleCommentRemoval={handleCommentRemoval}

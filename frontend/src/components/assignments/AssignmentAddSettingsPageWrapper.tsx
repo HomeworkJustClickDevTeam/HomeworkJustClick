@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom"
 import React, { ChangeEvent, useEffect, useState } from "react"
 import {
   addEvaluationPanelToAssignmentPostgresService,
-  createAssignmentWithUserAndGroupPostgresService
+  createAssignmentWithUserAndGroupPostgresService, createListOfCommentsPostgresService
 } from "../../services/postgresDatabaseServices"
 import ReactDatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
@@ -16,6 +16,7 @@ import {AssignmentSettingsPage} from "./AssignmentSettingsPage";
 import {useGetEvaluationTable} from "../customHooks/useGetEvaluationTable";
 import {useGetCommentsByUserAndAssignment} from "../customHooks/useGetCommentsByUserAndAssignment";
 import {CommentInterface} from "../../types/CommentInterface";
+import {CommentCreateInterface} from "../../types/CommentCreateInterface";
 
 function AssignmentAddSettingsPageWrapper() {
   const navigate = useNavigate()
@@ -45,14 +46,22 @@ function AssignmentAddSettingsPageWrapper() {
         assignment
       )
         .then(async (response) => {
-          if (response !== undefined) {
+          if (response?.status === 200) {
             setIdAssignment(response.data.id)
             setToSend(true)
             if(chosenEvaluationTable !== -1)
               return await addEvaluationPanelToAssignmentPostgresService({assignmentId: response.data.id, evaluationPanelId: chosenEvaluationTable})
+
+            if(comments.length > 0){
+              const commentsWithAssignmentId :CommentCreateInterface[]= []
+              comments.forEach(comment =>{
+                commentsWithAssignmentId.push({...comment, assignmentId: response.data.id})
+              })
+              return await createListOfCommentsPostgresService(commentsWithAssignmentId)
+            }
           }
         })
-        .then(()=> navigate(-1))
+        .then(()=> navigate(`/group/${group!.id}/assignments`))
         .catch((error) => console.log(error))
     }
   }
@@ -61,6 +70,8 @@ function AssignmentAddSettingsPageWrapper() {
     <AssignmentSettingsPage handleSubmit={handleSubmit}
                             assignment={assignment}
                             toSend={toSend}
+                            setComments={setComments}
+                            comments={comments}
                             setAssignment={setAssignment} evaluationTable={evaluationTable}
                             chosenEvaluationTable={chosenEvaluationTable}
                             setChosenEvaluationTable={setChosenEvaluationTable}

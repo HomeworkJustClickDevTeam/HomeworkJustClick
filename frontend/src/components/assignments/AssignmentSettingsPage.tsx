@@ -1,12 +1,14 @@
 import ReactDatePicker from "react-datepicker";
 import {AssignmentModifyFile} from "./AssignmentModifyFile";
-import React, {ChangeEvent, useEffect, useState} from "react";
+import React, {ChangeEvent, SetStateAction, useEffect, useState} from "react";
 import {AssignmentInterface} from "../../types/AssignmentInterface";
 import {Table} from "../../types/Table.model";
 import {AssignmentToSendInterface} from "../../types/AssignmentToSendInterface";
 import {GroupInterface} from "../../types/GroupInterface";
 import {useNavigate} from "react-router-dom";
 import {AssignmentAddFile} from "./AssignmentAddFile";
+import {AssignmentModifyCommentsPanel} from "./AssignmentModifyCommentsPanel";
+import {CommentInterface} from "../../types/CommentInterface";
 import {AssignmentAddCommentsPanel} from "./AssignmentAddCommentsPanel";
 
 interface AssignmentSettingsPagePropsInterface{
@@ -19,10 +21,14 @@ interface AssignmentSettingsPagePropsInterface{
   evaluationTable:Table[],
   setAssignment: (assignment: (prevState: any) => any) => void,
   group: GroupInterface|null,
-  newAssignmentId?: number
+  newAssignmentId?: number,
+  setComments: React.Dispatch<SetStateAction<CommentInterface[]>>
+  comments: CommentInterface[]
 }
 
 export const AssignmentSettingsPage = ({handleSubmit,
+                                         comments,
+                                         setComments,
                                          assignment,
                                          chosenEvaluationTable,
                                          handleDelete,
@@ -35,8 +41,6 @@ export const AssignmentSettingsPage = ({handleSubmit,
 
   const [toNavigate, setToNavigate] = useState<boolean>(false)
   const navigate = useNavigate()
-
-
   const handleTextChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target
     setAssignment((prevState) => ({
@@ -176,14 +180,13 @@ export const AssignmentSettingsPage = ({handleSubmit,
               />
             </label>
             <button
-              type="submit"
+              type={"submit"}
               className="absolute top-0 right-0 mr-6 mt-4 px-10 py-1 rounded-lg bg-main_blue text-white hover:bg-hover_blue hover:shadow-md active:shadow-none"
             >
               Zapisz
             </button>
-            {'id' in assignment && newAssignmentId === undefined ?
-              <AssignmentAddCommentsPanel assignmentId={assignment.id}></AssignmentAddCommentsPanel>
-              : <AssignmentAddCommentsPanel assignmentId={newAssignmentId!}></AssignmentAddCommentsPanel>}
+            {!('id' in assignment && newAssignmentId === undefined) &&
+            <AssignmentAddCommentsPanel comments={comments} setComments={setComments}/>}
           </form>
           <p className="mt-4 mb-2">Dodaj pliki: </p>
           {'id' in assignment && newAssignmentId === undefined ?
@@ -204,7 +207,8 @@ export const AssignmentSettingsPage = ({handleSubmit,
         </div>
       </div>
       <div style={{float:"right"}}>
-
+        {'id' in assignment && newAssignmentId === undefined &&
+            <AssignmentModifyCommentsPanel setComments={setComments} comments={comments} assignmentId={assignment.id}></AssignmentModifyCommentsPanel>}
       </div>
     </>
   )
