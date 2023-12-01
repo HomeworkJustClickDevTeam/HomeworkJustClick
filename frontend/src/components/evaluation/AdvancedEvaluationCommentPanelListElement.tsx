@@ -12,7 +12,6 @@ export const AdvancedEvaluationCommentPanelListElement = (
     setChosenComment: (comment: CommentInterface | undefined) => void,
     updateCommentsLists: (comment: CommentInterface) => void,
     comment: CommentInterface,
-    fileType: "txt" | "img",
     handleCommentRemoval: (commentToBeRemoved: CommentInterface) => void
     chosenCommentId: number | undefined
     highlightedCommentId: number | undefined

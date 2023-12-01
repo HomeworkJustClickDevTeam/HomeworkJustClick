@@ -41,12 +41,12 @@ function AssignmentAddSettingsPageWrapper() {
         group?.id as unknown as string,
         assignment
       )
-        .then((response) => {
+        .then(async (response) => {
           if (response !== undefined) {
             setIdAssignment(response.data.id)
             setToSend(true)
             if(chosenEvaluationTable !== -1)
-              return addEvaluationPanelToAssignmentPostgresService({assignmentId: response.data.id, evaluationPanelId: chosenEvaluationTable})
+              return await addEvaluationPanelToAssignmentPostgresService({assignmentId: response.data.id, evaluationPanelId: chosenEvaluationTable})
           }
         })
         .then(()=> navigate(-1))

@@ -42,7 +42,7 @@ export const AdvancedEvaluationCommentPanel = (
   const [newCommentDescription, setNewCommentDescription] = useState<string>("")
   const userState = useAppSelector(selectUserState)
 
-  const handleNewCommentCreation = async (event:React.FormEvent<HTMLButtonElement>) => {
+  const handleNewCommentCreation = async (event:React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     if(newCommentDescription.length > 0)
     {
@@ -56,7 +56,7 @@ export const AdvancedEvaluationCommentPanel = (
         }
         createCommentWithUserPostgresService(newComment)
           .then((response) => {
-            if(response.data !== undefined && response.data !== null && response.status === 201){
+            if(response.data !== undefined && response.data !== null && response.status === (201 || 200)){
               const tempComments = rightPanelUserComments
               setRightPanelUserComments([{
                 ...newComment,
@@ -74,18 +74,20 @@ export const AdvancedEvaluationCommentPanel = (
   return (
     <div id={"commentPanelDiv"} style={{float:"right", height:height !== undefined ? height.toString() : "100%"}}>
       <p className='text-center underline underline-offset-4 mb-4'>KOMENTARZE</p>
-      Dodaj nowy komentarz:<br/>
-      <div className='inline-flex w-full pb-4'>
-        <input className='border border-black rounded-sm mr-2 w-full pl-1.5' onChange={(event) => setNewCommentDescription(event.target.value)}/>
-        <button className='w-24 ml-auto mr-2 bg-main_blue text-white px-2 py-1 rounded-md' type={"button"} onClick={(event) => handleNewCommentCreation(event)}>Dodaj</button><br/><hr/>
-      </div>
 
+      <form onSubmit={(event) => handleNewCommentCreation(event)}>
+      <div className='inline-flex w-full pb-4'>
+        Dodaj nowy komentarz:<br/>
+        <input value={newCommentDescription} className='border border-black rounded-sm mr-2 w-full pl-1.5' onChange={(event) => setNewCommentDescription(event.target.value)}/>
+        <button className='w-24 ml-auto mr-2 bg-main_blue text-white px-2 py-1 rounded-md' type={"submit"}>Dodaj</button><br/><hr/>
+      </div>
+    </form>
     <section >
       <p className='pt-1 pb-1 font-semibold'>Wybierz komentarz: </p>
         <section className='border border-border_gray rounded-md w-fit px-2 flex'>
           <label htmlFor={"sortDropdown"} className='flex'> <FaSort className='mt-1'/>Sortuj:</label>
           <select defaultValue={sortButtonState} onChange={(event) => setSortButtonState(event.target.value as SortButtonStateType)} name={"sortDropdown"} id={"sortDropdown"}>
-            <option value={"description,desc"}>Alfabetycznie</option>
+            <option value={"description,asc"}>Alfabetycznie</option>
             <option value={"counter,desc"}>Najczęściej używane</option>
             <option value={"counter,asc"}> Najrzadziej używane</option>
             <option value={"lastUsedDate,desc"}>Ostatnio używane </option>
@@ -100,7 +102,6 @@ export const AdvancedEvaluationCommentPanel = (
             <AdvancedEvaluationCommentPanelListElement
               highlightedCommentId={highlightedCommentId}
               chosenCommentId={chosenCommentId}
-              fileType={fileType}
               handleCommentRemoval={handleCommentRemoval}
               comment={comment}
               setChosenComment={setChosenComment}
