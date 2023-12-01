@@ -28,4 +28,14 @@ public interface EvaluationRepository extends JpaRepository<Evaluation, Integer>
 
     @Query(value = "select count(e.*) from _evaluation e join _solution s on e.solution_id = s.id where s.id = :solution_id", nativeQuery = true)
     int checkForEvaluationToSolution(@Param("solution_id") int solution_id);
+
+    Boolean existsBySolutionId(Integer solutionId);
+
+    Boolean existsBySolutionIdAndId(Integer solutionId, Integer id);
+
+    List<Evaluation> findAllByReportedAndUserId(Boolean reported, Integer userId);
+
+    List<Evaluation> findAllByReportedAndGroupId(Boolean reported, Integer groupId);
+
+    List<Evaluation> findAllByReportedAndUserIdAndGroupId(Boolean reported, Integer userId, Integer groupId);
 }
