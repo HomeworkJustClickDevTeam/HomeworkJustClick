@@ -7,6 +7,7 @@ import {AssignmentToSendInterface} from "../../types/AssignmentToSendInterface";
 import {GroupInterface} from "../../types/GroupInterface";
 import {useNavigate} from "react-router-dom";
 import {AssignmentAddFile} from "./AssignmentAddFile";
+import {AssignmentAddCommentsPanel} from "./AssignmentAddCommentsPanel";
 
 interface AssignmentSettingsPagePropsInterface{
   handleSubmit: (event: React.FormEvent) => void,
@@ -65,8 +66,6 @@ export const AssignmentSettingsPage = ({handleSubmit,
       completionDatetime: date,
     }))
   }
-
-
 
   useEffect(() => {
     if (toNavigate) {
@@ -182,6 +181,9 @@ export const AssignmentSettingsPage = ({handleSubmit,
             >
               Zapisz
             </button>
+            {'id' in assignment && newAssignmentId === undefined ?
+              <AssignmentAddCommentsPanel assignmentId={assignment.id}></AssignmentAddCommentsPanel>
+              : <AssignmentAddCommentsPanel assignmentId={newAssignmentId!}></AssignmentAddCommentsPanel>}
           </form>
           <p className="mt-4 mb-2">Dodaj pliki: </p>
           {'id' in assignment && newAssignmentId === undefined ?

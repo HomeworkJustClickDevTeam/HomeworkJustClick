@@ -14,6 +14,8 @@ import { selectUserState } from "../../redux/userStateSlice"
 import { useAppSelector } from "../../types/HooksRedux"
 import {AssignmentSettingsPage} from "./AssignmentSettingsPage";
 import {useGetEvaluationTable} from "../customHooks/useGetEvaluationTable";
+import {useGetCommentsByUserAndAssignment} from "../customHooks/useGetCommentsByUserAndAssignment";
+import {CommentInterface} from "../../types/CommentInterface";
 
 function AssignmentAddSettingsPageWrapper() {
   const navigate = useNavigate()
@@ -32,6 +34,7 @@ function AssignmentAddSettingsPageWrapper() {
   const group = useSelector(selectGroup)
   const {evaluationTable} = useGetEvaluationTable(userState!.id)
   const [chosenEvaluationTable, setChosenEvaluationTable] = useState<number>(-1)
+  const [comments, setComments] = useState<CommentInterface[]>([])
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault()

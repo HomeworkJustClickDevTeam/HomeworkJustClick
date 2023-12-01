@@ -47,7 +47,7 @@ export default function AdvancedEvaluationPage() {
   const [chosenComment, setChosenComment] = useState<CommentInterface|undefined>(undefined)
   const {comments: rightPanelUserComments,setComments: setRightPanelUserComments} = useGetCommentsByUserAndAssignment(userState!.id, state.solutionExtended.assignment.id, `size=10&sort=${sortButton}`, refreshRightPanelUserComments)
   const {availableHeight, availableWidth} = useGetSolutionAreaSizeAvailable()
-  const commentsImageState = useGetCommentsImageByFile(file?.postgresId, "")
+  const {commentsImage, setCommentsImage} = useGetCommentsImageByFile(file?.postgresId, "")
   const {comments: commentsText, setComments: setCommentsText} = useGetCommentsTextByFile(file?.postgresId, "")
   const [highlightedCommentId, setHighlightedCommentId] = useState<number|undefined>(undefined)
   const [deletedRightPanelCommentId, setDeletedRightPanelCommentId] = useState<number|undefined>(undefined)
@@ -115,6 +115,8 @@ export default function AdvancedEvaluationPage() {
               fileText={fileText}/>)
             : (image !== undefined ?
               <AdvancedEvaluationImageArea
+                commentsImage={commentsImage}
+                setCommentsImage={setCommentsImage}
                 deletedCommentId={deletedRightPanelCommentId}
                 setDeletedCommentId={setDeletedRightPanelCommentId}
                 setUpdatedComment={setUpdatedComment}

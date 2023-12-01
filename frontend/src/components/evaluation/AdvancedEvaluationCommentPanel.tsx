@@ -43,7 +43,7 @@ export const AdvancedEvaluationCommentPanel = (
 
   const [newCommentDescription, setNewCommentDescription] = useState<string>("")
   const userState = useAppSelector(selectUserState)
-  const updateCommentsLists = async (changedComment:CommentInterface) => {
+  const updateCommentsList = async (changedComment:CommentInterface) => {
     try {
       const response = await changeCommentPostgresService(changedComment)
       if (response !== undefined && response !== null && response.data !== undefined && response.status === 200) {
@@ -133,7 +133,7 @@ export const AdvancedEvaluationCommentPanel = (
               handleCommentRemoval={handleCommentRemoval}
               comment={comment}
               setChosenComment={setChosenComment}
-              updateCommentsLists={updateCommentsLists}></AdvancedEvaluationCommentPanelListElement>
+              updateCommentsList={updateCommentsList}></AdvancedEvaluationCommentPanelListElement>
           </div>)}
       )}</div>
     </section>

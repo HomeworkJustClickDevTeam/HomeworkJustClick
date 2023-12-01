@@ -25,10 +25,14 @@ interface AdvancedEvaluationImageAreaInterface{
   image: HTMLImageElement,
   chosenComment?: CommentInterface|undefined,
   fileId:number
+  commentsImage: AdvancedEvaluationImageCommentInterface[]
+  setCommentsImage: React.Dispatch<React.SetStateAction<AdvancedEvaluationImageCommentInterface[]>>
   handleCommentHighlighting:(commentId: number) => void
-  setRefreshRightPanelUserComments: (refresher:React.SetStateAction<boolean>) => void
+  setRefreshRightPanelUserComments: React.Dispatch<React.SetStateAction<boolean>>
 }
 export const AdvancedEvaluationImageArea = ({setSortButtonState,
+                                              commentsImage,
+                                              setCommentsImage,
                                               setUpdatedComment,
                                               setDeletedCommentId,
                                               deletedCommentId,
@@ -49,7 +53,7 @@ export const AdvancedEvaluationImageArea = ({setSortButtonState,
   const canvasAction = useRef<CanvasActionsType>("hovering")
   const commentAction = useRef<CommentActionsType>("noHover")
   const mouseDownTimestamp = useRef<number|null>(null)
-  const drawnComments = useRef<AdvancedEvaluationImageCommentInterface[]>([])
+  const drawnComments = useRef<AdvancedEvaluationImageCommentInterface[]>(commentsImage)
 
 
 
@@ -545,8 +549,9 @@ export const AdvancedEvaluationImageArea = ({setSortButtonState,
     drawOnCanvas()
   }, [])
   useEffect(() => {
+    drawnComments.current = commentsImage
     drawOnCanvas()
-  }, [width, height])
+  }, [width, height, commentsImage])
   useUpdateEffect(()=> {
     const updateImageList = async (updatedComment:CommentInterface) => {
       if (drawnComments?.current !== undefined && drawnComments?.current !== null) {

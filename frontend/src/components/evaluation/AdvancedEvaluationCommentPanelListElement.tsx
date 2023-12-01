@@ -7,16 +7,16 @@ import { useTimeout, useUpdateEffect } from "usehooks-ts"
 import { delay } from "@reduxjs/toolkit/dist/utils"
 
 interface AdvancedEvaluationCommentPanelListElementPropsInterface{
-  setChosenComment: (comment: CommentInterface | undefined) => void,
-  updateCommentsLists: (comment: CommentInterface) => void,
+  setChosenComment?: React.Dispatch<React.SetStateAction<CommentInterface|undefined>>,
+  updateCommentsList: (comment: CommentInterface) => void,
   comment: CommentInterface,
   handleCommentRemoval: (commentToBeRemoved: CommentInterface) => void
-  chosenCommentId: number | undefined
-  highlightedCommentId: number | undefined
+  chosenCommentId?: number | undefined
+  highlightedCommentId?: number | undefined
 }
 export const AdvancedEvaluationCommentPanelListElement = ({ highlightedCommentId,
                                                             chosenCommentId,
-                                                            updateCommentsLists,
+                                                            updateCommentsList,
                                                             setChosenComment,
                                                             comment,
                                                             handleCommentRemoval }:AdvancedEvaluationCommentPanelListElementPropsInterface ) => {
@@ -27,7 +27,7 @@ export const AdvancedEvaluationCommentPanelListElement = ({ highlightedCommentId
     const updateComment = () => {
       changeCommentPostgresService(commentState)
         .then(() => {
-          updateCommentsLists(commentState)
+          updateCommentsList(commentState)
         })
         .catch((error) => console.log(error))
     }
@@ -43,9 +43,11 @@ export const AdvancedEvaluationCommentPanelListElement = ({ highlightedCommentId
     event.stopPropagation()
     event.preventDefault()
     if (chosenCommentId === comment.id) {
-      setChosenComment(undefined)
+        if(setChosenComment !== undefined)
+            setChosenComment(undefined)
     } else {
-      setChosenComment(commentState)
+      if(setChosenComment !== undefined)
+        setChosenComment(commentState)
     }
   }
 

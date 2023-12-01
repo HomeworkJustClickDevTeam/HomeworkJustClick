@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom"
 import React, { ChangeEvent, useEffect, useState } from "react"
 import {
   addEvaluationPanelToAssignmentPostgresService,
-  changeAssignmentPostgresService, changeEvaluationPanelAssignmentPostgresService,
+  changeAssignmentPostgresService, changeCommentPostgresService, changeEvaluationPanelAssignmentPostgresService,
   deleteAssignmentPostgresService, deleteEvaluationPanelAssignmentPostgresService,
 } from "../../services/postgresDatabaseServices"
 import ReactDatePicker from "react-datepicker"
@@ -17,6 +17,8 @@ import {Table} from "../../types/Table.model";
 import {ta} from "date-fns/locale";
 import {AssignmentSettingsPage} from "./AssignmentSettingsPage";
 import {useGetEvaluationPanelAssignment} from "../customHooks/useGetEvaluationPanelAssignment";
+import {useGetCommentsByUserAndAssignment} from "../customHooks/useGetCommentsByUserAndAssignment";
+import {CommentInterface} from "../../types/CommentInterface";
 
 interface AssignmentModifyPropsInterface extends AssignmentPropsInterface {
   setAssignment: (assignment: (prevState: any) => any) => void
@@ -34,6 +36,7 @@ function AssignmentModifySettingsPageWrapper({
   const {evaluationPanelAssignment} = useGetEvaluationPanelAssignment(assignment.id, userState!.id)
   const [chosenEvaluationTable, setChosenEvaluationTable] =
     useState<number>(evaluationPanelAssignment === undefined ? -1 : evaluationPanelAssignment.evaluationPanelId)
+  const {comments, setComments} = useGetCommentsByUserAndAssignment(userState!.id, assignment.id, "")
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
