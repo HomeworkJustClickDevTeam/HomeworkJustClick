@@ -5,7 +5,8 @@ import {selectUserState} from "../../redux/userStateSlice";
 import {AdvancedEvaluationCommentPanelListElement} from "../evaluation/AdvancedEvaluationCommentPanelListElement";
 import {CommentInterface} from "../../types/CommentInterface";
 import {
-  changeCommentPostgresService,
+  changeCommentImageColorByCommentIdPostgresService,
+  changeCommentPostgresService, changeCommentTextColorByCommentIdPostgresService,
   createCommentWithUserPostgresService,
   deleteCommentPostgresService
 } from "../../services/postgresDatabaseServices";
@@ -42,8 +43,8 @@ export const AssignmentModifyCommentsPanel = ({assignmentId, setComments, commen
           else return comment
         })
         setComments(newComments)
-
-
+        await changeCommentImageColorByCommentIdPostgresService(changedComment.id.toString(), changedComment.color)
+        await changeCommentTextColorByCommentIdPostgresService(changedComment.id.toString(), changedComment.color)
       }
     }catch (error){
       console.log(error)

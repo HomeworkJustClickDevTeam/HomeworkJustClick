@@ -432,6 +432,20 @@ export const changeUserColorPostgresService = async (
   return await postgresqlDatabaseJSON.put(`/user/color/${userId}`, color)
 }
 
+export const changeCommentImageColorByCommentIdPostgresService = async (
+  commentId: string,
+  color: string
+) => {
+  return await postgresqlDatabaseJSON.put(`api/comment_file_img/colorByCommentId/${commentId}`, {color: color})
+}
+
+export const changeCommentTextColorByCommentIdPostgresService = async (
+  commentId: string,
+  color: string
+) => {
+  return await postgresqlDatabaseJSON.put(`api/comment_file_text/colorByCommentId/${commentId}`, {color: color})
+}
+
 export const changeUserIndexPostgresService = async (
   userId: string,
   index: number
