@@ -7,11 +7,13 @@ import org.springframework.stereotype.Service;
 import pl.HomeworkJustClick.Backend.assignment.Assignment;
 import pl.HomeworkJustClick.Backend.assignment.AssignmentRepository;
 import pl.HomeworkJustClick.Backend.assignment.AssignmentResponseDto;
+import pl.HomeworkJustClick.Backend.evaluation.EvaluationUtilsService;
 import pl.HomeworkJustClick.Backend.group.Group;
 import pl.HomeworkJustClick.Backend.group.GroupRepository;
 import pl.HomeworkJustClick.Backend.group.GroupResponseDto;
 import pl.HomeworkJustClick.Backend.infrastructure.enums.CalendarStatus;
 import pl.HomeworkJustClick.Backend.infrastructure.exception.EntityNotFoundException;
+import pl.HomeworkJustClick.Backend.infrastructure.exception.InvalidArgumentException;
 import pl.HomeworkJustClick.Backend.user.User;
 import pl.HomeworkJustClick.Backend.user.UserRepository;
 import pl.HomeworkJustClick.Backend.user.UserResponseDto;
@@ -26,15 +28,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Service
 @RequiredArgsConstructor
 public class SolutionService {
-
     private final EntityManager entityManager;
-
     private final SolutionRepository solutionRepository;
-
     private final UserRepository userRepository;
-
     private final AssignmentRepository assignmentRepository;
     private final GroupRepository groupRepository;
+    private final EvaluationUtilsService evaluationUtilsService;
 
     public Solution findById(Integer id) {
         return solutionRepository.findById(id)
@@ -121,13 +120,12 @@ public class SolutionService {
     }
 
     @Transactional
-    public Boolean delete(int id) {
-        if (solutionRepository.existsById(id)) {
-            solutionRepository.deleteById(id);
-            return true;
-        } else {
-            return false;
+    public void delete(int id) {
+        var solution = findById(id);
+        if (evaluationUtilsService.existsBySolutionId(id)) {
+            throw new InvalidArgumentException("Evaluation to solution with id = " + id + " already exists");
         }
+        solutionRepository.delete(solution);
     }
 
     @Transactional

@@ -156,13 +156,8 @@ public class SolutionController {
             }
     )
 
-    public ResponseEntity<Void> delete(@PathVariable("solution_id") int id){
-        if(solutionService.delete(id)){
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public void delete(@PathVariable("solution_id") int id) {
+        solutionService.delete(id);
     }
 
     @PostMapping("/solution/withUserAndAssignment/{user_id}/{assignment_id}")
