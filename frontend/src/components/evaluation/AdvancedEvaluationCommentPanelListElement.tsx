@@ -41,7 +41,7 @@ export const AdvancedEvaluationCommentPanelListElement = ({ highlightedCommentId
       return
     }
     else{
-      const timeoutId = setTimeout(()=> updateComment(), 250)
+      const timeoutId = setTimeout(()=> updateComment(), 300)
       return () => clearTimeout(timeoutId)
     }
   }, [commentState])

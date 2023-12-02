@@ -110,7 +110,7 @@ export const AssignmentSettingsPage = ({handleSubmit,
                 type="text"
                 onChange={(event)=>handleTextChange(event)}
                 value={assignment.title}
-                placeholder="Nazwa grupy"
+                placeholder="Nazwa zadania"
                 className="pl-1 ml-2 border-b-2 border-b-light_gray w-64"
               />
             </label>
