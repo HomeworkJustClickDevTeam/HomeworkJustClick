@@ -43,7 +43,7 @@ export const AssignmentModifyCommentsPanel = ({assignmentId, setComments, commen
         })
         setComments(newComments)
 
-        //await zeby aktualizowalo narysowane komentarze
+
       }
     }catch (error){
       console.log(error)

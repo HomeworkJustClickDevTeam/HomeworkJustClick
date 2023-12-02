@@ -58,15 +58,14 @@ postgresqlDatabaseJSON.interceptors.response.use(
   },
   async (error) => {
     const originalRequest = error.config
-    if (
-      error !== undefined &&
-      error.response?.status === 403 &&
-      !originalRequest._retry
-    ) {
+    if ((error.response?.status === 403 || error.code === "ERR_NETWORK") && !originalRequest._retry) {
       originalRequest._retry = true
       localStorage.removeItem("user")
       window.dispatchEvent(new Event("storage"))
       window.location.reload()
+      return new Promise((resolve) => {
+        resolve(postgresqlDatabaseJSON(originalRequest))
+      })
     }
     return Promise.reject(error)
   }
@@ -93,11 +92,14 @@ postgresqlDatabaseTextPlain.interceptors.response.use(
   },
   async (error) => {
     const originalRequest = error.config
-    if (error.response.status === 403 && !originalRequest._retry) {
+    if ((error.response?.status === 403 || error.code === "ERR_NETWORK") && !originalRequest._retry) {
       originalRequest._retry = true
       localStorage.removeItem("user")
       window.dispatchEvent(new Event("storage"))
       window.location.reload()
+      return new Promise((resolve) => {
+        resolve(postgresqlDatabaseTextPlain(originalRequest))
+      })
     }
     return Promise.reject(error)
   }
