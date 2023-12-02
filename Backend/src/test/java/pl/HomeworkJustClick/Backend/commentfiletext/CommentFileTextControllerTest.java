@@ -12,8 +12,7 @@ import pl.HomeworkJustClick.Backend.file.FileRepository;
 
 import java.nio.charset.StandardCharsets;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -150,6 +149,38 @@ public class CommentFileTextControllerTest extends BaseTestEntity {
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().is4xxClientError())
                 .andReturn();
+    }
+
+    @Test
+    void shouldUpdateAllCommentFileTextsColorsByCommentId() throws Exception {
+        var newColor = "a".repeat(10);
+        var commentFileText = commentFileTextRepository.findAll().get(0);
+        var commentId = commentFileText.getComment().getId();
+        var colorDto = CommentFileTextUpdateColorDto.builder().color(newColor).build();
+        var body = objectMapper.writeValueAsString(colorDto);
+        mockMvc.perform(put("/api/comment_file_text/colorByCommentId/" + commentId)
+                        .content(body)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isOk())
+                .andReturn();
+        commentFileTextRepository.findCommentFileTextsByCommentId(commentId).forEach(c -> assertEquals(newColor, c.getColor()));
+    }
+
+    @Test
+    void shouldNotUpdateAllCommentFileImgsColorsByCommentIdWithInvalidColor() throws Exception {
+        var newColor = "a".repeat(11);
+        var commentFileText = commentFileTextRepository.findAll().get(0);
+        var commentId = commentFileText.getComment().getId();
+        var colorDto = CommentFileTextUpdateColorDto.builder().color(newColor).build();
+        var body = objectMapper.writeValueAsString(colorDto);
+        mockMvc.perform(put("/api/comment_file_text/colorByCommentId/" + commentId)
+                        .content(body)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().is4xxClientError())
+                .andReturn();
+        commentFileTextRepository.findCommentFileTextsByCommentId(commentId).forEach(c -> assertNotEquals(newColor, c.getColor()));
     }
 
     @Test

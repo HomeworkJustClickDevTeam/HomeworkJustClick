@@ -9,6 +9,8 @@ import java.util.List;
 public interface CommentFileImgRepository extends JpaRepository<CommentFileImg, Integer> {
     Page<CommentFileImg> getCommentFileImgsByCommentId(Integer commentId, Pageable pageable);
 
+    List<CommentFileImg> getCommentFileImgsByCommentId(Integer commentId);
+
     Page<CommentFileImg> getCommentFileImgsByFileId(Integer fileId, Pageable pageable);
 
     List<CommentFileImg> getCommentFileImgsByCommentIdAndFileId(Integer commentId, Integer fileId);
