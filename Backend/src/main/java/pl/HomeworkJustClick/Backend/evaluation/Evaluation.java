@@ -72,7 +72,8 @@ public class Evaluation {
     )
     @JsonIgnore
     private List<CommentEvaluation> commentEvaluations = new ArrayList<>();
-    public Evaluation(Double result, User user, Solution solution, Group group, OffsetDateTime creationDatetime, OffsetDateTime lastModifiedDatetime, Double grade) {
+
+    public Evaluation(Double result, User user, Solution solution, Group group, OffsetDateTime creationDatetime, OffsetDateTime lastModifiedDatetime, Double grade, Boolean reported) {
         this.result = result;
         this.user = user;
         this.solution = solution;
@@ -80,5 +81,6 @@ public class Evaluation {
         this.creationDatetime = creationDatetime;
         this.lastModifiedDatetime = lastModifiedDatetime;
         this.grade = grade;
+        this.reported = reported;
     }
 }
