@@ -62,8 +62,9 @@ public class CommentFileTextService {
     }
 
     public List<CommentFileTextResponseDto> updateAllCommentFileTextColorByCommentId(Integer commentId, CommentFileTextUpdateColorDto colorDto) {
+        var comment = commentService.findById(commentId);
         var response = new ArrayList<CommentFileTextResponseDto>();
-        var commentFileTexts = repository.findCommentFileTextsByCommentId(commentId);
+        var commentFileTexts = repository.findCommentFileTextsByCommentId(comment.getId());
         commentFileTexts.forEach(commentFileText -> {
             commentFileText.setColor(colorDto.getColor());
             response.add(mapper.map(repository.save(commentFileText)));
