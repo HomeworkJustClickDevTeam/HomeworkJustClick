@@ -9,6 +9,9 @@ import pl.HomeworkJustClick.Backend.comment.CommentUtilsService;
 import pl.HomeworkJustClick.Backend.file.FileService;
 import pl.HomeworkJustClick.Backend.infrastructure.exception.EntityNotFoundException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class CommentFileTextService {
@@ -56,6 +59,16 @@ public class CommentFileTextService {
         setRelationFields(commentFileText, commentFileTextDto);
         checkColor(commentFileText);
         return mapper.map(repository.save(commentFileText));
+    }
+
+    public List<CommentFileTextResponseDto> updateAllCommentFileTextColorByCommentId(Integer commentId, CommentFileTextUpdateColorDto colorDto) {
+        var response = new ArrayList<CommentFileTextResponseDto>();
+        var commentFileTexts = repository.findCommentFileTextsByCommentId(commentId);
+        commentFileTexts.forEach(commentFileText -> {
+            commentFileText.setColor(colorDto.getColor());
+            response.add(mapper.map(repository.save(commentFileText)));
+        });
+        return response;
     }
 
     public void deleteCommentFileText(Integer id) {

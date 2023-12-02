@@ -15,6 +15,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/comment_file_img")
 @RequiredArgsConstructor
@@ -213,6 +215,33 @@ public class CommentFileImgController {
     )
     public CommentFileImgResponseDto updateCommentFileImg(@PathVariable Integer id, @RequestBody @Valid CommentFileImgDto commentFileImgDto) {
         return service.updateCommentFileImg(id, commentFileImgDto);
+    }
+
+    @PutMapping("colorByCommentId/{commentId}")
+    @Operation(
+            summary = "Updates all commentFileImgs colors by commentId",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = CommentFileImgResponseDto.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Invalid dto",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Jwt token invalid",
+                            content = @Content
+                    )
+            }
+    )
+    public List<CommentFileImgResponseDto> changeAllCommentFileImgColorByCommentId(@PathVariable Integer commentId, @RequestBody @Valid CommentFileImgUpdateColorDto color) {
+        return service.changeAllCommentFileImgColorByCommentId(commentId, color);
     }
 
     @DeleteMapping("{id}")

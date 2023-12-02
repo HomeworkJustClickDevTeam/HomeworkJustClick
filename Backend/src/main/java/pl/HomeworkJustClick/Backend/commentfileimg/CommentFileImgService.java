@@ -9,6 +9,9 @@ import pl.HomeworkJustClick.Backend.comment.CommentUtilsService;
 import pl.HomeworkJustClick.Backend.file.FileService;
 import pl.HomeworkJustClick.Backend.infrastructure.exception.EntityNotFoundException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class CommentFileImgService {
@@ -56,6 +59,16 @@ public class CommentFileImgService {
         setRelationFields(commentFileImg, commentFileImgDto);
         checkColor(commentFileImg);
         return mapper.map(repository.save(commentFileImg));
+    }
+
+    public List<CommentFileImgResponseDto> changeAllCommentFileImgColorByCommentId(Integer commentId, CommentFileImgUpdateColorDto newColor) {
+        var commentFileImgs = repository.getCommentFileImgsByCommentId(commentId);
+        var response = new ArrayList<CommentFileImgResponseDto>();
+        commentFileImgs.forEach(commentFileImg -> {
+            commentFileImg.setColor(newColor.getColor());
+            response.add(mapper.map(repository.save(commentFileImg)));
+        });
+        return response;
     }
 
     public void deleteCommentFileImg(Integer id) {

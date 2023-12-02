@@ -15,6 +15,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/comment_file_text")
 @RequiredArgsConstructor
@@ -213,6 +215,33 @@ public class CommentFileTextController {
     )
     public CommentFileTextResponseDto updateCommentFileText(@PathVariable Integer id, @RequestBody @Valid CommentFileTextDto commentFileTextDto) {
         return service.updateCommentFileText(id, commentFileTextDto);
+    }
+
+    @PutMapping("colorByCommentId/{commentId}")
+    @Operation(
+            summary = "Updates all commentFileTexts colors by commentId",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = CommentFileTextResponseDto.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Invalid dto",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Jwt token invalid",
+                            content = @Content
+                    )
+            }
+    )
+    public List<CommentFileTextResponseDto> updateAllCommentFileTextColorByCommentId(@PathVariable Integer commentId, @RequestBody @Valid CommentFileTextUpdateColorDto colorDto) {
+        return service.updateAllCommentFileTextColorByCommentId(commentId, colorDto);
     }
 
     @DeleteMapping("{id}")

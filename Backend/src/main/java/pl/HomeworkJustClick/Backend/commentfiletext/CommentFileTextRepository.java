@@ -9,6 +9,8 @@ import java.util.List;
 public interface CommentFileTextRepository extends JpaRepository<CommentFileText, Integer> {
     Page<CommentFileText> findCommentFileTextsByCommentId(Integer commentId, Pageable pageable);
 
+    List<CommentFileText> findCommentFileTextsByCommentId(Integer commentId);
+
     Page<CommentFileText> findCommentFileTextsByFileId(Integer fileId, Pageable pageable);
 
     List<CommentFileText> findCommentFileTextsByCommentIdAndFileId(Integer commentId, Integer fileId);
