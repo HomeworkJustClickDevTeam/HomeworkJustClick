@@ -62,7 +62,8 @@ public class CommentFileImgService {
     }
 
     public List<CommentFileImgResponseDto> changeAllCommentFileImgColorByCommentId(Integer commentId, CommentFileImgUpdateColorDto newColor) {
-        var commentFileImgs = repository.getCommentFileImgsByCommentId(commentId);
+        var comment = commentService.findById(commentId);
+        var commentFileImgs = repository.getCommentFileImgsByCommentId(comment.getId());
         var response = new ArrayList<CommentFileImgResponseDto>();
         commentFileImgs.forEach(commentFileImg -> {
             commentFileImg.setColor(newColor.getColor());
