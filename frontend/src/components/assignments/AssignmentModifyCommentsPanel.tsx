@@ -13,6 +13,9 @@ import {
 import {CommentCreateInterface} from "../../types/CommentCreateInterface";
 import {parseISO} from "date-fns";
 import {AssignmentCommentPanelForm} from "./AssignmentCommentPanelForm";
+import {AxiosError} from "axios";
+import {Simulate} from "react-dom/test-utils";
+import error = Simulate.error;
 
 
 interface AssignmentModifyCommentsPanelPropsInterface{
@@ -43,8 +46,9 @@ export const AssignmentModifyCommentsPanel = ({assignmentId, setComments, commen
           else return comment
         })
         setComments(newComments)
-        await changeCommentImageColorByCommentIdPostgresService(changedComment.id.toString(), changedComment.color)
-        await changeCommentTextColorByCommentIdPostgresService(changedComment.id.toString(), changedComment.color)
+        void await changeCommentImageColorByCommentIdPostgresService(changedComment.id.toString(), changedComment.color)
+        void await changeCommentTextColorByCommentIdPostgresService(changedComment.id.toString(), changedComment.color)
+
       }
     }catch (error){
       console.log(error)

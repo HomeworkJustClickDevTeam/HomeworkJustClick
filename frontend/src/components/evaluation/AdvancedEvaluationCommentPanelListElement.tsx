@@ -46,6 +46,7 @@ export const AdvancedEvaluationCommentPanelListElement = ({ highlightedCommentId
     }
   }, [commentState])
   const handleColorPickerBehaviour = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault()
     setCommentState((prevState) => ({ ...prevState, color: event.target.value }))
   }
   const handleCommentChoice = (event: React.MouseEvent<HTMLDivElement>) => {
