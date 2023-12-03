@@ -1,5 +1,13 @@
 import { CommentInterface } from "../../types/CommentInterface"
-import React, { MutableRefObject, useEffect, useImperativeHandle, useLayoutEffect, useRef, useState } from "react"
+import React, {
+  MutableRefObject,
+  SetStateAction,
+  useEffect,
+  useImperativeHandle,
+  useLayoutEffect,
+  useRef,
+  useState
+} from "react"
 import { AdvancedEvaluationImageCommentInterface } from "../../types/AdvancedEvaluationImageCommentInterface"
 import { useWindowSize } from "../customHooks/useWindowSize"
 import { CanvasActionsType } from "../../types/CanvasActionsType"
@@ -19,6 +27,8 @@ import {
   handleMouseMove,
   handleMouseUp
 } from "../../utils/AdvancedEvaluationImageCanvasLogic";
+import {useAppSelector} from "../../types/HooksRedux";
+import {selectUserState} from "../../redux/userStateSlice";
 
 interface AdvancedEvaluationImageAreaInterface{
   width:number|undefined,
@@ -31,6 +41,7 @@ interface AdvancedEvaluationImageAreaInterface{
   image: HTMLImageElement,
   chosenComment?: CommentInterface|undefined,
   fileId:number
+  checked: boolean
   commentsImage: AdvancedEvaluationImageCommentInterface[]
   setCommentsImage: React.Dispatch<React.SetStateAction<AdvancedEvaluationImageCommentInterface[]>>
   handleCommentHighlighting:(commentId: number) => void
@@ -38,6 +49,7 @@ interface AdvancedEvaluationImageAreaInterface{
 }
 export const AdvancedEvaluationImageArea = ({setSortButtonState,
                                               commentsImage,
+                                              checked,
                                               setCommentsImage,
                                               setUpdatedComment,
                                               setDeletedCommentId,
@@ -60,6 +72,8 @@ export const AdvancedEvaluationImageArea = ({setSortButtonState,
   const [commentAction, setCommentAction] = useState<CommentActionsType>("noHover")
   const [mouseDownTimestamp, setMouseDownTimestamp] = useState<number|null>(null)
   const drawnComments = useRef<AdvancedEvaluationImageCommentInterface[]>(commentsImage)
+  const userState = useAppSelector(selectUserState)
+
 
 
   useLayoutEffect(() => {
@@ -69,7 +83,8 @@ export const AdvancedEvaluationImageArea = ({setSortButtonState,
       drawnComments,
       width,
       height,
-      canvasRef)
+      canvasRef,
+      setCommentsImage)
   }, [])
   useEffect(() => {
     drawnComments.current = commentsImage
@@ -78,7 +93,8 @@ export const AdvancedEvaluationImageArea = ({setSortButtonState,
       drawnComments,
       width,
       height,
-      canvasRef)
+      canvasRef,
+      setCommentsImage)
   }, [width, height, commentsImage])
   useUpdateEffect(()=> {
     const updateImageList = async (updatedComment:CommentInterface) => {
@@ -107,7 +123,8 @@ export const AdvancedEvaluationImageArea = ({setSortButtonState,
           drawnComments,
           width,
           height,
-          canvasRef)
+          canvasRef,
+          setCommentsImage)
       }
     }
     if(updatedComment!== undefined)
@@ -127,7 +144,8 @@ export const AdvancedEvaluationImageArea = ({setSortButtonState,
               drawnComments,
               width,
               height,
-              canvasRef)
+              canvasRef,
+              setCommentsImage)
           }
         }catch (error){
           console.log(error)
@@ -145,17 +163,108 @@ export const AdvancedEvaluationImageArea = ({setSortButtonState,
       drawnComments,
       width,
       height,
-      canvasRef)
+      canvasRef,
+      setCommentsImage)
   }, [mouseStartY, mouseStartX])
   return (
     <canvas onContextMenu={(event) => {
               event.preventDefault();
               event.stopPropagation()
-              setCanvasAction("commentDeleting")}}
-            onMouseOut={(event)=>handleMouseUp(event, canvasAction, setCanvasAction, setCommentIndex, setMouseStartY, setMouseStartX, setMouseDownTimestamp, setCommentPreviousState, commentIndex, mouseDownTimestamp, handleCommentHighlighting, drawnComments, commentPreviousState, image, canvasContext, canvasRef, setRefreshRightPanelUserComments, setSortButtonState, setCommentAction, commentAction, width, height)}
+              !checked && setCanvasAction("commentDeleting")}}
+            onMouseOut={async (event)=>{
+              !checked &&
+              await handleMouseUp(event,
+                canvasAction,
+                setCanvasAction,
+                setCommentIndex,
+                setMouseStartY,
+                setMouseStartX,
+                setMouseDownTimestamp,
+                setCommentPreviousState,
+                commentIndex,
+                mouseDownTimestamp,
+                handleCommentHighlighting,
+                drawnComments,
+                commentPreviousState,
+                image,
+                canvasContext,
+                canvasRef,
+                setRefreshRightPanelUserComments,
+                setSortButtonState,
+                setCommentAction,
+                commentAction,
+                width,
+                height,
+                setCommentsImage,
+        userState!.role === "Student")
+            }}
             id={"commentsLayer"}
-            onMouseUp={(event)=>handleMouseUp(event, canvasAction, setCanvasAction, setCommentIndex, setMouseStartY, setMouseStartX, setMouseDownTimestamp, setCommentPreviousState, commentIndex, mouseDownTimestamp, handleCommentHighlighting, drawnComments, commentPreviousState, image, canvasContext, canvasRef, setRefreshRightPanelUserComments, setSortButtonState, setCommentAction, commentAction, width, height)}
-            onMouseMove={(event)=>handleMouseMove(event, canvasAction, setCommentIndex, canvasContext, canvasRef, drawnComments, setCommentAction, commentAction, commentIndex, mouseStartX, width, height, mouseStartY, setMouseStartY, setMouseStartX, image)}
-            onMouseDown={(event)=>handleMouseDown(event, setCanvasAction, setCommentIndex, commentAction, canvasContext, setMouseStartY, setMouseStartX, setCommentPreviousState, drawnComments, commentIndex, setMouseDownTimestamp, mouseStartX, mouseStartY, canvasRef, fileId, chosenComment)}
+            onMouseUp={async (event)=>{
+              !checked &&
+              await handleMouseUp(event,
+                canvasAction,
+                setCanvasAction,
+                setCommentIndex,
+                setMouseStartY,
+                setMouseStartX,
+                setMouseDownTimestamp,
+                setCommentPreviousState,
+                commentIndex,
+                mouseDownTimestamp,
+                handleCommentHighlighting,
+                drawnComments,
+                commentPreviousState,
+                image,
+                canvasContext,
+                canvasRef,
+                setRefreshRightPanelUserComments,
+                setSortButtonState,
+                setCommentAction,
+                commentAction,
+                width,
+                height,
+                setCommentsImage,
+        userState!.role === "Student")
+            }}
+            onMouseMove={(event)=>{
+              !checked &&
+              handleMouseMove(event,
+                canvasAction,
+                setCommentIndex,
+                canvasContext,
+                canvasRef,
+                drawnComments,
+                setCommentAction,
+                commentAction,
+                commentIndex,
+                mouseStartX,
+                width,
+                height,
+                mouseStartY,
+                setMouseStartY,
+                setMouseStartX,
+                image,
+                setCommentsImage,
+                userState!.role === "Student")
+            }}
+            onMouseDown={(event)=>{
+              !checked &&
+              handleMouseDown(event,
+                setCanvasAction,
+                setCommentIndex,
+                commentAction,
+                canvasContext,
+                setMouseStartY,
+                setMouseStartX,
+                setCommentPreviousState,
+                drawnComments,
+                commentIndex,
+                setMouseDownTimestamp,
+                canvasRef,
+                fileId,
+                commentsImage,
+                chosenComment,
+                userState!.role === "Student")
+            }}
             ref={canvasRef}/>)
 }

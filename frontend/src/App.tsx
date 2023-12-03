@@ -28,7 +28,6 @@ import { AssignmentsType } from "./types/AssignmentsType"
 import { ExtendedSolutionType } from "./types/ExtendedSolutionType"
 
 function App() {
-
   return (
     <Routes>
       <Route element={<LoggedOutUserRoute/>}>
@@ -95,7 +94,7 @@ function App() {
           />
 
         </Route>
-        <Route path="/advancedEvaluation" element={<AdvancedEvaluationPage/>}/>
+        <Route path="/group/:idGroup/advancedEvaluation" element={<AdvancedEvaluationPage/>}/>
       </Route>
       <Route path="*" element={<NotFoundPage/>}/>
     </Routes>

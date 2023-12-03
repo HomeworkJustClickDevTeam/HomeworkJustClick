@@ -11,13 +11,13 @@ import { AssignmentPropsInterface } from "../../types/AssignmentPropsInterface"
 import { SolutionCreateInterface } from "../../types/SolutionCreateInterface"
 import { selectUserState } from "../../redux/userStateSlice"
 import { useAppDispatch, useAppSelector } from "../../types/HooksRedux"
-import { useGetFiles } from "../customHooks/useGetFiles"
+import { useGetFile } from "../customHooks/useGetFile"
 function SolutionAddPage({ assignment }: AssignmentPropsInterface) {
   const navigate = useNavigate()
   useAppDispatch()
   const userState = useAppSelector(selectUserState)
   const [file, setFile] = useState<File>()
-  const files = useGetFiles(assignment.id, "assignment")
+  const fileFromDb = useGetFile(assignment.id, "assignment")
   const [solution, setSolution] = useState<SolutionCreateInterface>({
     creationDatetime: new Date().toISOString(),
     comment: "",
@@ -91,7 +91,7 @@ function SolutionAddPage({ assignment }: AssignmentPropsInterface) {
         <span className="font-semibold">Data ukończenia: </span>
         {format(assignment.completionDatetime, "dd.MM.yyyy, HH:mm")}
       </div>
-      {files.length > 0 && <AssignmentFile assignmentId={assignment.id} />}
+      {fileFromDb !== undefined && <AssignmentFile assignmentId={assignment.id} />}
       <label>
         Moje rozwiązania:
         <input name="file" type="file" onChange={(e) => handleChangeFile(e)} />

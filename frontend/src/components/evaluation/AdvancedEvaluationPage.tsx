@@ -1,6 +1,6 @@
 import React, { MutableRefObject, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react"
 import { Link, useLocation, useNavigate } from "react-router-dom"
-import { useGetFiles } from "../customHooks/useGetFiles"
+import { useGetFile } from "../customHooks/useGetFile"
 import { AdvancedEvaluationCommentPanel } from "./AdvancedEvaluationCommentPanel"
 import { AdvancedEvaluationTextArea } from "./AdvancedEvaluationTextArea"
 import { CommentInterface } from "../../types/CommentInterface"
@@ -32,26 +32,29 @@ import { selectGroup } from "../../redux/groupSlice"
 import { SortButtonStateType } from "../../types/SortButtonStateType"
 import { useUpdateEffect } from "usehooks-ts"
 import {useGetCommentsByUserAndAssignment} from "../customHooks/useGetCommentsByUserAndAssignment";
+import {SolutionExtendedInterface} from "../../types/SolutionExtendedInterface";
+import {AdvancedEvaluationCheckedCommentPanel} from "./AdvancedEvaluationCheckedCommentPanel";
 
 
 
 export default function AdvancedEvaluationPage() {
   let {state} = useLocation()
-  const group = useAppSelector(selectGroup)
+  const [solutionExtended, setSolutionExtended] = useState<SolutionExtendedInterface>(state.solutionExtended)
   const userState = useAppSelector(selectUserState)
   const [refreshRightPanelUserComments, setRefreshRightPanelUserComments] = useState(false)
   const [sortButton, setSortButton] = useState<SortButtonStateType>("lastUsedDate,desc")
-  const file = useGetFiles(state.solutionExtended.id, 'solution')[0]
+  const file = useGetFile(solutionExtended.id, 'solution')
   const [fileText, setFileText] = useState("")
   const [image, setImage] = useState<HTMLImageElement|undefined>(undefined)
   const [chosenComment, setChosenComment] = useState<CommentInterface|undefined>(undefined)
-  const {comments: rightPanelUserComments,setComments: setRightPanelUserComments} = useGetCommentsByUserAndAssignment(userState!.id, state.solutionExtended.assignment.id, `size=10&sort=${sortButton}`, refreshRightPanelUserComments)
+  const {comments: rightPanelUserComments,setComments: setRightPanelUserComments} = useGetCommentsByUserAndAssignment(userState!.id, solutionExtended.assignment.id, `size=10&sort=${sortButton}`, refreshRightPanelUserComments)
   const {availableHeight, availableWidth} = useGetSolutionAreaSizeAvailable()
   const {commentsImage, setCommentsImage} = useGetCommentsImageByFile(file?.postgresId, "")
   const {comments: commentsText, setComments: setCommentsText} = useGetCommentsTextByFile(file?.postgresId, "")
   const [highlightedCommentId, setHighlightedCommentId] = useState<number|undefined>(undefined)
   const [deletedRightPanelCommentId, setDeletedRightPanelCommentId] = useState<number|undefined>(undefined)
   const [updatedComment, setUpdatedComment] = useState<CommentInterface|undefined>(undefined)
+
 
   const handleCommentHighlighting = (commentId:number) => {
       setHighlightedCommentId(commentId)
@@ -68,8 +71,12 @@ export default function AdvancedEvaluationPage() {
       imageTemp.onload = () => {
         setImage(imageTemp)
       }
+      return () => URL.revokeObjectURL(imageTemp.src)
     }
   }, [file])
+  useEffect(() => {
+    setSolutionExtended(state.solutionExtended)
+  }, [state]);
   useUpdateEffect(()=>{
     if(highlightedCommentId !== undefined){
       const timeoutId = setTimeout(()=> setHighlightedCommentId(undefined), 2000)
@@ -79,25 +86,32 @@ export default function AdvancedEvaluationPage() {
   if(file)
     return (
       <div id={"advancedEvaluationPageDiv"}>
-        {group?.id !== undefined && userState?.id !== undefined &&
+        {solutionExtended.assignment.groupId !== undefined && userState?.id !== undefined &&
         <div style={{width: "100%"}} id={"backButtonDiv"}>
-          <Link to = {`/group/${state.solutionExtended.assignment.groupId}/solution/${state.solutionExtended.user.id}/${state.solutionExtended.assignment.id}`} state={{solution: state.solutionExtended}}>Wróć</Link>
+          <Link to = {`/group/${solutionExtended.assignment.groupId}/solution/${solutionExtended.user.id}/${solutionExtended.assignment.id}`} state={{solution: solutionExtended}}>Wróć</Link>
         </div>}
-        <AdvancedEvaluationCommentPanel
-          setDeletedRightPanelCommentId={setDeletedRightPanelCommentId}
-          setUpdatedComment={setUpdatedComment}
-          assignmentId={state.solutionExtended.assignment.id}
-          setSortButtonState={setSortButton}
-          sortButtonState={sortButton}
-          chosenCommentId={chosenComment?.id}
-          height={availableHeight}
-          highlightedCommentId={highlightedCommentId}
-          setChosenComment={setChosenComment}
-          setRightPanelUserComments={setRightPanelUserComments}
-          rightPanelUserComments={rightPanelUserComments}></AdvancedEvaluationCommentPanel>
+        {userState!.role === "Teacher" ?
+          <AdvancedEvaluationCommentPanel
+            setDeletedRightPanelCommentId={setDeletedRightPanelCommentId}
+            setUpdatedComment={setUpdatedComment}
+            assignmentId={solutionExtended.assignment.id}
+            setSortButtonState={setSortButton}
+            sortButtonState={sortButton}
+            chosenCommentId={chosenComment?.id}
+            height={availableHeight}
+            highlightedCommentId={highlightedCommentId}
+            setChosenComment={setChosenComment}
+            setRightPanelUserComments={setRightPanelUserComments}
+            rightPanelUserComments={rightPanelUserComments}></AdvancedEvaluationCommentPanel>
+        :
+          <AdvancedEvaluationCheckedCommentPanel
+            rightPanelUserComments={rightPanelUserComments}
+            highlightedCommentId={highlightedCommentId}
+            height={availableHeight}></AdvancedEvaluationCheckedCommentPanel>}
         {(file.format === "txt"
             ? (<AdvancedEvaluationTextArea
               setUpdatedComment={setUpdatedComment}
+              checked={userState!.role === "Student"}
               setCommentsText={setCommentsText}
               setDeletedCommentId={setDeletedRightPanelCommentId}
               setRefreshRightPanelUserComments={setRefreshRightPanelUserComments}
@@ -115,6 +129,7 @@ export default function AdvancedEvaluationPage() {
               fileText={fileText}/>)
             : (image !== undefined ?
               <AdvancedEvaluationImageArea
+                checked={userState!.role === "Student"}
                 commentsImage={commentsImage}
                 setCommentsImage={setCommentsImage}
                 deletedCommentId={deletedRightPanelCommentId}

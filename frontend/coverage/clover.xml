@@ -1318,7 +1318,7 @@
         <line num="51" count="0" type="stmt"/>
         <line num="52" count="0" type="stmt"/>
       </file>
-      <file name="useGetFiles.ts" path="C:\Users\sjule\Desktop\studia\6Sem\projektInzynierski\HomeworkJustClick\frontend\src\components\customHooks\useGetFiles.ts">
+      <file name="useGetFile.ts" path="C:\Users\sjule\Desktop\studia\6Sem\projektInzynierski\HomeworkJustClick\frontend\src\components\customHooks\useGetFile.ts">
         <metrics statements="74" coveredstatements="12" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>

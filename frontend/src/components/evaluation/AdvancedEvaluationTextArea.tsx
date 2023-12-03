@@ -22,6 +22,7 @@ interface AdvancedEvaluationTextAreaPropsInterface{
   comments: AdvancedEvaluationTextCommentInterface[]
   fileText: string,
   fileId: number,
+  checked: boolean,
   commentsText: AdvancedEvaluationTextCommentInterface[],
   setCommentsText: React.Dispatch<React.SetStateAction<AdvancedEvaluationTextCommentInterface[]>>,
   setSortButton: React.Dispatch<React.SetStateAction<SortButtonStateType>>,
@@ -34,6 +35,7 @@ interface AdvancedEvaluationTextAreaPropsInterface{
 export const AdvancedEvaluationTextArea = ({fileText,
                                              setUpdatedComment,
                                              updatedComment,
+                                             checked,
                                              setDeletedCommentId,
                                              deletedCommentId,
                                              setSortButton,
@@ -84,7 +86,7 @@ export const AdvancedEvaluationTextArea = ({fileText,
   const handleMouseUp = async (event:React.MouseEvent, index:number) => {
     event.preventDefault()
     event.stopPropagation()
-    if(event.button === 2) await handleDrawnCommentDeletion(index)
+    if(!checked && event.button === 2) await handleDrawnCommentDeletion(index)
     else if(event.button === 0) {
       if(mouseDownTimestamp !== undefined && (event.timeStamp - mouseDownTimestamp) < 150){
         const clickedComment = calculateCommentBasedOnLetterIndex(index)
@@ -94,7 +96,7 @@ export const AdvancedEvaluationTextArea = ({fileText,
         }
       }
       else{
-        await handleNewCommentTextCreation()
+        !checked && await handleNewCommentTextCreation()
       }
     }
   }
@@ -266,11 +268,14 @@ export const AdvancedEvaluationTextArea = ({fileText,
 
   return <div style={{width: width !== undefined ? width : "100%", height: height !== undefined ? height:"100%"}}>{fileText.split('').map((letter:string, index)=>{
     return <span
-      onMouseDown={(event) => {event.button===0 && setMouseDownTimestamp(event.timeStamp)}}
+      onMouseDown={(event) => {
+        event.button===0 && setMouseDownTimestamp(event.timeStamp)}}
       id={index.toString()}
       style={{backgroundColor: letterColor[index] ? letterColor[index]+"80" : 'white', userSelect:chosenComment === undefined ? "none" : "auto"}}
       key={index}
-      onContextMenu={(event) => {event.preventDefault();event.stopPropagation()}}
+      onContextMenu={(event) => {
+        event.preventDefault();
+        event.stopPropagation()}}
       onMouseUp={(event) =>handleMouseUp(event, index)}>
       {letter}</span>
   })}</div>

@@ -4,6 +4,8 @@ import { Rating } from "../evaluation/Rating"
 import { SolutionFile } from "./SolutionFile"
 import { SolutionExtendedInterface } from "../../types/SolutionExtendedInterface"
 import { useGetEvaluationBySolution } from "../customHooks/useGetEvaluationBySolution"
+import {useAppSelector} from "../../types/HooksRedux";
+import {selectGroup} from "../../redux/groupSlice";
 
 function SolutionPage() {
   let { state } = useLocation()
@@ -13,6 +15,7 @@ function SolutionPage() {
   const [points, setPoints] = useState<number>()
   const [showRating, setShowRating] = useState<boolean>(false)
   const evaluation = useGetEvaluationBySolution(solutionExtended.id)
+  const group = useAppSelector(selectGroup)
 
   const handleDisableRating = () => {
     setShowRating(false)
@@ -65,9 +68,9 @@ function SolutionPage() {
       </div>
       {evaluation === undefined ? (
         <div>
-          {solutionExtended.id && (
+          {solutionExtended.id && group && (
             <Link
-              to={`/advancedEvaluation`}
+              to={`/group/${group.id}/advancedEvaluation`}
               state={{ solutionExtended: solutionExtended }}
               className="absolute underline font-semibold bottom-0 left-0 mb-2 ml-4"
             >

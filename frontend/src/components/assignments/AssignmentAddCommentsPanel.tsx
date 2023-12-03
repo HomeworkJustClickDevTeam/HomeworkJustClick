@@ -1,5 +1,5 @@
 import React, {SetStateAction, useState} from "react";
-import {AssignmentCommentPanelForm} from "./AssignmentCommentPanelForm";
+import {AssignmentCommentsPanelForm} from "./AssignmentCommentsPanelForm";
 import {AdvancedEvaluationCommentPanelListElement} from "../evaluation/AdvancedEvaluationCommentPanelListElement";
 import {CommentInterface} from "../../types/CommentInterface";
 import {CommentCreateInterface} from "../../types/CommentCreateInterface";
@@ -44,7 +44,7 @@ export const AssignmentAddCommentsPanel = ({comments, setComments}:AssignmentAdd
     }
   }
   return(<div>
-    <AssignmentCommentPanelForm handleNewCommentCreation={handleNewCommentCreation} newCommentDescription={newCommentDescription} setNewCommentDescription={setNewCommentDescription}/>
+    <AssignmentCommentsPanelForm handleNewCommentCreation={handleNewCommentCreation} newCommentDescription={newCommentDescription} setNewCommentDescription={setNewCommentDescription}/>
     {comments.map((comment, index)=>{
       return <AdvancedEvaluationCommentPanelListElement key={index} commentAlreadyInDb={false} commentId={index} updateCommentsList={updateCommentsList} comment={comment} handleCommentRemoval={handleCommentRemoval}></AdvancedEvaluationCommentPanelListElement>
     })}

@@ -5,7 +5,7 @@ interface AssignmentCommentPanelFormPropsInterface{
   newCommentDescription: string,
   setNewCommentDescription: Dispatch<SetStateAction<string>>
 }
-export const AssignmentCommentPanelForm = ({handleNewCommentCreation, setNewCommentDescription, newCommentDescription}:AssignmentCommentPanelFormPropsInterface) =>{
+export const AssignmentCommentsPanelForm = ({handleNewCommentCreation, setNewCommentDescription, newCommentDescription}:AssignmentCommentPanelFormPropsInterface) =>{
   return(
     <>
       Dodaj komentarz:<br/>

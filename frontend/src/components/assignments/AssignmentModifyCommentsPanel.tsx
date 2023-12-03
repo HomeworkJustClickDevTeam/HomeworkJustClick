@@ -7,15 +7,16 @@ import {CommentInterface} from "../../types/CommentInterface";
 import {
   changeCommentImageColorByCommentIdPostgresService,
   changeCommentPostgresService, changeCommentTextColorByCommentIdPostgresService,
-  createCommentWithUserPostgresService,
-  deleteCommentPostgresService
+  createCommentWithUserPostgresService, deleteCommentImageByCommentFilePostgresService,
+  deleteCommentPostgresService, deleteCommentTextByCommentFilePostgresService
 } from "../../services/postgresDatabaseServices";
 import {CommentCreateInterface} from "../../types/CommentCreateInterface";
 import {parseISO} from "date-fns";
-import {AssignmentCommentPanelForm} from "./AssignmentCommentPanelForm";
+import {AssignmentCommentsPanelForm} from "./AssignmentCommentsPanelForm";
 import {AxiosError} from "axios";
 import {Simulate} from "react-dom/test-utils";
 import error = Simulate.error;
+import {useGetFile} from "../customHooks/useGetFile";
 
 
 interface AssignmentModifyCommentsPanelPropsInterface{
@@ -32,6 +33,7 @@ export const AssignmentModifyCommentsPanel = ({assignmentId, setComments, commen
       if (response.data !== null && response.data !== undefined && response.status === 200) {
         const userNewComments = comments.filter(oldComment => oldComment.id !== deletedCommentId)
         setComments(userNewComments)
+
       }
     } catch (error) {
       console.log(error)
@@ -85,7 +87,7 @@ export const AssignmentModifyCommentsPanel = ({assignmentId, setComments, commen
   }
 
   return(<>
-      <AssignmentCommentPanelForm handleNewCommentCreation={handleNewCommentCreation} newCommentDescription={newCommentDescription} setNewCommentDescription={setNewCommentDescription}/>
+      <AssignmentCommentsPanelForm handleNewCommentCreation={handleNewCommentCreation} newCommentDescription={newCommentDescription} setNewCommentDescription={setNewCommentDescription}/>
       {comments.map((comment)=>{
         return <AdvancedEvaluationCommentPanelListElement key={comment.id} commentId={comment.id} updateCommentsList={updateCommentsList} comment={comment} handleCommentRemoval={handleCommentRemoval}></AdvancedEvaluationCommentPanelListElement>
       })}

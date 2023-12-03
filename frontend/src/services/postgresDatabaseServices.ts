@@ -1,6 +1,6 @@
 import { AssignmentInterface } from "../types/AssignmentInterface"
 import { AssignmentToSendInterface } from "../types/AssignmentToSendInterface"
-import { EvaluationInterface } from "../types/EvaluationInterface"
+import { EvaluationModel } from "../types/Evaluation.model"
 import { GroupCreateInterface } from "../types/GroupCreateInterface"
 import { SolutionCreateInterface } from "../types/SolutionCreateInterface"
 import { UserLoginInterface } from "../types/UserLoginInterface"
@@ -17,6 +17,7 @@ import axios from "axios";
 import { Table } from "../types/Table.model"
 import {EvaluationPanelAssignmentCreateInterface} from "../types/EvaluationPanelAssignmentCreateInterface";
 import {EvaluationPanelAssignmentInterface} from "../types/EvaluationPanelAssignmentInterface";
+import {EvaluationCreateModel} from "../types/EvaluationCreate.model";
 
 
 const postgresqlDatabaseJSON = axios.create({
@@ -176,7 +177,7 @@ export const createFileWithSolutionPostgresService = async (
 export const createEvaluationWithUserAndSolution = async (
   userId: string,
   solutionId: string,
-  evaluation: EvaluationInterface
+  evaluation: EvaluationCreateModel
 ) => {
   return await postgresqlDatabaseJSON.post(
     `/evaluation/withUserAndSolution/${userId}/${solutionId}`,
