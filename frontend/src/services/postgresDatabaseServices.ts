@@ -58,15 +58,14 @@ postgresqlDatabaseJSON.interceptors.response.use(
   },
   async (error) => {
     const originalRequest = error.config
-    if (
-      error !== undefined &&
-      error.response?.status === 403 &&
-      !originalRequest._retry
-    ) {
+    if ((error.response?.status === 403 || error.code === "ERR_NETWORK") && !originalRequest._retry) {
       originalRequest._retry = true
       localStorage.removeItem("user")
       window.dispatchEvent(new Event("storage"))
       window.location.reload()
+      return new Promise((resolve) => {
+        resolve(postgresqlDatabaseJSON(originalRequest))
+      })
     }
     return Promise.reject(error)
   }
@@ -93,11 +92,14 @@ postgresqlDatabaseTextPlain.interceptors.response.use(
   },
   async (error) => {
     const originalRequest = error.config
-    if (error.response.status === 403 && !originalRequest._retry) {
+    if ((error.response?.status === 403 || error.code === "ERR_NETWORK") && !originalRequest._retry) {
       originalRequest._retry = true
       localStorage.removeItem("user")
       window.dispatchEvent(new Event("storage"))
       window.location.reload()
+      return new Promise((resolve) => {
+        resolve(postgresqlDatabaseTextPlain(originalRequest))
+      })
     }
     return Promise.reject(error)
   }
@@ -364,6 +366,14 @@ export const getCommentsByUserPostgresService = async (
   return await postgresqlDatabaseJSON.get(`/comment/byUser/${userId}?${params}`)
 }
 
+export const getCommentsByUserAndAssignmentPostgresService = async (
+  userId: string,
+  assignmentId: string,
+  params: string
+) => {
+  return await postgresqlDatabaseJSON.get(`/comment/byUserAndAssignment/${userId}/${assignmentId}?${params}`)
+}
+
 export const getCommentsTextByFilePostgresService = async (
   fileId: string,
   params: string
@@ -420,6 +430,20 @@ export const changeUserColorPostgresService = async (
   color: number
 ) => {
   return await postgresqlDatabaseJSON.put(`/user/color/${userId}`, color)
+}
+
+export const changeCommentImageColorByCommentIdPostgresService = async (
+  commentId: string,
+  color: string
+) => {
+  return await postgresqlDatabaseJSON.put(`/comment_file_img/colorByCommentId/${commentId}`, {color: color})
+}
+
+export const changeCommentTextColorByCommentIdPostgresService = async (
+  commentId: string,
+  color: string
+) => {
+  return await postgresqlDatabaseJSON.put(`/comment_file_text/colorByCommentId/${commentId}`, {color: color})
 }
 
 export const changeUserIndexPostgresService = async (
@@ -541,6 +565,11 @@ export const updateEvaluationPanelService = async (evaluationPanel: Table) => {
     `/evaluation_panel/${evaluationPanel.id}`,
     evaluationPanel
   )
+}
+
+export const createListOfCommentsPostgresService = async (commentsList:CommentCreateInterface[])=> {
+  return await postgresqlDatabaseJSON
+    .post('/comment/list', commentsList)
 }
 
 export const addEvaluationPanelToAssignmentPostgresService = async (evaluationPanelAssignment: EvaluationPanelAssignmentCreateInterface)=> {

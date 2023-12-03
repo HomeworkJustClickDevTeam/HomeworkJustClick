@@ -2,10 +2,13 @@ import { useEffect, useState } from "react"
 import { CommentInterface } from "../../types/CommentInterface"
 import { useAppDispatch } from "../../types/HooksRedux"
 import { setIsLoading } from "../../redux/isLoadingSlice"
-import { getCommentsByUserPostgresService } from "../../services/postgresDatabaseServices"
+import {
+  getCommentsByUserAndAssignmentPostgresService,
+  getCommentsByUserPostgresService
+} from "../../services/postgresDatabaseServices"
 import { parseISO } from "date-fns"
 
-export const useGetCommentsByUser = (userId: number|undefined|null, assignmentId: number|undefined|null, params:string, manualRefresher?:any) => {
+export const useGetCommentsByUserAndAssignment = (userId: number|undefined|null, assignmentId: number|undefined|null, params:string, manualRefresher?:any) => {
   const [comments, setComments] = useState<CommentInterface[]>([])
   const dispatch = useAppDispatch()
 
@@ -13,12 +16,12 @@ export const useGetCommentsByUser = (userId: number|undefined|null, assignmentId
     let mounted = true
     if(userId !== undefined && userId !== null && assignmentId !== undefined && assignmentId !== null) {
       dispatch(setIsLoading(true))
-      getCommentsByUserPostgresService(userId.toString(), "")
+      getCommentsByUserAndAssignmentPostgresService(userId.toString(),assignmentId.toString(), "")
         .then(async (response) => {
           if (response !== null && response !== undefined){
             const commentsFromServer:CommentInterface[] = []
             for(let pageNumber = 0; pageNumber < response.data.totalPages; pageNumber++) {
-              const responsePaged = await getCommentsByUserPostgresService(userId.toString(), `?page=${pageNumber}&${params}`)
+              const responsePaged = await getCommentsByUserAndAssignmentPostgresService(userId.toString(),assignmentId.toString(), `?page=${pageNumber}&${params}`)
               if (responsePaged?.status === 200) {
                 for (const commentFromServer of responsePaged.data.content) {
                   commentsFromServer.push({
@@ -38,7 +41,7 @@ export const useGetCommentsByUser = (userId: number|undefined|null, assignmentId
           }
         })
         .catch((error)=> {
-          if(error !== null && error !== undefined && error.response.status === 404) {
+          if(error !== null && error !== undefined && error.response?.status === 404) {
             if(mounted){setComments([])}
           }
           else {console.log(error)}
@@ -47,7 +50,7 @@ export const useGetCommentsByUser = (userId: number|undefined|null, assignmentId
     }
     return () => {mounted = false}
 
-  }, [userId, params, manualRefresher, assignmentId])
+  }, [userId, assignmentId, params, manualRefresher])
 
   return {comments, setComments}
 }

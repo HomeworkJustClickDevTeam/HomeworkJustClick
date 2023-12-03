@@ -9,7 +9,7 @@ import {
 import { AdvancedEvaluationImageCommentInterface } from "../../types/AdvancedEvaluationImageCommentInterface"
 
 export const useGetCommentsImageByFile = (fileId: number|undefined|null, params:string) => {
-  const [comments, setComments] = useState<AdvancedEvaluationImageCommentInterface[]|null>(null)
+  const [comments, setComments] = useState<AdvancedEvaluationImageCommentInterface[]>([])
   const dispatch = useAppDispatch()
 
   useEffect(() => {
@@ -55,5 +55,5 @@ export const useGetCommentsImageByFile = (fileId: number|undefined|null, params:
     return () => {mounted = false}
 
   }, [fileId])
-  return comments
+  return {commentsImage: comments, setCommentsImage: setComments}
 }

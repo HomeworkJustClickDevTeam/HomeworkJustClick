@@ -8,34 +8,42 @@ import { cursors } from "../../assets/cursors"
 import { he } from "date-fns/locale"
 import {
   changeCommentImagePostgresService,
-  createCommentImageWithFilePostgresService,
+  createCommentImageWithFilePostgresService, deleteCommentImageByCommentFilePostgresService,
   deleteCommentImagePostgresService
 } from "../../services/postgresDatabaseServices"
 import { SortButtonStateType } from "../../types/SortButtonStateType"
+import {useUpdateEffect} from "usehooks-ts";
 
 interface AdvancedEvaluationImageAreaInterface{
   width:number|undefined,
   height:number|undefined,
-  setSortButtonState:(buttonState:React.SetStateAction<SortButtonStateType>) => void,
+  deletedCommentId: number|undefined,
+  setDeletedCommentId:React.Dispatch<React.SetStateAction<number|undefined>>,
+  updatedComment:CommentInterface|undefined,
+  setUpdatedComment:React.Dispatch<React.SetStateAction<CommentInterface|undefined>>,
+  setSortButtonState:React.Dispatch<React.SetStateAction<SortButtonStateType>>,
   image: HTMLImageElement,
-  editable:boolean,
   chosenComment?: CommentInterface|undefined,
-  drawnComments:MutableRefObject<AdvancedEvaluationImageCommentInterface[]>
   fileId:number
+  commentsImage: AdvancedEvaluationImageCommentInterface[]
+  setCommentsImage: React.Dispatch<React.SetStateAction<AdvancedEvaluationImageCommentInterface[]>>
   handleCommentHighlighting:(commentId: number) => void
-  setRefreshRightPanelUserComments: (refresher:React.SetStateAction<boolean>) => void
+  setRefreshRightPanelUserComments: React.Dispatch<React.SetStateAction<boolean>>
 }
-export const AdvancedEvaluationImageArea = React.forwardRef<any, AdvancedEvaluationImageAreaInterface>(({
-                                                                                                          setSortButtonState,
-                                                                                                          setRefreshRightPanelUserComments,
-                                                                                                          handleCommentHighlighting,
-                                                                                                          fileId,
-                                                                                                          editable,
-                                                                                                          image,
-                                                                                                          chosenComment,
-                                                                                                          drawnComments,
-                                                                                                          width,
-                                                                                                          height}, advancedEvaluationImageAreaRef) =>{
+export const AdvancedEvaluationImageArea = ({setSortButtonState,
+                                              commentsImage,
+                                              setCommentsImage,
+                                              setUpdatedComment,
+                                              setDeletedCommentId,
+                                              deletedCommentId,
+                                              updatedComment,
+                                              setRefreshRightPanelUserComments,
+                                              handleCommentHighlighting,
+                                              fileId,
+                                              image,
+                                              chosenComment,
+                                              width,
+                                              height}: AdvancedEvaluationImageAreaInterface) =>{
   const canvasRef = useRef<HTMLCanvasElement|null>(null)
   const canvasContext = useRef(canvasRef.current?.getContext("2d"))
   const mouseStartX = useRef<null|number>(null)
@@ -45,12 +53,10 @@ export const AdvancedEvaluationImageArea = React.forwardRef<any, AdvancedEvaluat
   const canvasAction = useRef<CanvasActionsType>("hovering")
   const commentAction = useRef<CommentActionsType>("noHover")
   const mouseDownTimestamp = useRef<number|null>(null)
+  const drawnComments = useRef<AdvancedEvaluationImageCommentInterface[]>(commentsImage)
 
-  useImperativeHandle(advancedEvaluationImageAreaRef, () => ({
-    drawOnCanvas() {
-      drawOnCanvas()
-    }
-  }))//use with caution
+
+
   const handleCommentResizing = (mouseX:number, mouseY:number) => {
     if(commentIndex.current !== null && canvasContext.current !== null && canvasContext.current !== undefined && mouseStartX.current!==null && mouseStartY.current!==null) {
       const {moveDiffX, moveDiffY} = updateMouseCoords(mouseX, mouseY)
@@ -176,7 +182,7 @@ export const AdvancedEvaluationImageArea = React.forwardRef<any, AdvancedEvaluat
       drawOnCanvas()
     }
   }
-  const handleCommentDeletion = async (draw:boolean) => {
+  const handleDrawnCommentDeletion = async (draw:boolean) => {
     if (canvasContext.current !== null && canvasContext.current !== undefined) {
       if(commentIndex.current !== null){
         const response = await deleteCommentImagePostgresService(drawnComments.current[commentIndex.current].id.toString())
@@ -403,7 +409,6 @@ export const AdvancedEvaluationImageArea = React.forwardRef<any, AdvancedEvaluat
   const handleMouseMove = (event:React.MouseEvent) => {
     event.preventDefault()
     event.stopPropagation()
-    if(!editable) return
     if(canvasAction.current === "commentDeleting") {
       const {mouseXOnCanvas, mouseYOnCanvas} = calculateCoordsOnCanvas(event.clientX, event.clientY)
       commentIndex.current = setPartOfCommentHovered(mouseXOnCanvas, mouseYOnCanvas)
@@ -427,8 +432,7 @@ export const AdvancedEvaluationImageArea = React.forwardRef<any, AdvancedEvaluat
   const handleMouseDown = (event:React.MouseEvent) => {
     event.preventDefault()
     event.stopPropagation()
-    if(!editable) return
-    else if(event.button === 2){//check if rmb used
+    if(event.button === 2){//check if rmb used
       canvasAction.current = "commentDeleting"
     }
     else if(commentAction.current==="centerHovered"){
@@ -466,7 +470,6 @@ export const AdvancedEvaluationImageArea = React.forwardRef<any, AdvancedEvaluat
   const handleMouseUp = async (event: React.MouseEvent) => {
     event.preventDefault()
     event.stopPropagation()
-    if (!editable) return
     let draw = false
     if (canvasAction.current === "commentHolding" && commentIndex.current !== null) {
       if(mouseDownTimestamp?.current !== null && (event.timeStamp - mouseDownTimestamp.current) < 150){
@@ -501,7 +504,7 @@ export const AdvancedEvaluationImageArea = React.forwardRef<any, AdvancedEvaluat
       if(!draw)
         draw = await updateCommentImageInDb(draw)
     } else if (canvasAction.current === "commentDeleting" && event.button === 2) {
-      draw = await handleCommentDeletion(draw)
+      draw = await handleDrawnCommentDeletion(draw)
     }
     if (draw) {
       drawOnCanvas()
@@ -546,8 +549,58 @@ export const AdvancedEvaluationImageArea = React.forwardRef<any, AdvancedEvaluat
     drawOnCanvas()
   }, [])
   useEffect(() => {
+    drawnComments.current = commentsImage
     drawOnCanvas()
-  }, [width, height])
+  }, [width, height, commentsImage])
+  useUpdateEffect(()=> {
+    const updateImageList = async (updatedComment:CommentInterface) => {
+      if (drawnComments?.current !== undefined && drawnComments?.current !== null) {
+        const drawnCommentsTemp = await Promise.all(drawnComments.current.map(async (commentImage) => {
+          if(commentImage.commentId === updatedComment.id){
+            try {
+              const updatedCommentExtended = { ...commentImage, color: updatedComment.color } as AdvancedEvaluationImageCommentInterface
+              const response = await changeCommentImagePostgresService(updatedCommentExtended)
+              if (response !== undefined && response !== null && response.data !== undefined && response.status === 200) {
+                return updatedCommentExtended
+              }
+              else {
+                return commentImage
+              }
+            }catch (error){
+              console.log(error)
+              return commentImage
+            }
+          }
+          return commentImage
+        }))
+        drawnComments.current = drawnCommentsTemp
+        drawOnCanvas()
+      }
+    }
+    if(updatedComment!== undefined)
+      updateImageList(updatedComment)
+        .then(()=> setUpdatedComment(undefined))
+  }, [updatedComment])
+  useUpdateEffect(()=> {
+    const handleCommentImageDeletion = async (deletedCommentId:number) => {
+      if(drawnComments?.current !== undefined && drawnComments?.current !== null) {
+        try {
+          const response = await deleteCommentImageByCommentFilePostgresService(deletedCommentId.toString(), fileId.toString())
+          if(response?.status === 200){
+            const drawnCommentsTemp = drawnComments.current.filter( commentImage => !(commentImage.commentId === deletedCommentId))
+            drawnComments.current = drawnCommentsTemp
+            drawOnCanvas()
+          }
+        }catch (error){
+          console.log(error)
+        }
+      }
+    }
+
+    if(deletedCommentId!== undefined)
+      handleCommentImageDeletion(deletedCommentId)
+        .then(()=> setDeletedCommentId(undefined))
+  }, [deletedCommentId])
 
 
 
@@ -563,4 +616,4 @@ export const AdvancedEvaluationImageArea = React.forwardRef<any, AdvancedEvaluat
             onMouseDown={handleMouseDown}
             ref={canvasRef}
     />)
-})
+}

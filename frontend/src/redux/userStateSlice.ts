@@ -3,6 +3,7 @@ import { UserInterface } from "../types/UserInterface"
 import { RootState } from "./store"
 import { getUser, loginUser } from "../services/otherServices"
 import { setIsLoadingInReducer } from "./isLoadingSlice"
+import axios from "axios";
 
 type UserStateSliceType = UserInterface | null
 export const userStateSlice = createSlice({

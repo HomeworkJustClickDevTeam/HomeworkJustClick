@@ -6,17 +6,24 @@ import { MdDelete } from "react-icons/md"
 import { useTimeout, useUpdateEffect } from "usehooks-ts"
 import { delay } from "@reduxjs/toolkit/dist/utils"
 
-
-export const AdvancedEvaluationCommentPanelListElement = (
-  { highlightedCommentId, chosenCommentId, updateCommentsLists, setChosenComment, comment, handleCommentRemoval }: {
-    setChosenComment: (comment: CommentInterface | undefined) => void,
-    updateCommentsLists: (comment: CommentInterface) => void,
-    comment: CommentInterface,
-    fileType: "txt" | "img",
-    handleCommentRemoval: (commentToBeRemoved: CommentInterface) => void
-    chosenCommentId: number | undefined
-    highlightedCommentId: number | undefined
-  }) => {
+interface AdvancedEvaluationCommentPanelListElementPropsInterface{
+  setChosenComment?: React.Dispatch<React.SetStateAction<CommentInterface|undefined>>,
+  updateCommentsList: (comment: CommentInterface) => void,
+  comment: CommentInterface,
+  handleCommentRemoval: (commentToBeRemovedId: number) => void
+  chosenCommentId?: number | undefined
+  highlightedCommentId?: number | undefined
+  commentId: number
+  commentAlreadyInDb?: boolean
+}
+export const AdvancedEvaluationCommentPanelListElement = ({ highlightedCommentId,
+                                                            commentAlreadyInDb,
+                                                            chosenCommentId,
+                                                            updateCommentsList,
+                                                            setChosenComment,
+                                                            comment,
+                                                            commentId,
+                                                            handleCommentRemoval }:AdvancedEvaluationCommentPanelListElementPropsInterface ) => {
   const [commentState, setCommentState] = useState<CommentInterface>(comment)
   const [commentReadonly, setCommentReadonly] = useState(true)
 
@@ -24,14 +31,22 @@ export const AdvancedEvaluationCommentPanelListElement = (
     const updateComment = () => {
       changeCommentPostgresService(commentState)
         .then(() => {
-          updateCommentsLists(commentState)
+          updateCommentsList(commentState)
         })
         .catch((error) => console.log(error))
     }
-    const timeoutId = setTimeout(()=> updateComment(), 250)
-    return () => clearTimeout(timeoutId)
+    if (commentAlreadyInDb === false)
+    {
+      updateCommentsList(commentState)
+      return
+    }
+    else{
+      const timeoutId = setTimeout(()=> updateComment(), 250)
+      return () => clearTimeout(timeoutId)
+    }
   }, [commentState])
   const handleColorPickerBehaviour = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault()
     setCommentState((prevState) => ({ ...prevState, color: event.target.value }))
   }
   const handleCommentChoice = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -40,9 +55,11 @@ export const AdvancedEvaluationCommentPanelListElement = (
     event.stopPropagation()
     event.preventDefault()
     if (chosenCommentId === comment.id) {
-      setChosenComment(undefined)
+        if(setChosenComment !== undefined)
+            setChosenComment(undefined)
     } else {
-      setChosenComment(commentState)
+      if(setChosenComment !== undefined)
+        setChosenComment(commentState)
     }
   }
 
@@ -60,9 +77,7 @@ export const AdvancedEvaluationCommentPanelListElement = (
           <div className="mb-3 flex">
           <textarea className="italic underline underline-offset-2 max-h-[75px] min-h-[36px] pr-2"
                     disabled={commentReadonly}
-                    onChange={(event) => {
-                      !commentReadonly &&
-                      setCommentState((prevState) => ({ ...prevState, description: event.target.value }))
+                    onChange={(event) => {setCommentState((prevState) => ({ ...prevState, description: event.target.value }))
                     }
                     }
                     id={"commentDescription"}
@@ -70,10 +85,10 @@ export const AdvancedEvaluationCommentPanelListElement = (
                     readOnly={commentReadonly}
                     defaultValue={commentState.description}></textarea>
             <button className=" text-main_blue underline text-sm flex" id={"editButton"}
+                    type={"button"}
                     onClick={() => setCommentReadonly(prevState => !prevState)}>
               <FaEdit className="mt-1 mr-[2px] ml-2" />
               {commentReadonly ? "Edytuj" : "Ok"}
-
             </button>
           </div>
             <p className="mb-2 h-full">Kolor:</p>
@@ -85,13 +100,11 @@ export const AdvancedEvaluationCommentPanelListElement = (
         </div>
         <br />
         <button className="text-berry_red ml-auto text-center flex mr-4"
-                onClick={() => handleCommentRemoval(commentState)} type={"button"}>
+                onClick={() => handleCommentRemoval(commentId)} type={"button"}>
           <MdDelete className="text-berry_red mt-[4.5px]" />Usuń
         </button>
-
       </div>
       <hr className="mt-2" />
     </div>
-
   )
 }
