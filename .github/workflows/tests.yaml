@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: Run tests
 
 on:
   push:
@@ -18,7 +18,7 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
-      - run: mvn verify 
+      - run: mvn --batch-mode --update-snapshots verify 
         working-directory: ./Backend
       - run: mkdir staging && cp target/*.jar staging
         working-directory: ./Backend
@@ -31,4 +31,6 @@ jobs:
         with:
           node-version: '20'
       - run: npm ci
+        working-directory: ./frontend
+      - run: npm test
         working-directory: ./frontend
