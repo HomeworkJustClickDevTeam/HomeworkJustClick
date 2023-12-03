@@ -40,6 +40,10 @@ public class SolutionService {
                 .orElseThrow(() -> new EntityNotFoundException("Solution with id = " + id + " not found"));
     }
 
+    public Group getGroupBySolutionId(Integer solutionId) {
+        return findById(solutionId).getGroup();
+    }
+
     public List<SolutionResponseDto> getAll() {
         List<Solution> solutionList = solutionRepository.findAll();
         List<SolutionResponseDto> responseList = new ArrayList<>();
