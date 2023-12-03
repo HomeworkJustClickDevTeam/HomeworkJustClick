@@ -1,4 +1,6 @@
 delete
+from _notification;
+delete
 from _evaluation_panel_assignment;
 delete
 from _evaluation_panel_button;

@@ -9,6 +9,7 @@ import pl.HomeworkJustClick.Backend.group.GroupResponseDto;
 import pl.HomeworkJustClick.Backend.group.GroupService;
 import pl.HomeworkJustClick.Backend.infrastructure.exception.EntityNotFoundException;
 import pl.HomeworkJustClick.Backend.infrastructure.exception.InvalidArgumentException;
+import pl.HomeworkJustClick.Backend.notification.NotificationCreateService;
 import pl.HomeworkJustClick.Backend.solution.Solution;
 import pl.HomeworkJustClick.Backend.solution.SolutionRepository;
 import pl.HomeworkJustClick.Backend.solution.SolutionResponseDto;
@@ -34,6 +35,7 @@ public class EvaluationService {
     private final SolutionService solutionService;
     private final GroupService groupService;
     private final EvaluationMapper mapper;
+    private final NotificationCreateService notificationCreateService;
 
     public Evaluation findById(Integer id) {
         return repository.findById(id)
@@ -65,8 +67,10 @@ public class EvaluationService {
         if (repository.existsBySolutionId(evaluationDto.getSolutionId())) {
             throw new InvalidArgumentException("Evaluation with solutionId = " + evaluationDto.getSolutionId() + " already exists");
         }
+        validateDto(evaluationDto);
         var evaluation = mapper.map(evaluationDto);
         setRelationFields(evaluation, evaluationDto);
+        notificationCreateService.createEvaluationNotification(evaluation.getSolution().getUser(), evaluation.getSolution().getAssignment(), evaluation.getGroup());
         return mapper.mapExtended(repository.save(evaluation));
     }
 
@@ -254,6 +258,7 @@ public class EvaluationService {
     public EvaluationResponseExtendedDto reportEvaluation(Integer id) {
         var evaluation = findById(id);
         evaluation.setReported(true);
+        notificationCreateService.createEvaluationReportNotification(evaluation.getUser(), evaluation.getSolution().getAssignment(), evaluation.getSolution().getUser());
         return mapper.mapExtended(repository.save(evaluation));
     }
 
@@ -324,10 +329,20 @@ public class EvaluationService {
         if (repository.existsBySolutionId(evaluationDto.getSolutionId()) && !repository.existsBySolutionIdAndId(evaluationDto.getSolutionId(), id)) {
             throw new InvalidArgumentException("Evaluation with solutionId = " + evaluationDto.getSolutionId() + " already exists");
         }
+        validateDto(evaluationDto);
         var evaluation = findById(id);
         mapper.map(evaluation, evaluationDto);
         setRelationFields(evaluation, evaluationDto);
         return mapper.mapExtended(repository.save(evaluation));
+    }
+
+    private void validateDto(EvaluationDto evaluationDto) {
+        if (solutionService.getGroupBySolutionId(evaluationDto.getSolutionId()).getId() != evaluationDto.getGroupId()) {
+            throw new InvalidArgumentException("Invalid groupId");
+        }
+        if (userService.getTeachersByGroup(evaluationDto.getGroupId()).stream().filter(user -> user.getId() == evaluationDto.getUserId()).count() == 0) {
+            throw new InvalidArgumentException("Given user is not teacher in group");
+        }
     }
 
     private void setRelationFields(Evaluation evaluation, EvaluationDto evaluationDto) {

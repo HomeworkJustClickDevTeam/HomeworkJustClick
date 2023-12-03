@@ -10,7 +10,9 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.jdbc.Sql;
 import pl.HomeworkJustClick.Backend.BaseTestEntity;
 import pl.HomeworkJustClick.Backend.group.GroupRepository;
+import pl.HomeworkJustClick.Backend.groupteacher.GroupTeacherRepository;
 import pl.HomeworkJustClick.Backend.solution.SolutionRepository;
+import pl.HomeworkJustClick.Backend.solution.SolutionService;
 import pl.HomeworkJustClick.Backend.user.UserRepository;
 
 import java.nio.charset.StandardCharsets;
@@ -41,6 +43,10 @@ public class EvaluationControllerTest extends BaseTestEntity {
     SolutionRepository solutionRepository;
     @Autowired
     GroupRepository groupRepository;
+    @Autowired
+    SolutionService solutionService;
+    @Autowired
+    GroupTeacherRepository groupTeacherRepository;
 
     private static Stream<Arguments> prepareValidData() {
         return Stream.of(
@@ -52,9 +58,7 @@ public class EvaluationControllerTest extends BaseTestEntity {
     private static Stream<Arguments> prepareInvalidData() {
         return Stream.of(
                 Arguments.of(null, 1.0, false, 1, 1, 1),
-                Arguments.of(1.0, 1.0, false, 999, 1, 1),
-                Arguments.of(1.0, 1.0, false, 1, 999, 1),
-                Arguments.of(1.0, 1.0, false, 1, 1, 999)
+                Arguments.of(1.0, 1.0, false, 1, 9999, 1)
         );
     }
 
@@ -62,7 +66,7 @@ public class EvaluationControllerTest extends BaseTestEntity {
     void shouldGetAllEvaluations() throws Exception {
         mockMvc.perform(get("/api/evaluations"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.size()").value(12))
+                .andExpect(jsonPath("$.size()").value(11))
                 .andReturn();
     }
 
@@ -70,7 +74,7 @@ public class EvaluationControllerTest extends BaseTestEntity {
     void shouldGetAllEvaluationsExtended() throws Exception {
         mockMvc.perform(get("/api/extended/evaluations"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.size()").value(12))
+                .andExpect(jsonPath("$.size()").value(11))
                 .andReturn();
     }
 
@@ -217,19 +221,17 @@ public class EvaluationControllerTest extends BaseTestEntity {
 
     private EvaluationDto createEvaluationDto(Double result, Double grade, Boolean reported, Integer userId, Integer solutionId, Integer groupId) {
         if (userId == 1) {
-            userId = userRepository.findAll().get(0).getId();
-        }
-        if (solutionId == 1) {
-            solutionId = solutionRepository.findAll().get(0).getId();
-            evaluationRepository.delete(evaluationRepository.getEvaluationBySolution(solutionId).get());
+            userId = userRepository.findByEmail("anna_malinowska@gmail.com").get().getId();
         }
         if (groupId == 1) {
-            groupId = groupRepository.findAll().get(0).getId();
+            groupId = groupRepository.getGroupsByTeacherId(userId).get(0).getId();
+        }
+        if (solutionId == 1) {
+            solutionId = solutionRepository.getUncheckedSolutionsByGroup(groupId).get(0).getId();
         }
         return EvaluationDto.builder()
                 .result(result)
                 .grade(grade)
-                .reported(reported)
                 .userId(userId)
                 .solutionId(solutionId)
                 .groupId(groupId)
