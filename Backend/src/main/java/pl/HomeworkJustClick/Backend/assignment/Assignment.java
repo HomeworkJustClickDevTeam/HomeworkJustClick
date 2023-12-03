@@ -11,6 +11,7 @@ import pl.HomeworkJustClick.Backend.comment.Comment;
 import pl.HomeworkJustClick.Backend.evaluationpanelassignment.EvaluationPanelAssignment;
 import pl.HomeworkJustClick.Backend.file.File;
 import pl.HomeworkJustClick.Backend.group.Group;
+import pl.HomeworkJustClick.Backend.notification.Notification;
 import pl.HomeworkJustClick.Backend.solution.Solution;
 import pl.HomeworkJustClick.Backend.user.User;
 
@@ -99,6 +100,13 @@ public class Assignment {
     )
     @JsonIgnore
     private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(
+            mappedBy = "assignment",
+            fetch = FetchType.LAZY
+    )
+    @JsonIgnore
+    private List<Notification> notifications = new ArrayList<>();
 
     public Assignment(User user, Group group, String taskDescription, OffsetDateTime creationDatetime, OffsetDateTime lastModifiedDatetime, OffsetDateTime completionDatetime, String title, Boolean visible, int max_points, int auto_penalty) {
         this.user = user;

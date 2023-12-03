@@ -9,6 +9,7 @@ import pl.HomeworkJustClick.Backend.group.GroupResponseDto;
 import pl.HomeworkJustClick.Backend.group.GroupService;
 import pl.HomeworkJustClick.Backend.infrastructure.exception.EntityNotFoundException;
 import pl.HomeworkJustClick.Backend.infrastructure.exception.InvalidArgumentException;
+import pl.HomeworkJustClick.Backend.notification.NotificationCreateService;
 import pl.HomeworkJustClick.Backend.solution.Solution;
 import pl.HomeworkJustClick.Backend.solution.SolutionRepository;
 import pl.HomeworkJustClick.Backend.solution.SolutionResponseDto;
@@ -34,6 +35,7 @@ public class EvaluationService {
     private final SolutionService solutionService;
     private final GroupService groupService;
     private final EvaluationMapper mapper;
+    private final NotificationCreateService notificationCreateService;
 
     public Evaluation findById(Integer id) {
         return repository.findById(id)
@@ -67,6 +69,7 @@ public class EvaluationService {
         }
         var evaluation = mapper.map(evaluationDto);
         setRelationFields(evaluation, evaluationDto);
+        notificationCreateService.createEvaluationNotification(evaluation.getSolution().getUser(), evaluation.getSolution().getAssignment(), evaluation.getGroup());
         return mapper.mapExtended(repository.save(evaluation));
     }
 
@@ -254,6 +257,7 @@ public class EvaluationService {
     public EvaluationResponseExtendedDto reportEvaluation(Integer id) {
         var evaluation = findById(id);
         evaluation.setReported(true);
+        notificationCreateService.createEvaluationReportNotification(evaluation.getUser(), evaluation.getSolution().getAssignment(), evaluation.getSolution().getUser());
         return mapper.mapExtended(repository.save(evaluation));
     }
 
