@@ -18,5 +18,4 @@ public class EvaluationDto {
     @NotNull
     private Integer groupId;
     private Double grade;
-    private Boolean reported;
 }

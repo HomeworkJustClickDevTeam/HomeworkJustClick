@@ -35,13 +35,13 @@ public class NotificationService {
 
     @Transactional
     public List<NotificationResponseDto> updateReadInNotifications(List<Integer> notificationsIds) {
-        var response = new ArrayList<NotificationResponseDto>();
+        var notifications = new ArrayList<Notification>();
         notificationsIds.forEach(id -> {
             var notification = findById(id);
             notification.setRead(true);
-            response.add(mapper.map(repository.save(notification)));
+            notifications.add(notification);
         });
-        return response;
+        return repository.saveAll(notifications).stream().map(mapper::map).toList();
     }
 
     @Transactional

@@ -67,6 +67,7 @@ public class EvaluationService {
         if (repository.existsBySolutionId(evaluationDto.getSolutionId())) {
             throw new InvalidArgumentException("Evaluation with solutionId = " + evaluationDto.getSolutionId() + " already exists");
         }
+        validateDto(evaluationDto);
         var evaluation = mapper.map(evaluationDto);
         setRelationFields(evaluation, evaluationDto);
         notificationCreateService.createEvaluationNotification(evaluation.getSolution().getUser(), evaluation.getSolution().getAssignment(), evaluation.getGroup());
@@ -328,10 +329,20 @@ public class EvaluationService {
         if (repository.existsBySolutionId(evaluationDto.getSolutionId()) && !repository.existsBySolutionIdAndId(evaluationDto.getSolutionId(), id)) {
             throw new InvalidArgumentException("Evaluation with solutionId = " + evaluationDto.getSolutionId() + " already exists");
         }
+        validateDto(evaluationDto);
         var evaluation = findById(id);
         mapper.map(evaluation, evaluationDto);
         setRelationFields(evaluation, evaluationDto);
         return mapper.mapExtended(repository.save(evaluation));
+    }
+
+    private void validateDto(EvaluationDto evaluationDto) {
+        if (solutionService.getGroupBySolutionId(evaluationDto.getSolutionId()).getId() != evaluationDto.getGroupId()) {
+            throw new InvalidArgumentException("Invalid groupId");
+        }
+        if (userService.getTeachersByGroup(evaluationDto.getGroupId()).stream().filter(user -> user.getId() == evaluationDto.getUserId()).count() == 0) {
+            throw new InvalidArgumentException("Given user is not teacher in group");
+        }
     }
 
     private void setRelationFields(Evaluation evaluation, EvaluationDto evaluationDto) {
