@@ -13,6 +13,7 @@ services:
     build:
       context: ./Backend(MongoDB)
       dockerfile: .Dockerfile
+    image: pioszymk/homework-just-click:backend_mongo
     ports:
         - "8082:8082"
     depends_on:
@@ -22,21 +23,23 @@ services:
   backend:
     container_name: homework_just_click_backend_api
     build:
-      context: /Backend
+      context: ./Backend
       dockerfile: .Dockerfile
+    image: pioszymk/homework-just-click:backend
     ports:
       - "8080:8080"
     depends_on:
       - homework_just_click
       - backend_mongo
 
-  fronted:
+  frontend:
     container_name: homework_just_click_frontend
     build:
       context: ./frontend
       dockerfile: .Dockerfile
+    image: pioszymk/homework-just-click:frontend
     ports:
-      - "3000:3000"
+      - "80:80"
     depends_on:
       - backend
       - backend_mongo
