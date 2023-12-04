@@ -1,5 +1,5 @@
 import { CommentInterface } from "../../types/CommentInterface"
-import React, { MutableRefObject, useState } from "react"
+import React, {MutableRefObject, SetStateAction, useCallback, useLayoutEffect, useRef, useState} from "react"
 import { AdvancedEvaluationCommentPanelListElement } from "./AdvancedEvaluationCommentPanelListElement"
 import { useAppSelector } from "../../types/HooksRedux"
 import { selectUserState } from "../../redux/userStateSlice"
@@ -22,11 +22,11 @@ interface AdvancedEvaluationCommentPanelPropsInterface{
   setSortButtonState:(buttonState:SortButtonStateType) => void,
   highlightedCommentId:number|undefined,
   sortButtonState: SortButtonStateType,
-  height:number|undefined,
   rightPanelUserComments: CommentInterface[],
   setRightPanelUserComments: (comments:CommentInterface[]) => void,
   assignmentId: number,
   setDeletedRightPanelCommentId: React.Dispatch<React.SetStateAction<number|undefined>>
+  onCommentPanelListRefChange: (node:HTMLDivElement)=>void
 }
 export const AdvancedEvaluationCommentPanel = (
   {assignmentId,
@@ -38,8 +38,8 @@ export const AdvancedEvaluationCommentPanel = (
     chosenCommentId,
     rightPanelUserComments,
     setRightPanelUserComments,
-    height,
-    setChosenComment}:AdvancedEvaluationCommentPanelPropsInterface) => {
+    setChosenComment,
+    onCommentPanelListRefChange}:AdvancedEvaluationCommentPanelPropsInterface) => {
 
   const [newCommentDescription, setNewCommentDescription] = useState<string>("")
   const userState = useAppSelector(selectUserState)
@@ -99,8 +99,10 @@ export const AdvancedEvaluationCommentPanel = (
       }
     }
   }
+
+
   return (
-    <div id={"commentPanelDiv"} style={{float:"right", height:height !== undefined ? height.toString() : "100%"}}>
+    <div  style={{float:"right", height:"100vh"}}>
       <p className='text-center underline underline-offset-4 mb-4'>KOMENTARZE</p>
 
       <form onSubmit={(event) => handleNewCommentCreation(event)}>
@@ -111,7 +113,7 @@ export const AdvancedEvaluationCommentPanel = (
       </div>
     </form>
     <section >
-      <p className='pt-1 pb-1 font-semibold'>Wybierz komentarz: </p>
+      <p className='pt-1 pb-1 font-semibold' ref={onCommentPanelListRefChange}>Wybierz komentarz: </p>
         <section className='border border-border_gray rounded-md w-fit px-2 flex'>
           <label htmlFor={"sortDropdown"} className='flex'> <FaSort className='mt-1'/>Sortuj:</label>
           <select defaultValue={sortButtonState} onChange={(event) => setSortButtonState(event.target.value as SortButtonStateType)} name={"sortDropdown"} id={"sortDropdown"}>

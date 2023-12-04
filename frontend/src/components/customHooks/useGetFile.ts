@@ -9,8 +9,8 @@ import { FileInterface } from "../../types/FileInterface"
 import { setIsLoading } from "../../redux/isLoadingSlice"
 import { useAppDispatch } from "../../types/HooksRedux"
 
-export const useGetFiles = (filterId: number|undefined|null, filter:"assignment" | "solution") => {
-  const [files, setFiles] = useState<FileInterface[]>([])
+export const useGetFile = (filterId: number|undefined|null, filter:"assignment" | "solution") => {
+  const [file, setFile] = useState<FileInterface|undefined>(undefined)
   const dispatch = useAppDispatch()
 
   useEffect(() => {
@@ -43,19 +43,20 @@ export const useGetFiles = (filterId: number|undefined|null, filter:"assignment"
                     data: blob,
                     name: mongoResponse.data.name,
                     format: fileData.format,
-                    mongoId: file.mongo_id,
-                    postgresId: file.id
+                    mongo_id: file.mongo_id,
+                    id: file.id
                   })
                 }
               }
             }
             if(mounted){
-              setFiles(updatedFiles)
+              if(updatedFiles.length > 0) setFile(updatedFiles[0])
+              else setFile(undefined)
             }
           }
         }catch (error:any) {
           if(error !== null && error!== undefined && error.response !== null && error.response!==undefined && error.response.status === 404){
-            if(mounted){setFiles([])}
+            if(mounted){setFile(undefined)}
           }
           else{
             console.log("Error retrieving database file:", error)
@@ -70,5 +71,5 @@ export const useGetFiles = (filterId: number|undefined|null, filter:"assignment"
     dispatch(setIsLoading(false))
     return () => {mounted = false}
   }, [filterId, filter])
-  return files
+  return file
 }

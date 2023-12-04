@@ -1,4 +1,4 @@
-import { AdvancedEvaluationTextCommentInterface } from "../../types/AdvancedEvaluationTextCommentInterface"
+import { AdvancedEvaluationTextCommentModel } from "../../types/AdvancedEvaluationTextComment.model"
 import { CommentInterface } from "../../types/CommentInterface"
 import React, { useEffect, useState } from "react"
 import { AdvancedEvaluationTextCommentCreateInterface } from "../../types/AdvancedEvaluationTextCommentCreateInterface"
@@ -14,22 +14,22 @@ import {useUpdateEffect} from "usehooks-ts";
 
 
 interface AdvancedEvaluationTextAreaPropsInterface{
-  chosenComment:CommentInterface|undefined,
-  setComments:(comments:AdvancedEvaluationTextCommentInterface[]) => void,
+  chosenComment?:CommentInterface|undefined,
+  setComments?:(comments:AdvancedEvaluationTextCommentModel[]) => void,
   handleCommentHighlighting:(commentId: number) => void,
   width:number|undefined,
   height:number|undefined,
-  comments: AdvancedEvaluationTextCommentInterface[]
+  comments: AdvancedEvaluationTextCommentModel[]
   fileText: string,
-  fileId: number,
-  commentsText: AdvancedEvaluationTextCommentInterface[],
-  setCommentsText: React.Dispatch<React.SetStateAction<AdvancedEvaluationTextCommentInterface[]>>,
-  setSortButton: React.Dispatch<React.SetStateAction<SortButtonStateType>>,
-  setRefreshRightPanelUserComments: React.Dispatch<React.SetStateAction<boolean>>,
-  deletedCommentId: number|undefined,
-  setDeletedCommentId:React.Dispatch<React.SetStateAction<number|undefined>>,
-  updatedComment:CommentInterface|undefined,
-  setUpdatedComment:React.Dispatch<React.SetStateAction<CommentInterface|undefined>>,
+  fileId?: number,
+  commentsText: AdvancedEvaluationTextCommentModel[],
+  setCommentsText?: React.Dispatch<React.SetStateAction<AdvancedEvaluationTextCommentModel[]>>,
+  setSortButton?: React.Dispatch<React.SetStateAction<SortButtonStateType>>,
+  setRefreshRightPanelUserComments?: React.Dispatch<React.SetStateAction<boolean>>,
+  deletedCommentId?: number|undefined,
+  setDeletedCommentId?:React.Dispatch<React.SetStateAction<number|undefined>>,
+  updatedComment?:CommentInterface|undefined,
+  setUpdatedComment?:React.Dispatch<React.SetStateAction<CommentInterface|undefined>>,
 }
 export const AdvancedEvaluationTextArea = ({fileText,
                                              setUpdatedComment,
@@ -49,7 +49,7 @@ export const AdvancedEvaluationTextArea = ({fileText,
                                              chosenComment}:AdvancedEvaluationTextAreaPropsInterface) => {
   const [letterColor, setLetterColor] = useState<(string|undefined)[]>([undefined])
   const [mouseDownTimestamp, setMouseDownTimestamp] = useState<undefined|number>(undefined)
-  const toLetterArray = (commentsList:AdvancedEvaluationTextCommentInterface[]):(string|undefined)[] => {
+  const toLetterArray = (commentsList:AdvancedEvaluationTextCommentModel[]):(string|undefined)[] => {
     let newArray = Array<undefined|string>(fileText.length)
     newArray.fill(undefined, 0, fileText.length)
     commentsList.forEach((comment)=>{
@@ -57,8 +57,8 @@ export const AdvancedEvaluationTextArea = ({fileText,
     })
     return newArray
   }
-  const calculateCommentBasedOnLetterIndex = (index:number):AdvancedEvaluationTextCommentInterface|undefined => {
-    let resultComment:undefined|AdvancedEvaluationTextCommentInterface = undefined
+  const calculateCommentBasedOnLetterIndex = (index:number):AdvancedEvaluationTextCommentModel|undefined => {
+    let resultComment:undefined|AdvancedEvaluationTextCommentModel = undefined
     for(const comment of comments){
       if(comment.highlightStart <= index && index <= comment.highlightEnd){
         resultComment = {...comment}
@@ -68,6 +68,7 @@ export const AdvancedEvaluationTextArea = ({fileText,
     return resultComment
   }
   const handleDrawnCommentDeletion = async (index:number) => {
+    if(setComments===undefined) return
     try {
       const commentToBeDeleted = calculateCommentBasedOnLetterIndex(index)
       if(commentToBeDeleted!==undefined){
@@ -84,25 +85,25 @@ export const AdvancedEvaluationTextArea = ({fileText,
   const handleMouseUp = async (event:React.MouseEvent, index:number) => {
     event.preventDefault()
     event.stopPropagation()
-    if(event.button === 2) await handleDrawnCommentDeletion(index)
+    if(setComments !== undefined && event.button === 2) await handleDrawnCommentDeletion(index)
     else if(event.button === 0) {
       if(mouseDownTimestamp !== undefined && (event.timeStamp - mouseDownTimestamp) < 150){
         const clickedComment = calculateCommentBasedOnLetterIndex(index)
         if(clickedComment !== undefined){
-          handleCommentHighlighting(clickedComment.commentId)
+          handleCommentHighlighting(clickedComment.comment.id)
           setMouseDownTimestamp(undefined)
         }
       }
       else{
-        await handleNewCommentTextCreation()
+        setComments !== undefined && await handleNewCommentTextCreation()
       }
     }
   }
 
 
   const handleNewCommentTextCreation =  async () =>{
-    if(chosenComment === undefined) return
-    const checkNewRanges = async (updatedComment:AdvancedEvaluationTextCommentInterface) => {
+    if(chosenComment === undefined || fileId === undefined || setCommentsText === undefined || setSortButton === undefined || setRefreshRightPanelUserComments === undefined) return
+    const checkNewRanges = async (updatedComment:AdvancedEvaluationTextCommentModel) => {
       if(updatedComment.highlightStart<=updatedComment.highlightEnd){
         const response = await changeCommentTextPostgresService(updatedComment)
         return response?.status === 200;
@@ -124,20 +125,20 @@ export const AdvancedEvaluationTextArea = ({fileText,
         }
         const response = await createCommentTextWithFilePostgresService(newComment)
         if(response?.status !== 201) return
-        let selectedComment:AdvancedEvaluationTextCommentInterface = {
-          commentId: response.data.comment.id,
-          fileId: response.data.file.id,
+        let selectedComment:AdvancedEvaluationTextCommentModel = {
+          comment: response.data.comment,
+          file: response.data.file,
           color: response.data.color,
           highlightStart: response.data.highlightStart,
           highlightEnd: response.data.highlightEnd,
           id: response.data.id
         }
-        const newComments: AdvancedEvaluationTextCommentInterface[] = []
+        const newComments: AdvancedEvaluationTextCommentModel[] = []
         if (commentsText.length === 0) {
           newComments.push(selectedComment)
         } else {
           for (const oldComment of commentsText) {
-            if (oldComment.commentId === selectedComment.commentId &&
+            if (oldComment.comment.id === selectedComment.comment.id &&
               selectedComment.highlightStart < oldComment.highlightStart &&
               selectedComment.highlightEnd >= oldComment.highlightStart &&
               selectedComment.highlightStart < oldComment.highlightEnd &&
@@ -152,7 +153,7 @@ export const AdvancedEvaluationTextArea = ({fileText,
                 newComments.push(oldComment)
               }
             }
-            else if (oldComment.commentId === selectedComment.commentId &&
+            else if (oldComment.comment.id === selectedComment.comment.id &&
               selectedComment.highlightStart > oldComment.highlightStart &&
               selectedComment.highlightEnd > oldComment.highlightStart &&
               selectedComment.highlightStart <= oldComment.highlightEnd &&
@@ -223,26 +224,28 @@ export const AdvancedEvaluationTextArea = ({fileText,
   }, [fileText, comments])
   useUpdateEffect(()=>{
     const handleCommentTextDeletion = async (deletedCommentId:number) => {
+      if(setCommentsText === undefined || fileId === undefined) return
       try {
         const response = await deleteCommentTextByCommentFilePostgresService(deletedCommentId.toString(), fileId.toString())
         if(response?.status === 200){
-          const textCommentsTemp = commentsText.filter(commentText=> !(commentText.commentId === deletedCommentId))
+          const textCommentsTemp = commentsText.filter(commentText=> !(commentText.comment.id === deletedCommentId))
           setCommentsText(textCommentsTemp)
         }
       }catch (error){
         console.log(error)
       }
     }
-    if(deletedCommentId !== undefined)
+    if(deletedCommentId !== undefined && setDeletedCommentId !== undefined)
       handleCommentTextDeletion(deletedCommentId)
         .then(() => setDeletedCommentId(undefined))
   },[deletedCommentId])
   useUpdateEffect(()=>{
     const updateTextList = async (updatedComment:CommentInterface) => {
+      if(setCommentsText === undefined) return
       const textCommentsTemp = await Promise.all(commentsText.map(async textComment => {
-        if(textComment.commentId === updatedComment.id){
+        if(textComment.comment.id === updatedComment.id){
           try {
-            const updatedCommentExtended = {...textComment, color: updatedComment.color} as AdvancedEvaluationTextCommentInterface
+            const updatedCommentExtended = {...textComment, color: updatedComment.color} as AdvancedEvaluationTextCommentModel
             const response = await changeCommentTextPostgresService(updatedCommentExtended)
             if (response !== undefined && response !== null && response.data !== undefined && response.status === 200) {
               return updatedCommentExtended
@@ -259,18 +262,21 @@ export const AdvancedEvaluationTextArea = ({fileText,
       }))
       setCommentsText(textCommentsTemp)
     }
-    if(updatedComment !== undefined)
+    if(updatedComment !== undefined && setUpdatedComment !== undefined)
       updateTextList(updatedComment)
         .then(() => setUpdatedComment(undefined))
   },[updatedComment])
 
   return <div style={{width: width !== undefined ? width : "100%", height: height !== undefined ? height:"100%"}}>{fileText.split('').map((letter:string, index)=>{
     return <span
-      onMouseDown={(event) => {event.button===0 && setMouseDownTimestamp(event.timeStamp)}}
+      onMouseDown={(event) => {
+        event.button===0 && setMouseDownTimestamp(event.timeStamp)}}
       id={index.toString()}
       style={{backgroundColor: letterColor[index] ? letterColor[index]+"80" : 'white', userSelect:chosenComment === undefined ? "none" : "auto"}}
       key={index}
-      onContextMenu={(event) => {event.preventDefault();event.stopPropagation()}}
+      onContextMenu={(event) => {
+        event.preventDefault();
+        event.stopPropagation()}}
       onMouseUp={(event) =>handleMouseUp(event, index)}>
       {letter}</span>
   })}</div>

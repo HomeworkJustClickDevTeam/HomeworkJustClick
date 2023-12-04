@@ -1,6 +1,6 @@
 import { AssignmentInterface } from "../types/AssignmentInterface"
 import { AssignmentToSendInterface } from "../types/AssignmentToSendInterface"
-import { EvaluationInterface } from "../types/EvaluationInterface"
+import { EvaluationModel } from "../types/Evaluation.model"
 import { GroupCreateInterface } from "../types/GroupCreateInterface"
 import { SolutionCreateInterface } from "../types/SolutionCreateInterface"
 import { UserLoginInterface } from "../types/UserLoginInterface"
@@ -10,13 +10,14 @@ import { getUser } from "./otherServices"
 import { CommentCreateInterface } from "../types/CommentCreateInterface"
 import { AdvancedEvaluationTextCommentCreateInterface } from "../types/AdvancedEvaluationTextCommentCreateInterface"
 import { CommentInterface } from "../types/CommentInterface"
-import { AdvancedEvaluationImageCommentInterface } from "../types/AdvancedEvaluationImageCommentInterface"
-import { AdvancedEvaluationTextCommentInterface } from "../types/AdvancedEvaluationTextCommentInterface"
+import { AdvancedEvaluationImageCommentModel } from "../types/AdvancedEvaluationImageComment.model"
+import { AdvancedEvaluationTextCommentModel } from "../types/AdvancedEvaluationTextComment.model"
 import { AdvancedEvaluationImageCommentCreateInterface } from "../types/AdvancedEvaluationImageCommentCreateInterface"
 import axios from "axios";
 import { Table } from "../types/Table.model"
 import {EvaluationPanelAssignmentCreateInterface} from "../types/EvaluationPanelAssignmentCreateInterface";
 import {EvaluationPanelAssignmentInterface} from "../types/EvaluationPanelAssignmentInterface";
+import {EvaluationCreateModel} from "../types/EvaluationCreate.model";
 
 
 const postgresqlDatabaseJSON = axios.create({
@@ -176,7 +177,7 @@ export const createFileWithSolutionPostgresService = async (
 export const createEvaluationWithUserAndSolution = async (
   userId: string,
   solutionId: string,
-  evaluation: EvaluationInterface
+  evaluation: EvaluationCreateModel
 ) => {
   return await postgresqlDatabaseJSON.post(
     `/evaluation/withUserAndSolution/${userId}/${solutionId}`,
@@ -458,15 +459,24 @@ export const changeCommentPostgresService = async (
   return await postgresqlDatabaseJSON.put(`/comment/${comment.id}`, comment)
 }
 export const changeCommentImagePostgresService = async (
-  comment: AdvancedEvaluationImageCommentInterface
+  comment: AdvancedEvaluationImageCommentModel
 ) => {
   return await postgresqlDatabaseJSON.put(
     `/comment_file_img/${comment.id}`,
-    comment
+    {id: comment.id,
+      leftTopY: comment.leftTopY,
+      leftTopX: comment.leftTopX,
+      width: comment.width,
+      height: comment.height,
+      imgHeight: comment.imgHeight,
+      imgWidth: comment.imgWidth,
+      color: comment.color,
+      commentId: comment.comment.id,
+      fileId: comment.file.id}
   )
 }
 export const changeCommentTextPostgresService = async (
-  comment: AdvancedEvaluationTextCommentInterface
+  comment: AdvancedEvaluationTextCommentModel
 ) => {
   return await postgresqlDatabaseJSON.put(
     `/comment_file_text/${comment.id}`,
