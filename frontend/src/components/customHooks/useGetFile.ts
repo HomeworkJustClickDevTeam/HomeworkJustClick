@@ -43,8 +43,8 @@ export const useGetFile = (filterId: number|undefined|null, filter:"assignment" 
                     data: blob,
                     name: mongoResponse.data.name,
                     format: fileData.format,
-                    mongoId: file.mongo_id,
-                    postgresId: file.id
+                    mongo_id: file.mongo_id,
+                    id: file.id
                   })
                 }
               }

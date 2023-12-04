@@ -8,7 +8,7 @@ import React, {
   useRef,
   useState
 } from "react"
-import { AdvancedEvaluationImageCommentInterface } from "../../types/AdvancedEvaluationImageCommentInterface"
+import { AdvancedEvaluationImageCommentModel } from "../../types/AdvancedEvaluationImageComment.model"
 import { useWindowSize } from "../customHooks/useWindowSize"
 import { CanvasActionsType } from "../../types/CanvasActionsType"
 import { CommentActionsType } from "../../types/CommentActionsType"
@@ -29,27 +29,26 @@ import {
 } from "../../utils/AdvancedEvaluationImageCanvasLogic";
 import {useAppSelector} from "../../types/HooksRedux";
 import {selectUserState} from "../../redux/userStateSlice";
+import {FileInterface} from "../../types/FileInterface";
 
 interface AdvancedEvaluationImageAreaInterface{
   width:number|undefined,
   height:number|undefined,
-  deletedCommentId: number|undefined,
-  setDeletedCommentId:React.Dispatch<React.SetStateAction<number|undefined>>,
-  updatedComment:CommentInterface|undefined,
-  setUpdatedComment:React.Dispatch<React.SetStateAction<CommentInterface|undefined>>,
-  setSortButtonState:React.Dispatch<React.SetStateAction<SortButtonStateType>>,
+  deletedCommentId?: number|undefined,
+  setDeletedCommentId?:React.Dispatch<React.SetStateAction<number|undefined>>,
+  updatedComment?:CommentInterface|undefined,
+  setUpdatedComment?:React.Dispatch<React.SetStateAction<CommentInterface|undefined>>,
+  setSortButtonState?:React.Dispatch<React.SetStateAction<SortButtonStateType>>,
   image: HTMLImageElement,
   chosenComment?: CommentInterface|undefined,
-  fileId:number
-  checked: boolean
-  commentsImage: AdvancedEvaluationImageCommentInterface[]
-  setCommentsImage: React.Dispatch<React.SetStateAction<AdvancedEvaluationImageCommentInterface[]>>
+  file?: FileInterface
+  commentsImage: AdvancedEvaluationImageCommentModel[]
+  setCommentsImage?: React.Dispatch<React.SetStateAction<AdvancedEvaluationImageCommentModel[]>>
   handleCommentHighlighting:(commentId: number) => void
-  setRefreshRightPanelUserComments: React.Dispatch<React.SetStateAction<boolean>>
+  setRefreshRightPanelUserComments?: React.Dispatch<React.SetStateAction<boolean>>
 }
 export const AdvancedEvaluationImageArea = ({setSortButtonState,
                                               commentsImage,
-                                              checked,
                                               setCommentsImage,
                                               setUpdatedComment,
                                               setDeletedCommentId,
@@ -57,7 +56,7 @@ export const AdvancedEvaluationImageArea = ({setSortButtonState,
                                               updatedComment,
                                               setRefreshRightPanelUserComments,
                                               handleCommentHighlighting,
-                                              fileId,
+                                              file,
                                               image,
                                               chosenComment,
                                               width,
@@ -67,13 +66,11 @@ export const AdvancedEvaluationImageArea = ({setSortButtonState,
   const [mouseStartX, setMouseStartX] = useState<null|number>(null)
   const [mouseStartY, setMouseStartY] = useState<null|number>(null)
   const [commentIndex, setCommentIndex] = useState<null|number>(null)
-  const [commentPreviousState, setCommentPreviousState] = useState<null|AdvancedEvaluationImageCommentInterface>(null)
+  const [commentPreviousState, setCommentPreviousState] = useState<null|AdvancedEvaluationImageCommentModel>(null)
   const [canvasAction, setCanvasAction] = useState<CanvasActionsType>("hovering")
   const [commentAction, setCommentAction] = useState<CommentActionsType>("noHover")
   const [mouseDownTimestamp, setMouseDownTimestamp] = useState<number|null>(null)
-  const drawnComments = useRef<AdvancedEvaluationImageCommentInterface[]>(commentsImage)
-  const userState = useAppSelector(selectUserState)
-
+  const drawnComments = useRef<AdvancedEvaluationImageCommentModel[]>(commentsImage)
 
 
   useLayoutEffect(() => {
@@ -95,14 +92,14 @@ export const AdvancedEvaluationImageArea = ({setSortButtonState,
       height,
       canvasRef,
       setCommentsImage)
-  }, [width, height, commentsImage])
+  }, [width, height, commentsImage, image])
   useUpdateEffect(()=> {
     const updateImageList = async (updatedComment:CommentInterface) => {
       if (drawnComments?.current !== undefined && drawnComments?.current !== null) {
         const drawnCommentsTemp = await Promise.all(drawnComments.current.map(async (commentImage) => {
-          if(commentImage.commentId === updatedComment.id){
+          if(commentImage.comment.id === updatedComment.id){
             try {
-              const updatedCommentExtended = { ...commentImage, color: updatedComment.color } as AdvancedEvaluationImageCommentInterface
+              const updatedCommentExtended: AdvancedEvaluationImageCommentModel = {...commentImage, color: updatedComment.color}
               const response = await changeCommentImagePostgresService(updatedCommentExtended)
               if (response !== undefined && response !== null && response.data !== undefined && response.status === 200) {
                 return updatedCommentExtended
@@ -127,7 +124,7 @@ export const AdvancedEvaluationImageArea = ({setSortButtonState,
           setCommentsImage)
       }
     }
-    if(updatedComment!== undefined)
+    if(updatedComment!== undefined && setUpdatedComment !== undefined)
       updateImageList(updatedComment)
         .then(()=> setUpdatedComment(undefined))
   }, [updatedComment])
@@ -135,9 +132,9 @@ export const AdvancedEvaluationImageArea = ({setSortButtonState,
     const handleCommentImageDeletion = async (deletedCommentId:number) => {
       if(drawnComments?.current !== undefined && drawnComments?.current !== null) {
         try {
-          const response = await deleteCommentImageByCommentFilePostgresService(deletedCommentId.toString(), fileId.toString())
+          const response = await deleteCommentImageByCommentFilePostgresService(deletedCommentId.toString(), file!.id.toString())
           if(response?.status === 200){
-            const drawnCommentsTemp = drawnComments.current.filter( commentImage => !(commentImage.commentId === deletedCommentId))
+            const drawnCommentsTemp = drawnComments.current.filter( commentImage => !(commentImage.comment.id === deletedCommentId))
             drawnComments.current = drawnCommentsTemp
             drawOnCanvas(canvasContext,
               image,
@@ -153,7 +150,7 @@ export const AdvancedEvaluationImageArea = ({setSortButtonState,
       }
     }
 
-    if(deletedCommentId!== undefined)
+    if(deletedCommentId!== undefined && setDeletedCommentId!==undefined && file !== undefined)
       handleCommentImageDeletion(deletedCommentId)
         .then(()=> setDeletedCommentId(undefined))
   }, [deletedCommentId])
@@ -170,9 +167,8 @@ export const AdvancedEvaluationImageArea = ({setSortButtonState,
     <canvas onContextMenu={(event) => {
               event.preventDefault();
               event.stopPropagation()
-              !checked && setCanvasAction("commentDeleting")}}
+              setUpdatedComment !== undefined && setCanvasAction("commentDeleting")}}
             onMouseOut={async (event)=>{
-              !checked &&
               await handleMouseUp(event,
                 canvasAction,
                 setCanvasAction,
@@ -189,18 +185,16 @@ export const AdvancedEvaluationImageArea = ({setSortButtonState,
                 image,
                 canvasContext,
                 canvasRef,
-                setRefreshRightPanelUserComments,
-                setSortButtonState,
                 setCommentAction,
                 commentAction,
                 width,
                 height,
+                setSortButtonState,
                 setCommentsImage,
-        userState!.role === "Student")
+                setRefreshRightPanelUserComments)
             }}
             id={"commentsLayer"}
             onMouseUp={async (event)=>{
-              !checked &&
               await handleMouseUp(event,
                 canvasAction,
                 setCanvasAction,
@@ -217,17 +211,15 @@ export const AdvancedEvaluationImageArea = ({setSortButtonState,
                 image,
                 canvasContext,
                 canvasRef,
-                setRefreshRightPanelUserComments,
-                setSortButtonState,
                 setCommentAction,
                 commentAction,
                 width,
                 height,
+                setSortButtonState,
                 setCommentsImage,
-        userState!.role === "Student")
+                setRefreshRightPanelUserComments)
             }}
             onMouseMove={(event)=>{
-              !checked &&
               handleMouseMove(event,
                 canvasAction,
                 setCommentIndex,
@@ -244,11 +236,9 @@ export const AdvancedEvaluationImageArea = ({setSortButtonState,
                 setMouseStartY,
                 setMouseStartX,
                 image,
-                setCommentsImage,
-                userState!.role === "Student")
+                setCommentsImage)
             }}
             onMouseDown={(event)=>{
-              !checked &&
               handleMouseDown(event,
                 setCanvasAction,
                 setCommentIndex,
@@ -261,10 +251,8 @@ export const AdvancedEvaluationImageArea = ({setSortButtonState,
                 commentIndex,
                 setMouseDownTimestamp,
                 canvasRef,
-                fileId,
-                commentsImage,
-                chosenComment,
-                userState!.role === "Student")
+                file,
+                chosenComment)
             }}
             ref={canvasRef}/>)
 }

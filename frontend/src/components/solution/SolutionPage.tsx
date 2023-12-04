@@ -70,10 +70,9 @@ function SolutionPage() {
         <div>
           {solutionExtended.id && group && (
             <Link
-              to={`/group/${group.id}/advancedEvaluation`}
+              to={`/group/${group.id}/advancedAssignment`}
               state={{ solutionExtended: solutionExtended }}
-              className="absolute underline font-semibold bottom-0 left-0 mb-2 ml-4"
-            >
+              className="absolute underline font-semibold bottom-0 left-0 mb-2 ml-4">
               Zaawansowane Sprawdzanie
             </Link>
           )}

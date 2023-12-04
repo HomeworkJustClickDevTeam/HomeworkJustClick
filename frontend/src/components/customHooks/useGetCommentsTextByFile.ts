@@ -6,11 +6,11 @@ import {
   getCommentsByUserPostgresService,
   getCommentsImageByFilePostgresService, getCommentsTextByFilePostgresService
 } from "../../services/postgresDatabaseServices"
-import { AdvancedEvaluationImageCommentInterface } from "../../types/AdvancedEvaluationImageCommentInterface"
-import { AdvancedEvaluationTextCommentInterface } from "../../types/AdvancedEvaluationTextCommentInterface"
+import { AdvancedEvaluationImageCommentModel } from "../../types/AdvancedEvaluationImageComment.model"
+import { AdvancedEvaluationTextCommentModel } from "../../types/AdvancedEvaluationTextComment.model"
 
 export const useGetCommentsTextByFile = (fileId: number|undefined|null, params:string) => {
-  const [comments, setComments] = useState<AdvancedEvaluationTextCommentInterface[]>([])
+  const [comments, setComments] = useState<AdvancedEvaluationTextCommentModel[]>([])
   const dispatch = useAppDispatch()
 
   useEffect(() => {
@@ -20,18 +20,18 @@ export const useGetCommentsTextByFile = (fileId: number|undefined|null, params:s
       getCommentsTextByFilePostgresService(fileId.toString(), "")
         .then(async (response) => {
           if (response !== null && response !== undefined) {
-            const commentsFromServer: AdvancedEvaluationTextCommentInterface[] = []
+            const commentsFromServer: AdvancedEvaluationTextCommentModel[] = []
             for (let pageNumber = 0; pageNumber < response.data.totalPages; pageNumber++) {
               const responsePaged = await getCommentsTextByFilePostgresService(fileId.toString(), `?page=${pageNumber}&${params}`)
               if (responsePaged?.status === 200) {
                 for (const commentFromServer of responsePaged.data.content) {
                   commentsFromServer.push({
                     id: commentFromServer.id,
-                    fileId: commentFromServer.file.id,
+                    file: commentFromServer.file,
                     highlightEnd: commentFromServer.highlightEnd,
                     highlightStart: commentFromServer.highlightStart,
                     color: commentFromServer.color,
-                    commentId: commentFromServer.comment.id
+                    comment: commentFromServer.comment
                   })
                 }
               }

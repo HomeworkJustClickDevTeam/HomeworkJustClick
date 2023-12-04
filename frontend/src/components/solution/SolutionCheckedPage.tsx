@@ -44,7 +44,7 @@ export default function SolutionCheckedPage(props: {
         </p>
       </div>
       <Link
-        to={`/group/${props.solution.groupId}/advancedEvaluation`}
+        to={`/group/${props.solution.groupId}/advancedAssignment`}
         state={{ solutionExtended: {id: props.solution.id, user: userState!, assignment: props.assignment, comment: props.solution.comment}}}
         className="absolute underline font-semibold bottom-0 left-0 mb-2 ml-4">
         Komentarze prowadzącego do pliku

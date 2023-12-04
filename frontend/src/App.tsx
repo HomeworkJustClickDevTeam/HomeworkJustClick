@@ -26,6 +26,9 @@ import { LoggedInUserRoute } from "./components/route/LoggedInUserRoute"
 import { LoggedOutUserRoute } from "./components/route/LoggedOutUserRoute"
 import { AssignmentsType } from "./types/AssignmentsType"
 import { ExtendedSolutionType } from "./types/ExtendedSolutionType"
+import {RoleBasedRoute} from "./components/route/RoleBasedRoute";
+import SolutionCheckedPage from "./components/solution/SolutionCheckedPage";
+import {SolutionCheckedAdvancedPage} from "./components/solution/SolutionCheckedAdvancedPage";
 
 function App() {
   return (
@@ -94,7 +97,8 @@ function App() {
           />
 
         </Route>
-        <Route path="/group/:idGroup/advancedEvaluation" element={<AdvancedEvaluationPage/>}/>
+        <Route path="/group/:idGroup/advancedAssignment" element={
+          <RoleBasedRoute renderForStudent={<SolutionCheckedAdvancedPage/>} renderForTeacher={<AdvancedEvaluationPage/>}/>}/>
       </Route>
       <Route path="*" element={<NotFoundPage/>}/>
     </Routes>

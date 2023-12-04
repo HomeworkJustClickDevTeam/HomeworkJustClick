@@ -7,9 +7,7 @@ import {AssignmentToSendInterface} from "../../types/AssignmentToSendInterface";
 import {GroupInterface} from "../../types/GroupInterface";
 import {useNavigate} from "react-router-dom";
 import {AssignmentAddFile} from "./AssignmentAddFile";
-import {AssignmentModifyCommentsPanel} from "./AssignmentModifyCommentsPanel";
 import {CommentInterface} from "../../types/CommentInterface";
-import {AssignmentAddCommentsPanel} from "./AssignmentAddCommentsPanel";
 
 interface AssignmentSettingsPagePropsInterface{
   handleSubmit: (event: React.FormEvent) => void,
@@ -100,7 +98,7 @@ export const AssignmentSettingsPage = ({handleSubmit,
   }
   return (
     <>
-      <div style={{float:"left"}}>
+      <div>
         <div className="relative flex flex-col mx-[7.5%] mt-4 border border-border_gray border-1 rounded-md pt-4 px-4 h-80">
           <form onSubmit={(event) => handleSubmit(event)} className="flex flex-col gap-3">
             <label className="pr-3">
@@ -185,8 +183,6 @@ export const AssignmentSettingsPage = ({handleSubmit,
             >
               Zapisz
             </button>
-            {!('id' in assignment && newAssignmentId === undefined) &&
-            <AssignmentAddCommentsPanel comments={comments} setComments={setComments}/>}
           </form>
           <p className="mt-4 mb-2">Dodaj pliki: </p>
           {'id' in assignment && newAssignmentId === undefined ?
@@ -205,10 +201,6 @@ export const AssignmentSettingsPage = ({handleSubmit,
                   className='absolute bottom-0 right-0 mr-6 mb-4 px-4 py-1 rounded-lg bg-berry_red text-white'>Usuń Zadanie
           </button>}
         </div>
-      </div>
-      <div style={{float:"right"}}>
-        {'id' in assignment && newAssignmentId === undefined &&
-            <AssignmentModifyCommentsPanel setComments={setComments} comments={comments} assignmentId={assignment.id}></AssignmentModifyCommentsPanel>}
       </div>
     </>
   )

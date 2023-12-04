@@ -1,18 +1,37 @@
-import { useEffect, useState } from "react"
+import {useCallback, useEffect, useState} from "react"
 import { useWindowSize } from "./useWindowSize"
 
 export const useGetSolutionAreaSizeAvailable = () => {
   const {windowHeight, windowWidth} =  useWindowSize()
   const [availableWidth, setAvailableWidth] = useState<number|undefined>(undefined)
   const [availableHeight, setAvailableHeight] = useState<number|undefined>(undefined)
+  const [commentPanelWidth, setCommentPanelWidth] = useState<number|undefined>(undefined)
+  const [backButtonHeight, setBackButtonHeight] = useState<number|undefined>(undefined)
+
+
+  const onCommentPanelListRefChange = useCallback((node:HTMLDivElement)=>{
+    if(node !== null)
+      setCommentPanelWidth(node.offsetWidth)
+  },[])
+
+  const onBackButtonRefChange = useCallback((node:HTMLDivElement)=>{
+    if(node !== null)
+      setBackButtonHeight(node.offsetHeight)
+  },[])
 
   useEffect(() => {
-    const commentPanelWidth = document.getElementById("commentPanelDiv")?.clientWidth
-    const backButtonHeight = document.getElementById("backButtonDiv")?.clientHeight
-    const headerHeight = document.getElementById("headerLoggedInSection")?.clientHeight
-    commentPanelWidth !== undefined && setAvailableWidth(windowWidth-commentPanelWidth-10)
-    headerHeight !== undefined && backButtonHeight !== undefined && setAvailableHeight(windowHeight-headerHeight-backButtonHeight)
-  }, [windowWidth, document.getElementById("backButtonDiv")?.clientHeight, windowHeight, document.getElementById("commentPanel")?.clientWidth, document.getElementById("headerLoggedIn")?.clientHeight])
+    const headerLoggedInSection = document.getElementById("headerLoggedInSection")
+    if(commentPanelWidth=== undefined || backButtonHeight=== undefined || headerLoggedInSection === null) return
+    const resizeObserver = new ResizeObserver(()=> {
+      setAvailableWidth(windowWidth-commentPanelWidth)
+      headerLoggedInSection !== null && backButtonHeight !== null && setAvailableHeight(windowHeight-headerLoggedInSection.offsetHeight-backButtonHeight)
+    })
+    resizeObserver.observe(headerLoggedInSection!)
 
-  return {availableHeight: availableHeight, availableWidth:availableWidth}
+    return () => resizeObserver.disconnect()
+
+
+  }, [windowWidth, windowHeight, commentPanelWidth, backButtonHeight])
+
+  return {availableHeight, availableWidth, onCommentPanelListRefChange, onBackButtonRefChange}
 }

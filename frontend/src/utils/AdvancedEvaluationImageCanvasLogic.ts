@@ -2,7 +2,7 @@ import {
   changeCommentImagePostgresService,
   createCommentImageWithFilePostgresService, deleteCommentImagePostgresService
 } from "../services/postgresDatabaseServices";
-import {AdvancedEvaluationImageCommentInterface} from "../types/AdvancedEvaluationImageCommentInterface";
+import {AdvancedEvaluationImageCommentModel} from "../types/AdvancedEvaluationImageComment.model";
 import {cursors} from "../assets/cursors";
 import React, {SetStateAction} from "react";
 import {CanvasActionsType} from "../types/CanvasActionsType";
@@ -10,6 +10,7 @@ import {CommentActionsType} from "../types/CommentActionsType";
 import {CommentInterface} from "../types/CommentInterface";
 import {SortButtonStateType} from "../types/SortButtonStateType";
 import {he} from "date-fns/locale";
+import {FileInterface} from "../types/FileInterface";
 
 export const handleCommentResizing = (mouseX:number,
                                       mouseY:number,
@@ -17,14 +18,15 @@ export const handleCommentResizing = (mouseX:number,
                                       canvasContext:React.MutableRefObject<CanvasRenderingContext2D|undefined|null>,
                                       mouseStartX: number|null,
                                       mouseStartY: number|null,
-                                      drawnComments:React.MutableRefObject<AdvancedEvaluationImageCommentInterface[]>,
+                                      drawnComments:React.MutableRefObject<AdvancedEvaluationImageCommentModel[]>,
                                       commentAction:CommentActionsType,
                                       image:HTMLImageElement,
                                       width:number|undefined,
                                       height:number|undefined,
                                       setMouseStartY:React.Dispatch<SetStateAction<number|null>>,
                                       setMouseStartX:React.Dispatch<SetStateAction<number|null>>,
-                                      canvasRef: React.MutableRefObject<HTMLCanvasElement | null>) => {
+                                      canvasRef: React.MutableRefObject<HTMLCanvasElement | null>,
+                                      setCommentsImage: React.Dispatch<React.SetStateAction<AdvancedEvaluationImageCommentModel[]>>) => {
   if(commentIndex !== null && canvasContext.current !== null && canvasContext.current !== undefined && mouseStartX!==null && mouseStartY!==null) {
     const {moveDiffX, moveDiffY} = updateMouseCoords(mouseX, mouseY, setMouseStartY, setMouseStartX, canvasContext, mouseStartX, mouseStartY, canvasRef)
     switch (commentAction){
@@ -33,55 +35,54 @@ export const handleCommentResizing = (mouseX:number,
         drawnComments.current[commentIndex].leftTopY += moveDiffY
         drawnComments.current[commentIndex].width -= moveDiffX
         drawnComments.current[commentIndex].height -= moveDiffY
-        drawOnCanvas(canvasContext, image, drawnComments, width, height, canvasRef)
+        drawOnCanvas(canvasContext, image, drawnComments, width, height, canvasRef, setCommentsImage)
         break
       case "topLineHovered":
         drawnComments.current[commentIndex].leftTopY += moveDiffY
         drawnComments.current[commentIndex].height -= moveDiffY
-        drawOnCanvas(canvasContext, image, drawnComments, width, height, canvasRef)
+        drawOnCanvas(canvasContext, image, drawnComments, width, height, canvasRef, setCommentsImage)
         break
       case "rightTopCornerHovered":
         drawnComments.current[commentIndex].leftTopY += moveDiffY
         drawnComments.current[commentIndex].width += moveDiffX
         drawnComments.current[commentIndex].height -= moveDiffY
-        drawOnCanvas(canvasContext, image, drawnComments, width, height, canvasRef)
+        drawOnCanvas(canvasContext, image, drawnComments, width, height, canvasRef, setCommentsImage)
         break
       case "rightLineHovered":
         drawnComments.current[commentIndex].width += moveDiffX
-        drawOnCanvas(canvasContext, image, drawnComments, width, height, canvasRef)
+        drawOnCanvas(canvasContext, image, drawnComments, width, height, canvasRef, setCommentsImage)
         break
       case "rightBottomCornerHovered":
         drawnComments.current[commentIndex].width += moveDiffX
         drawnComments.current[commentIndex].height += moveDiffY
-        drawOnCanvas(canvasContext, image, drawnComments, width, height, canvasRef)
+        drawOnCanvas(canvasContext, image, drawnComments, width, height, canvasRef, setCommentsImage)
         break
       case "bottomLineHovered":
         drawnComments.current[commentIndex].height += moveDiffY
-        drawOnCanvas(canvasContext, image, drawnComments, width, height, canvasRef)
+        drawOnCanvas(canvasContext, image, drawnComments, width, height, canvasRef, setCommentsImage)
         break
       case "leftBottomCornerHovered":
         drawnComments.current[commentIndex].leftTopX += moveDiffX
         drawnComments.current[commentIndex].width -= moveDiffX
         drawnComments.current[commentIndex].height += moveDiffY
-        drawOnCanvas(canvasContext, image, drawnComments, width, height, canvasRef)
+        drawOnCanvas(canvasContext, image, drawnComments, width, height, canvasRef, setCommentsImage)
         break
       case "leftLineHovered":
         drawnComments.current[commentIndex].leftTopX += moveDiffX
         drawnComments.current[commentIndex].width -= moveDiffX
-        drawOnCanvas(canvasContext, image, drawnComments, width, height, canvasRef)
+        drawOnCanvas(canvasContext, image, drawnComments, width, height, canvasRef, setCommentsImage)
         break
     }
   }
 }
 export const updateCommentImageInDb = async (draw:boolean,
                                              commentIndex:number|null,
-                                             drawnComments:React.MutableRefObject<AdvancedEvaluationImageCommentInterface[]>,
-                                             commentPreviousState:AdvancedEvaluationImageCommentInterface|null,
+                                             drawnComments:React.MutableRefObject<AdvancedEvaluationImageCommentModel[]>,
+                                             commentPreviousState:AdvancedEvaluationImageCommentModel|null,
                                              ) => {
 
   if (commentIndex !== undefined && commentIndex !== null) {
     try {
-
       const response = await changeCommentImagePostgresService(drawnComments.current[commentIndex])
       if(!(response?.data !== undefined && response?.data !== null && response?.status === 200)){
         drawnComments.current[commentIndex] = JSON.parse(JSON.stringify(commentPreviousState))
@@ -97,13 +98,24 @@ export const updateCommentImageInDb = async (draw:boolean,
   return draw
 }
 export const saveCommentImageToDb = async (draw:boolean,
-                                           drawnComments:React.MutableRefObject<AdvancedEvaluationImageCommentInterface[]>,
+                                           drawnComments:React.MutableRefObject<AdvancedEvaluationImageCommentModel[]>,
                                            commentIndex:number|null,
                                            setRefreshRightPanelUserComments: React.Dispatch<SetStateAction<boolean>>,
                                            setSortButtonState:React.Dispatch<SetStateAction<SortButtonStateType>>) => {
   if (commentIndex !== undefined && commentIndex !== null) {
     try {
-      const response = await createCommentImageWithFilePostgresService(drawnComments.current[commentIndex])
+      const response = await createCommentImageWithFilePostgresService(
+        {
+          leftTopY: drawnComments.current[commentIndex].leftTopY,
+          leftTopX: drawnComments.current[commentIndex].leftTopX,
+          width: drawnComments.current[commentIndex].width,
+          height: drawnComments.current[commentIndex].height,
+          imgWidth: drawnComments.current[commentIndex].imgWidth,
+          imgHeight: drawnComments.current[commentIndex].imgHeight,
+          color: drawnComments.current[commentIndex].color,
+          commentId: drawnComments.current[commentIndex].comment.id,
+          fileId: drawnComments.current[commentIndex].file.id
+        })
       if (response?.data !== undefined && response?.data !== null && response?.status === 201) {
         drawnComments.current[commentIndex].id = response.data.id
         setRefreshRightPanelUserComments(prevState => !prevState)
@@ -127,7 +139,7 @@ export const checkCollision = (topLeftX:number,
                                width:number,
                                height:number,
                                movedCommentIndex:number,
-                               drawnComments:React.MutableRefObject<AdvancedEvaluationImageCommentInterface[]>) => {
+                               drawnComments:React.MutableRefObject<AdvancedEvaluationImageCommentModel[]>) => {
   let j= 0
   for(const comment of drawnComments.current){
     if((movedCommentIndex !== j) &&
@@ -146,12 +158,12 @@ export const handleNewCommentCreation = (mouseX:number|null,
                                          chosenComment: CommentInterface|undefined,
                                          canvasRef: React.MutableRefObject<HTMLCanvasElement | null>,
                                          setCommentIndex: React.Dispatch<SetStateAction<number|null>>,
-                                         drawnComments:React.MutableRefObject<AdvancedEvaluationImageCommentInterface[]>,
-                                         fileId:number) =>{
+                                         drawnComments:React.MutableRefObject<AdvancedEvaluationImageCommentModel[]>,
+                                         file:FileInterface) =>{
   if(chosenComment !== undefined && canvasRef.current !== undefined && canvasRef.current !== null && mouseX!==null && mouseY!==null){
 
-    let newComment:AdvancedEvaluationImageCommentInterface = {
-      id:-1, color: chosenComment.color, fileId: fileId,commentId:chosenComment.id, leftTopX: mouseX, leftTopY:mouseY, width: 1, height:1, imgHeight:canvasRef.current.height, imgWidth:canvasRef.current.width}
+    let newComment:AdvancedEvaluationImageCommentModel = {
+      id:-1, color: chosenComment.color, file: file, comment:chosenComment, leftTopX: mouseX, leftTopY:mouseY, width: 1, height:1, imgHeight:canvasRef.current.height, imgWidth:canvasRef.current.width}
     setCommentIndex(drawnComments.current.push(newComment) - 1)
   }
 }
@@ -159,7 +171,7 @@ export const handleCommentSizeChangeWhileItBeingCreated = (mouseX:number,
                                                            mouseY:number,
                                                            commentIndex:number|null,
                                                            canvasContext:React.MutableRefObject<CanvasRenderingContext2D|undefined|null>,
-                                                           drawnComments:React.MutableRefObject<AdvancedEvaluationImageCommentInterface[]>,
+                                                           drawnComments:React.MutableRefObject<AdvancedEvaluationImageCommentModel[]>,
                                                            mouseStartX: number|null,
                                                            mouseStartY: number|null,
                                                            width:number|undefined,
@@ -167,12 +179,13 @@ export const handleCommentSizeChangeWhileItBeingCreated = (mouseX:number,
                                                            setMouseStartY:React.Dispatch<SetStateAction<number|null>>,
                                                            setMouseStartX:React.Dispatch<SetStateAction<number|null>>,
                                                            canvasRef: React.MutableRefObject<HTMLCanvasElement | null>,
-                                                           image:HTMLImageElement) => {
+                                                           image:HTMLImageElement,
+                                                           setCommentsImage: React.Dispatch<React.SetStateAction<AdvancedEvaluationImageCommentModel[]>>) => {
   if(commentIndex!==null && canvasContext.current !== null && canvasContext.current !== undefined && mouseStartX!==null && mouseStartY!==null){
     const {moveDiffX, moveDiffY} = updateMouseCoords(mouseX, mouseY, setMouseStartY, setMouseStartX, canvasContext, mouseStartX, mouseStartY, canvasRef)
     drawnComments.current[commentIndex].width += moveDiffX
     drawnComments.current[commentIndex].height += moveDiffY
-    drawOnCanvas(canvasContext, image, drawnComments, width, height, canvasRef)
+    drawOnCanvas(canvasContext, image, drawnComments, width, height, canvasRef, setCommentsImage)
   }
 }
 export const handleCommentMove = (mouseX:number,
@@ -181,23 +194,24 @@ export const handleCommentMove = (mouseX:number,
                                   canvasContext:React.MutableRefObject<CanvasRenderingContext2D|undefined|null>,
                                   mouseStartX: number|null,
                                   mouseStartY: number|null,
-                                  drawnComments:React.MutableRefObject<AdvancedEvaluationImageCommentInterface[]>,
+                                  drawnComments:React.MutableRefObject<AdvancedEvaluationImageCommentModel[]>,
                                   setMouseStartY:React.Dispatch<SetStateAction<number|null>>,
                                   setMouseStartX:React.Dispatch<SetStateAction<number|null>>,
                                   canvasRef: React.MutableRefObject<HTMLCanvasElement | null>,
                                   width:number|undefined,
                                   height:number|undefined,
-                                  image:HTMLImageElement) => {
+                                  image:HTMLImageElement,
+                                  setCommentsImage: React.Dispatch<React.SetStateAction<AdvancedEvaluationImageCommentModel[]>>) => {
   if(commentIndex!==null && canvasContext.current !== null && canvasContext.current !== undefined && mouseStartX!==null && mouseStartY!==null){
     const {moveDiffX, moveDiffY} = updateMouseCoords(mouseX, mouseY, setMouseStartY, setMouseStartX, canvasContext, mouseStartX, mouseStartY, canvasRef)
     drawnComments.current[commentIndex].leftTopX += moveDiffX
     drawnComments.current[commentIndex].leftTopY += moveDiffY
-    drawOnCanvas(canvasContext, image, drawnComments, width, height, canvasRef)
+    drawOnCanvas(canvasContext, image, drawnComments, width, height, canvasRef, setCommentsImage)
   }
 }
 export const handleDrawnCommentDeletion = async (draw:boolean,
                                                  canvasContext:React.MutableRefObject<CanvasRenderingContext2D|undefined|null>,
-                                                 drawnComments:React.MutableRefObject<AdvancedEvaluationImageCommentInterface[]>,
+                                                 drawnComments:React.MutableRefObject<AdvancedEvaluationImageCommentModel[]>,
                                                  commentIndex:number|null,) => {
   if (canvasContext.current !== null && canvasContext.current !== undefined) {
     if(commentIndex !== null){
@@ -279,8 +293,8 @@ export const updateMouseCoords = (x:number,
 }
 export const checkIfOutOfCanvas = (initialDrawValue:boolean,
                                    commentIndex:number|null,
-                                   drawnComments:React.MutableRefObject<AdvancedEvaluationImageCommentInterface[]>,
-                                   commentPreviousState:AdvancedEvaluationImageCommentInterface|null,
+                                   drawnComments:React.MutableRefObject<AdvancedEvaluationImageCommentModel[]>,
+                                   commentPreviousState:AdvancedEvaluationImageCommentModel|null,
                                    canvasRef: React.MutableRefObject<HTMLCanvasElement | null>,) =>{
   let draw = initialDrawValue
   if(commentIndex !== null && commentPreviousState !== null && canvasRef.current!==null && canvasRef.current!==undefined) {
@@ -307,7 +321,7 @@ export const checkIfOutOfCanvas = (initialDrawValue:boolean,
   }
   return draw
 }
-export const normalizeCommentValues = (drawnComments:React.MutableRefObject<AdvancedEvaluationImageCommentInterface[]>,
+export const normalizeCommentValues = (drawnComments:React.MutableRefObject<AdvancedEvaluationImageCommentModel[]>,
                                        commentIndex:number|null,) => {
   if (commentIndex !== null) {
     if (drawnComments.current[commentIndex].height <= 0) {//minus height removal
@@ -336,7 +350,7 @@ export const calculateImageSizeWithAspectRatio = (image:HTMLImageElement,
 }
 export const setPartOfCommentHovered = (mouseX:number,
                                         mouseY:number,
-                                        drawnComments:React.MutableRefObject<AdvancedEvaluationImageCommentInterface[]>,
+                                        drawnComments:React.MutableRefObject<AdvancedEvaluationImageCommentModel[]>,
                                         setCommentAction:React.Dispatch<SetStateAction<CommentActionsType>>,
                                         clickedCommentIndex?:number|null) => {
   for (let i = 0; i < drawnComments.current.length; i++) {
@@ -396,7 +410,7 @@ export const setPartOfCommentHovered = (mouseX:number,
   return null
 }
 export const scaleCommentsToImageDimensions = (canvasRef: React.MutableRefObject<HTMLCanvasElement | null>,
-                                               drawnComments:React.MutableRefObject<AdvancedEvaluationImageCommentInterface[]>) => {
+                                               drawnComments:React.MutableRefObject<AdvancedEvaluationImageCommentModel[]>) => {
   if(canvasRef.current!==null && canvasRef.current!==undefined){
     for(const comment of drawnComments.current){
       const commentsProportionsWidth = canvasRef.current.width/comment.imgWidth
@@ -433,8 +447,8 @@ export const calculateCanvasSize = (width:number|undefined,
 }
 export const runBackCommentValues = (initialDrawValue:boolean,
                                      commentIndex:number|null,
-                                     commentPreviousState:AdvancedEvaluationImageCommentInterface|null,
-                                     drawnComments:React.MutableRefObject<AdvancedEvaluationImageCommentInterface[]>,) => {
+                                     commentPreviousState:AdvancedEvaluationImageCommentModel|null,
+                                     drawnComments:React.MutableRefObject<AdvancedEvaluationImageCommentModel[]>,) => {
   let draw = initialDrawValue
   if(commentIndex !== null && commentPreviousState !== null) {
     if(checkCollision(
@@ -456,7 +470,7 @@ export const handleMouseMove = (event:React.MouseEvent,
                                 setCommentIndex:React.Dispatch<SetStateAction<number|null>>,
                                 canvasContext:React.MutableRefObject<CanvasRenderingContext2D|undefined|null>,
                                 canvasRef: React.MutableRefObject<HTMLCanvasElement | null>,
-                                drawnComments:React.MutableRefObject<AdvancedEvaluationImageCommentInterface[]>,
+                                drawnComments:React.MutableRefObject<AdvancedEvaluationImageCommentModel[]>,
                                 setCommentAction:React.Dispatch<SetStateAction<CommentActionsType>>,
                                 commentAction: CommentActionsType,
                                 commentIndex:number|null,
@@ -466,27 +480,29 @@ export const handleMouseMove = (event:React.MouseEvent,
                                 mouseStartY: number|null,
                                 setMouseStartY:React.Dispatch<SetStateAction<number|null>>,
                                 setMouseStartX:React.Dispatch<SetStateAction<number|null>>,
-                                image:HTMLImageElement) => {
+                                image:HTMLImageElement,
+                                setCommentsImage?: React.Dispatch<React.SetStateAction<AdvancedEvaluationImageCommentModel[]>>) => {
   event.preventDefault()
   event.stopPropagation()
-  if(canvasAction === "commentDeleting") {
+
+  if(setCommentsImage !== undefined && canvasAction === "commentDeleting") {
     const {mouseXOnCanvas, mouseYOnCanvas} = calculateCoordsOnCanvas(event.clientX, event.clientY, canvasContext, canvasRef)
     setCommentIndex(setPartOfCommentHovered(mouseXOnCanvas, mouseYOnCanvas, drawnComments, setCommentAction))
     handleCursorAppearanceChange(canvasRef, commentAction)
   }
-  else if(canvasAction === "commentHolding"){
-    handleCommentMove(event.clientX, event.clientY, commentIndex, canvasContext, mouseStartX, mouseStartY, drawnComments, setMouseStartY, setMouseStartX, canvasRef,width, height, image)
+  else if(setCommentsImage !== undefined && canvasAction === "commentHolding"){
+    handleCommentMove(event.clientX, event.clientY, commentIndex, canvasContext, mouseStartX, mouseStartY, drawnComments, setMouseStartY, setMouseStartX, canvasRef,width, height, image, setCommentsImage)
   }
-  else if(canvasAction === "commentCreating") {
-    handleCommentSizeChangeWhileItBeingCreated(event.clientX, event.clientY, commentIndex, canvasContext, drawnComments, mouseStartX, mouseStartY,width, height, setMouseStartY, setMouseStartX, canvasRef, image)
+  else if(setCommentsImage !== undefined && canvasAction === "commentCreating") {
+    handleCommentSizeChangeWhileItBeingCreated(event.clientX, event.clientY, commentIndex, canvasContext, drawnComments, mouseStartX, mouseStartY,width, height, setMouseStartY, setMouseStartX, canvasRef, image, setCommentsImage)
   }
-  else if(canvasAction === "commentResizing"){
-    handleCommentResizing(event.clientX, event.clientY, commentIndex, canvasContext, mouseStartX, mouseStartY, drawnComments, commentAction, image,width, height, setMouseStartY, setMouseStartX, canvasRef)
+  else if(setCommentsImage !== undefined && canvasAction === "commentResizing"){
+    handleCommentResizing(event.clientX, event.clientY, commentIndex, canvasContext, mouseStartX, mouseStartY, drawnComments, commentAction, image,width, height, setMouseStartY, setMouseStartX, canvasRef, setCommentsImage)
   }
   else if(canvasAction === "hovering"){
     const {mouseXOnCanvas, mouseYOnCanvas} = calculateCoordsOnCanvas(event.clientX, event.clientY, canvasContext, canvasRef)
     setCommentIndex(setPartOfCommentHovered(mouseXOnCanvas, mouseYOnCanvas, drawnComments, setCommentAction))
-    handleCursorAppearanceChange(canvasRef, commentAction)
+    setCommentsImage !== undefined && handleCursorAppearanceChange(canvasRef, commentAction)
   }
   console.log(commentAction, canvasAction)
 }
@@ -497,19 +513,17 @@ export const handleMouseDown = (event:React.MouseEvent,
                                 canvasContext:React.MutableRefObject<CanvasRenderingContext2D|undefined|null>,
                                 setMouseStartY:React.Dispatch<SetStateAction<number|null>>,
                                 setMouseStartX:React.Dispatch<SetStateAction<number|null>>,
-                                setCommentPreviousState:React.Dispatch<SetStateAction<AdvancedEvaluationImageCommentInterface|null>>,
-                                drawnComments:React.MutableRefObject<AdvancedEvaluationImageCommentInterface[]>,
+                                setCommentPreviousState:React.Dispatch<SetStateAction<AdvancedEvaluationImageCommentModel|null>>,
+                                drawnComments:React.MutableRefObject<AdvancedEvaluationImageCommentModel[]>,
                                 commentIndex:number|null,
                                 setMouseDownTimestamp:React.Dispatch<SetStateAction<number|null>>,
-                                mouseStartX: number|null,
-                                mouseStartY: number|null,
                                 canvasRef: React.MutableRefObject<HTMLCanvasElement | null>,
-                                fileId: number,
+                                file?: FileInterface,
                                 chosenComment?: CommentInterface|undefined) => {
   event.preventDefault()
   event.stopPropagation()
-
-  if(event.button === 2){//check if rmb used
+  setMouseDownTimestamp(event.timeStamp)
+  if(event.button === 2 && file !== undefined){//check if rmb used
     setCanvasAction("commentDeleting")
   }
   else if(commentAction==="centerHovered"){
@@ -524,14 +538,14 @@ export const handleMouseDown = (event:React.MouseEvent,
       setCommentPreviousState(commentIndex === null ? null : JSON.parse(JSON.stringify(drawnComments.current[commentIndex])))//deep copy
     }
   }
-  else if(commentAction==="leftTopCornerHovered" ||
+  else if((commentAction==="leftTopCornerHovered" ||
     commentAction==="topLineHovered" ||
     commentAction==="rightTopCornerHovered" ||
     commentAction==="rightLineHovered" ||
     commentAction==="rightBottomCornerHovered" ||
     commentAction==="bottomLineHovered" ||
     commentAction==="leftBottomCornerHovered" ||
-    commentAction==="leftLineHovered"){
+    commentAction==="leftLineHovered") && file !== undefined){
     setCanvasAction("commentResizing")
     if (canvasContext.current !== null && canvasContext.current !== undefined) {
       const { mouseXOnCanvas, mouseYOnCanvas } = calculateCoordsOnCanvas(event.clientX, event.clientY, canvasContext, canvasRef)
@@ -540,17 +554,16 @@ export const handleMouseDown = (event:React.MouseEvent,
       setCommentPreviousState(commentIndex === null ? null : JSON.parse(JSON.stringify(drawnComments.current[commentIndex])))
     }
   }
-  else if (chosenComment !== undefined) {
+  else if (chosenComment !== undefined && file !== undefined) {
     setCanvasAction("commentCreating")
     if (canvasContext.current !== null && canvasContext.current !== undefined) {
       const { mouseXOnCanvas, mouseYOnCanvas } = calculateCoordsOnCanvas(event.clientX, event.clientY, canvasContext, canvasRef)
       setMouseStartX(mouseXOnCanvas)
       setMouseStartY(mouseYOnCanvas)
 
-      handleNewCommentCreation(mouseXOnCanvas, mouseYOnCanvas, chosenComment, canvasRef, setCommentIndex, drawnComments, fileId)
+      handleNewCommentCreation(mouseXOnCanvas, mouseYOnCanvas, chosenComment, canvasRef, setCommentIndex, drawnComments, file)
     }
   }
-  setMouseDownTimestamp(event.timeStamp)
 }
 export const handleMouseUp = async (event: React.MouseEvent,
                                     canvasAction:CanvasActionsType,
@@ -559,39 +572,41 @@ export const handleMouseUp = async (event: React.MouseEvent,
                                     setMouseStartY:React.Dispatch<SetStateAction<number|null>>,
                                     setMouseStartX:React.Dispatch<SetStateAction<number|null>>,
                                     setMouseDownTimestamp:React.Dispatch<SetStateAction<number|null>>,
-                                    setCommentPreviousState:React.Dispatch<SetStateAction<AdvancedEvaluationImageCommentInterface|null>>,
+                                    setCommentPreviousState:React.Dispatch<SetStateAction<AdvancedEvaluationImageCommentModel|null>>,
                                     commentIndex:number|null,
                                     mouseDownTimestamp:number|null,
                                     handleCommentHighlighting: (commentIdToHighlight: number) => void,
-                                    drawnComments:React.MutableRefObject<AdvancedEvaluationImageCommentInterface[]>,
-                                    commentPreviousState: AdvancedEvaluationImageCommentInterface|null,
+                                    drawnComments:React.MutableRefObject<AdvancedEvaluationImageCommentModel[]>,
+                                    commentPreviousState: AdvancedEvaluationImageCommentModel|null,
                                     image:HTMLImageElement,
                                     canvasContext:React.MutableRefObject<CanvasRenderingContext2D|undefined|null>,
                                     canvasRef: React.MutableRefObject<HTMLCanvasElement | null>,
-                                    setRefreshRightPanelUserComments: React.Dispatch<SetStateAction<boolean>>,
-                                    setSortButtonState:React.Dispatch<SetStateAction<SortButtonStateType>>,
+
                                     setCommentAction:React.Dispatch<SetStateAction<CommentActionsType>>,
                                     commentAction:CommentActionsType,
                                     width:number|undefined,
-                                    height:number|undefined,) => {
+                                    height:number|undefined,
+                                    setSortButtonState?:React.Dispatch<SetStateAction<SortButtonStateType>>,
+                                    setCommentsImage?: React.Dispatch<React.SetStateAction<AdvancedEvaluationImageCommentModel[]>>,
+                                    setRefreshRightPanelUserComments?: React.Dispatch<SetStateAction<boolean>>,
+                                    ) => {
   event.preventDefault()
   event.stopPropagation()
+
   let draw = false
   if (canvasAction === "commentHolding" && commentIndex !== null) {
-    console.log(commentIndex)
-    console.log(drawnComments)
     if(mouseDownTimestamp !== null && (event.timeStamp - mouseDownTimestamp) < 150){
-      handleCommentHighlighting(drawnComments.current[commentIndex].commentId)
+      handleCommentHighlighting(drawnComments.current[commentIndex].comment.id)
       drawnComments.current[commentIndex] = JSON.parse(JSON.stringify(commentPreviousState))
       draw = true
     }
-    else if (commentPreviousState !== null) {
+    else if (commentPreviousState !== null && setRefreshRightPanelUserComments !== undefined) {
       draw = checkIfOutOfCanvas(draw, commentIndex, drawnComments, commentPreviousState, canvasRef)
       draw = runBackCommentValues(draw, commentIndex, commentPreviousState, drawnComments)
       if(!draw)
         draw = await updateCommentImageInDb(draw, commentIndex, drawnComments, commentPreviousState)
     }
-  } else if (canvasAction === "commentCreating") {//mouse up while creating new comment
+  } else if (canvasAction === "commentCreating" && setRefreshRightPanelUserComments !== undefined) {//mouse up while creating new comment
     if (commentIndex !== null) {
       normalizeCommentValues(drawnComments, commentIndex)
       if (checkCollision(
@@ -600,23 +615,23 @@ export const handleMouseUp = async (event: React.MouseEvent,
         drawnComments.current[commentIndex].width,
         drawnComments.current[commentIndex].height,
         commentIndex,
-        drawnComments)) {//check if mouse up on existing comment cancel is so (comment that we are creating is already in the array)
+        drawnComments)) {//check if mouse up on existing comment cancel if so (comment that we are creating is already in the array)
         drawnComments.current.splice(commentIndex, 1)
         draw = true
-      } else {
+      } else if(setRefreshRightPanelUserComments !== undefined && setSortButtonState !== undefined) {
         draw = await saveCommentImageToDb(draw, drawnComments, commentIndex, setRefreshRightPanelUserComments, setSortButtonState)
       }
     }
-  } else if (canvasAction === "commentResizing") {
+  } else if (canvasAction === "commentResizing" && setRefreshRightPanelUserComments !== undefined) {
     normalizeCommentValues(drawnComments, commentIndex)
     draw = runBackCommentValues(draw, commentIndex, commentPreviousState, drawnComments)
     if(!draw)
       draw = await updateCommentImageInDb(draw, commentIndex, drawnComments, commentPreviousState)
-  } else if (canvasAction === "commentDeleting" && event.button === 2) {
+  } else if (canvasAction === "commentDeleting" && event.button === 2 && setRefreshRightPanelUserComments !== undefined) {
     draw = await handleDrawnCommentDeletion(draw, canvasContext, drawnComments, commentIndex)
   }
   if (draw) {
-    drawOnCanvas(canvasContext, image, drawnComments, width, height, canvasRef)
+    drawOnCanvas(canvasContext, image, drawnComments, width, height, canvasRef, setCommentsImage)
   }
   setCommentIndex(null)
   setCommentPreviousState(null)
@@ -626,28 +641,39 @@ export const handleMouseUp = async (event: React.MouseEvent,
   setCanvasAction("hovering")
   const { mouseXOnCanvas, mouseYOnCanvas } = calculateCoordsOnCanvas(event.clientX, event.clientY, canvasContext, canvasRef)
   setPartOfCommentHovered(mouseXOnCanvas, mouseYOnCanvas, drawnComments, setCommentAction)
-  handleCursorAppearanceChange(canvasRef, commentAction)
+  setSortButtonState !== undefined && handleCursorAppearanceChange(canvasRef, commentAction)
 }
 export const drawOnCanvas = (canvasContext:React.MutableRefObject<CanvasRenderingContext2D|undefined|null>,
                              image:HTMLImageElement,
-                             drawnComments:React.MutableRefObject<AdvancedEvaluationImageCommentInterface[]>,
+                             drawnComments:React.MutableRefObject<AdvancedEvaluationImageCommentModel[]>,
                              width:number|undefined,
                              height:number|undefined,
-                             canvasRef: React.MutableRefObject<HTMLCanvasElement | null>,) => {
+                             canvasRef: React.MutableRefObject<HTMLCanvasElement | null>,
+                             setCommentsImage?: React.Dispatch<React.SetStateAction<AdvancedEvaluationImageCommentModel[]>>) => {
   if(canvasContext.current!==null && canvasContext.current!==undefined){
     const {calculatedHeight, calculatedWidth} = calculateCanvasSize(width, height, image)
     if(calculatedHeight === undefined || calculatedWidth === undefined) return
+
     canvasContext.current.canvas.height = calculatedHeight
     canvasContext.current.canvas.width = calculatedWidth
     canvasContext.current.globalAlpha = 1
     canvasContext.current.clearRect(0,0, calculatedWidth, calculatedHeight)
     if(image.complete){
       canvasContext.current.drawImage(image,0,0,  canvasContext.current.canvas.width, canvasContext.current.canvas.height)
+      canvasContext.current.strokeStyle = 'black'
+      canvasContext.current.lineWidth = 3
+      canvasContext.current.strokeRect(0,0,calculatedWidth,calculatedHeight)
+
     }
     else
       image.onload = () =>{
-        if(canvasContext.current!==null && canvasContext.current!==undefined)
+        if(canvasContext.current!==null && canvasContext.current!==undefined){
           canvasContext.current.drawImage(image,0,0,  canvasContext.current.canvas.width, canvasContext.current.canvas.height)
+          canvasContext.current.strokeStyle = 'black'
+          canvasContext.current.lineWidth = 3
+          canvasContext.current.strokeRect(0,0,calculatedWidth,calculatedHeight)
+
+        }
       }
     scaleCommentsToImageDimensions(canvasRef, drawnComments)
     for (const comment of drawnComments.current) {
@@ -655,5 +681,7 @@ export const drawOnCanvas = (canvasContext:React.MutableRefObject<CanvasRenderin
       canvasContext.current.globalAlpha = 0.2
       canvasContext.current.fillRect(comment.leftTopX, comment.leftTopY, comment.width, comment.height)
     }
+    if(setCommentsImage!==undefined)
+      setCommentsImage(drawnComments.current)
   }
 }
