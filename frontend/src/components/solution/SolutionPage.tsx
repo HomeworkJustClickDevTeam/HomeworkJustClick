@@ -5,6 +5,7 @@ import {SolutionFile} from "./SolutionFile"
 import {SolutionExtendedInterface} from "../../types/SolutionExtendedInterface"
 import {useGetEvaluationBySolution} from "../customHooks/useGetEvaluationBySolution"
 import {useAppSelector} from "../../types/HooksRedux";
+import {selectGroup} from "../../redux/groupSlice";
 import {selectUserState} from "../../redux/userStateSlice";
 import {useGetEvaluationPanelByUserIdAndAssigmentId} from "../customHooks/useGetEvaluationPanelByUserIdAndAssigmentId";
 import {EvaluationPanelAssigment} from "../../types/EvaluationPanelAssigment.model";
@@ -19,7 +20,8 @@ function SolutionPage() {
     const evaluation = useGetEvaluationBySolution(solutionExtended.id);
     const userState = useAppSelector(selectUserState)
     const evaluationPanel = useGetEvaluationPanelByUserIdAndAssigmentId(userState!.id, solutionExtended.assignment.id)
-    const [isChangedButtons,setIsChangedButtons] = useState<boolean>(false)
+    const [isChangedButtons, setIsChangedButtons] = useState<boolean>(false)
+    const group = useAppSelector(selectGroup)
 
     const handleDisableRating = () => {
         setShowRating(false)
@@ -39,7 +41,7 @@ function SolutionPage() {
         }
     }
 
-    function calculatePointsWithTable(evaluationPanel:EvaluationPanelAssigment) {
+    function calculatePointsWithTable(evaluationPanel: EvaluationPanelAssigment) {
         const todayDate = solutionExtended.creationDateTime
         const completionDateTime = evaluationPanel.assignment.completionDatetime;
         const penalty = evaluationPanel.assignment.auto_penalty;
@@ -97,12 +99,11 @@ function SolutionPage() {
             </div>
             {evaluation === undefined ? (
                 <div>
-                    {solutionExtended.id && (
+                    {solutionExtended.id && group && (
                         <Link
-                            to={`/advancedEvaluation`}
+                            to={`/group/${group.id}/advancedAssignment`}
                             state={{solutionExtended: solutionExtended}}
-                            className="absolute underline font-semibold bottom-0 left-0 mb-2 ml-4"
-                        >
+                            className="absolute underline font-semibold bottom-0 left-0 mb-2 ml-4">
                             Zaawansowane Sprawdzanie
                         </Link>
                     )}
@@ -114,7 +115,7 @@ function SolutionPage() {
                                 setPoints={setPoints}
                                 solutionId={solutionExtended.id}
                                 groupId={solutionExtended.assignment.groupId}
-                                evaluationPanelButtons={evaluationPanel? evaluationPanel.evaluationPanel.buttons: undefined}
+                                evaluationPanelButtons={evaluationPanel ? evaluationPanel.evaluationPanel.buttons : undefined}
                             />
                             <button
                                 onClick={handleDisableRating}

@@ -6,10 +6,10 @@ import {
   getCommentsByUserPostgresService,
   getCommentsImageByFilePostgresService
 } from "../../services/postgresDatabaseServices"
-import { AdvancedEvaluationImageCommentInterface } from "../../types/AdvancedEvaluationImageCommentInterface"
+import { AdvancedEvaluationImageCommentModel } from "../../types/AdvancedEvaluationImageComment.model"
 
 export const useGetCommentsImageByFile = (fileId: number|undefined|null, params:string) => {
-  const [comments, setComments] = useState<AdvancedEvaluationImageCommentInterface[]>([])
+  const [comments, setComments] = useState<AdvancedEvaluationImageCommentModel[]>([])
   const dispatch = useAppDispatch()
 
   useEffect(() => {
@@ -19,7 +19,7 @@ export const useGetCommentsImageByFile = (fileId: number|undefined|null, params:
       getCommentsImageByFilePostgresService(fileId.toString(), "")
         .then(async (response) => {
           if (response !== null && response !== undefined) {
-            const commentsFromServer: AdvancedEvaluationImageCommentInterface[] = []
+            const commentsFromServer: AdvancedEvaluationImageCommentModel[] = []
             for (let pageNumber = 0; pageNumber < response.data.totalPages; pageNumber++) {
               const responsePaged = await getCommentsImageByFilePostgresService(fileId.toString(), `?page=${pageNumber}&${params}`)
               if(responsePaged?.status === 200){
@@ -33,8 +33,8 @@ export const useGetCommentsImageByFile = (fileId: number|undefined|null, params:
                     imgHeight: commentFromServer.imgHeight,
                     imgWidth: commentFromServer.imgWidth,
                     color: commentFromServer.color,
-                    commentId: commentFromServer.comment.id,
-                    fileId: commentFromServer.file.id
+                    comment: commentFromServer.comment,
+                    file: commentFromServer.file
                   })
                 }
               }

@@ -4,6 +4,7 @@ import {useNavigate} from "react-router-dom"
 import {selectUserState} from "../../redux/userStateSlice"
 import {useAppSelector} from "../../types/HooksRedux"
 import {Button} from "../../types/Table.model";
+import {EvaluationCreateModel} from "../../types/EvaluationCreate.model";
 
 interface RatingPropsInterface {
     maxPoints: number
@@ -22,15 +23,17 @@ export function Rating({
                            groupId,
                            evaluationPanelButtons,
                        }: RatingPropsInterface) {
-    const [active, setActive] = useState<number>()
-    const navigate = useNavigate()
-    const userState = useAppSelector(selectUserState)
-    const handleMark = () => {
-        const body = {result: points, grade: 0}
-        createEvaluationWithUserAndSolution(userState?.id as unknown as string, solutionId.toString(), body)
-            .then(() => navigate(`/group/${groupId}`))
-            .catch((e) => console.log(e))
+  const [active, setActive] = useState<number>()
+  const navigate = useNavigate()
+  const userState = useAppSelector(selectUserState)
+  const handleMark = () => {
+    if(points !== undefined){
+      const body:EvaluationCreateModel = new EvaluationCreateModel(points, userState!.id, solutionId, groupId, 0, false)
+      createEvaluationWithUserAndSolution(userState!.id.toString(), solutionId.toString(), body)
+        .then(() => navigate(`/group/${groupId}`))
+        .catch((e) => console.log(e))
     }
+  }
 
     function createButtonFromMaxPoints(buttons: any[]) {
         for (let i = 0; i <= maxPoints; i++) {
@@ -69,11 +72,10 @@ export function Rating({
         return buttons
     }
 
-    return (
-        <div className="mt-4">
-            <div className="relative flex w-72 gap-2 flex-wrap">{renderButtons()}</div>
-            <button onClick={handleMark} className="mt-4 px-6 py-1 bg-main_blue text-white rounded">Przeslij Ocene
-            </button>
-        </div>
-    )
+  return (
+    <div className="mt-4">
+      <div className="relative flex w-72 gap-2 flex-wrap">{renderButtons()}</div>
+      <button onClick={()=>handleMark()} className="mt-4 px-6 py-1 bg-main_blue text-white rounded">Prześlij Ocenę</button>
+    </div>
+  )
 }
