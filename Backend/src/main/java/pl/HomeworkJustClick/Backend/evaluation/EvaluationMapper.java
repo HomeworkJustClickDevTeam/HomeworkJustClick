@@ -25,7 +25,6 @@ public class EvaluationMapper {
                 .creationDatetime(evaluation.getCreationDatetime())
                 .lastModifiedDatetime(evaluation.getLastModifiedDatetime())
                 .grade(evaluation.getGrade())
-                .reported(evaluation.getReported())
                 .build();
     }
 
@@ -39,7 +38,6 @@ public class EvaluationMapper {
                 .creationDatetime(evaluation.getCreationDatetime())
                 .lastModifiedDatetime(evaluation.getLastModifiedDatetime())
                 .grade(evaluation.getGrade())
-                .reported(evaluation.getReported())
                 .build();
     }
 
@@ -49,7 +47,6 @@ public class EvaluationMapper {
                 .creationDatetime(OffsetDateTime.now())
                 .lastModifiedDatetime(OffsetDateTime.now())
                 .grade(evaluationDto.getGrade())
-                .reported(false)
                 .build();
     }
 
@@ -57,6 +54,5 @@ public class EvaluationMapper {
         evaluation.setResult(evaluationDto.getResult());
         evaluation.setLastModifiedDatetime(OffsetDateTime.now());
         evaluation.setGrade(evaluationDto.getGrade());
-        evaluation.setReported(false);
     }
 }

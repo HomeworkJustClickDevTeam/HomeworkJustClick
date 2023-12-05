@@ -13,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.HomeworkJustClick.Backend.comment.CommentResponseDto;
 
 import java.util.List;
 
@@ -131,8 +130,6 @@ public class EvaluationController {
         return evaluationService.getReportedEvaluationsByUserIdAndGroupId(userId, groupId);
     }
 
-
-
     @PostMapping("/evaluation")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(
@@ -143,7 +140,7 @@ public class EvaluationController {
                             description = "Created",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = CommentResponseDto.class))
+                                    schema = @Schema(implementation = EvaluationResponseExtendedDto.class))
                     ),
                     @ApiResponse(
                             responseCode = "404",
@@ -199,50 +196,6 @@ public class EvaluationController {
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-    }
-
-    @PostMapping("/evaluation/report/{id}")
-    @Operation(
-            summary = "Reports incorrect evaluation",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "404",
-                            description = "No evaluation with given id found in the DB.",
-                            content = @Content
-                    ),
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "OK.",
-                            content = @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = EvaluationResponseDto.class))
-                    )
-            }
-    )
-    public EvaluationResponseExtendedDto reportEvaluation(@PathVariable Integer id) {
-        return evaluationService.reportEvaluation(id);
-    }
-
-    @PostMapping("/evaluation/unreport/{id}")
-    @Operation(
-            summary = "Unreports incorrect evaluation",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "404",
-                            description = "No evaluation with given id found in the DB.",
-                            content = @Content
-                    ),
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "OK.",
-                            content = @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = EvaluationResponseDto.class))
-                    )
-            }
-    )
-    public EvaluationResponseExtendedDto unreportEvaluation(@PathVariable Integer id) {
-        return evaluationService.unreportEvaluation(id);
     }
 
     @GetMapping("/extended/evaluations")
@@ -334,6 +287,11 @@ public class EvaluationController {
                     @ApiResponse(
                             responseCode = "404",
                             description = "Missing evaluation with this id.",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Jwt token invalid",
                             content = @Content
                     )
             }
