@@ -57,9 +57,9 @@ public class CommentEvaluationControllerTest extends BaseTestEntity {
     private static Stream<Arguments> prepareInvalidData() {
         return Stream.of(
                 Arguments.of(1, 1, "A".repeat(256)),
-                Arguments.of(999, 1, "desc"),
-                Arguments.of(1, 999, "desc"),
-                Arguments.of(999, 999, "desc")
+                Arguments.of(9999, 1, "desc"),
+                Arguments.of(1, 9999, "desc"),
+                Arguments.of(9999, 9999, "desc")
         );
     }
 
