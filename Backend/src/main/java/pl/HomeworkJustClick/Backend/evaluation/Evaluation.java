@@ -7,6 +7,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import pl.HomeworkJustClick.Backend.commentevaluation.CommentEvaluation;
+import pl.HomeworkJustClick.Backend.evaluationreport.EvaluationReport;
 import pl.HomeworkJustClick.Backend.group.Group;
 import pl.HomeworkJustClick.Backend.solution.Solution;
 import pl.HomeworkJustClick.Backend.user.User;
@@ -62,9 +63,6 @@ public class Evaluation {
     @Schema(example = "3.5")
     private Double grade;
 
-    @Column(name = "reported")
-    private Boolean reported;
-
     @OneToMany(
             mappedBy = "evaluation",
             orphanRemoval = true,
@@ -72,6 +70,9 @@ public class Evaluation {
     )
     @JsonIgnore
     private List<CommentEvaluation> commentEvaluations = new ArrayList<>();
+
+    @OneToOne(mappedBy = "evaluation")
+    private EvaluationReport evaluationReport;
 
     public Evaluation(Double result, User user, Solution solution, Group group, OffsetDateTime creationDatetime, OffsetDateTime lastModifiedDatetime, Double grade, Boolean reported) {
         this.result = result;
@@ -81,6 +82,5 @@ public class Evaluation {
         this.creationDatetime = creationDatetime;
         this.lastModifiedDatetime = lastModifiedDatetime;
         this.grade = grade;
-        this.reported = reported;
     }
 }

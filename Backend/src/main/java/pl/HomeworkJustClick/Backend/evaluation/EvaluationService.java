@@ -191,17 +191,17 @@ public class EvaluationService {
     }
 
     public List<EvaluationResponseExtendedDto> getReportedEvaluationsByUserId(Integer userId) {
-        return repository.findAllByReportedAndUserId(true, userId)
+        return repository.findReportedEvaluationsByUserId(userId)
                 .stream().map(mapper::mapExtended).toList();
     }
 
     public List<EvaluationResponseExtendedDto> getReportedEvaluationsByGroupId(Integer groupId) {
-        return repository.findAllByReportedAndGroupId(true, groupId)
+        return repository.findReportedEvaluationsByGroupId(groupId)
                 .stream().map(mapper::mapExtended).toList();
     }
 
     public List<EvaluationResponseExtendedDto> getReportedEvaluationsByUserIdAndGroupId(Integer userId, Integer groupId) {
-        return repository.findAllByReportedAndUserIdAndGroupId(true, userId, groupId)
+        return repository.findReportedEvaluationsByUserIdAndGroupId(userId, groupId)
                 .stream().map(mapper::mapExtended).toList();
     }
 
@@ -252,21 +252,6 @@ public class EvaluationService {
     public void delete(int id) {
         var evaluation = findById(id);
         repository.delete(evaluation);
-    }
-
-    @Transactional
-    public EvaluationResponseExtendedDto reportEvaluation(Integer id) {
-        var evaluation = findById(id);
-        evaluation.setReported(true);
-        notificationCreateService.createEvaluationReportNotification(evaluation.getUser(), evaluation.getSolution().getAssignment(), evaluation.getSolution().getUser());
-        return mapper.mapExtended(repository.save(evaluation));
-    }
-
-    @Transactional
-    public EvaluationResponseExtendedDto unreportEvaluation(Integer id) {
-        var evaluation = findById(id);
-        evaluation.setReported(false);
-        return mapper.mapExtended(repository.save(evaluation));
     }
 
     @Transactional

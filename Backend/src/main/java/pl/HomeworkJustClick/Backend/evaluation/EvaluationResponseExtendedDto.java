@@ -28,7 +28,6 @@ public class EvaluationResponseExtendedDto {
     private OffsetDateTime lastModifiedDatetime;
     @Schema(example = "3.5")
     private Double grade;
-    private boolean reported;
     @JsonIgnore
     private boolean forbidden;
 }
