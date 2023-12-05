@@ -29,6 +29,7 @@ import { ExtendedSolutionType } from "./types/ExtendedSolutionType"
 import {RoleBasedRoute} from "./components/route/RoleBasedRoute";
 import SolutionCheckedPage from "./components/solution/SolutionCheckedPage";
 import {SolutionCheckedAdvancedPage} from "./components/solution/SolutionCheckedAdvancedPage";
+import {EvaluationsTeacherPage} from "./components/evaluation/EvaluationsTeacherPage";
 
 function App() {
   return (
@@ -94,6 +95,10 @@ function App() {
           <Route
             path="solutions/check"
             element={<SolutionsTypesPage type={"checked" as ExtendedSolutionType}/>}
+          />
+          <Route
+            path="evaluations"
+            element={<RoleBasedRoute renderForStudent={<EvaluationsTeacherPage/>} renderForTeacher={<EvaluationsTeacherPage/>}/>}
           />
 
         </Route>

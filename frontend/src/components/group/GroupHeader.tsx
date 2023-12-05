@@ -41,8 +41,8 @@ function GroupHeader({}:{key:number}) {
                 <Link to="users" className="inline-block w-[170px] p-4  rounded-t-lg "> Osoby </Link>
               </li>
               <li
-                className={locationSplit[3] === "#" ? "border-main_blue border-b-[3px] rounded bg-main_blue bg-opacity-5 text-black" : "hover:bg-hover_gray"}>
-                <Link to="#" className="inline-block w-[170px] p-4  rounded-t-lg "> Oceny</Link>
+                className={locationSplit[3] === "evaluations" ? "border-main_blue border-b-[3px] rounded bg-main_blue bg-opacity-5 text-black" : "hover:bg-hover_gray"}>
+                <Link to="evaluations" className="inline-block w-[170px] p-4  rounded-t-lg "> Oceny</Link>
               </li>
             </ul>
           </div>
