@@ -18,7 +18,7 @@ import pl.HomeworkJustClick.Backend.user.UserRepository;
 import java.nio.charset.StandardCharsets;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -32,7 +32,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         "classpath:db/init_group_teacher.sql",
         "classpath:db/init_assignment.sql",
         "classpath:db/init_solution.sql",
-        "classpath:db/init_evaluation.sql"
+        "classpath:db/init_evaluation.sql",
+        "classpath:db/init_evaluation_report.sql"
 })
 public class EvaluationControllerTest extends BaseTestEntity {
     @Autowired
@@ -170,24 +171,6 @@ public class EvaluationControllerTest extends BaseTestEntity {
                 .andExpect(status().isNotFound())
                 .andReturn();
         assertEquals(expectedSize, evaluationRepository.findAll().size());
-    }
-
-    @Test
-    void shouldReportEvaluation() throws Exception {
-        var evaluationId = evaluationRepository.findAll().get(0).getId();
-        mockMvc.perform(post("/api/evaluation/report/" + evaluationId))
-                .andExpect(status().isOk())
-                .andReturn();
-        assertTrue(evaluationRepository.findById(evaluationId).get().getReported());
-    }
-
-    @Test
-    void shouldUnreportEvaluation() throws Exception {
-        var evaluationId = evaluationRepository.findAll().get(0).getId();
-        mockMvc.perform(post("/api/evaluation/unreport/" + evaluationId))
-                .andExpect(status().isOk())
-                .andReturn();
-        assertFalse(evaluationRepository.findById(evaluationId).get().getReported());
     }
 
     @Test

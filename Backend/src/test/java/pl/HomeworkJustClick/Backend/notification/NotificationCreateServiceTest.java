@@ -10,6 +10,7 @@ import pl.HomeworkJustClick.Backend.BaseTestEntity;
 import pl.HomeworkJustClick.Backend.assignment.Assignment;
 import pl.HomeworkJustClick.Backend.evaluation.EvaluationDto;
 import pl.HomeworkJustClick.Backend.evaluation.EvaluationResponseExtendedDto;
+import pl.HomeworkJustClick.Backend.evaluationreport.EvaluationReportDto;
 import pl.HomeworkJustClick.Backend.group.GroupRepository;
 import pl.HomeworkJustClick.Backend.solution.SolutionRepository;
 import pl.HomeworkJustClick.Backend.user.UserRepository;
@@ -84,8 +85,13 @@ public class NotificationCreateServiceTest extends BaseTestEntity {
                 .andExpect(status().isCreated())
                 .andReturn();
         var evaluationResponseDto = objectMapper.readValue(evaluationResponse.getResponse().getContentAsString(), EvaluationResponseExtendedDto.class);
-        mockMvc.perform(post("/api/evaluation/report/" + evaluationResponseDto.getId()))
-                .andExpect(status().isOk())
+        var evaluationReportDto = EvaluationReportDto.builder().comment("comment").evaluationId(evaluationResponseDto.getId()).build();
+        body = objectMapper.writeValueAsString(evaluationReportDto);
+        mockMvc.perform(post("/api/evaluation_report")
+                        .content(body)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isCreated())
                 .andReturn();
         assertEquals(2, notificationRepository.findAll().size());
     }
