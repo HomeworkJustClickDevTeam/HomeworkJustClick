@@ -126,9 +126,10 @@ export default function PointsTableForm(props: {
   }
 
   return (
-    <div>
-      <h1>NOWA TABELA</h1>
-      <form onSubmit={handleSubmit}>
+    <div className={isEditForm ? 'border-t border-border_gray w-full my-2 pt-1':'mt-6 border-2 border-border_gray p-2 rounded-md'}>
+      {isEditForm ? <h1 className='font-semibold mb-2'>EDYTUJ TABELĘ</h1> : <h1 className='font-semibold mb-2'>NOWA TABELA</h1>}
+      <div className='flex relative'>
+      <form onSubmit={handleSubmit} className='flex flex-col gap-2'>
         <label>
           Nazwa:
           <input
@@ -136,15 +137,18 @@ export default function PointsTableForm(props: {
             type="text"
             onChange={handleValueChange}
             value={isEditForm ? table.name : undefined}
+            className='ml-1 pl-1 border-b solid black'
           />
         </label>
-        <label>Punkty: </label>
+        <label>Punkty:
         <input
           name="buttons"
           type="text"
           onChange={handlePointsTableChange}
           value={isEditForm ? pointsInString : undefined}
+          className='ml-1 pl-1 border-b solid black'
         />
+        </label>
         <label>
           Wiersze w tabeli (max 5):
           <input
@@ -153,26 +157,28 @@ export default function PointsTableForm(props: {
             max="5"
             onChange={handleValueChange}
             value={isEditForm ? table.width : undefined}
+            className='ml-1 pl-1 border-b solid black w-10'
           />
         </label>
         <button
           type="submit"
-          className="mr-6 mt-4 px-10 py-1 rounded-lg bg-main_blue text-white hover:bg-hover_blue hover:shadow-md active:shadow-none"
+          className="flex w-24 justify-center mr-6 mt-4 px-10 py-1 rounded-lg bg-main_blue text-white hover:bg-hover_blue hover:shadow-md active:shadow-none"
         >
-          {isEditForm ? "Edytuj" : "Zapisz"}
+          {isEditForm ? "Zatwierdź" : "Zapisz"}
         </button>
       </form>
       {!isEditForm ? (
         <button
           onClick={() => handleCancel()}
-          className="mr-6 mb-4 px-4 py-1 rounded-lg bg-berry_red text-white"
+          className="absolute bottom-2.5 right-0 mr-6 px-4 py-1 rounded-lg bg-berry_red text-white"
         >
           {" "}
           X{" "}
         </button>
       ) : (
-        <button onClick={() => deleteEvaluationTable()}> Usuń</button>
+        <button onClick={() => deleteEvaluationTable()} className="absolute bottom-0 right-0 mr-6 px-4 py-1 rounded-lg bg-berry_red text-white"> Usuń</button>
       )}
+      </div>
     </div>
   )
 }
