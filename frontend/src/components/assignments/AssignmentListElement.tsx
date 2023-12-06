@@ -6,14 +6,14 @@ interface AssignmentItemPropsInterface extends AssignmentPropsInterface {
   idGroup: string
   optionalUserId?: string
   createReportButton?: boolean
-  handleReportButtonClick?: () => void
+  handleGenerateReportButtonClick?: () => void
 }
 
 function AssignmentListElement({assignment,
                                  idGroup,
                                  optionalUserId,
                                  createReportButton=false,
-                                 handleReportButtonClick}: AssignmentItemPropsInterface) {
+                                 handleGenerateReportButtonClick}: AssignmentItemPropsInterface) {
   const completionDatetime = new Date(assignment.completionDatetime)
   return (
     <>
@@ -23,7 +23,7 @@ function AssignmentListElement({assignment,
           <div>{assignment.title}</div>
           <div className="text-border_gray">{format(completionDatetime, "dd.MM.yyyy, HH:mm")}</div>
         </div>
-        {createReportButton && handleReportButtonClick && <Link to={`/group/${idGroup}/evaluations`} type={"button"} onClick={()=>{handleReportButtonClick()}}>Wygeneruj raport</Link>}
+        {createReportButton && handleGenerateReportButtonClick && <Link to={`/group/${idGroup}/evaluations`} type={"button"} onClick={()=>{handleGenerateReportButtonClick()}}>Wygeneruj raport</Link>}
         <div className="mr-10 font-semibold text-[28px]">{"/" + assignment.max_points}</div>
       </Link>
     </>

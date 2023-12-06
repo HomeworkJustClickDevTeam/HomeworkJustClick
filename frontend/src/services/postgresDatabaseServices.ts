@@ -18,6 +18,8 @@ import {Table} from "../types/Table.model"
 import {EvaluationPanelAssignmentCreateInterface} from "../types/EvaluationPanelAssignmentCreateInterface";
 import {EvaluationPanelAssignmentInterface} from "../types/EvaluationPanelAssignmentInterface";
 import {EvaluationCreateModel} from "../types/EvaluationCreate.model";
+import {GroupCreateReportModel} from "../types/GroupCreateReport.model";
+import {AssignmentCreateReportModel} from "../types/AssignmentCreateReport.model";
 
 
 const postgresqlDatabaseJSON = axios.create({
@@ -581,6 +583,24 @@ export const createListOfCommentsPostgresService = async (commentsList: CommentC
     return await postgresqlDatabaseJSON
         .post('/comment/list', commentsList)
 }
+
+export const createReportGroup = async (groupReportCreator: GroupCreateReportModel) =>{
+    return await postgresqlDatabaseJSON
+      .post('/report/group', groupReportCreator)
+}
+export const createReportGroupCSV = async (groupReportCreator: GroupCreateReportModel) =>{
+    return await postgresqlDatabaseJSON
+      .post('/report/group_csv', groupReportCreator)
+}
+export const createReportAssignmentCSV = async (assignmentReportCreator: AssignmentCreateReportModel) =>{
+    return await postgresqlDatabaseJSON
+      .post('/report/assignment_csv', assignmentReportCreator)
+}
+export const createReportAssignment = async (assignmentReportCreator: AssignmentCreateReportModel) =>{
+    return await postgresqlDatabaseJSON
+      .post('/report/assignment', assignmentReportCreator)
+}
+
 
 export const addEvaluationPanelToAssignmentPostgresService = async (evaluationPanelAssignment: EvaluationPanelAssignmentCreateInterface) => {
     return await postgresqlDatabaseJSON
