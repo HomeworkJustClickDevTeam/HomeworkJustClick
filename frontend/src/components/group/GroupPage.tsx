@@ -26,10 +26,10 @@ function GroupPage() {
   }
   if (role === "User not in group") {
     return (
-      <>
-        User not in group
-        <button onClick={() => addToGroup()}> Add to group</button>
-      </>
+      <div className='flex flex-col items-center mt-16'>
+        <p className='flex  font-semibold underline underline-offset-2 decoration-main_blue text-3xl'>Nie ma Cię jeszcze w tej grupie</p>
+        <button onClick={() => addToGroup()} className=" mt-16 w-52 mr-2 bg-main_blue text-white px-4 py-2 rounded-md hover:text-hover_blue hover:bg-white hover:border hover:border-solid hover:border-main_blue text-xl"> Dołącz do grupy</button>
+      </div>
     )
   }
 

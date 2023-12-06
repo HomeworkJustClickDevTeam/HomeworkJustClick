@@ -99,7 +99,7 @@ export const AssignmentSettingsPage = ({handleSubmit,
   return (
     <>
       <div>
-        <div className="relative flex flex-col mx-[7.5%] mt-4 border border-border_gray border-1 rounded-md pt-4 px-4 h-80">
+        <div className="relative flex flex-col mx-[7.5%] mt-4 border border-border_gray border-1 rounded-md pt-4 px-4 fit pb-4">
           <form onSubmit={(event) => handleSubmit(event)} className="flex flex-col gap-3">
             <label className="pr-3">
               Tytuł
@@ -136,8 +136,8 @@ export const AssignmentSettingsPage = ({handleSubmit,
                 className="pl-1 ml-2 border-b-2 border-b-light_gray cursor-pointer w-12"
               />
             </label>
-            <label>Wybierz tabelę
-              <select onChange={(event) => handleTableChange(event)} value={chosenEvaluationTable}>
+            <label>Wybierz tabelę:
+              <select className="ml-2 pr-1 border-2 border-border_gray border-solid rounded-md" onChange={(event) => handleTableChange(event)} value={chosenEvaluationTable}>
                 {evaluationTables()}
               </select>
             </label>
