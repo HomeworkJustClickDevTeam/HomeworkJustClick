@@ -1,6 +1,7 @@
 package pl.HomeworkJustClick.Backend.evaluationreport;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -8,6 +9,10 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +32,26 @@ import org.springframework.web.bind.annotation.*;
 )
 public class EvaluationReportController {
     private final EvaluationReportService service;
+
+    @GetMapping("byEvaluationId/{evaluationId}")
+    public EvaluationReportResponseDto getEvaluationReportByEvaluationId(@PathVariable Integer evaluationId, @Parameter(hidden = true) @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+        return service.getEvaluationReportByEvaluationId(evaluationId);
+    }
+
+    @GetMapping("byUserId/{userId}")
+    public Slice<EvaluationReportResponseDto> getEvaluationReportByUserId(@PathVariable Integer userId, @Parameter(hidden = true) @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+        return service.getEvaluationReportsByUserId(userId, pageable);
+    }
+
+    @GetMapping("byGroupId/{groupId}")
+    public Slice<EvaluationReportResponseDto> getEvaluationReportByGroupId(@PathVariable Integer groupId, @Parameter(hidden = true) @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+        return service.getEvaluationReportsByGroupId(groupId, pageable);
+    }
+
+    @GetMapping("byUserIdAndGroupId/{userId}/{groupId}")
+    public Slice<EvaluationReportResponseDto> getEvaluationReportByUserIdAndGroupId(@PathVariable Integer userId, @PathVariable Integer groupId, @Parameter(hidden = true) @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+        return service.getEvaluationReportsByUserIdAndGroupId(userId, groupId, pageable);
+    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
