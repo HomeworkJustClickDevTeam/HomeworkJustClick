@@ -9,18 +9,23 @@ import {FaCaretDown} from "react-icons/fa";
 import {GroupHomePageDisplayer} from "./GroupHomePageDisplayer";
 
 //import {theme.colors.colorsArray: string[]} = require("../../../tailwind.config")
-
+type sortButtonValue = "Wszystkie"|"Do wykonania"|"Zrobione"|"Zaległe"|"Zadania"|"Do sprawdzenia"|"Sprawdzone"|"Spóźnione"
 function GroupHeader({}:{key:number}) {
   const location = useLocation();
   const locationSplit = location.pathname.split("/");
   const group= useAppSelector(selectGroup)
   const role = useAppSelector(selectRole)
-  const [btnStudentName, setBtnStudentName] = useState('Do wykonania')
-  const [btnTeacherName, setBtnTeacherName] = useState('Do sprawdzenia')
+  const [sortButtonState, setSortButtonState] = useState("")
   const [isOpen, setIsOpen] = useState(false)
 
+  const handleSortButton = (buttonValue: sortButtonValue) => {
+    setIsOpen(false)
+    setSortButtonState(buttonValue)
+  }
+
   useEffect(() => {
-  }, [group]);
+    if(role !== null) setSortButtonState(role === "Teacher" ? "Zadania" : "Wszystkie")
+  }, [group, role]);
 
   if(group !== null) {
     return (
@@ -31,6 +36,7 @@ function GroupHeader({}:{key:number}) {
             <article className='absolute bottom-0 mb-6 ml-4'>
               <p className='text-3xl'>{group.name}</p>
               <p className='text-xl mt-1'>{group.description}</p>
+              {role==="Teacher" && <button>Stwórz raport grupy</button>}
             </article>
           </div>
         </div>
@@ -45,37 +51,38 @@ function GroupHeader({}:{key:number}) {
                 className={locationSplit[3] === "users" ? "border-main_blue border-b-[3px] rounded bg-main_blue bg-opacity-5 text-black" : "hover:bg-hover_gray"}>
                 <Link to="users" className="inline-block w-[170px] p-4  rounded-t-lg "> Osoby </Link>
               </li>
-              <li
+              {role==="Student" &&
+                <li
                 className={locationSplit[3] === "evaluations" ? "border-main_blue border-b-[3px] rounded bg-main_blue bg-opacity-5 text-black" : "hover:bg-hover_gray"}>
                 <Link to="evaluations" className="inline-block w-[170px] p-4  rounded-t-lg "> Oceny</Link>
-              </li>
+              </li>}
             </ul>
           </div>
           <div className='relative float-right flex h-16 items-center gap-5 '>
-            {role === "Student"  ? (<button className='flex inline underline' onClick={() => setIsOpen(el => !el)}>{btnStudentName}<FaCaretDown
+            <button className='flex inline underline' onClick={() => setIsOpen(el => !el)}>{sortButtonState}<FaCaretDown
                 className=' ml-1 h-full w-[9px] items-center mt-2'/>
-            </button>) : (<button className='flex inline underline' onClick={() => setIsOpen(el => !el)}>{btnTeacherName}<FaCaretDown
-                className=' ml-1 h-full w-[9px] items-center mt-2'/>
-            </button>)}
+            </button>
 
             {isOpen && ( role === "Student" ? (
                 <div
                     className=' absolute left-4 w-40 z-10  mt-36 origin-top-right bg-white border border-hover_gray rounded-md shadow-lg '>
+                  <Link to="assignments/todo" className="block w-40 px-4 py-2 text-sm text-black rounded-lg hover:bg-lilly-bg hover:text-black" onClick={() => handleSortButton("Wszystkie")}>Wszystkie</Link>
 
-                  <Link to="assignments/todo" className="block w-40 px-4 py-2 text-sm text-black rounded-lg hover:bg-lilly-bg hover:text-black" onClick={() => setIsOpen(false)}>Do wykonania</Link>
+                  <Link to="assignments/todo" className="block w-40 px-4 py-2 text-sm text-black rounded-lg hover:bg-lilly-bg hover:text-black" onClick={() =>handleSortButton("Do wykonania")}>Do wykonania</Link>
 
-                  <Link to="assignments/done " className="block w-40 px-4 py-2 text-sm text-black rounded-lg hover:bg-lilly-bg hover:text-black" onClick={() => setIsOpen(false)}>Zrobione</Link>
+                  <Link to="assignments/done " className="block w-40 px-4 py-2 text-sm text-black rounded-lg hover:bg-lilly-bg hover:text-black" onClick={() => handleSortButton("Zrobione")}>Zrobione</Link>
 
-                  <Link to="assignments/expired" className="block w-40 px-4 py-2 text-sm text-black rounded-lg hover:bg-lilly-bg hover:text-black" onClick={() => setIsOpen(false)}>Zaległe</Link>
+                  <Link to="assignments/expired" className="block w-40 px-4 py-2 text-sm text-black rounded-lg hover:bg-lilly-bg hover:text-black" onClick={() => handleSortButton("Zaległe")}>Zaległe</Link>
                 </div>
             ) : (<div
                 className=' absolute left-16 z-10 w-56 mt-36 origin-top-right bg-white border border-hover_gray rounded-md shadow-lg pr-16'>
+              <Link to="assignments" className="block w-56 px-4 py-2 text-sm text-black rounded-lg hover:bg-lilly-bg hover:text-black" onClick={() => handleSortButton("Zadania")}>Zadania</Link>
 
-              <Link to="solutions/uncheck" className="block w-56 px-4 py-2 text-sm text-black rounded-lg hover:bg-lilly-bg hover:text-black" onClick={() => setIsOpen(false)}>Do sprawdzenia</Link>
+              <Link to="solutions/uncheck" className="block w-56 px-4 py-2 text-sm text-black rounded-lg hover:bg-lilly-bg hover:text-black" onClick={() => handleSortButton("Do sprawdzenia")}>Do sprawdzenia</Link>
 
-              <Link to="solutions/check" className="block w-56 px-4 py-2 text-sm text-black rounded-lg hover:bg-lilly-bg hover:text-black" onClick={() => setIsOpen(false)}>Sprawdzone</Link>
+              <Link to="solutions/check" className="block w-56 px-4 py-2 text-sm text-black rounded-lg hover:bg-lilly-bg hover:text-black" onClick={() => handleSortButton("Sprawdzone")}>Sprawdzone</Link>
 
-              <Link to="solutions/late" className="block w-56 px-4 py-2 text-sm text-black rounded-lg hover:bg-lilly-bg hover:text-black" onClick={() => setIsOpen(false)}>Spóźnione</Link>
+              <Link to="solutions/late" className="block w-56 px-4 py-2 text-sm text-black rounded-lg hover:bg-lilly-bg hover:text-black" onClick={() => handleSortButton("Spóźnione")}>Spóźnione</Link>
 
             </div>))}
             {role === "Teacher" && <Link to="settings" onClick={() => setIsOpen(false)}>Ustawienia</Link>}

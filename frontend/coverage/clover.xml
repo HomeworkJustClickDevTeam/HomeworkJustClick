@@ -727,7 +727,7 @@
         <line num="48" count="1" type="stmt"/>
         <line num="49" count="1" type="stmt"/>
       </file>
-      <file name="AssignmentsGroupDisplayedPage.tsx" path="C:\Users\sjule\Desktop\studia\6Sem\projektInzynierski\HomeworkJustClick\frontend\src\components\assignments\AssignmentsGroupDisplayedPage.tsx">
+      <file name="AssignmentsGroupTeacherDisplayedPage.tsx" path="C:\Users\sjule\Desktop\studia\6Sem\projektInzynierski\HomeworkJustClick\frontend\src\components\assignments\AssignmentsGroupTeacherDisplayedPage.tsx">
         <metrics statements="34" coveredstatements="9" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>
