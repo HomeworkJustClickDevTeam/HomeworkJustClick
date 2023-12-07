@@ -7,6 +7,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.jdbc.Sql;
 import pl.HomeworkJustClick.Backend.BaseTestEntity;
 import pl.HomeworkJustClick.Backend.evaluation.EvaluationRepository;
+import pl.HomeworkJustClick.Backend.group.GroupRepository;
+import pl.HomeworkJustClick.Backend.user.UserRepository;
 
 import java.nio.charset.StandardCharsets;
 
@@ -32,6 +34,47 @@ public class EvaluationReportTest extends BaseTestEntity {
     EvaluationReportRepository repository;
     @Autowired
     EvaluationRepository evaluationRepository;
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    GroupRepository groupRepository;
+
+    @Test
+    void shouldGetEvaluationReportByEvaluationId() throws Exception {
+        var evaluationId = repository.findAll().get(0).getEvaluation().getId();
+        mockMvc.perform(get("/api/evaluation_report/byEvaluationId/" + evaluationId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.evaluation.id").value(evaluationId))
+                .andReturn();
+    }
+
+    @Test
+    void shouldGetEvaluationReportsByUserId() throws Exception {
+        var userId = userRepository.findByEmail("zofia_danielska@gmail.com").get().getId();
+        mockMvc.perform(get("/api/evaluation_report/byUserId/" + userId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalElements").value(2))
+                .andReturn();
+    }
+
+    @Test
+    void shouldGetEvaluationReportsByGroupId() throws Exception {
+        var groupId = groupRepository.findAll().get(0).getId();
+        mockMvc.perform(get("/api/evaluation_report/byGroupId/" + groupId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalElements").value(2))
+                .andReturn();
+    }
+
+    @Test
+    void shouldGetEvaluationReportsByUserIdAndGroupId() throws Exception {
+        var userId = userRepository.findByEmail("zofia_danielska@gmail.com").get().getId();
+        var groupId = groupRepository.getGroupsByTeacherId(userId).get(0).getId();
+        mockMvc.perform(get("/api/evaluation_report/byUserIdAndGroupId/" + userId + "/" + groupId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalElements").value(2))
+                .andReturn();
+    }
 
     @Test
     void shouldCreateEvaluationReport() throws Exception {

@@ -2,6 +2,8 @@ package pl.HomeworkJustClick.Backend.evaluationreport;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import pl.HomeworkJustClick.Backend.evaluation.EvaluationUtilsService;
 import pl.HomeworkJustClick.Backend.infrastructure.exception.EntityNotFoundException;
@@ -19,6 +21,25 @@ public class EvaluationReportService {
     public EvaluationReport findById(Integer id) {
         return repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("EvaluationReport with id = " + id + " not fount"));
+    }
+
+    public EvaluationReportResponseDto getEvaluationReportByEvaluationId(Integer evaluationId) {
+        return mapper.map(repository.findByEvaluationId(evaluationId));
+    }
+
+    public Slice<EvaluationReportResponseDto> getEvaluationReportsByUserId(Integer userId, Pageable pageable) {
+        return repository.findAllByUserId(userId, pageable)
+                .map(mapper::map);
+    }
+
+    public Slice<EvaluationReportResponseDto> getEvaluationReportsByGroupId(Integer groupId, Pageable pageable) {
+        return repository.findAllByGroupId(groupId, pageable)
+                .map(mapper::map);
+    }
+
+    public Slice<EvaluationReportResponseDto> getEvaluationReportsByUserIdAndGroupId(Integer userId, Integer groupId, Pageable pageable) {
+        return repository.findAllByUserIdAndGroupId(userId, groupId, pageable)
+                .map(mapper::map);
     }
 
     @Transactional
