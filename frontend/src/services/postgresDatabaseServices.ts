@@ -1,18 +1,17 @@
-import { AssignmentInterface } from "../types/AssignmentInterface"
-import { AssignmentToSendInterface } from "../types/AssignmentToSendInterface"
-import { EvaluationModel } from "../types/Evaluation.model"
-import { GroupCreateInterface } from "../types/GroupCreateInterface"
-import { SolutionCreateInterface } from "../types/SolutionCreateInterface"
-import { UserLoginInterface } from "../types/UserLoginInterface"
-import { UserRegisterInterface } from "../types/UserRegisterInterface"
-import { CredentialsInterface } from "../types/CredentialsInterface"
-import { getUser } from "./otherServices"
-import { CommentCreateInterface } from "../types/CommentCreateInterface"
-import { AdvancedEvaluationTextCommentCreateInterface } from "../types/AdvancedEvaluationTextCommentCreateInterface"
-import { CommentInterface } from "../types/CommentInterface"
-import { AdvancedEvaluationImageCommentModel } from "../types/AdvancedEvaluationImageComment.model"
-import { AdvancedEvaluationTextCommentModel } from "../types/AdvancedEvaluationTextComment.model"
-import { AdvancedEvaluationImageCommentCreateInterface } from "../types/AdvancedEvaluationImageCommentCreateInterface"
+import {AssignmentInterface} from "../types/AssignmentInterface"
+import {AssignmentToSendInterface} from "../types/AssignmentToSendInterface"
+import {GroupCreateInterface} from "../types/GroupCreateInterface"
+import {SolutionCreateInterface} from "../types/SolutionCreateInterface"
+import {UserLoginInterface} from "../types/UserLoginInterface"
+import {UserRegisterInterface} from "../types/UserRegisterInterface"
+import {CredentialsInterface} from "../types/CredentialsInterface"
+import {getUser} from "./otherServices"
+import {CommentCreateInterface} from "../types/CommentCreateInterface"
+import {AdvancedEvaluationTextCommentCreateInterface} from "../types/AdvancedEvaluationTextCommentCreateInterface"
+import {CommentInterface} from "../types/CommentInterface"
+import {AdvancedEvaluationImageCommentModel} from "../types/AdvancedEvaluationImageComment.model"
+import {AdvancedEvaluationTextCommentModel} from "../types/AdvancedEvaluationTextComment.model"
+import {AdvancedEvaluationImageCommentCreateInterface} from "../types/AdvancedEvaluationImageCommentCreateInterface"
 import axios from "axios";
 import {Table} from "../types/Table.model"
 import {EvaluationPanelAssignmentCreateInterface} from "../types/EvaluationPanelAssignmentCreateInterface";
@@ -20,6 +19,7 @@ import {EvaluationPanelAssignmentInterface} from "../types/EvaluationPanelAssign
 import {EvaluationCreateModel} from "../types/EvaluationCreate.model";
 import {GroupCreateReportModel} from "../types/GroupCreateReport.model";
 import {AssignmentCreateReportModel} from "../types/AssignmentCreateReport.model";
+import {EvaluationReport} from "../types/EvaluationReport.model";
 
 
 const postgresqlDatabaseJSON = axios.create({
@@ -177,14 +177,14 @@ export const createFileWithSolutionPostgresService = async (
 }
 
 export const createEvaluationWithUserAndSolution = async (
-  userId: string,
-  solutionId: string,
-  evaluation: EvaluationCreateModel
+    userId: string,
+    solutionId: string,
+    evaluation: EvaluationCreateModel
 ) => {
-  return await postgresqlDatabaseJSON.post(
-    `/evaluation/withUserAndSolution/${userId}/${solutionId}`,
-    evaluation
-  )
+    return await postgresqlDatabaseJSON.post(
+        `/evaluation/withUserAndSolution/${userId}/${solutionId}`,
+        evaluation
+    )
 }
 
 export const addTeacherToGroupPostgresService = async (
@@ -461,24 +461,26 @@ export const changeCommentPostgresService = async (
     return await postgresqlDatabaseJSON.put(`/comment/${comment.id}`, comment)
 }
 export const changeCommentImagePostgresService = async (
-  comment: AdvancedEvaluationImageCommentModel
+    comment: AdvancedEvaluationImageCommentModel
 ) => {
-  return await postgresqlDatabaseJSON.put(
-    `/comment_file_img/${comment.id}`,
-    {id: comment.id,
-      leftTopY: comment.leftTopY,
-      leftTopX: comment.leftTopX,
-      width: comment.width,
-      height: comment.height,
-      imgHeight: comment.imgHeight,
-      imgWidth: comment.imgWidth,
-      color: comment.color,
-      commentId: comment.comment.id,
-      fileId: comment.file.id}
-  )
+    return await postgresqlDatabaseJSON.put(
+        `/comment_file_img/${comment.id}`,
+        {
+            id: comment.id,
+            leftTopY: comment.leftTopY,
+            leftTopX: comment.leftTopX,
+            width: comment.width,
+            height: comment.height,
+            imgHeight: comment.imgHeight,
+            imgWidth: comment.imgWidth,
+            color: comment.color,
+            commentId: comment.comment.id,
+            fileId: comment.file.id
+        }
+    )
 }
 export const changeCommentTextPostgresService = async (
-  comment: AdvancedEvaluationTextCommentModel
+    comment: AdvancedEvaluationTextCommentModel
 ) => {
     return await postgresqlDatabaseJSON.put(
         `/comment_file_text/${comment.id}`,
@@ -632,4 +634,8 @@ export const deleteEvaluationPanelService = async (
     return await postgresqlDatabaseJSON.delete(
         `/evaluation_panel/${evaluationPanelId}`
     )
+}
+export const addEvaluationReport = async (evaluationReport: EvaluationReport) => {
+    return await postgresqlDatabaseJSON.post(`/evaluation_report`, evaluationReport);
+
 }
