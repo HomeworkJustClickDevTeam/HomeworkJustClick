@@ -1,5 +1,5 @@
 import { UserInterface } from "../types/UserInterface"
-import { LoginUserInterface } from "../types/LoginUserInterface"
+import { UserLoginInterface } from "../types/UserLoginInterface"
 import { createAsyncThunk } from "@reduxjs/toolkit"
 import { loginPostgresService } from "./postgresDatabaseServices"
 
@@ -19,7 +19,7 @@ export const getUser = (): (UserInterface | null) => {
 
 export const loginUser = createAsyncThunk(
   "userState/login",
-  async (userData:LoginUserInterface) => {
+  async (userData:UserLoginInterface) => {
     try{
       const response = await loginPostgresService(userData)
       localStorage.setItem("user", JSON.stringify(response.data))

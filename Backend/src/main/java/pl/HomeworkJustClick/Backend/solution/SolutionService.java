@@ -7,10 +7,13 @@ import org.springframework.stereotype.Service;
 import pl.HomeworkJustClick.Backend.assignment.Assignment;
 import pl.HomeworkJustClick.Backend.assignment.AssignmentRepository;
 import pl.HomeworkJustClick.Backend.assignment.AssignmentResponseDto;
+import pl.HomeworkJustClick.Backend.evaluation.EvaluationUtilsService;
 import pl.HomeworkJustClick.Backend.group.Group;
 import pl.HomeworkJustClick.Backend.group.GroupRepository;
 import pl.HomeworkJustClick.Backend.group.GroupResponseDto;
 import pl.HomeworkJustClick.Backend.infrastructure.enums.CalendarStatus;
+import pl.HomeworkJustClick.Backend.infrastructure.exception.EntityNotFoundException;
+import pl.HomeworkJustClick.Backend.infrastructure.exception.InvalidArgumentException;
 import pl.HomeworkJustClick.Backend.user.User;
 import pl.HomeworkJustClick.Backend.user.UserRepository;
 import pl.HomeworkJustClick.Backend.user.UserResponseDto;
@@ -25,15 +28,21 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Service
 @RequiredArgsConstructor
 public class SolutionService {
-
     private final EntityManager entityManager;
-
     private final SolutionRepository solutionRepository;
-
     private final UserRepository userRepository;
-
     private final AssignmentRepository assignmentRepository;
     private final GroupRepository groupRepository;
+    private final EvaluationUtilsService evaluationUtilsService;
+
+    public Solution findById(Integer id) {
+        return solutionRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Solution with id = " + id + " not found"));
+    }
+
+    public Group getGroupBySolutionId(Integer solutionId) {
+        return findById(solutionId).getGroup();
+    }
 
     public List<SolutionResponseDto> getAll() {
         List<Solution> solutionList = solutionRepository.findAll();
@@ -115,13 +124,12 @@ public class SolutionService {
     }
 
     @Transactional
-    public Boolean delete(int id) {
-        if (solutionRepository.existsById(id)) {
-            solutionRepository.deleteById(id);
-            return true;
-        } else {
-            return false;
+    public void delete(int id) {
+        var solution = findById(id);
+        if (evaluationUtilsService.existsBySolutionId(id)) {
+            throw new InvalidArgumentException("Evaluation to solution with id = " + id + " already exists");
         }
+        solutionRepository.delete(solution);
     }
 
     @Transactional
@@ -170,7 +178,7 @@ public class SolutionService {
     }
 
     public List<SolutionResponseDto> getSolutionsByAssignmentId(int id) {
-        List<Solution> solutions = solutionRepository.getSolutionsByAssignmentId(id);
+        List<Solution> solutions = solutionRepository.findAllByAssignmentId(id);
         List<SolutionResponseDto> solutionResponsDtos = new ArrayList<>();
         for(Solution solution : solutions) {
             solutionResponsDtos.add(SolutionResponseDto.builder()
@@ -217,7 +225,7 @@ public class SolutionService {
     }
 
     public List<SolutionResponseDto> getLateSolutionsByAssignment(int assignment_id) {
-        List<Solution> solutions = solutionRepository.getSolutionsByAssignmentId(assignment_id);
+        List<Solution> solutions = solutionRepository.findAllByAssignmentId(assignment_id);
         List<Solution> lateSolutions = new ArrayList<>();
         solutions.forEach(solution -> {
             if(solution.getAssignment().getCompletionDatetime().isBefore(solution.getCreationDatetime())) {
@@ -347,7 +355,7 @@ public class SolutionService {
     }
 
     public List<SolutionResponseExtendedDto> getSolutionsByAssignmentIdExtended(int id) {
-        List<Solution> solutions = solutionRepository.getSolutionsByAssignmentId(id);
+        List<Solution> solutions = solutionRepository.findAllByAssignmentId(id);
         List<SolutionResponseExtendedDto> solutionResponses = new ArrayList<>();
         for(Solution solution : solutions) {
             solutionResponses.add(buildSolutionResponseExtended(solution));
@@ -386,7 +394,7 @@ public class SolutionService {
     }
 
     public List<SolutionResponseExtendedDto> getLateSolutionsByAssignmentExtended(int assignment_id) {
-        List<Solution> solutions = solutionRepository.getSolutionsByAssignmentId(assignment_id);
+        List<Solution> solutions = solutionRepository.findAllByAssignmentId(assignment_id);
         List<Solution> lateSolutions = new ArrayList<>();
         solutions.forEach(solution -> {
             if(solution.getAssignment().getCompletionDatetime().isBefore(solution.getCreationDatetime())) {
@@ -550,6 +558,7 @@ public class SolutionService {
                 .title(assignment.getTitle())
                 .visible(assignment.getVisible())
                 .max_points(assignment.getMax_points())
+                .auto_penalty(assignment.getAuto_penalty())
                 .build();
 
         return SolutionResponseExtendedDto.builder()
@@ -642,5 +651,20 @@ public class SolutionService {
         }
         response.sort(Comparator.comparing(SolutionResponseCalendarDto::getCreationDateTime));
         return response;
+    }
+
+    public Optional<Solution> getSolutionByEvaluationId(Integer evaluationId) {
+        return solutionRepository.getSolutionByEvaluationId(evaluationId);
+    }
+
+    public Boolean checkIfSolutionWasLate(Solution solution) {
+        if (solution.getAssignment().getCompletionDatetime().isBefore(solution.getCreationDatetime())) {
+            return true;
+        }
+        return false;
+    }
+
+    public List<Solution> getSolutionsModelsByAssignmentId(Integer assignmentId) {
+        return solutionRepository.findAllByAssignmentId(assignmentId);
     }
 }

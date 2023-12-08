@@ -10,14 +10,14 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.jdbc.Sql;
 import pl.HomeworkJustClick.Backend.BaseTestEntity;
+import pl.HomeworkJustClick.Backend.assignment.AssignmentRepository;
 import pl.HomeworkJustClick.Backend.comment.CommentRepository;
 import pl.HomeworkJustClick.Backend.file.FileRepository;
 
 import java.nio.charset.StandardCharsets;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -48,10 +48,13 @@ public class CommentFileImgControllerTest extends BaseTestEntity {
     @Autowired
     FileRepository fileRepository;
 
+    @Autowired
+    AssignmentRepository assignmentRepository;
+
     private static Stream<Arguments> prepareValidData() {
         return Stream.of(
-                Arguments.of(100, 100, 100, 100, 100, 100, 100, 1, 1, 1),
-                Arguments.of(100, 100, 100, 100, 100, 100, 100, null, 1, 1)
+                Arguments.of(100, 100, 100, 100, 100, 100, "#ffffff", 1, 1),
+                Arguments.of(100, 100, 100, 100, 100, 100, null, 1, 1)
         );
     }
 
@@ -73,7 +76,6 @@ public class CommentFileImgControllerTest extends BaseTestEntity {
                 .andExpect(jsonPath("$.leftTopY").value(commentFileImg.getLeftTopY()))
                 .andExpect(jsonPath("$.width").value(commentFileImg.getWidth()))
                 .andExpect(jsonPath("$.height").value(commentFileImg.getHeight()))
-                .andExpect(jsonPath("$.lineWidth").value(commentFileImg.getLineWidth()))
                 .andExpect(jsonPath("$.imgWidth").value(commentFileImg.getImgWidth()))
                 .andExpect(jsonPath("$.imgHeight").value(commentFileImg.getImgHeight()))
                 .andExpect(jsonPath("$.color").value(commentFileImg.getColor()))
@@ -94,18 +96,30 @@ public class CommentFileImgControllerTest extends BaseTestEntity {
 
     @Test
     void shouldGetCommentFileImgsByFileId() throws Exception {
-        var file = fileRepository.findAll().get(0);
+        var file = fileRepository.findAll().get(1);
         var commentFileImgsSize = commentFileImgRepository.getCommentFileImgsByFileId(file.getId(), Pageable.ofSize(20)).getTotalElements();
-        mockMvc.perform(get("/api/comment_file_img/byCommentId/" + file.getId()))
+        mockMvc.perform(get("/api/comment_file_img/byFileId/" + file.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.numberOfElements").value(commentFileImgsSize))
                 .andReturn();
     }
 
+    @Test
+    void shouldGetInvisibleCommentWhenGettingCommentFileImgByFile() throws Exception {
+        var assignment = assignmentRepository.findAll().get(1);
+        var comment = commentRepository.getCommentsByAssignmentIdAndVisible(assignment.getId(), false, Pageable.ofSize(20)).getContent().get(0);
+        var commentFileImg = commentFileImgRepository.getCommentFileImgsByCommentId(comment.getId(), Pageable.ofSize(20)).getContent().get(0);
+        var file = commentFileImg.getFile();
+        mockMvc.perform(get("/api/comment_file_img/byFileId/" + file.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.numberOfElements").value(1))
+                .andReturn();
+    }
+
     @ParameterizedTest
     @MethodSource("prepareValidData")
-    void shouldCreateCommentFileImg(Integer leftTopX, Integer leftTopY, Integer width, Integer height, Integer lineWidth, Integer imgWidth, Integer imgHeight, Integer color, Integer commentId, Integer fileId) throws Exception {
-        var commentFileImgDto = createCommentImgDto(leftTopX, leftTopY, width, height, lineWidth, imgWidth, imgHeight, color, commentId, fileId);
+    void shouldCreateCommentFileImg(Integer leftTopX, Integer leftTopY, Integer width, Integer height, Integer imgWidth, Integer imgHeight, String color, Integer commentId, Integer fileId) throws Exception {
+        var commentFileImgDto = createCommentImgDto(leftTopX, leftTopY, width, height, imgWidth, imgHeight, color, commentId, fileId);
         var body = objectMapper.writeValueAsString(commentFileImgDto);
         mockMvc.perform(post("/api/comment_file_img")
                         .content(body)
@@ -116,7 +130,6 @@ public class CommentFileImgControllerTest extends BaseTestEntity {
                 .andExpect(jsonPath("$.leftTopY").value(commentFileImgDto.getLeftTopY()))
                 .andExpect(jsonPath("$.width").value(commentFileImgDto.getWidth()))
                 .andExpect(jsonPath("$.height").value(commentFileImgDto.getHeight()))
-                .andExpect(jsonPath("$.lineWidth").value(commentFileImgDto.getLineWidth()))
                 .andExpect(jsonPath("$.imgWidth").value(commentFileImgDto.getImgWidth()))
                 .andExpect(jsonPath("$.imgHeight").value(commentFileImgDto.getImgHeight()))
                 .andExpect(jsonPath("$.comment.id").value(commentFileImgDto.getCommentId()))
@@ -126,9 +139,9 @@ public class CommentFileImgControllerTest extends BaseTestEntity {
 
     @ParameterizedTest
     @MethodSource("prepareValidData")
-    void shouldUpdateCommentFileImg(Integer leftTopX, Integer leftTopY, Integer width, Integer height, Integer lineWidth, Integer imgWidth, Integer imgHeight, Integer color, Integer commentId, Integer fileId) throws Exception {
+    void shouldUpdateCommentFileImg(Integer leftTopX, Integer leftTopY, Integer width, Integer height, Integer imgWidth, Integer imgHeight, String color, Integer commentId, Integer fileId) throws Exception {
         var commentFileImg = commentFileImgRepository.findAll().get(0);
-        var commentFileImgDto = createCommentImgDto(leftTopX, leftTopY, width, height, lineWidth, imgWidth, imgHeight, color, commentId, fileId);
+        var commentFileImgDto = createCommentImgDto(leftTopX, leftTopY, width, height, imgWidth, imgHeight, color, commentId, fileId);
         var body = objectMapper.writeValueAsString(commentFileImgDto);
         mockMvc.perform(put("/api/comment_file_img/" + commentFileImg.getId())
                         .content(body)
@@ -139,7 +152,6 @@ public class CommentFileImgControllerTest extends BaseTestEntity {
                 .andExpect(jsonPath("$.leftTopY").value(commentFileImgDto.getLeftTopY()))
                 .andExpect(jsonPath("$.width").value(commentFileImgDto.getWidth()))
                 .andExpect(jsonPath("$.height").value(commentFileImgDto.getHeight()))
-                .andExpect(jsonPath("$.lineWidth").value(commentFileImgDto.getLineWidth()))
                 .andExpect(jsonPath("$.imgWidth").value(commentFileImgDto.getImgWidth()))
                 .andExpect(jsonPath("$.imgHeight").value(commentFileImgDto.getImgHeight()))
                 .andExpect(jsonPath("$.comment.id").value(commentFileImgDto.getCommentId()))
@@ -150,7 +162,6 @@ public class CommentFileImgControllerTest extends BaseTestEntity {
         assertEquals(updatedCommentFileImg.getLeftTopY(), commentFileImgDto.getLeftTopY());
         assertEquals(updatedCommentFileImg.getWidth(), commentFileImgDto.getWidth());
         assertEquals(updatedCommentFileImg.getHeight(), commentFileImgDto.getHeight());
-        assertEquals(updatedCommentFileImg.getLineWidth(), commentFileImgDto.getLineWidth());
         assertEquals(updatedCommentFileImg.getImgWidth(), commentFileImgDto.getImgWidth());
         assertEquals(updatedCommentFileImg.getImgHeight(), commentFileImgDto.getImgHeight());
         assertEquals(updatedCommentFileImg.getComment().getId(), commentFileImgDto.getCommentId());
@@ -159,7 +170,7 @@ public class CommentFileImgControllerTest extends BaseTestEntity {
 
     @Test
     void shouldNotUpdateNotExistingCommentFileImg() throws Exception {
-        var commentFileImgDto = createCommentImgDto(1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
+        var commentFileImgDto = createCommentImgDto(1, 1, 1, 1, 1, 1, "#ffffff", 1, 1);
         var body = objectMapper.writeValueAsString(commentFileImgDto);
         mockMvc.perform(put("/api/comment_file_img/" + 999)
                         .content(body)
@@ -167,6 +178,38 @@ public class CommentFileImgControllerTest extends BaseTestEntity {
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().is4xxClientError())
                 .andReturn();
+    }
+
+    @Test
+    void shouldUpdateAllCommentFileImgsColorsByCommentId() throws Exception {
+        var newColor = "a".repeat(10);
+        var commentFileImg = commentFileImgRepository.findAll().get(0);
+        var commentId = commentFileImg.getComment().getId();
+        var colorDto = CommentFileImgUpdateColorDto.builder().color(newColor).build();
+        var body = objectMapper.writeValueAsString(colorDto);
+        mockMvc.perform(put("/api/comment_file_img/colorByCommentId/" + commentId)
+                        .content(body)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isOk())
+                .andReturn();
+        commentFileImgRepository.getCommentFileImgsByCommentId(commentId).forEach(c -> assertEquals(newColor, c.getColor()));
+    }
+
+    @Test
+    void shouldNotUpdateAllCommentFileImgsColorsByCommentIdWithInvalidColor() throws Exception {
+        var newColor = "a".repeat(11);
+        var commentFileImg = commentFileImgRepository.findAll().get(0);
+        var commentId = commentFileImg.getComment().getId();
+        var colorDto = CommentFileImgUpdateColorDto.builder().color(newColor).build();
+        var body = objectMapper.writeValueAsString(colorDto);
+        mockMvc.perform(put("/api/comment_file_img/colorByCommentId/" + commentId)
+                        .content(body)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().is4xxClientError())
+                .andReturn();
+        commentFileImgRepository.getCommentFileImgsByCommentId(commentId).forEach(c -> assertNotEquals(newColor, c.getColor()));
     }
 
     @Test
@@ -185,7 +228,32 @@ public class CommentFileImgControllerTest extends BaseTestEntity {
                 .andReturn();
     }
 
-    private CommentFileImgDto createCommentImgDto(Integer leftTopX, Integer leftTopY, Integer width, Integer height, Integer lineWidth, Integer imgWidth, Integer imgHeight, Integer color, Integer commentId, Integer fileId) {
+    @Test
+    void shouldDeleteCommentFileImgByCommentIdAndFileId() throws Exception {
+        var commentFileImgs = commentFileImgRepository.findAll();
+        var firstCommentFileImg = commentFileImgs.get(0);
+        var comment = firstCommentFileImg.getComment();
+        var file = firstCommentFileImg.getFile();
+        var secondCommentFileImg = commentFileImgs.get(1);
+        secondCommentFileImg.setComment(comment);
+        secondCommentFileImg.setFile(file);
+        commentFileImgRepository.save(secondCommentFileImg);
+        mockMvc.perform(delete("/api/comment_file_img/byCommentFile/" + comment.getId() + "/" + file.getId()))
+                .andExpect(status().isOk())
+                .andReturn();
+        assertEquals(commentFileImgs.size() - 2, commentFileImgRepository.findAll().size());
+    }
+
+    @Test
+    void shouldNotDeleteCommentFileImgByNotExistingCommentIdAndFileId() throws Exception {
+        var commentFileImgs = commentFileImgRepository.findAll();
+        mockMvc.perform(delete("/api/comment_file_img/byCommentFile/999/999"))
+                .andExpect(status().isOk())
+                .andReturn();
+        assertEquals(commentFileImgs.size(), commentFileImgRepository.findAll().size());
+    }
+
+    private CommentFileImgDto createCommentImgDto(Integer leftTopX, Integer leftTopY, Integer width, Integer height, Integer imgWidth, Integer imgHeight, String color, Integer commentId, Integer fileId) {
         if (commentId == 1) {
             commentId = commentRepository.findAll().get(0).getId();
         }
@@ -197,7 +265,6 @@ public class CommentFileImgControllerTest extends BaseTestEntity {
                 .leftTopY(leftTopY)
                 .width(width)
                 .height(height)
-                .lineWidth(lineWidth)
                 .imgWidth(imgWidth)
                 .imgHeight(imgHeight)
                 .color(color)

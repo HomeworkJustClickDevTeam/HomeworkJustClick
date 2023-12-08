@@ -28,4 +28,17 @@ public interface EvaluationRepository extends JpaRepository<Evaluation, Integer>
 
     @Query(value = "select count(e.*) from _evaluation e join _solution s on e.solution_id = s.id where s.id = :solution_id", nativeQuery = true)
     int checkForEvaluationToSolution(@Param("solution_id") int solution_id);
+
+    Boolean existsBySolutionId(Integer solutionId);
+
+    Boolean existsBySolutionIdAndId(Integer solutionId, Integer id);
+
+    @Query(value = "select e.* from _evaluation e join _evaluation_report er on e.id = er.evaluation_id where e.user_id = :userId", nativeQuery = true)
+    List<Evaluation> findReportedEvaluationsByUserId(@Param("userId") Integer userId);
+
+    @Query(value = "select e.* from _evaluation e join _evaluation_report er on e.id = er.evaluation_id where e.group_id = :groupId", nativeQuery = true)
+    List<Evaluation> findReportedEvaluationsByGroupId(@Param("groupId") Integer groupId);
+
+    @Query(value = "select e.* from _evaluation e join _evaluation_report er on e.id = er.evaluation_id where e.user_id = :userId and e.group_id = :groupId", nativeQuery = true)
+    List<Evaluation> findReportedEvaluationsByUserIdAndGroupId(@Param("userId") Integer userId, @Param("groupId") Integer groupId);
 }

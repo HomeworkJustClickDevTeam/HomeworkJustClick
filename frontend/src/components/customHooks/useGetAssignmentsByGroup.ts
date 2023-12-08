@@ -11,9 +11,9 @@ export const useGetAssignmentsByGroup = (groupId: number|undefined|null) => {
   const role = useAppSelector(selectRole)
 
   useEffect(() => {
-    dispatch(setIsLoading(true))
     let mounted = true
     if(groupId !== undefined && groupId !== null){
+      dispatch(setIsLoading(true))
       getAssignmentsByGroupPostgresService(groupId.toString())
         .then((response)=> {
           const assignmentsFromServer = response.data as AssignmentInterface[]
@@ -31,7 +31,7 @@ export const useGetAssignmentsByGroup = (groupId: number|undefined|null) => {
           }
         })
         .catch((error)=> {
-          if(error !== null && error !== undefined && error.response.status === 404) {
+          if(error !== null && error !== undefined && error?.response.status === 404) {
             if(mounted){setAssignments([])}
           }
           else {console.log(error)}

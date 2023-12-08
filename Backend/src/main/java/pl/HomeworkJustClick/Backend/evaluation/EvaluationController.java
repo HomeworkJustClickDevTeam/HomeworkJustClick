@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -75,12 +76,93 @@ public class EvaluationController {
         }
     }
 
-    @PostMapping("/evaluation")
-    @Hidden
-    public ResponseEntity<EvaluationResponseDto> add(@RequestBody Evaluation evaluation) {
-        EvaluationResponseDto response = evaluationService.add(evaluation);
-        return ResponseEntity.ok(response);
+    @GetMapping("/evaluations/reportedByUserId/{userId}")
+    @Operation(
+            summary = "Returns list of all reported evaluations associated with user.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = Evaluation.class))
+                            )
+                    )
+            }
+    )
+    public List<EvaluationResponseExtendedDto> getReportedEvaluationsByUserId(@PathVariable Integer userId) {
+        return evaluationService.getReportedEvaluationsByUserId(userId);
     }
+
+    @GetMapping("/evaluations/reportedByGroupId/{groupId}")
+    @Operation(
+            summary = "Returns list of all reported evaluations associated with group.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = Evaluation.class))
+                            )
+                    )
+            }
+    )
+    public List<EvaluationResponseExtendedDto> getReportedEvaluationsByGroupId(@PathVariable Integer groupId) {
+        return evaluationService.getReportedEvaluationsByGroupId(groupId);
+    }
+
+    @GetMapping("/evaluations/reportedByUserIdAndGroupId/{userId}/{groupId}")
+    @Operation(
+            summary = "Returns list of all reported evaluations associated with user in the group with given ids.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = Evaluation.class))
+                            )
+                    )
+            }
+    )
+    public List<EvaluationResponseExtendedDto> getReportedEvaluationsByUserIdAndGroupId(@PathVariable Integer userId, @PathVariable Integer groupId) {
+        return evaluationService.getReportedEvaluationsByUserIdAndGroupId(userId, groupId);
+    }
+
+    @PostMapping("/evaluation")
+    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(
+            summary = "Creates evaluation",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "201",
+                            description = "Created",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = EvaluationResponseExtendedDto.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "User or solution or group not found",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Invalid dto",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Jwt token invalid",
+                            content = @Content
+                    )
+            }
+    )
+    public EvaluationResponseExtendedDto create(@RequestBody @Valid EvaluationDto evaluationDto) {
+        return evaluationService.create(evaluationDto);
+    }
+
     @Operation(
             summary = "Creates evaluation with user and solution already attached to it.",
             responses = {
@@ -101,7 +183,8 @@ public class EvaluationController {
                                     mediaType = "application/json",
                                     schema = @Schema(implementation = EvaluationResponseDto.class))
                     )
-            }
+            },
+            deprecated = true
     )
     @PostMapping("/evaluation/withUserAndSolution/{user_id}/{solution_id}")
     public ResponseEntity<EvaluationResponseDto> addWithUserAndSolution(@RequestBody Evaluation evaluation, @PathVariable("user_id") int user_id, @PathVariable("solution_id") int solution_id) {
@@ -183,7 +266,8 @@ public class EvaluationController {
                                     mediaType = "application/json",
                                     schema = @Schema(implementation = EvaluationResponseDto.class))
                     )
-            }
+            },
+            deprecated = true
     )
     @PostMapping("/extended/evaluation/withUserAndSolution/{user_id}/{solution_id}")
     public ResponseEntity<EvaluationResponseExtendedDto> addWithUserAndSolutionExtended(@RequestBody Evaluation evaluation, @PathVariable("user_id") int user_id, @PathVariable("solution_id") int solution_id) {
@@ -204,17 +288,49 @@ public class EvaluationController {
                             responseCode = "404",
                             description = "Missing evaluation with this id.",
                             content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Jwt token invalid",
+                            content = @Content
                     )
             }
     )
     @DeleteMapping("/evaluation/{evaluation_id}")
-    public ResponseEntity<Void> delete(@PathVariable("evaluation_id") int id){
-        if(evaluationService.delete(id)){
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public void delete(@PathVariable("evaluation_id") int id) {
+        evaluationService.delete(id);
+    }
+
+    @PutMapping("/evaluation/{evaluationId}")
+    @Operation(
+            summary = "Updates evaluation",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = EvaluationResponseExtendedDto.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "User or solution or group not found",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Invalid dto",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Jwt token invalid",
+                            content = @Content
+                    )
+            }
+    )
+    public EvaluationResponseExtendedDto update(@RequestBody @Valid EvaluationDto evaluationDto, @PathVariable Integer evaluationId) {
+        return evaluationService.update(evaluationId, evaluationDto);
     }
 
     @PutMapping("/evaluation/result/{evaluation_id}")
@@ -226,7 +342,8 @@ public class EvaluationController {
                             description = "Missing evaluation with this id.",
                             content = @Content
                     )
-            }
+            },
+            deprecated = true
     )
     public ResponseEntity<Void> updateResult(@PathVariable("evaluation_id") int id, @RequestBody Double result){
         if(evaluationService.changeResultById(id, result)){
@@ -246,7 +363,8 @@ public class EvaluationController {
                             description = "Missing evaluation or user with the id.",
                             content = @Content
                     )
-            }
+            },
+            deprecated = true
     )
     public ResponseEntity<Void> updateUser(@PathVariable("user_id") int userId, @PathVariable("evaluation_id") int id){
         if(evaluationService.changeUserById(id, userId)){
@@ -266,7 +384,8 @@ public class EvaluationController {
                             description = "Missing evaluation or solution with the id.",
                             content = @Content
                     )
-            }
+            },
+            deprecated = true
     )
     public ResponseEntity<Void> updateSolution(@PathVariable("solution_id") int solutionId, @PathVariable("evaluation_id") int id){
         if(evaluationService.changeSolutionById(id, solutionId)){
@@ -286,7 +405,8 @@ public class EvaluationController {
                             description = "Missing evaluation with the id.",
                             content = @Content
                     )
-            }
+            },
+            deprecated = true
     )
     public ResponseEntity<Void> updateGrade(@RequestBody Double grade, @PathVariable("evaluation_id") int id){
         if(evaluationService.changeGradeById(id, grade)){

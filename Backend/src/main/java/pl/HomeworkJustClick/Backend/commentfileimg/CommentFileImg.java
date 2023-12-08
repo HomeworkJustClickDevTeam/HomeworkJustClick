@@ -28,14 +28,12 @@ public class CommentFileImg {
     private Integer width;
     @Column(name = "height")
     private Integer height;
-    @Column(name = "line_width")
-    private Integer lineWidth;
     @Column(name = "img_width")
     private Integer imgWidth;
     @Column(name = "img_height")
     private Integer imgHeight;
     @Column(name = "color")
-    private Integer color;
+    private String color;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "comment_id", nullable = false, foreignKey = @ForeignKey(name = "comment_file_img_comment_id_fk"))
     @JsonIgnore

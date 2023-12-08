@@ -14,7 +14,7 @@ public class CommentEvaluationMapper {
     public CommentEvaluationResponseDto map(CommentEvaluation commentEvaluation) {
         return CommentEvaluationResponseDto.builder()
                 .id(commentEvaluation.getId())
-                .comment(commentMapper.map(commentEvaluation.getComment()))
+                .comment(commentMapper.mapToSimpleResponseDto(commentEvaluation.getComment()))
                 .evaluation(evaluationMapper.map(commentEvaluation.getEvaluation()))
                 .description(commentEvaluation.getDescription())
                 .build();

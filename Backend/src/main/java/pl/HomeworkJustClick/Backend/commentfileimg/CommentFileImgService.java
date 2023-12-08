@@ -7,7 +7,10 @@ import org.springframework.stereotype.Service;
 import pl.HomeworkJustClick.Backend.comment.CommentService;
 import pl.HomeworkJustClick.Backend.comment.CommentUtilsService;
 import pl.HomeworkJustClick.Backend.file.FileService;
-import pl.HomeworkJustClick.Backend.infrastructure.exception.commentfileimg.CommentFileImgNotFoundException;
+import pl.HomeworkJustClick.Backend.infrastructure.exception.EntityNotFoundException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +23,7 @@ public class CommentFileImgService {
 
     public CommentFileImg findById(Integer id) {
         return repository.findById(id)
-                .orElseThrow(() -> new CommentFileImgNotFoundException("CommentFileImg not found"));
+                .orElseThrow(() -> new EntityNotFoundException("CommentFileImg with id = " + id + " not found"));
     }
 
     public Slice<CommentFileImgResponseDto> getCommentFileImgs(Pageable pageable) {
@@ -58,9 +61,25 @@ public class CommentFileImgService {
         return mapper.map(repository.save(commentFileImg));
     }
 
+    public List<CommentFileImgResponseDto> changeAllCommentFileImgColorByCommentId(Integer commentId, CommentFileImgUpdateColorDto newColor) {
+        var comment = commentService.findById(commentId);
+        var commentFileImgs = repository.getCommentFileImgsByCommentId(comment.getId());
+        var response = new ArrayList<CommentFileImgResponseDto>();
+        commentFileImgs.forEach(commentFileImg -> {
+            commentFileImg.setColor(newColor.getColor());
+            response.add(mapper.map(repository.save(commentFileImg)));
+        });
+        return response;
+    }
+
     public void deleteCommentFileImg(Integer id) {
         var commentFileImg = findById(id);
         repository.delete(commentFileImg);
+    }
+
+    public void deleteCommentFileImgsByCommentIdAndFileId(Integer commentId, Integer fileId) {
+        var commentFileImgsToDelete = repository.getCommentFileImgsByCommentIdAndFileId(commentId, fileId);
+        repository.deleteAll(commentFileImgsToDelete);
     }
 
     private void setRelationFields(CommentFileImg commentFileImg, CommentFileImgDto commentFileImgDto) {
@@ -72,7 +91,7 @@ public class CommentFileImgService {
 
     private void checkColor(CommentFileImg commentFileImg) {
         if (commentFileImg.getColor() == null) {
-            commentFileImg.setColor(commentFileImg.getComment().getDefaultColor());
+            commentFileImg.setColor(commentFileImg.getComment().getColor());
         }
     }
 }

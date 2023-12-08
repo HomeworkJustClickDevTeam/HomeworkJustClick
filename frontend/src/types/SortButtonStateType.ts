@@ -1,0 +1,1 @@
+export type SortButtonStateType = "counter,asc"|"description,asc"|"counter,desc"|"lastUsedDate,desc"

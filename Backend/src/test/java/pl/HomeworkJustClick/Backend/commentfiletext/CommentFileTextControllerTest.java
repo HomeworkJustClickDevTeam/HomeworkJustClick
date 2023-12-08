@@ -12,8 +12,7 @@ import pl.HomeworkJustClick.Backend.file.FileRepository;
 
 import java.nio.charset.StandardCharsets;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -88,7 +87,7 @@ public class CommentFileTextControllerTest extends BaseTestEntity {
 
     @Test
     void shouldCreateCommentFileText() throws Exception {
-        var commentFileTextDto = createCommentFileTextDto(100, 100, 1, commentRepository.findAll().get(0).getId(), fileRepository.findAll().get(0).getId());
+        var commentFileTextDto = createCommentFileTextDto(100, 100, "#ffffff", commentRepository.findAll().get(0).getId(), fileRepository.findAll().get(0).getId());
         var body = objectMapper.writeValueAsString(commentFileTextDto);
         mockMvc.perform(post("/api/comment_file_text")
                         .content(body)
@@ -105,7 +104,7 @@ public class CommentFileTextControllerTest extends BaseTestEntity {
 
     @Test
     void shouldNotCreateCommentFileText() throws Exception {
-        var commentFileTextDto = createCommentFileTextDto(100, 100, 1, 999, 999);
+        var commentFileTextDto = createCommentFileTextDto(100, 100, "#ffffff", 999, 999);
         var body = objectMapper.writeValueAsString(commentFileTextDto);
         mockMvc.perform(post("/api/comment_file_text")
                         .content(body)
@@ -118,7 +117,7 @@ public class CommentFileTextControllerTest extends BaseTestEntity {
     @Test
     void shouldUpdateCommentFileText() throws Exception {
         var commentFileText = commentFileTextRepository.findAll().get(0);
-        var commentFileTextDto = createCommentFileTextDto(100, 100, 1, commentRepository.findAll().get(0).getId(), fileRepository.findAll().get(0).getId());
+        var commentFileTextDto = createCommentFileTextDto(100, 100, "#ffffff", commentRepository.findAll().get(0).getId(), fileRepository.findAll().get(0).getId());
         var body = objectMapper.writeValueAsString(commentFileTextDto);
         mockMvc.perform(put("/api/comment_file_text/" + commentFileText.getId())
                         .content(body)
@@ -142,7 +141,7 @@ public class CommentFileTextControllerTest extends BaseTestEntity {
     @Test
     void shouldNotUpdateCommentFileText() throws Exception {
         var commentFileText = commentFileTextRepository.findAll().get(0);
-        var commentFileTextDto = createCommentFileTextDto(100, 100, 1, 999, 999);
+        var commentFileTextDto = createCommentFileTextDto(100, 100, "#ffffff", 999, 999);
         var body = objectMapper.writeValueAsString(commentFileTextDto);
         mockMvc.perform(put("/api/comment_file_text/" + commentFileText.getId())
                         .content(body)
@@ -150,6 +149,38 @@ public class CommentFileTextControllerTest extends BaseTestEntity {
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().is4xxClientError())
                 .andReturn();
+    }
+
+    @Test
+    void shouldUpdateAllCommentFileTextsColorsByCommentId() throws Exception {
+        var newColor = "a".repeat(10);
+        var commentFileText = commentFileTextRepository.findAll().get(0);
+        var commentId = commentFileText.getComment().getId();
+        var colorDto = CommentFileTextUpdateColorDto.builder().color(newColor).build();
+        var body = objectMapper.writeValueAsString(colorDto);
+        mockMvc.perform(put("/api/comment_file_text/colorByCommentId/" + commentId)
+                        .content(body)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isOk())
+                .andReturn();
+        commentFileTextRepository.findCommentFileTextsByCommentId(commentId).forEach(c -> assertEquals(newColor, c.getColor()));
+    }
+
+    @Test
+    void shouldNotUpdateAllCommentFileImgsColorsByCommentIdWithInvalidColor() throws Exception {
+        var newColor = "a".repeat(11);
+        var commentFileText = commentFileTextRepository.findAll().get(0);
+        var commentId = commentFileText.getComment().getId();
+        var colorDto = CommentFileTextUpdateColorDto.builder().color(newColor).build();
+        var body = objectMapper.writeValueAsString(colorDto);
+        mockMvc.perform(put("/api/comment_file_text/colorByCommentId/" + commentId)
+                        .content(body)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().is4xxClientError())
+                .andReturn();
+        commentFileTextRepository.findCommentFileTextsByCommentId(commentId).forEach(c -> assertNotEquals(newColor, c.getColor()));
     }
 
     @Test
@@ -168,7 +199,32 @@ public class CommentFileTextControllerTest extends BaseTestEntity {
                 .andReturn();
     }
 
-    private CommentFileTextDto createCommentFileTextDto(Integer highlightStart, Integer highlightEnd, Integer color, Integer commentId, Integer fileId) {
+    @Test
+    void shouldDeleteCommentFileTextsByCommentIdAndFileId() throws Exception {
+        var commentFileTexts = commentFileTextRepository.findAll();
+        var firstCommentFileText = commentFileTexts.get(0);
+        var comment = firstCommentFileText.getComment();
+        var file = firstCommentFileText.getFile();
+        var secondCommentFileText = commentFileTexts.get(1);
+        secondCommentFileText.setComment(comment);
+        secondCommentFileText.setFile(file);
+        commentFileTextRepository.save(secondCommentFileText);
+        mockMvc.perform(delete("/api/comment_file_text/byCommentFile/" + comment.getId() + "/" + file.getId()))
+                .andExpect(status().isOk())
+                .andReturn();
+        assertEquals(commentFileTexts.size() - 2, commentFileTextRepository.findAll().size());
+    }
+
+    @Test
+    void shouldNotDeleteCommentFileTextsByNotExistingCommentIdAndFileId() throws Exception {
+        var commentFileTexts = commentFileTextRepository.findAll();
+        mockMvc.perform(delete("/api/comment_file_text/byCommentFile/999/999"))
+                .andExpect(status().isOk())
+                .andReturn();
+        assertEquals(commentFileTexts.size(), commentFileTextRepository.findAll().size());
+    }
+
+    private CommentFileTextDto createCommentFileTextDto(Integer highlightStart, Integer highlightEnd, String color, Integer commentId, Integer fileId) {
         return CommentFileTextDto.builder()
                 .highlightStart(highlightStart)
                 .highlightEnd(highlightEnd)

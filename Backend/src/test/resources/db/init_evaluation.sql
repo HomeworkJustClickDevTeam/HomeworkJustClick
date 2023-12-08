@@ -31,7 +31,4 @@ values (now(), 3, now(), 1, (select id from _group where name = 'grupa 1'),
         (select id from _user where email = 'anna_malinowska@gmail.com')),
        (now(), 3, now(), 11, (select id from _group where name = 'grupa 3'),
         (select id from _solution where comment = 'test solution 11'),
-        (select id from _user where email = 'anna_malinowska@gmail.com')),
-       (now(), 3, now(), 12, (select id from _group where name = 'grupa 3'),
-        (select id from _solution where comment = 'test solution 12'),
         (select id from _user where email = 'anna_malinowska@gmail.com'));

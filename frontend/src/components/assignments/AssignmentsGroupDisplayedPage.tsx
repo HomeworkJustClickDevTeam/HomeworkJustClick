@@ -15,7 +15,7 @@ function AssignmentsGroupDisplayedPage() {
       {role === "Teacher" && (
         <Link to={`/group/${group?.id}/assignments/add`}>
           <button
-            className='absolute right-[7.5%] bottom-0 bg-main_blue text-white px-8 py-2 rounded-md text-lg hover:bg-hover_blue hover:shadow-md active:shadow-none'>Nowe
+            className='absolute mb-4 right-[7.5%] bottom-0 bg-main_blue text-white px-8 py-2 rounded-md text-lg hover:bg-hover_blue hover:shadow-md active:shadow-none'>Nowe
             zadanie +
           </button>
         </Link>

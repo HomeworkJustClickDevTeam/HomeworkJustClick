@@ -1,4 +1,16 @@
 delete
+from _notification;
+delete
+from _evaluation_report;
+delete
+from _evaluation_panel_assignment;
+delete
+from _evaluation_panel_button;
+delete
+from _evaluation_panel;
+delete
+from _evaluation_button;
+delete
 from _comment_file_img;
 delete
 from _comment_file_text;

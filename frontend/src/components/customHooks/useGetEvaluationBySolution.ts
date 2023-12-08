@@ -2,15 +2,19 @@ import { useEffect, useState } from "react"
 import { useAppDispatch } from "../../types/HooksRedux"
 import { setIsLoading } from "../../redux/isLoadingSlice"
 import { getEvaluationBySolutionPostgresService } from "../../services/postgresDatabaseServices"
-import { EvaluationInterface } from "../../types/EvaluationInterface"
+import { EvaluationModel } from "../../types/Evaluation.model"
 
-export const useGetEvaluationBySolution = (solutionId: number|undefined|null)=>{
-  const [evaluation, setEvaluation] = useState<EvaluationInterface|undefined>(undefined)
+export const useGetEvaluationBySolution = (
+  solutionId: number | undefined | null
+) => {
+  const [evaluation, setEvaluation] = useState<EvaluationModel | undefined>(
+    undefined
+  )
   const dispatch = useAppDispatch()
 
   useEffect(() => {
     let mounted = true
-    if(solutionId !== undefined && solutionId !== null) {
+    if (solutionId !== undefined && solutionId !== null) {
       dispatch(setIsLoading(true))
       getEvaluationBySolutionPostgresService(solutionId.toString())
         .then((response) => {
@@ -21,16 +25,23 @@ export const useGetEvaluationBySolution = (solutionId: number|undefined|null)=>{
           }
         })
         .catch((error) => {
-          if (error !== null && error !== undefined && error.response.status === 404) {
-            if(mounted){setEvaluation(undefined)}
+          if (
+            error !== null &&
+            error !== undefined &&
+            error.response.status === 404
+          ) {
+            if (mounted) {
+              setEvaluation(undefined)
+            }
           } else {
             console.log("Error fetching evaluation:", error)
           }
         })
       dispatch(setIsLoading(false))
     }
-    return () => {mounted = false}
-
+    return () => {
+      mounted = false
+    }
   }, [solutionId])
 
   return evaluation

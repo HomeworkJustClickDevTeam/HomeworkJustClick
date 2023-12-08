@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import pl.HomeworkJustClick.Backend.comment.CommentService;
 import pl.HomeworkJustClick.Backend.comment.CommentUtilsService;
 import pl.HomeworkJustClick.Backend.evaluation.EvaluationService;
-import pl.HomeworkJustClick.Backend.infrastructure.exception.commentevaluation.CommentEvaluationNotFoundException;
+import pl.HomeworkJustClick.Backend.infrastructure.exception.EntityNotFoundException;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +25,7 @@ public class CommentEvaluationService {
 
     public CommentEvaluation findById(Integer id) {
         return repository.findById(id)
-                .orElseThrow(() -> new CommentEvaluationNotFoundException("CommentEvaluation not found"));
+                .orElseThrow(() -> new EntityNotFoundException("CommentEvaluation with id = " + id + " not found"));
     }
 
     public CommentEvaluationResponseDto getCommentEvaluationById(Integer id) {

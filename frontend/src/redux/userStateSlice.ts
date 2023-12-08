@@ -3,11 +3,12 @@ import { UserInterface } from "../types/UserInterface"
 import { RootState } from "./store"
 import { getUser, loginUser } from "../services/otherServices"
 import { setIsLoadingInReducer } from "./isLoadingSlice"
+import axios from "axios";
 
 type UserStateSliceType = UserInterface | null
 export const userStateSlice = createSlice({
   name: 'userState',
-  initialState: getUser() as UserStateSliceType,
+  initialState: null as UserStateSliceType,
   reducers: {
     logOut: (_) => {
       localStorage.removeItem("user")
@@ -28,7 +29,8 @@ export const userStateSlice = createSlice({
     builder.addCase(loginUser.fulfilled,(_, action) =>
     {
       setIsLoadingInReducer(false)
-      if(action.payload.response !== undefined && action.payload.response.status !== 200){
+      if(action.payload.response !== undefined &&
+        action.payload.response.status in [...Array.from({length: 299-200+1}, (_, index) => index + 200)] === false){
         return null
       }
       else {

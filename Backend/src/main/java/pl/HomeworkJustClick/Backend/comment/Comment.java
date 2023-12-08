@@ -4,6 +4,7 @@ package pl.HomeworkJustClick.Backend.comment;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import pl.HomeworkJustClick.Backend.assignment.Assignment;
 import pl.HomeworkJustClick.Backend.commentevaluation.CommentEvaluation;
 import pl.HomeworkJustClick.Backend.commentfileimg.CommentFileImg;
 import pl.HomeworkJustClick.Backend.commentfiletext.CommentFileText;
@@ -34,14 +35,17 @@ public class Comment {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "defaultColor")
-    private Integer defaultColor;
+    @Column(name = "color")
+    private String color;
 
     @Column(name = "lastUsedDate")
     private OffsetDateTime lastUsedDate;
 
     @Column(name = "counter")
     private Integer counter;
+
+    @Column(name = "visible")
+    private Boolean visible;
 
     @OneToMany(
             mappedBy = "comment",
@@ -68,15 +72,13 @@ public class Comment {
     private List<CommentFileText> commentFileTexts = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "assignment_id", nullable = false, foreignKey = @ForeignKey(name = "comment_assignment_id_fk"))
+    @JsonIgnore
+    private Assignment assignment;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "comment_user_id_fk"))
     @JsonIgnore
     private User user;
 
-    public Comment(String title, String description, User user, Integer defaultColor, OffsetDateTime lastUsedDate) {
-        this.title = title;
-        this.description = description;
-        this.user = user;
-        this.defaultColor = defaultColor;
-        this.lastUsedDate = lastUsedDate;
-    }
 }

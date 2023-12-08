@@ -15,7 +15,7 @@ export default function GroupUserProfilePage() {
 
   return (
     <ul>
-      <li>Imię i nazwisko: {userProfile?.firstname} {userProfile?.lastname}</li>
+      <li>Imię i nazwisko: {userProfile?.name} {userProfile?.lastname}</li>
       <li>Indeks: {userProfile?.index}</li>
       <li>
         <dl>

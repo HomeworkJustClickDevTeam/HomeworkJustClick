@@ -9,6 +9,8 @@ import pl.HomeworkJustClick.Backend.group.Group;
 import pl.HomeworkJustClick.Backend.group.GroupRepository;
 import pl.HomeworkJustClick.Backend.group.GroupResponseDto;
 import pl.HomeworkJustClick.Backend.infrastructure.enums.CalendarStatus;
+import pl.HomeworkJustClick.Backend.infrastructure.exception.EntityNotFoundException;
+import pl.HomeworkJustClick.Backend.notification.NotificationCreateService;
 import pl.HomeworkJustClick.Backend.solution.SolutionRepository;
 import pl.HomeworkJustClick.Backend.user.User;
 import pl.HomeworkJustClick.Backend.user.UserRepository;
@@ -36,6 +38,12 @@ public class AssignmentService {
     private final SolutionRepository solutionRepository;
 
     private final EvaluationRepository evaluationRepository;
+    private final NotificationCreateService notificationCreateService;
+
+    public Assignment findById(Integer id) {
+        return assignmentRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Assignment with id = " + id + " not found"));
+    }
 
     public List<AssignmentResponseDto> getAll() {
         List<Assignment> assignmentList = assignmentRepository.findAll();
@@ -98,6 +106,10 @@ public class AssignmentService {
                 assignment.setGroup(group.get());
                 assignment.setUser(user.get());
                 entityManager.persist(assignment);
+                group.get().getGroupStudents().forEach(groupStudent -> {
+                    var student = groupStudent.getUser();
+                    notificationCreateService.createAssignmentNotification(student, assignment, group.get());
+                });
                 return AssignmentResponseDto.builder()
                         .id(assignment.getId())
                         .userId(user_id)
