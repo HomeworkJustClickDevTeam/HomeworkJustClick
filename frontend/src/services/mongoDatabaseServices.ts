@@ -6,7 +6,7 @@ const mongoDatabaseServices = axios.create({
   timeout: 8082,
   headers: {
     "Content-Type": `multipart/form-data`,
-    "Access-Control-Allow-Origin": "http://localhost:3000",
+    "Access-Control-Allow-Origin": "http://ec2-18-185-95-150.eu-central-1.compute.amazonaws.com",
     ...(getUser()?.token && {
       Authorization: `Bearer ${getUser()?.token}`,
     }),

@@ -12,6 +12,6 @@ jobs:
     - name: Pull Docker images
       run: sudo docker pull pioszymk/homework-just-click -a
     - name: Delete Old docker containers
-      run: sudo docker image prune || true
+      run: sudo docker image prune -f
     - name: Run Docker Containers
       run: sudo docker-compose up -d 

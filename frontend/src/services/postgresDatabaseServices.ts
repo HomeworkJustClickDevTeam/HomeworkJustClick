@@ -10,19 +10,19 @@ import { CredentialsInterface } from "../types/CredentialsInterface"
 import { getUser } from "./otherServices"
 
 const postgresqlDatabaseJSON = axios.create({
-  baseURL: "http://homework_just_click_backend_api/api",
+  baseURL: "http://ec2-18-185-95-150.eu-central-1.compute.amazonaws.com/api",
   timeout: 8000,
   headers: {
-    "Access-Control-Allow-Origin": "http://localhost:3000",
+    "Access-Control-Allow-Origin": "http://ec2-18-185-95-150.eu-central-1.compute.amazonaws.com",
     "Content-Type": "application/json",
   },
 })
 
 const postgresqlDatabaseTextPlain = axios.create({
-  baseURL: "http://homework_just_click_backend_api/api",
+  baseURL: "http://ec2-18-185-95-150.eu-central-1.compute.amazonaws.com/api",
   timeout: 8000,
   headers: {
-    "Access-Control-Allow-Origin": "http://homework_just_click_frontend",
+    "Access-Control-Allow-Origin": "http://ec2-18-185-95-150.eu-central-1.compute.amazonaws.com",
     "Content-Type": "text/plain",
   },
 })
