@@ -1,10 +1,10 @@
-import { Link } from "react-router-dom"
+import {Link, useLocation} from "react-router-dom"
 import AssignmentListElement from "./AssignmentListElement"
 import { selectRole } from "../../redux/roleSlice"
 import { selectGroup } from "../../redux/groupSlice"
 import { useAppSelector } from "../../types/HooksRedux"
 import { useGetAssignmentsByGroup } from "../customHooks/useGetAssignmentsByGroup"
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {AssignmentInterface} from "../../types/AssignmentInterface";
 import {AssignmentReportModel} from "../../types/AssignmentReport.model";
 import {GroupReportModel} from "../../types/GroupReport.model";
@@ -12,31 +12,27 @@ import {AssignmentCreateReportModel} from "../../types/AssignmentCreateReport.mo
 import {GroupCreateReportModel} from "../../types/GroupCreateReport.model";
 import {createReportAssignment, createReportGroup} from "../../services/postgresDatabaseServices";
 import {CreateReport} from "../report/CreateReport";
+import {GroupInterface} from "../../types/GroupInterface";
 
 function AssignmentsGroupTeacherDisplayedPage() {
   const role = useAppSelector(selectRole)
+  const {state} = useLocation()
   const group= useAppSelector(selectGroup)
   const assignments = useGetAssignmentsByGroup(group?.id)
-  const [chosenAssignment, setChosenAssignment] = useState<AssignmentInterface|undefined>(undefined)
-  const [report, setReport] = useState<AssignmentReportModel|GroupReportModel|undefined>(undefined)
+  const [chosenObjectsReport, setChosenObjectsReport] = useState<AssignmentInterface| GroupInterface |undefined>(undefined)
 
+  useEffect(()=>{
+    if(group !== null && state?.groupReport === true && ((chosenObjectsReport !== undefined && !('name' in chosenObjectsReport))|| chosenObjectsReport === undefined)) setChosenObjectsReport(group)
+    else if (state?.groupReport === true && chosenObjectsReport !== undefined && 'name' in chosenObjectsReport) setChosenObjectsReport(undefined)
+  }, [state])
   const handleGenerateReportButtonClick = (assignment: AssignmentInterface) =>{
-    if(assignment === chosenAssignment) setChosenAssignment(undefined)
-    else setChosenAssignment(assignment)
-  }
-  const handleReportCreation = async (createdReportData: AssignmentCreateReportModel|GroupCreateReportModel, event:React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    if('assignmentId' in createdReportData){
-      const assignmentReport = await createReportAssignment(createdReportData)
-    }
-    else {
-      const groupReport = await createReportGroup(createdReportData)
-    }
+    if(assignment === chosenObjectsReport) setChosenObjectsReport(undefined)
+    else setChosenObjectsReport(assignment)
   }
 
   return (
     <div className='relative h-[420px]'>
-      {role === "Teacher" && chosenAssignment === undefined && (
+      {role === "Teacher" && chosenObjectsReport === undefined && (
         <Link to={`/group/${group?.id}/assignments/add`}>
           <button
             className='absolute mb-4 right-[7.5%] bottom-0 bg-main_blue text-white px-8 py-2 rounded-md text-lg hover:bg-hover_blue hover:shadow-md active:shadow-none'>Nowe
@@ -55,8 +51,7 @@ function AssignmentsGroupTeacherDisplayedPage() {
           })}
         </div>
         <div style={{float:"left", width:"50%"}}>
-          {chosenAssignment && <CreateReport handleReportCreation={handleReportCreation}
-                                             reportedObject={chosenAssignment}/>}
+          {chosenObjectsReport && <CreateReport reportedObject={chosenObjectsReport}/>}
         </div>
       </div>
     </div>

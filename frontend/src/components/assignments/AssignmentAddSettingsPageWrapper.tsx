@@ -70,8 +70,6 @@ function AssignmentAddSettingsPageWrapper() {
     <AssignmentSettingsPage handleSubmit={handleSubmit}
                             assignment={assignment}
                             toSend={toSend}
-                            setComments={setComments}
-                            comments={comments}
                             setAssignment={setAssignment} evaluationTable={evaluationTable}
                             chosenEvaluationTable={chosenEvaluationTable}
                             setChosenEvaluationTable={setChosenEvaluationTable}

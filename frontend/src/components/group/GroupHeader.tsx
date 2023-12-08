@@ -36,7 +36,7 @@ function GroupHeader({}:{key:number}) {
             <article className='absolute bottom-0 mb-6 ml-4'>
               <p className='text-3xl'>{group.name}</p>
               <p className='text-xl mt-1'>{group.description}</p>
-              {role==="Teacher" && <button>Stwórz raport grupy</button>}
+              {role==="Teacher" && <Link to={"assignments"} state={{groupReport: true}}>Stwórz raport grupy</Link>}
             </article>
           </div>
         </div>

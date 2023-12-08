@@ -19,14 +19,10 @@ interface AssignmentSettingsPagePropsInterface{
   evaluationTable:Table[],
   setAssignment: (assignment: (prevState: any) => any) => void,
   group: GroupInterface|null,
-  newAssignmentId?: number,
-  setComments: React.Dispatch<SetStateAction<CommentInterface[]>>
-  comments: CommentInterface[]
+  newAssignmentId?: number
 }
 
 export const AssignmentSettingsPage = ({handleSubmit,
-                                         comments,
-                                         setComments,
                                          assignment,
                                          chosenEvaluationTable,
                                          handleDelete,

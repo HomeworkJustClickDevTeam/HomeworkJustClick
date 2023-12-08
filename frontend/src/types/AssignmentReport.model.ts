@@ -5,13 +5,13 @@ import {StudentResultModel} from "./StudentResult.model";
 export class AssignmentReportModel {
   constructor(
     public assignment: AssignmentInterface,
-    public maxResult: boolean,
+    public maxResult: number,
     public maxResultPercent: number,
     public minResult: number,
     public minResultPercent: number,
-    public avgResult: boolean,
+    public avgResult: number,
     public avgResultPercent: number,
-    public late: boolean,
+    public late: number,
     public hist: number[],
     public studentsHist: number[],
     public students: StudentResultModel[],
