@@ -11,7 +11,7 @@ import {GroupReportModel} from "../../types/GroupReport.model";
 import {AssignmentCreateReportModel} from "../../types/AssignmentCreateReport.model";
 import {GroupCreateReportModel} from "../../types/GroupCreateReport.model";
 import {createReportAssignment, createReportGroup} from "../../services/postgresDatabaseServices";
-import {CreateReport} from "../report/CreateReport";
+import {ReportCreate} from "../report/ReportCreate";
 import {GroupInterface} from "../../types/GroupInterface";
 
 function AssignmentsGroupTeacherDisplayedPage() {
@@ -51,7 +51,7 @@ function AssignmentsGroupTeacherDisplayedPage() {
           })}
         </div>
         <div style={{float:"left", width:"50%"}}>
-          {chosenObjectsReport && <CreateReport reportedObject={chosenObjectsReport}/>}
+          {chosenObjectsReport && <ReportCreate csvVersion={false} reportedObject={chosenObjectsReport}/>}
         </div>
       </div>
     </div>
