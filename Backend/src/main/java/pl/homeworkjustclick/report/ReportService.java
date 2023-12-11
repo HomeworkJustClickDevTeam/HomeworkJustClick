@@ -48,6 +48,13 @@ public class ReportService {
     public AssignmentReportResponseDto createAssignmentReport(AssignmentReportDto assignmentReportDto) {
         var assignmentId = assignmentReportDto.getAssignmentId();
         var assignment = assignmentService.findById(assignmentReportDto.getAssignmentId());
+        var solutions = solutionService.getSolutionsByAssignmentId(assignmentId);
+        if (solutions.isEmpty()) {
+            return AssignmentReportResponseDto.builder()
+                    .assignment(assignmentMapper.map(assignment))
+                    .description("Brak wysłanych rozwiązań")
+                    .build();
+        }
         var evaluations = evaluationService.getEvaluationsByAssignment(assignment.getId());
         var groupId = assignment.getGroup().getId();
         if (evaluations.isEmpty()) {
@@ -66,7 +73,22 @@ public class ReportService {
         var avgResultPercent = roundDouble(avgResult * 100 / maxPoints);
         var late = solutionService.getLateSolutionsByAssignment(assignment.getId()).size();
         var hist = assignmentReportDto.getHist();
-        var studentsHist = calculateHistogram(studentsResults, hist);
+        if (hist != null && !hist.isEmpty()) {
+            var studentsHist = calculateHistogram(studentsResults, hist);
+            return AssignmentReportResponseDto.builder()
+                    .assignment(assignmentMapper.map(assignment))
+                    .maxResult(maxResult)
+                    .maxResultPercent(maxResultPercent)
+                    .minResult(minResult)
+                    .minResultPercent(minResultPercent)
+                    .avgResult(avgResult)
+                    .avgResultPercent(avgResultPercent)
+                    .late(late)
+                    .hist(hist)
+                    .studentsHist(studentsHist)
+                    .students(studentsResults)
+                    .build();
+        }
         return AssignmentReportResponseDto.builder()
                 .assignment(assignmentMapper.map(assignment))
                 .maxResult(maxResult)
@@ -76,8 +98,6 @@ public class ReportService {
                 .avgResult(avgResult)
                 .avgResultPercent(avgResultPercent)
                 .late(late)
-                .hist(hist)
-                .studentsHist(studentsHist)
                 .students(studentsResults)
                 .build();
     }
@@ -86,6 +106,12 @@ public class ReportService {
     public GroupReportResponseDto createGroupReport(GroupReportDto groupReportDto) {
         var group = groupService.getById(groupReportDto.getGroupId()).orElseThrow(() -> new EntityNotFoundException("Group with id = " + groupReportDto.getGroupId() + " not found"));
         var assignments = assignmentService.getAssignmentsByGroupId(groupReportDto.getGroupId());
+        if (assignments.isEmpty()) {
+            return GroupReportResponseDto.builder()
+                    .group(groupMapper.map(group))
+                    .description("Brak zadań w grupie")
+                    .build();
+        }
         var assignmentReportList = new ArrayList<AssignmentReportResponseDto>();
         assignments.forEach(assignment -> {
             var assignmentReport = createAssignmentReport(AssignmentReportDto.builder()
@@ -137,17 +163,20 @@ public class ReportService {
             end.add("0");
             headerLength += 1;
         }
-        var hist = groupReport.getAssignments().get(0).getHist();
-        if (hist.get(0) != 0) {
-            hist.add(0);
-        }
-        if (hist.get(hist.size() - 1) != 100) {
-            hist.add(100);
-        }
-        Collections.sort(hist);
-        for (int i = 0; i < hist.size() - 1; i++) {
-            header.add(hist.get(i) + "-" + hist.get(i + 1));
-            end.add("0");
+        var hist = new ArrayList<Integer>();
+        if (groupReportDto.getHist() != null && !groupReportDto.getHist().isEmpty()) {
+            hist = (ArrayList<Integer>) groupReport.getAssignments().get(0).getHist();
+            if (hist.get(0) != 0) {
+                hist.add(0);
+            }
+            if (hist.get(hist.size() - 1) != 100) {
+                hist.add(100);
+            }
+            Collections.sort(hist);
+            for (int i = 0; i < hist.size() - 1; i++) {
+                header.add(hist.get(i) + "-" + hist.get(i + 1));
+                end.add("0");
+            }
         }
         var students = userService.getStudentsByGroup(groupReportDto.getGroupId());
         students.forEach(student -> {
@@ -159,7 +188,7 @@ public class ReportService {
         dataLines.add(header.toArray(new String[0]));
         var endLine = end.toArray(new String[0]);
         int finalHeaderLength = headerLength;
-        groupReport.getAssignments().forEach(assignment -> {
+        for (var assignment : groupReport.getAssignments()) {
             var line = new String[header.size()];
             line[0] = assignment.getAssignment().getTitle();
             line[1] = String.valueOf(assignment.getAssignment().getMax_points());
@@ -195,15 +224,25 @@ public class ReportService {
                 endLine[i] = String.valueOf(Double.parseDouble(endLine[i]) + assignment.getStudentsHist().get(i - finalHeaderLength));
             }
             var j = 0;
-            for (int i = finalHeaderLength + hist.size() - 1; i < header.size(); i += 2) {
-                line[i] = String.valueOf(assignment.getStudents().get(j).getResult());
-                endLine[i] = String.valueOf(Double.parseDouble(endLine[i]) + assignment.getStudents().get(j).getResult());
-                line[i + 1] = String.valueOf(assignment.getStudents().get(j).getResultPercent());
-                endLine[i + 1] = String.valueOf(Double.parseDouble(endLine[i + 1]) + assignment.getStudents().get(j).getResultPercent());
-                j += 1;
+            if (!hist.isEmpty()) {
+                for (int i = finalHeaderLength + hist.size() - 1; i < header.size(); i += 2) {
+                    line[i] = String.valueOf(assignment.getStudents().get(j).getResult());
+                    endLine[i] = String.valueOf(Double.parseDouble(endLine[i]) + assignment.getStudents().get(j).getResult());
+                    line[i + 1] = String.valueOf(assignment.getStudents().get(j).getResultPercent());
+                    endLine[i + 1] = String.valueOf(Double.parseDouble(endLine[i + 1]) + assignment.getStudents().get(j).getResultPercent());
+                    j += 1;
+                }
+            } else {
+                for (int i = finalHeaderLength; i < header.size(); i += 2) {
+                    line[i] = String.valueOf(assignment.getStudents().get(j).getResult());
+                    endLine[i] = String.valueOf(Double.parseDouble(endLine[i]) + assignment.getStudents().get(j).getResult());
+                    line[i + 1] = String.valueOf(assignment.getStudents().get(j).getResultPercent());
+                    endLine[i + 1] = String.valueOf(Double.parseDouble(endLine[i + 1]) + assignment.getStudents().get(j).getResultPercent());
+                    j += 1;
+                }
             }
             dataLines.add(line);
-        });
+        }
         if (finalHeaderLength >= 5) {
             endLine[3] = String.valueOf(roundDouble(Double.parseDouble(endLine[3]) / (dataLines.size() - 1)));
         }
@@ -253,16 +292,19 @@ public class ReportService {
             header.add("liczba spóżnionych");
             headerLength += 1;
         }
-        var hist = assignmentReport.getHist();
-        if (hist.get(0) != 0) {
-            hist.add(0);
-        }
-        if (hist.get(hist.size() - 1) != 100) {
-            hist.add(100);
-        }
-        Collections.sort(hist);
-        for (int i = 0; i < hist.size() - 1; i++) {
-            header.add(hist.get(i) + "-" + hist.get(i + 1));
+        var hist = new ArrayList<Integer>();
+        if (assignmentReportDto.getHist() != null && !assignmentReportDto.getHist().isEmpty()) {
+            hist = (ArrayList<Integer>) assignmentReport.getHist();
+            if (hist.get(0) != 0) {
+                hist.add(0);
+            }
+            if (hist.get(hist.size() - 1) != 100) {
+                hist.add(100);
+            }
+            Collections.sort(hist);
+            for (int i = 0; i < hist.size() - 1; i++) {
+                header.add(hist.get(i) + "-" + hist.get(i + 1));
+            }
         }
         var students = userService.getStudentsByGroup(assignmentReport.getAssignment().getGroupId());
         students.forEach(student -> {
@@ -297,10 +339,18 @@ public class ReportService {
             line[i] = String.valueOf(assignmentReport.getStudentsHist().get(i - finalHeaderLength));
         }
         var j = 0;
-        for (int i = finalHeaderLength + hist.size() - 1; i < header.size(); i += 2) {
-            line[i] = String.valueOf(assignmentReport.getStudents().get(j).getResult());
-            line[i + 1] = String.valueOf(assignmentReport.getStudents().get(j).getResultPercent());
-            j += 1;
+        if (!hist.isEmpty()) {
+            for (int i = finalHeaderLength + hist.size() - 1; i < header.size(); i += 2) {
+                line[i] = String.valueOf(assignmentReport.getStudents().get(j).getResult());
+                line[i + 1] = String.valueOf(assignmentReport.getStudents().get(j).getResultPercent());
+                j += 1;
+            }
+        } else {
+            for (int i = finalHeaderLength; i < header.size(); i += 2) {
+                line[i] = String.valueOf(assignmentReport.getStudents().get(j).getResult());
+                line[i + 1] = String.valueOf(assignmentReport.getStudents().get(j).getResultPercent());
+                j += 1;
+            }
         }
         dataLines.add(line);
         var fileName = "raport.csv";
