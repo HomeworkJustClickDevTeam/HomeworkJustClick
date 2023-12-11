@@ -29,6 +29,17 @@ function SolutionPage() {
     }
 
 
+    const checkIfPenaltyOn = () => {
+        if (!evaluation) {
+            if (solutionExtended.assignment.completionDatetime < solutionExtended.creationDateTime) {
+                if (solutionExtended.assignment.auto_penalty > 0) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
     return (
         <div
             className="relative flex flex-col mx-[7.5%] mt-4 border border-border_gray border-1 rounded-md pt-4 px-4 h-96 gap-2">
@@ -66,9 +77,13 @@ function SolutionPage() {
             </div>
             <div>
                 <span>Data przesłania zadania: </span>
-
-                {format(parseISO(solutionExtended.creationDateTime.toString()), "dd.MM.yyyy HH:mm")  }
+                {format(parseISO(solutionExtended.creationDateTime.toString()), "dd.MM.yyyy HH:mm")}
             </div>
+            {(checkIfPenaltyOn()) &&
+                <div>
+                    Zadanie wysłane po terminie, zostanie automatycznie naliczona
+                    kara {solutionExtended.assignment.auto_penalty}%
+                </div>}
             {evaluation === undefined ? (
                 <div>
                     {solutionExtended.id && group && (
