@@ -8,7 +8,7 @@ import {useAppSelector} from "../../types/HooksRedux";
 import {selectGroup} from "../../redux/groupSlice";
 import {selectUserState} from "../../redux/userStateSlice";
 import {useGetEvaluationPanelByUserIdAndAssigmentId} from "../customHooks/useGetEvaluationPanelByUserIdAndAssigmentId";
-import {format} from "date-fns";
+import {format, parseISO} from "date-fns";
 
 function SolutionPage() {
     let {state} = useLocation()
@@ -40,10 +40,10 @@ function SolutionPage() {
                 <span className="font-semibold">Opis zadania: </span>
                 {solutionExtended.assignment.taskDescription}
             </div>
-            {/*<div>*/}
-            {/*    <span>Data ukończenia:  </span>*/}
-            {/*    {format(solutionExtended.assignment.completionDatetime, "dd.MM.yyyy, HH:mm")}*/}
-            {/*</div>*/}
+            <div>
+                <span>Data ukończenia:  </span>
+                {format(parseISO(solutionExtended.assignment.completionDatetime.toString()), "dd.MM.yyyy HH:mm")}
+            </div>
             {solutionExtended.comment.length > 0 && (
                 <div className="text-border_gray">
                     <span className="font-semibold">Komentarz ucznia: </span>
@@ -64,11 +64,11 @@ function SolutionPage() {
                     <p>Brak</p>
                 )}
             </div>
-            {/*<div>*/}
-            {/*    <span>Data przesłania zadania:</span>*/}
-            {/*    {solutionExtended.creationDateTime instanceof Date ?*/}
-            {/*        format(solutionExtended.creationDateTime, "dd.MM.yyyy, HH:mm") : solutionExtended.creationDateTime}*/}
-            {/*</div>*/}
+            <div>
+                <span>Data przesłania zadania: </span>
+
+                {format(parseISO(solutionExtended.creationDateTime.toString()), "dd.MM.yyyy HH:mm")  }
+            </div>
             {evaluation === undefined ? (
                 <div>
                     {solutionExtended.id && group && (
