@@ -37,4 +37,16 @@ public class ExceptionHandler {
         body.put("path", ((ServletWebRequest) request).getRequest().getRequestURI());
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler(value = {InvalidUserException.class})
+    public ResponseEntity<Object> invalidUserException(InvalidUserException ex, WebRequest request) {
+        log.error(ex.getMessage());
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", 400);
+        body.put("error", "Bad request");
+        body.put("message", ex.getMessage());
+        body.put("path", ((ServletWebRequest) request).getRequest().getRequestURI());
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
 }

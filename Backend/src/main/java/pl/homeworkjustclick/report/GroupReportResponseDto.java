@@ -13,4 +13,5 @@ import java.util.List;
 public class GroupReportResponseDto {
     private GroupResponseDto group;
     private List<AssignmentReportResponseDto> assignments;
+    private String description;
 }

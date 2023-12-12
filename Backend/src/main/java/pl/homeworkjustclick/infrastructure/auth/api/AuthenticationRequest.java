@@ -1,4 +1,4 @@
-package pl.homeworkjustclick.infrastructure.auth;
+package pl.homeworkjustclick.infrastructure.auth.api;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Size;
@@ -11,18 +11,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegisterRequest {
-
-    @Schema(example = "Example")
-    @Size(max = 255)
-    private String firstname;
-    @Schema(example = "Examplowski")
-    @Size(max = 255)
-    private String lastname;
+public class AuthenticationRequest {
     @Schema(example = "dadwa@wda.com")
     @Size(max = 255)
     private String email;
     @Schema(example = "d092")
-    @Size(min = 8, max = 255)
+    @Size(max = 255)
     private String password;
 }

@@ -1,4 +1,4 @@
-package pl.homeworkjustclick.infrastructure.auth;
+package pl.homeworkjustclick.infrastructure.auth.api;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;

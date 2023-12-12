@@ -1,6 +1,5 @@
 package pl.homeworkjustclick.assignment;
 
-import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,9 +25,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Service
 @RequiredArgsConstructor
 public class AssignmentService {
-
-    private final EntityManager entityManager;
-
     private final AssignmentRepository assignmentRepository;
 
     private final GroupRepository groupRepository;
@@ -73,9 +69,14 @@ public class AssignmentService {
         return assignmentOptional.map(this::buildAssignmentResponseExtended).orElse(null);
     }
 
+    public Assignment findByEvaluationId(Integer evaluationId) {
+        return assignmentRepository.findAssignmentByEvaluationId(evaluationId)
+                .orElseThrow(() -> new EntityNotFoundException("Assignment with evaluationId = " + evaluationId + " not found"));
+    }
+
     @Transactional
     public AssignmentResponseDto add(Assignment assignment) {
-        entityManager.persist(assignment);
+        assignmentRepository.save(assignment);
         return AssignmentResponseDto.builder()
                 .id(assignment.getId())
                 .userId((assignment.getUser() == null) ? null : assignment.getUser().getId())
@@ -105,7 +106,7 @@ public class AssignmentService {
             if(ok.get()) {
                 assignment.setGroup(group.get());
                 assignment.setUser(user.get());
-                entityManager.persist(assignment);
+                assignmentRepository.save(assignment);
                 group.get().getGroupStudents().forEach(groupStudent -> {
                     var student = groupStudent.getUser();
                     notificationCreateService.createAssignmentNotification(student, assignment, group.get());
