@@ -61,20 +61,18 @@ export const ReportCreate = ({reportedObject, csvVersion
     event.preventDefault()
     if(reportCreate === undefined) return
     try {
-      if('assignmentId' in reportCreate){
-        const response = await createReportAssignmentCSV(reportCreate)
-        if(response?.status === 200){
-          const file = new Blob([response.data], {type:'text/plain;charset=utf8'})
-          const href = URL.createObjectURL(file)
-          const link = document.createElement('a')
-          link.href = href
-          link.download = 'csvReport.csv'
-          link.click()
-          URL.revokeObjectURL(href)
-        }
-      }
-      else {
-
+      let response = null
+      if('assignmentId' in reportCreate) response = await createReportAssignmentCSV(reportCreate)
+      else response = await createReportGroup(reportCreate)
+      if(response?.status === 200){
+        const file = new Blob([response.data], {type:'text/plain;charset=utf8'})
+        const href = URL.createObjectURL(file)
+        const link = document.createElement('a')
+        link.href = href
+        link.download = 'csvReport.csv'
+        link.click()
+        document.removeChild(link)
+        URL.revokeObjectURL(href)
       }
     }
     catch (e) {console.error(e)}
