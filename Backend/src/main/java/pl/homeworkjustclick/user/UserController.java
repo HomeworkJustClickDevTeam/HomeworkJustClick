@@ -12,9 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.homeworkjustclick.infrastructure.auth.AuthenticationResponseDto;
-import pl.homeworkjustclick.infrastructure.auth.AuthenticationService;
-import pl.homeworkjustclick.infrastructure.auth.ChangePasswordRequest;
+import pl.homeworkjustclick.infrastructure.auth.api.AuthenticationResponseDto;
+import pl.homeworkjustclick.infrastructure.auth.api.AuthenticationService;
+import pl.homeworkjustclick.infrastructure.auth.api.ChangePasswordRequest;
 
 import java.util.List;
 
