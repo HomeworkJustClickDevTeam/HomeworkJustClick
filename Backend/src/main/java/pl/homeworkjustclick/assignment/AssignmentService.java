@@ -69,6 +69,11 @@ public class AssignmentService {
         return assignmentOptional.map(this::buildAssignmentResponseExtended).orElse(null);
     }
 
+    public Assignment findByEvaluationId(Integer evaluationId) {
+        return assignmentRepository.findAssignmentByEvaluationId(evaluationId)
+                .orElseThrow(() -> new EntityNotFoundException("Assignment with evaluationId = " + evaluationId + " not found"));
+    }
+
     @Transactional
     public AssignmentResponseDto add(Assignment assignment) {
         assignmentRepository.save(assignment);

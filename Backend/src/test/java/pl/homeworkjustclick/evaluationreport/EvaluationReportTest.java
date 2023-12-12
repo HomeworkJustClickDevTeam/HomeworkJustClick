@@ -49,9 +49,18 @@ public class EvaluationReportTest extends BaseTestEntity {
     }
 
     @Test
-    void shouldGetEvaluationReportsByUserId() throws Exception {
+    void shouldGetEvaluationReportsByTeacherId() throws Exception {
         var userId = userRepository.findByEmail("zofia_danielska@gmail.com").get().getId();
-        mockMvc.perform(get("/api/evaluation_report/byUserId/" + userId))
+        mockMvc.perform(get("/api/evaluation_report/byTeacherId/" + userId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalElements").value(2))
+                .andReturn();
+    }
+
+    @Test
+    void shouldGetEvaluationReportsByStudentId() throws Exception {
+        var userId = userRepository.findByEmail("anna_malinowska@gmail.com").get().getId();
+        mockMvc.perform(get("/api/evaluation_report/byStudentId/" + userId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.totalElements").value(2))
                 .andReturn();
@@ -67,10 +76,20 @@ public class EvaluationReportTest extends BaseTestEntity {
     }
 
     @Test
-    void shouldGetEvaluationReportsByUserIdAndGroupId() throws Exception {
+    void shouldGetEvaluationReportsByTeacherIdAndGroupId() throws Exception {
         var userId = userRepository.findByEmail("zofia_danielska@gmail.com").get().getId();
         var groupId = groupRepository.getGroupsByTeacherId(userId).get(0).getId();
-        mockMvc.perform(get("/api/evaluation_report/byUserIdAndGroupId/" + userId + "/" + groupId))
+        mockMvc.perform(get("/api/evaluation_report/byTeacherIdAndGroupId/" + userId + "/" + groupId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalElements").value(2))
+                .andReturn();
+    }
+
+    @Test
+    void shouldGetEvaluationReportsByStudentIdAndGroupId() throws Exception {
+        var userId = userRepository.findByEmail("anna_malinowska@gmail.com").get().getId();
+        var groupId = groupRepository.getGroupsByStudentId(userId).get(0).getId();
+        mockMvc.perform(get("/api/evaluation_report/byStudentIdAndGroupId/" + userId + "/" + groupId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.totalElements").value(2))
                 .andReturn();

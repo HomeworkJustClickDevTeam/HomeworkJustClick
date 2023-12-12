@@ -13,11 +13,17 @@ public interface EvaluationReportRepository extends JpaRepository<EvaluationRepo
     EvaluationReport findByEvaluationId(Integer evaluationId);
 
     @Query(value = "select er.* from _evaluation_report er join _evaluation e on e.id = er.evaluation_id where e.user_id = :userId", nativeQuery = true)
-    Page<EvaluationReport> findAllByUserId(@Param("userId") Integer userId, Pageable pageable);
+    Page<EvaluationReport> findAllByTeacherId(@Param("userId") Integer userId, Pageable pageable);
+
+    @Query(value = "select er.* from _evaluation_report er join _evaluation e on er.evaluation_id = e.id join _solution s on e.solution_id = s.id where s.user_id = :userId", nativeQuery = true)
+    Page<EvaluationReport> findAllByStudentId(@Param("userId") Integer userId, Pageable pageable);
 
     @Query(value = "select er.* from _evaluation_report er join _evaluation e on e.id = er.evaluation_id where e.group_id = :groupId", nativeQuery = true)
     Page<EvaluationReport> findAllByGroupId(@Param("groupId") Integer groupId, Pageable pageable);
 
     @Query(value = "select er.* from _evaluation_report er join _evaluation e on e.id = er.evaluation_id where e.user_id = :userId and e.group_id = :groupId", nativeQuery = true)
-    Page<EvaluationReport> findAllByUserIdAndGroupId(@Param("userId") Integer userId, @Param("groupId") Integer groupId, Pageable pageable);
+    Page<EvaluationReport> findAllByTeacherIdAndGroupId(@Param("userId") Integer userId, @Param("groupId") Integer groupId, Pageable pageable);
+
+    @Query(value = "select er.* from _evaluation_report er join _evaluation e on er.evaluation_id = e.id join _solution s on e.solution_id = s.id where s.user_id = :userId and s.group_id = :groupId", nativeQuery = true)
+    Page<EvaluationReport> findAllByStudentIdAndGroupId(@Param("userId") Integer userId, @Param("groupId") Integer groupId, Pageable pageable);
 }
