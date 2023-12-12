@@ -23,7 +23,7 @@ import pl.homeworkjustclick.groupstudent.GroupStudent;
 import pl.homeworkjustclick.groupstudent.GroupStudentRepository;
 import pl.homeworkjustclick.groupteacher.GroupTeacher;
 import pl.homeworkjustclick.groupteacher.GroupTeacherRepository;
-import pl.homeworkjustclick.infrastructure.auth.AuthenticationService;
+import pl.homeworkjustclick.infrastructure.auth.api.AuthenticationService;
 import pl.homeworkjustclick.infrastructure.enums.Role;
 import pl.homeworkjustclick.solution.Solution;
 import pl.homeworkjustclick.solution.SolutionRepository;

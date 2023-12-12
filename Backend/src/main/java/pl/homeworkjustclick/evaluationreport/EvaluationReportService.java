@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
+import pl.homeworkjustclick.assignment.AssignmentService;
 import pl.homeworkjustclick.evaluation.EvaluationUtilsService;
 import pl.homeworkjustclick.infrastructure.exception.EntityNotFoundException;
 import pl.homeworkjustclick.infrastructure.exception.InvalidArgumentException;
@@ -17,6 +18,7 @@ public class EvaluationReportService {
     private final EvaluationReportMapper mapper;
     private final EvaluationUtilsService evaluationUtilsService;
     private final NotificationCreateService notificationCreateService;
+    private final AssignmentService assignmentService;
 
     public EvaluationReport findById(Integer id) {
         return repository.findById(id)
@@ -24,22 +26,32 @@ public class EvaluationReportService {
     }
 
     public EvaluationReportResponseDto getEvaluationReportByEvaluationId(Integer evaluationId) {
-        return mapper.map(repository.findByEvaluationId(evaluationId));
+        return mapper.map(repository.findByEvaluationId(evaluationId), assignmentService.findByEvaluationId(evaluationId));
     }
 
-    public Slice<EvaluationReportResponseDto> getEvaluationReportsByUserId(Integer userId, Pageable pageable) {
-        return repository.findAllByUserId(userId, pageable)
-                .map(mapper::map);
+    public Slice<EvaluationReportResponseDto> getEvaluationReportsByTeacherId(Integer userId, Pageable pageable) {
+        return repository.findAllByTeacherId(userId, pageable)
+                .map(evaluationReport -> mapper.map(evaluationReport, assignmentService.findByEvaluationId(evaluationReport.getEvaluation().getId())));
+    }
+
+    public Slice<EvaluationReportResponseDto> getEvaluationReportsByStudentId(Integer userId, Pageable pageable) {
+        return repository.findAllByStudentId(userId, pageable)
+                .map(evaluationReport -> mapper.map(evaluationReport, assignmentService.findByEvaluationId(evaluationReport.getEvaluation().getId())));
     }
 
     public Slice<EvaluationReportResponseDto> getEvaluationReportsByGroupId(Integer groupId, Pageable pageable) {
         return repository.findAllByGroupId(groupId, pageable)
-                .map(mapper::map);
+                .map(evaluationReport -> mapper.map(evaluationReport, assignmentService.findByEvaluationId(evaluationReport.getEvaluation().getId())));
     }
 
-    public Slice<EvaluationReportResponseDto> getEvaluationReportsByUserIdAndGroupId(Integer userId, Integer groupId, Pageable pageable) {
-        return repository.findAllByUserIdAndGroupId(userId, groupId, pageable)
-                .map(mapper::map);
+    public Slice<EvaluationReportResponseDto> getEvaluationReportsByTeacherIdAndGroupId(Integer userId, Integer groupId, Pageable pageable) {
+        return repository.findAllByTeacherIdAndGroupId(userId, groupId, pageable)
+                .map(evaluationReport -> mapper.map(evaluationReport, assignmentService.findByEvaluationId(evaluationReport.getEvaluation().getId())));
+    }
+
+    public Slice<EvaluationReportResponseDto> getEvaluationReportsByStudentIdAndGroupId(Integer userId, Integer groupId, Pageable pageable) {
+        return repository.findAllByStudentIdAndGroupId(userId, groupId, pageable)
+                .map(evaluationReport -> mapper.map(evaluationReport, assignmentService.findByEvaluationId(evaluationReport.getEvaluation().getId())));
     }
 
     @Transactional
@@ -49,7 +61,7 @@ public class EvaluationReportService {
         }
         var evaluationReport = mapper.map(evaluationReportDto);
         setRelationFields(evaluationReport, evaluationReportDto);
-        var response = mapper.map(repository.save(evaluationReport));
+        var response = mapper.map(repository.save(evaluationReport), assignmentService.findByEvaluationId(evaluationReport.getEvaluation().getId()));
         notificationCreateService.createEvaluationReportNotification(evaluationReport.getEvaluation().getUser(), evaluationReport.getEvaluation().getSolution().getAssignment(), evaluationReport.getEvaluation().getSolution().getUser());
         return response;
     }
@@ -62,7 +74,7 @@ public class EvaluationReportService {
         }
         mapper.map(evaluationReport, evaluationReportDto);
         setRelationFields(evaluationReport, evaluationReportDto);
-        return mapper.map(repository.save(evaluationReport));
+        return mapper.map(repository.save(evaluationReport), assignmentService.findByEvaluationId(evaluationReport.getEvaluation().getId()));
     }
 
     public void deleteEvaluationReport(Integer id) {

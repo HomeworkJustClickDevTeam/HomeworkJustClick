@@ -32,7 +32,7 @@ public class FileControllerTest extends BaseTestEntity {
     @BeforeEach
     public void setUp() throws IOException {
         Mockito.when(postgresClientService.checkToken(any())).thenReturn(Boolean.TRUE);
-        var file = new File("src/test/java/pl/HomeworkJustClick/HomeworkJustClick/file/lorem_lines.txt");
+        var file = new File("src/test/java/pl/homeworkjustclick/file/lorem_lines.txt");
         var inputStream = new FileInputStream(file);
         var multipartFile = new MockMultipartFile("file", "lorem_lines.txt", "txt", inputStream);
         pl.homeworkjustclick.file.File _file = new pl.homeworkjustclick.file.File("lorem_lines.txt", "txt");
@@ -51,7 +51,7 @@ public class FileControllerTest extends BaseTestEntity {
 
     @Test
     void shouldAddFile() throws Exception {
-        var file = new File("src/test/java/pl/HomeworkJustClick/HomeworkJustClick/file/lorem_lines.txt");
+        var file = new File("src/test/java/pl/homeworkjustclick/file/lorem_lines.txt");
         var inputStream = new FileInputStream(file);
         var multipartFile = new MockMultipartFile("file", "lorem_lines.txt", "txt", inputStream);
         var res = mockMvc.perform(multipart("/api/file")

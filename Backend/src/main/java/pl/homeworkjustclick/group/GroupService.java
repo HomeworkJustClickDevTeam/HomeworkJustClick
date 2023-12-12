@@ -1,6 +1,5 @@
 package pl.homeworkjustclick.group;
 
-import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,7 +12,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class GroupService {
 
-    private final EntityManager entityManager;
 
     private final GroupRepository groupRepository;
 
@@ -32,11 +30,11 @@ public class GroupService {
 
     @Transactional
     public GroupResponseDto add(Group group) {
-        entityManager.persist(group);
-        int id = group.getId();
-        group.setColor(id%20);
-        entityManager.persist(group);
-        return GroupResponseDto.builder().id(group.getId()).name(group.getName()).description(group.getDescription()).color(group.getColor()).build();
+        var savedGroup = groupRepository.save(group);
+        int id = savedGroup.getId();
+        savedGroup.setColor(id % 20);
+        groupRepository.save(savedGroup);
+        return GroupResponseDto.builder().id(savedGroup.getId()).name(savedGroup.getName()).description(savedGroup.getDescription()).color(savedGroup.getColor()).build();
     }
 
     @Transactional

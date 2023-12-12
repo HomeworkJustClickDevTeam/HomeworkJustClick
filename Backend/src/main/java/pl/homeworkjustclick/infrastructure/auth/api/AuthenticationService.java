@@ -1,4 +1,4 @@
-package pl.homeworkjustclick.infrastructure.auth;
+package pl.homeworkjustclick.infrastructure.auth.api;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -7,7 +7,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import pl.homeworkjustclick.infrastructure.config.JwtService;
+import pl.homeworkjustclick.infrastructure.auth.JwtService;
 import pl.homeworkjustclick.infrastructure.enums.Role;
 import pl.homeworkjustclick.user.User;
 import pl.homeworkjustclick.user.UserRepository;
