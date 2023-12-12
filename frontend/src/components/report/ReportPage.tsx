@@ -47,18 +47,18 @@ export const ReportPage = () =>{
       setReport(state.report)
       if('title' in state.report){
         const preparedData = (state.report as AssignmentReportModel).students.map((studentResult)=>{
-          return [`${studentResult.student.firstname} ${studentResult.student.lastname}`, studentResult.result]
+          return [`${studentResult.student.firstname} ${studentResult.student.lastname}`, studentResult.resultPercent]
         })
         preparedData.unshift(["Student", "Ilość puntów"])
-        setHistogramTitle('Wykres ilości studentów z danym wynikiem puntowym.')
+        setHistogramTitle('Wykres ilości studentów z danym wynikiem procentowym.')
         setHistogramData(preparedData)
       }
       else{
         let preparedData:any = (state.report as GroupReportModel).assignments.map((assignmentResult)=>{
-          return [assignmentResult.assignment.title, assignmentResult.avgResult]
+          return [assignmentResult.assignment.title, assignmentResult.avgResultPercent]
         })
         preparedData.unshift(["Zadanie", "Średnia ilość puntów"])
-        setHistogramTitle('Wykres ilości zadań z daną średnią ilością punktów studentów.')
+        setHistogramTitle('Wykres ilości zadań z daną średnią ilością procent studentów.')
         setHistogramData(preparedData)
       }
     }
