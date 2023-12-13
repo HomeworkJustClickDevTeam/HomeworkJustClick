@@ -1,6 +1,14 @@
 # HomeworkJustClick
 
 ## Projekt Inżynierski
+To run development environment using docker:
+```bash
+ docker-compose -f docker-compose.dev.yaml up
+ ```
+ or without logs:
+ ```bash
+ docker-compose -f docker-compose.dev.yaml up -d
+ ```
 
 To run PostgreSQL backend type:
 ```bash
