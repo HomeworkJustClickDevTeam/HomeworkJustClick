@@ -3,7 +3,7 @@ import { format } from "date-fns"
 import { AssignmentPropsInterface } from "../../types/AssignmentPropsInterface"
 
 interface AssignmentItemPropsInterface extends AssignmentPropsInterface {
-  idGroup: string
+  idGroup?: string
   optionalUserId?: string
   createReportButton?: boolean
   handleGenerateReportButtonClick?: () => void
@@ -17,7 +17,7 @@ function AssignmentListElement({assignment,
   const completionDatetime = new Date(assignment.completionDatetime)
   return (
     <>
-      <Link to={`/group/${idGroup}/assignment/${assignment.id}`} state={optionalUserId}
+      <Link to={idGroup!==undefined ? `/group/${idGroup}/assignment/${assignment.id}`: "#"} state={optionalUserId}
             className="flex ml-[7.5%] mt-4 border-border_gray border h-16 rounded-lg font-lato text-xl items-center justify-between">
         <div className="flex-col ml-10 ">
           <div>{assignment.title}</div>

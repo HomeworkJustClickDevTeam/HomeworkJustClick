@@ -39,25 +39,30 @@ export const ReportPage = () =>{
   const options = {
     title: histogramTitle,
     legend: { position: "top", maxLines: 1},
+    hAxis:{format:'percent'}
   };
 
   useEffect(()=>{
     if(state !== null) {
       setReportedObject(state.reportedObject)
       setReport(state.report)
-      if('title' in state.report){
-        const preparedData = (state.report as AssignmentReportModel).students.map((studentResult)=>{
-          return [`${studentResult.student.firstname} ${studentResult.student.lastname}`, studentResult.resultPercent]
-        })
-        preparedData.unshift(["Student", "Ilość puntów"])
+      if('title' in state.report.assignment){
+        const preparedData:any = (state.report as AssignmentReportModel).students
+          .filter(studentResult=>studentResult!==null)
+          .map(studentResult=>{
+            return [studentResult.student.firstname + ' ' + studentResult.student.lastname, studentResult.resultPercent/10]
+          })
+        preparedData.unshift(["Studenci", "Wynik procentowy"])
         setHistogramTitle('Wykres ilości studentów z danym wynikiem procentowym.')
         setHistogramData(preparedData)
       }
       else{
-        let preparedData:any = (state.report as GroupReportModel).assignments.map((assignmentResult)=>{
-          return [assignmentResult.assignment.title, assignmentResult.avgResultPercent]
+        let preparedData:any = (state.report as GroupReportModel).assignments
+          .filter(assignmentResult=>assignmentResult.assignment !== null)
+          .map((assignmentResult)=>{
+          return [assignmentResult.assignment.title, assignmentResult.avgResultPercent/10]
         })
-        preparedData.unshift(["Zadanie", "Średnia ilość puntów"])
+        preparedData.unshift(["Zadanie", "Średnia ilość procent"])
         setHistogramTitle('Wykres ilości zadań z daną średnią ilością procent studentów.')
         setHistogramData(preparedData)
       }

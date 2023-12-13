@@ -30,6 +30,7 @@ import {RoleBasedRoute} from "./components/route/RoleBasedRoute";
 import SolutionCheckedPage from "./components/solution/SolutionCheckedPage";
 import {SolutionCheckedAdvancedPage} from "./components/solution/SolutionCheckedAdvancedPage";
 import {ReportPage} from "./components/report/ReportPage";
+import {EvaluationsStudentPage} from "./components/evaluation/EvaluationsStudentPage";
 
 function App() {
   return (
@@ -102,7 +103,7 @@ function App() {
           />
           <Route
             path="evaluations"
-            element={<></>}
+            element={<EvaluationsStudentPage/>}
           />
 
         </Route>

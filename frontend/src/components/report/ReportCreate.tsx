@@ -150,7 +150,7 @@ export const ReportCreate = ({reportedObject, csvVersion
                                                           type={'checkbox'}
                                                           onChange={() => handleChangingState({...reportCreate, late: !reportCreate.late})}/><br/>
           </fieldset>}
-        <div>Przedziały do histogramu (%): <input required={true} type={"text"} value={histTextValue} onChange={(event) => setHistTextValue(event.target.value)}/></div>
+        <div>Przedziały do histogramu (%): <input type={"text"} value={histTextValue} onChange={(event) => setHistTextValue(event.target.value)}/></div>
         <button type={"submit"}>Utwórz</button>
         <button type={'reset'}>X</button>
       </form>
