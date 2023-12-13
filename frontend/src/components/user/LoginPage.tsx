@@ -1,73 +1,76 @@
-import React, { ChangeEvent, useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import React, {ChangeEvent, useState} from "react"
+import {Link, useLocation, useNavigate} from "react-router-dom"
 import login_left_circle from "./login_left_circle.svg"
 import login_right_circle from "./login_right_circle.svg"
-import { UserLoginInterface } from "../../types/UserLoginInterface"
-import { AppDispatch } from "../../redux/store"
-import { loginUser } from "../../services/otherServices"
-import { useAppDispatch, useAppSelector } from "../../types/HooksRedux"
-import { selectUserState } from "../../redux/userStateSlice"
+import {UserLoginInterface} from "../../types/UserLoginInterface"
+import {AppDispatch} from "../../redux/store"
+import {loginUser} from "../../services/otherServices"
+import {useAppDispatch, useAppSelector} from "../../types/HooksRedux"
+import {selectUserState} from "../../redux/userStateSlice"
 
 
 const LoginPage = () => {
-  const [userProvided, setUserProvided] = useState<UserLoginInterface>({
-    email: "",
-    password: "",
-  })
-  const navigate = useNavigate()
-  const dispatch :AppDispatch = useAppDispatch()
-  const user = useAppSelector(selectUserState)
+    const [userProvided, setUserProvided] = useState<UserLoginInterface>({
+        email: "",
+        password: "",
+    })
+    const navigate = useNavigate()
+    const dispatch: AppDispatch = useAppDispatch()
+    const user = useAppSelector(selectUserState)
+    let {state} = useLocation()
+    const [groupId] = useState<string>(state?.groupId)
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    dispatch(loginUser(userProvided))
-  }
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault()
+        dispatch(loginUser(userProvided))
+    }
 
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const {name, value} = event.target
-    setUserProvided((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }))
-  }
+    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const {name, value} = event.target
+        setUserProvided((prevState) => ({
+            ...prevState,
+            [name]: value,
+        }))
+    }
 
-  return (
-    <div data-testid="login-page" className='flex w-screen flex-col items-center text-center font-lato text-sm select-none'>
-      <img className="fixed left-[7%]  bottom-[3%] scale-50 xl:scale-100 -z-50" src={login_left_circle}
-           alt="Kółko po lewej stronie"></img>
-      <img className="fixed right-[9%] top-[18%] scale-50 translate-x-[25%] xl:transform-none -z-50"
-           src={login_right_circle} alt="Kółko po prawej stronie"></img>
-      <h1 className='mt-32 mb-16 text-6xl'>Zaloguj się</h1>
-      <form onSubmit={handleSubmit} className='flex flex-col items-center'>
-        <input
-          name="email"
-          type="email"
-          placeholder="Email"
-          onChange={handleChange}
-          className='border-b-2 border-b-light_gray mb-8 text-center placeholder:text-light_gray placeholder:text-[12px] w-60 xl:text-[20px] xl:placeholder:text-[20px] xl:w-[320px]'
-        />
-        <input
-          name="password"
-          type="password"
-          placeholder="Hasło"
-          onChange={handleChange}
-          className='border-b-2 border-b-light_gray mb-12 text-center placeholder:text-light_gray placeholder:text-[12px] w-60 xl:text-[20px] xl:placeholder:text-[20px] xl:w-[320px]'
-        />
-        <button type="submit"
-                className=' border-main_blue w-40 h-8 rounded-[5px] border-2 xl:w-[288px] xl:h-[56px] xl:border-[3px] xl:rounded-[10px] text-main_blue xl:text-[28px] hover:bg-hover_gray hover:shadow-md active:bg-opacity-60'>Zaloguj
-          się
-        </button>
-        <p className='text-[8px] xl:text-base text-main_blue'>Nie pamiętasz hasła?</p>
-        <p className='text-[8px] xl:text-base mt-4'>Nie masz jeszcze konta?</p>
-        <Link to="/register">
-          <button type="button"
-                  className=' bg-main_blue w-40 h-8 rounded-[5px] xl:rounded-[10px] xl:w-[288px] xl:h-[56px] text-white xl:text-[28px] hover:bg-hover_blue hover:shadow-md active:shadow-none'>Zarejestruj
-            się
-          </button>
-        </Link>
-      </form>
-    </div>
-  )
+    return (
+        <div data-testid="login-page"
+             className='flex w-screen flex-col items-center text-center font-lato text-sm select-none'>
+            <img className="fixed left-[7%]  bottom-[3%] scale-50 xl:scale-100 -z-50" src={login_left_circle}
+                 alt="Kółko po lewej stronie"></img>
+            <img className="fixed right-[9%] top-[18%] scale-50 translate-x-[25%] xl:transform-none -z-50"
+                 src={login_right_circle} alt="Kółko po prawej stronie"></img>
+            <h1 className='mt-32 mb-16 text-6xl'>Zaloguj się</h1>
+            <form onSubmit={handleSubmit} className='flex flex-col items-center'>
+                <input
+                    name="email"
+                    type="email"
+                    placeholder="Email"
+                    onChange={handleChange}
+                    className='border-b-2 border-b-light_gray mb-8 text-center placeholder:text-light_gray placeholder:text-[12px] w-60 xl:text-[20px] xl:placeholder:text-[20px] xl:w-[320px]'
+                />
+                <input
+                    name="password"
+                    type="password"
+                    placeholder="Hasło"
+                    onChange={handleChange}
+                    className='border-b-2 border-b-light_gray mb-12 text-center placeholder:text-light_gray placeholder:text-[12px] w-60 xl:text-[20px] xl:placeholder:text-[20px] xl:w-[320px]'
+                />
+                <button type="submit"
+                        className=' border-main_blue w-40 h-8 rounded-[5px] border-2 xl:w-[288px] xl:h-[56px] xl:border-[3px] xl:rounded-[10px] text-main_blue xl:text-[28px] hover:bg-hover_gray hover:shadow-md active:bg-opacity-60'>Zaloguj
+                    się
+                </button>
+                <p className='text-[8px] xl:text-base text-main_blue'>Nie pamiętasz hasła?</p>
+                <p className='text-[8px] xl:text-base mt-4'>Nie masz jeszcze konta?</p>
+                <Link to="/register">
+                    <button type="button"
+                            className=' bg-main_blue w-40 h-8 rounded-[5px] xl:rounded-[10px] xl:w-[288px] xl:h-[56px] text-white xl:text-[28px] hover:bg-hover_blue hover:shadow-md active:shadow-none'>Zarejestruj
+                        się
+                    </button>
+                </Link>
+            </form>
+        </div>
+    )
 }
 export default LoginPage
