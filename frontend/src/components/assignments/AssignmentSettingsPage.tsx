@@ -181,10 +181,10 @@ export const AssignmentSettingsPage = ({handleSubmit,
             </button>
           </form>
           <p className="mt-4 mb-2">Dodaj pliki: </p>
-          {'id' in assignment && newAssignmentId === undefined ?
+          {(assignment as AssignmentInterface).id !== undefined && newAssignmentId === undefined ?
           <AssignmentModifyFile
             toSend={toSend}
-            assignmentId={assignment.id}
+            assignmentId={(assignment as AssignmentInterface).id}
             setToNavigate={setToNavigate}
           />:
             <AssignmentAddFile

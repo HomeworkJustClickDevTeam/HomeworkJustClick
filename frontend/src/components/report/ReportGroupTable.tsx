@@ -24,7 +24,7 @@ export const ReportGroupTable = ({groupReport}:{groupReport: GroupReportModel}) 
   const renderStudentsFullNames = ():JSX.Element[] =>{
     let studentsFullNamesColumn:JSX.Element[] = []
     studentsFullNames.forEach(( studentFullName)=>{
-      studentsFullNamesColumn.push(<th>{studentFullName}</th>)
+      studentsFullNamesColumn.push(<th key={studentFullName}>{studentFullName}</th>)
     })
     return studentsFullNamesColumn
   }
@@ -32,7 +32,7 @@ export const ReportGroupTable = ({groupReport}:{groupReport: GroupReportModel}) 
   const renderStudentsResults = (assignmentTitle:string):JSX.Element[] =>{
     let studentsResultsNumbersColumn:JSX.Element[]=[]
     studentsFullNames.forEach((studentFullName)=>{
-      studentsResultsNumbersColumn.push(<td>{studentsResults.get(assignmentTitle)!.get(studentFullName)}</td>)
+      studentsResultsNumbersColumn.push(<td key={studentFullName}>{studentsResults.get(assignmentTitle)!.get(studentFullName)}</td>)
     })
     return studentsResultsNumbersColumn
   }
@@ -50,9 +50,9 @@ export const ReportGroupTable = ({groupReport}:{groupReport: GroupReportModel}) 
       </tr>
       {groupReport.assignments
         .filter((assignmentReport)=> assignmentReport.students!==null)
-        .map((assignmentReport) => {
+        .map((assignmentReport, index) => {
           return(
-            <tr>
+            <tr key={index}>
               <td>{assignmentReport.assignment.title}</td>
               <td>{assignmentReport.assignment.max_points}</td>
               <td>{assignmentReport.maxResult}</td>

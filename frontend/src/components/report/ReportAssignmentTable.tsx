@@ -6,15 +6,15 @@ export const ReportAssignmentTable = ({assignmentReport, max_points}:{assignment
       <tbody>
         <tr>
           <th>Uczeń</th>
-          {assignmentReport.students.map((studentResult)=><td>{studentResult.student.firstname} {studentResult.student.lastname}</td>)}
+          {assignmentReport.students.map((studentResult,index)=><td key={index}>{studentResult.student.firstname} {studentResult.student.lastname}</td>)}
         </tr>
         <tr>
           <th>Punkty</th>
-          {assignmentReport.students.map((studentResult) =><td>{studentResult.result}/{max_points}</td>)}
+          {assignmentReport.students.map((studentResult, index) =><td key={index}>{studentResult.result}/{max_points}</td>)}
         </tr>
         <tr>
           <th>Procenty</th>
-          {assignmentReport.students.map((studentResult)=><td>{studentResult.resultPercent} %</td>)}
+          {assignmentReport.students.map((studentResult, index)=><td key={index}>{studentResult.resultPercent} %</td>)}
         </tr>
       </tbody>
     </table>

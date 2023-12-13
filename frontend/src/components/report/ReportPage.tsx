@@ -46,7 +46,7 @@ export const ReportPage = () =>{
     if(state !== null) {
       setReportedObject(state.reportedObject)
       setReport(state.report)
-      if('title' in state.report.assignment){
+      if(state.report.assignment !== undefined){
         const preparedData:any = (state.report as AssignmentReportModel).students
           .filter(studentResult=>studentResult!==null)
           .map(studentResult=>{
