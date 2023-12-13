@@ -50,7 +50,7 @@ export const ReportPage = () =>{
         const preparedData:any = (state.report as AssignmentReportModel).students
           .filter(studentResult=>studentResult!==null)
           .map(studentResult=>{
-            return [studentResult.student.firstname + ' ' + studentResult.student.lastname, studentResult.resultPercent/10]
+            return [studentResult.student.firstname + ' ' + studentResult.student.lastname, studentResult.resultPercent/100]
           })
         preparedData.unshift(["Studenci", "Wynik procentowy"])
         setHistogramTitle('Wykres ilości studentów z danym wynikiem procentowym.')
@@ -60,7 +60,7 @@ export const ReportPage = () =>{
         let preparedData:any = (state.report as GroupReportModel).assignments
           .filter(assignmentResult=>assignmentResult.assignment !== null)
           .map((assignmentResult)=>{
-          return [assignmentResult.assignment.title, assignmentResult.avgResultPercent/10]
+          return [assignmentResult.assignment.title, assignmentResult.avgResultPercent/100]
         })
         preparedData.unshift(["Zadanie", "Średnia ilość procent"])
         setHistogramTitle('Wykres ilości zadań z daną średnią ilością procent studentów.')
