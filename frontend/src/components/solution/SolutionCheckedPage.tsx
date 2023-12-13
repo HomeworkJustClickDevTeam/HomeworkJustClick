@@ -8,6 +8,7 @@ import {useAppSelector} from "../../types/HooksRedux";
 import {selectUserState} from "../../redux/userStateSlice";
 import {roleSlice, selectRole} from "../../redux/roleSlice";
 import {ReportGrade} from "./ReportGrade";
+import {useGetFile} from "../customHooks/useGetFile";
 
 export default function SolutionCheckedPage(props: {
     solution: SolutionInterface
@@ -16,7 +17,7 @@ export default function SolutionCheckedPage(props: {
     const evaluation = useGetEvaluationBySolution(props.solution.id)
     const userState = useAppSelector(selectUserState)
     const userRole = useAppSelector(selectRole)
-
+    const fileFromDb = useGetFile(props.solution.id, "solution")
 
     return (
         <div
@@ -36,8 +37,8 @@ export default function SolutionCheckedPage(props: {
                 </p>
             )}
             <p className="font-semibold">Przesłane pliki: </p>
-            {props.solution ? (
-                <SolutionFile solutionId={props.solution.id}/>
+            {fileFromDb !== undefined ? (
+                <SolutionFile fileFromDb={fileFromDb}/>
             ) : (
                 <p>Brak</p>
             )}

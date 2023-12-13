@@ -32,7 +32,6 @@ function GroupHeader() {
 
   useEffect(()=>{
     setLocationSplit(location.pathname.split("/"))
-    console.log(location.pathname)
     switch (location.pathname.split("/")[4]){
       case "todo":
         setSortButtonState(sortButtonValue.toDo)
@@ -54,7 +53,7 @@ function GroupHeader() {
         break
       default:
         if(location.pathname.split("/")[3] === "assignments") setSortButtonState(sortButtonValue.assignments)
-        else{
+        else if(location.pathname.split("/")[3] === undefined){
           if(role === "Teacher") navigate("solutions/uncheck")
           else if(role==="Student") navigate("assignments/todo")
         }

@@ -1,7 +1,8 @@
 import { useGetFile } from "../customHooks/useGetFile"
+import {FileInterface} from "../../types/FileInterface";
 
-export function SolutionFile(props: { solutionId: number }) {
-  const fileFromDb = useGetFile(props.solutionId, "solution")
+export function SolutionFile({fileFromDb}: { fileFromDb: FileInterface }) {
+
   const handleDownload = () => {
     if (fileFromDb) {
       const fileUrl = URL.createObjectURL(fileFromDb.data)

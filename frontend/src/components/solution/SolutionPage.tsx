@@ -9,6 +9,7 @@ import {selectGroup} from "../../redux/groupSlice";
 import {selectUserState} from "../../redux/userStateSlice";
 import {useGetEvaluationPanelByUserIdAndAssigmentId} from "../customHooks/useGetEvaluationPanelByUserIdAndAssigmentId";
 import {format, parseISO} from "date-fns";
+import {useGetFile} from "../customHooks/useGetFile";
 
 function SolutionPage() {
     let {state} = useLocation()
@@ -21,6 +22,7 @@ function SolutionPage() {
     const userState = useAppSelector(selectUserState)
     const evaluationPanel = useGetEvaluationPanelByUserIdAndAssigmentId(userState!.id, solutionExtended.assignment.id)
     const group = useAppSelector(selectGroup)
+    const fileFromDb = useGetFile(solutionExtended.id, "solution")
     const handleDisableRating = () => {
         setShowRating(false)
     }
@@ -69,8 +71,8 @@ function SolutionPage() {
             </div>
             <div className="flex ">
                 <p className="mr-2">Przesłane pliki: </p>
-                {solutionExtended.id ? (
-                    <SolutionFile solutionId={solutionExtended.id}/>
+                {fileFromDb !== undefined ? (
+                    <SolutionFile fileFromDb={fileFromDb}/>
                 ) : (
                     <p>Brak</p>
                 )}
@@ -86,7 +88,7 @@ function SolutionPage() {
                 </div>}
             {evaluation === undefined ? (
                 <div>
-                    {solutionExtended.id && group && (
+                    {solutionExtended.id && group && fileFromDb!==undefined && (
                         <Link
                             to={`/group/${group.id}/advancedAssignment`}
                             state={{solutionExtended: solutionExtended}}
