@@ -8,7 +8,7 @@ import {f} from "msw/lib/core/RequestHandler-bb5cbb8f";
 import {
   createReportAssignment,
   createReportAssignmentCSV,
-  createReportGroup
+  createReportGroup, createReportGroupCSV
 } from "../../services/postgresDatabaseServices";
 import {Link, useNavigate} from "react-router-dom";
 import {useAppSelector} from "../../types/HooksRedux";
@@ -62,8 +62,9 @@ export const ReportCreate = ({reportedObject, csvVersion
     if(reportCreate === undefined) return
     try {
       let response = null
+      console.log(reportCreate)
       if('assignmentId' in reportCreate) response = await createReportAssignmentCSV(reportCreate)
-      else response = await createReportGroup(reportCreate)
+      else response = await createReportGroupCSV(reportCreate)
       if(response?.status === 200){
         const file = new Blob([response.data], {type:'text/plain;charset=utf8'})
         const href = URL.createObjectURL(file)
@@ -76,7 +77,6 @@ export const ReportCreate = ({reportedObject, csvVersion
       }
     }
     catch (e) {console.error(e)}
-    
   }
 
   useUpdateEffect(()=>{
