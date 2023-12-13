@@ -69,7 +69,7 @@ public class ReportService {
         var maxResultPercent = roundDouble(maxResult * 100 / maxPoints);
         var minResult = calculateMinResult(studentsResults);
         var minResultPercent = roundDouble(minResult * 100 / maxPoints);
-        var avgResult = calculateAvgResult(studentsResults);
+        var avgResult = roundDouble(calculateAvgResult(studentsResults));
         var avgResultPercent = roundDouble(avgResult * 100 / maxPoints);
         var late = solutionService.getLateSolutionsByAssignment(assignment.getId()).size();
         var hist = assignmentReportDto.getHist();
