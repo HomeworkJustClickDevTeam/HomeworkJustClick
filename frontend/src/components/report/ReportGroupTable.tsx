@@ -5,7 +5,7 @@ import {useGetAssignmentsByGroup} from "../customHooks/useGetAssignmentsByGroup"
 import {useEffect, useState} from "react";
 
 export const ReportGroupTable = ({groupReport}:{groupReport: GroupReportModel}) =>{
-  const [studentsFullNames, setStudentsFullNames] = useState<Set<string>>(new Set)
+  const [studentsFullNames, setStudentsFullNames] = useState<Set<string>>(new Set())
   const [studentsResults] = useState<Map<string,Map<string, number|undefined>>>(()=>{
     const output = new Map<string, Map<string, number|undefined>>()
     groupReport.assignments

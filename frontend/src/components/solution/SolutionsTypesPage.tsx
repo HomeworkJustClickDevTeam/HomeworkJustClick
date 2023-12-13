@@ -32,8 +32,7 @@ function SolutionsTypesPage({ type }: { type: ExtendedSolutionType }) {
               className="flex relative border-border_gray border w-[42.5%] h-16 rounded-lg font-lato text-xl items-center text-center gap-2"
             >
               <div className="flex-col pl-10 w-40 text-left">
-                <div>{solutionExtended.user.index}</div>
-                <div>{solutionExtended.user.name}</div>
+                <div>{solutionExtended.user.firstname}<br/> {solutionExtended.user.lastname}</div>
               </div>
               <div className="font-semibold underline text-left w-[40%]">
                 {solutionExtended.assignment.title}
