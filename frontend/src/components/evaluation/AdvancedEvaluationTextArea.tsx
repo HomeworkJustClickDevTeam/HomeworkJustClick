@@ -71,6 +71,7 @@ export const AdvancedEvaluationTextArea = ({fileText,
     if(setComments===undefined) return
     try {
       const commentToBeDeleted = calculateCommentBasedOnLetterIndex(index)
+      console.log(commentToBeDeleted)
       if(commentToBeDeleted!==undefined){
         const response = await deleteCommentTextPostgresService(commentToBeDeleted.id.toString())
         if(response?.status === 200){

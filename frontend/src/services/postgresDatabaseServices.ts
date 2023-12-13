@@ -484,7 +484,14 @@ export const changeCommentTextPostgresService = async (
 ) => {
     return await postgresqlDatabaseJSON.put(
         `/comment_file_text/${comment.id}`,
-        comment
+      {
+          id: comment.id,
+          highlightStart: comment.highlightStart,
+          highlightEnd: comment.highlightEnd,
+          color: comment.color,
+          commentId: comment.comment.id,
+          fileId: comment.file.id
+      }
     )
 }
 
