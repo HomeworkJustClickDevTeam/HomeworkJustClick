@@ -1,27 +1,25 @@
 version: "3.8"
 services:
-  homework_just_click:
-    image: postgres
-    container_name: homework_just_click
-    environment:
-      POSTGRES_PASSWORD: 123
-    ports:
-      - "5432:5432"
-
   backend_mongo:
     container_name: homework_just_click_mongo_api
+    environment:
+      - API_URL=${{ secrets.API_URL }}
+      - MONGO_URL=${{ secrets.MONGO_URL }}
+      - CORS_URL=${{ secrets.CORS_URL }}
     build:
       context: ./Backend(MongoDB)
       dockerfile: .Dockerfile
     image: pioszymk/homework-just-click:backend_mongo
     ports:
         - "8082:8082"
-    depends_on:
-        - mongodb
-        - mongo-express
-
+  
   backend:
     container_name: homework_just_click_backend_api
+    environment:
+      - DB_URL=${{ secrets.DB_URL }}
+      - DB_USERNAME=${{ secrets.DB_USERNAME }}
+      - DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+      - CORS_URL=${{ secrets.CORS_URL }}
     build:
       context: ./Backend
       dockerfile: .Dockerfile
@@ -29,11 +27,14 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - homework_just_click
       - backend_mongo
 
   frontend:
     container_name: homework_just_click_frontend
+    environment:
+      - API_URL=${{ secrets.API_URL }}
+      - MONGO_API_URL=${{ secrets.MONGO_API_URL }}
+      - CORS_URL=${{ secrets.CORS_URL }}
     build:
       context: ./frontend
       dockerfile: .Dockerfile
@@ -43,30 +44,6 @@ services:
     depends_on:
       - backend
       - backend_mongo
-
-  mongodb:
-    image: mongo
-    container_name: mongodb
-    ports:
-      - 27017:27017
-    volumes:
-      - data:/data
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=rootuser
-      - MONGO_INITDB_ROOT_PASSWORD=rootpass
-
-
-  mongo-express:
-    image: mongo-express
-    container_name: mongo-express
-    restart: always
-    ports:
-      - 8081:8081
-    environment:
-      - ME_CONFIG_MONGODB_ADMINUSERNAME=rootuser
-      - ME_CONFIG_MONGODB_ADMINPASSWORD=rootpass
-      - ME_CONFIG_MONGODB_SERVER=mongodb
-
 
 volumes:
   data: {}
