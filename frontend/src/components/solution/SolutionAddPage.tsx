@@ -12,6 +12,7 @@ import {SolutionCreateInterface} from "../../types/SolutionCreateInterface"
 import {selectUserState} from "../../redux/userStateSlice"
 import {useAppDispatch, useAppSelector} from "../../types/HooksRedux"
 import {useGetFile} from "../customHooks/useGetFile"
+import { IoDocumentAttachOutline } from "react-icons/io5";
 
 function SolutionAddPage({assignment}: AssignmentPropsInterface) {
     const navigate = useNavigate()
@@ -113,8 +114,8 @@ function SolutionAddPage({assignment}: AssignmentPropsInterface) {
             {fileFromDb !== undefined && <AssignmentFile assignmentId={assignment.id}/>}
             <label>
                 Moje rozwiązania:
-                <input name="file" type="file" onChange={(e) => handleChangeFile(e)}/>
-                <div> {file && `${file.name} - ${file.type}`}</div>
+                <input name="file" type="file" className='pl-2' onChange={(e) => handleChangeFile(e)}/>
+
             </label>
             <label>
                 Komentarz do zadania:
