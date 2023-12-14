@@ -2,6 +2,6 @@ FROM maven:3.8.4-eclipse-temurin-17
 
 COPY . /app
 WORKDIR /app
-RUN mvn install
+RUN mvn clean install
 CMD ["mvn", "spring-boot:run"]  
 EXPOSE 8080
