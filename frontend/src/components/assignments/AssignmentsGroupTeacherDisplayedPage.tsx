@@ -51,10 +51,11 @@ function AssignmentsGroupTeacherDisplayedPage() {
               </li>
             ))}
         </ul>
-      <div style={{float: "left", width: "50%"}}>
-        {chosenObjectsReport && <ReportCreate csvVersion={false} reportedObject={chosenObjectsReport}/>}
+        <div className='absolute right-[140px] top-[20px] bg-white'>
+          {chosenObjectsReport && <ReportCreate csvVersion={false} reportedObject={chosenObjectsReport}/>}
         </div>
       </div>
+
     </div>
   )
 }
