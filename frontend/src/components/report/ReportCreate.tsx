@@ -137,23 +137,40 @@ export const ReportCreate = ({reportedObject, csvVersion
       <form onSubmit={(event) => {csvVersion ? handleCsvCreation(event) : handleReportCreation(event)}}>
         {csvVersion &&
             <fieldset>
-              <legend>Elementy do wygenerowania:</legend>
-              Średnia punktów: <input checked={reportCreate.avgResult}
-                                      type={'checkbox'}
-                                      onChange={() => handleChangingState({...reportCreate, avgResult: !reportCreate.avgResult})}/><br/>
-              Najwyższy wynik: <input checked={reportCreate.maxResult}
-                                      type={'checkbox'}
-                                      onChange={() => handleChangingState({...reportCreate, maxResult: !reportCreate.maxResult})}/><br/>
-              Najniższy wynik: <input checked={reportCreate.minResult}
-                                      type={'checkbox'}
-                                      onChange={() => handleChangingState({...reportCreate, minResult: !reportCreate.minResult})}/><br/>
-              Ilość zadań przesłanych po terminie: <input checked={reportCreate.late}
-                                                          type={'checkbox'}
-                                                          onChange={() => handleChangingState({...reportCreate, late: !reportCreate.late})}/><br/>
-          </fieldset>}
-        <div className='mb-3 '><span className='font-semibold mr-1'>Przedziały do histogramu :</span> <input className='w-12 px-2 py-1 mr-2 ml-2 border-b solid black' type={"text"} value={histTextValue} onChange={(event) => setHistTextValue(event.target.value)}/>%</div>
-        <div className='flex justify-between pr-4 mb-2 '><button className='bg-main_blue text-white rounded-md text-sm p-1 px-2' type={"submit"}>Utwórz</button>
-          <button type={'reset'} className='bg-berry_red text-white rounded-md text-sm p-1 w-8'>X</button></div>
+                <legend>Elementy do wygenerowania:</legend>
+                Średnia punktów: <input checked={reportCreate.avgResult}
+                                        type={'checkbox'}
+                                        onChange={() => handleChangingState({
+                                          ...reportCreate,
+                                          avgResult: !reportCreate.avgResult
+                                        })}/><br/>
+                Najwyższy wynik: <input checked={reportCreate.maxResult}
+                                        type={'checkbox'}
+                                        onChange={() => handleChangingState({
+                                          ...reportCreate,
+                                          maxResult: !reportCreate.maxResult
+                                        })}/><br/>
+                Najniższy wynik: <input checked={reportCreate.minResult}
+                                        type={'checkbox'}
+                                        onChange={() => handleChangingState({
+                                          ...reportCreate,
+                                          minResult: !reportCreate.minResult
+                                        })}/><br/>
+                Ilość zadań przesłanych po terminie: <input checked={reportCreate.late}
+                                                            type={'checkbox'}
+                                                            onChange={() => handleChangingState({
+                                                              ...reportCreate,
+                                                              late: !reportCreate.late
+                                                            })}/><br/>
+                <div className='mb-3 '><span className='font-semibold mr-1'>Przedziały do histogramu :</span> <input
+                    className='w-12 px-2 py-1 mr-2 ml-2 border-b solid black' type={"text"} value={histTextValue}
+                    onChange={(event) => setHistTextValue(event.target.value)}/>%
+                </div>
+            </fieldset>}
+        <div className='flex justify-between pr-4 mb-2 '>
+          <button className='bg-main_blue text-white rounded-md text-sm p-1 px-2' type={"submit"}>Utwórz</button>
+          <button type={'reset'} className='bg-berry_red text-white rounded-md text-sm p-1 w-8'>X</button>
+        </div>
       </form>
     </div>
   }
