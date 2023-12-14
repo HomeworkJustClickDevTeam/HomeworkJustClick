@@ -14,7 +14,6 @@ export default function UserSecuritySettingsPage(): JSX.Element {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    console.log(newCredentials)
     if ((newCredentials.newPassword === newPasswordApproval) && ((newCredentials.password || newCredentials.newPassword || newPasswordApproval) !== undefined)) {
       await changePasswordPostgresService(newCredentials)
         .catch((error: AxiosError) => {

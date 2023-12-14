@@ -1,4 +1,4 @@
-import React, {useState} from "react"
+import React, {SetStateAction, useState} from "react"
 import {createEvaluationWithUserAndSolution} from "../../services/postgresDatabaseServices"
 import {useNavigate} from "react-router-dom"
 import {selectUserState} from "../../redux/userStateSlice"
@@ -8,8 +8,8 @@ import {EvaluationCreateModel} from "../../types/EvaluationCreate.model";
 
 interface RatingPropsInterface {
     maxPoints: number | undefined
-    points: number | undefined
-    setPoints: (arg0: number) => void
+    points: string
+    setPoints: React.Dispatch<SetStateAction<string>>
     solutionId: number
     groupId: number
     evaluationPanelButtons: Button[] | undefined
@@ -32,7 +32,7 @@ export function Rating({
     const [active, setActive] = useState<number>()
     const navigate = useNavigate()
     const userState = useAppSelector(selectUserState)
-    const [pointsToSend,setPointsToSend] = useState<number>()
+    const [pointsToSend,setPointsToSend] = useState<number|undefined>(undefined)
     const autoPenaltyCalculate = (points: number) => {
         if (assigmentCompletionDate > solutionCreationDate) {
             return points;
@@ -53,19 +53,24 @@ export function Rating({
 
     function createButtonFromMaxPoints(buttons: any[]) {
         if (maxPoints) {
+          if(maxPoints <= 10){
             for (let i = 0; i <= maxPoints; i++) {
-                buttons.push(
-                    <button key={i} onClick={() => {
-                        const points = autoPenaltyCalculate(i)
-                        setPointsToSend(i)
-                        setPoints(points);
-                        setActive(i)
-                    }}
-                            className={`border border-black w-20 h-6 text-center rounded-md hover:bg-lilly-bg focus:bg-hover_blue`}>
-                        {i}
-                    </button>
-                )
+              buttons.push(
+                <button key={i} onClick={() => {
+                  const points = autoPenaltyCalculate(i)
+                  setPointsToSend(i)
+                  setPoints(points.toString());
+                  setActive(i)
+                }}
+                        className={`border border-black w-20 h-6 text-center rounded-md hover:bg-lilly-bg focus:bg-hover_blue`}>
+                  {i}
+                </button>
+              )
             }
+          }
+          else{
+            createCalculator(buttons)
+          }
         }
     }
 
@@ -74,7 +79,7 @@ export function Rating({
         evaluationPanelButtons.forEach((evaluationButton) => {
             buttons.push(<button key={evaluationButton.points} onClick={() => {
                 const points = autoPenaltyCalculate(evaluationButton.points)
-                setPoints(points);
+                setPoints(points.toString());
                 setActive(evaluationButton.points)
                 setPointsToSend(evaluationButton.points)
             }}
@@ -82,6 +87,62 @@ export function Rating({
                 {evaluationButton.points}
             </button>)
         })
+    }
+
+    const setPointsResult = (characterToJoin:string) =>{
+      let pointsAsString = points
+      if(characterToJoin === '<-') {
+        pointsAsString = pointsAsString.slice(0, -1)
+        if (pointsAsString.length === 0) pointsAsString = '0'
+      }
+      else if(pointsAsString === '0' && characterToJoin!=="."){
+        setPoints(characterToJoin)
+        setPointsToSend(+characterToJoin)
+        return
+      }
+      else pointsAsString += characterToJoin
+      if(+pointsAsString <= maxPoints!){
+        setPoints(pointsAsString!)
+        setPointsToSend(+pointsAsString!)
+      }
+    }
+
+    const createCalculator = (buttons: any[]) =>{
+      for (let i = 1; i <= 9; i++) {
+        buttons.push(
+          <button key={i} onClick={() => {
+            setPointsResult(i.toString());
+          }}
+                  className={`border border-black w-20 h-6 text-center rounded-md hover:bg-lilly-bg`}>
+            {i}
+          </button>
+        )
+      }
+      buttons.push(
+        <button key={'.'} onClick={() => {
+          setPointsResult('.');
+        }}
+                className={`border border-black w-20 h-6 text-center rounded-md hover:bg-lilly-bg`}>
+          {'.'}
+        </button>
+      )
+      buttons.push(
+        <button key={0} onClick={() => {
+          setPointsResult('0');
+        }}
+                className={`border border-black w-20 h-6 text-center rounded-md hover:bg-lilly-bg `}>
+          {0}
+        </button>
+      )
+      buttons.push(
+        <button key={'<-'} onClick={() => {
+          setPointsResult('<-')
+        }}
+                className={`border border-black w-20 h-6 text-center rounded-md hover:bg-lilly-bg`}>
+          {'<-'}
+        </button>
+      )
+
     }
 
     const renderButtons = () => {

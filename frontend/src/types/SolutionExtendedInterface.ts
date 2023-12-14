@@ -6,5 +6,5 @@ export interface SolutionExtendedInterface {
     user: UserInterface
     assignment: AssignmentInterface
     comment: string
-    creationDateTime: string | Date
+    creationDateTime: Date
 }

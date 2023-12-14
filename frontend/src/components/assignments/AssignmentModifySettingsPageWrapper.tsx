@@ -43,7 +43,6 @@ function AssignmentModifySettingsPageWrapper({
   const {evaluationPanelAssignment} = useGetEvaluationPanelAssignment(assignment.id, userState!.id)
   const [chosenEvaluationTable, setChosenEvaluationTable] =
     useState<number>(evaluationPanelAssignment === undefined ? -1 : evaluationPanelAssignment.evaluationPanelId)
-  const {comments, setComments} = useGetCommentsByUserAndAssignment(userState!.id, assignment.id, "")
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
@@ -73,8 +72,6 @@ function AssignmentModifySettingsPageWrapper({
 
   return (
     <AssignmentSettingsPage handleSubmit={handleSubmit}
-                            setComments={setComments}
-                            comments={comments}
                             assignment={assignment}
                             chosenEvaluationTable={chosenEvaluationTable}
                             toSend={toSend}

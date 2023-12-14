@@ -13,3 +13,4 @@ Backend(MongoDB)/target/
 
 .idea/
 *.html
+Backend/raport.csv

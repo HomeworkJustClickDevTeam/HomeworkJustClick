@@ -9,26 +9,26 @@ import {selectGroup} from "../../redux/groupSlice";
 import {selectUserState} from "../../redux/userStateSlice";
 import {useGetEvaluationPanelByUserIdAndAssigmentId} from "../customHooks/useGetEvaluationPanelByUserIdAndAssigmentId";
 import {format, parseISO} from "date-fns";
+import {useGetFile} from "../customHooks/useGetFile";
 
 function SolutionPage() {
     let {state} = useLocation()
     const [solutionExtended] = useState<SolutionExtendedInterface>(
         state?.solution
     )
-    const [points, setPoints] = useState<number>()
+    const [points, setPoints] = useState<string>("0")
     const [showRating, setShowRating] = useState<boolean>(false)
     const evaluation = useGetEvaluationBySolution(solutionExtended.id);
     const userState = useAppSelector(selectUserState)
     const evaluationPanel = useGetEvaluationPanelByUserIdAndAssigmentId(userState!.id, solutionExtended.assignment.id)
     const group = useAppSelector(selectGroup)
+    const fileFromDb = useGetFile(solutionExtended.id, "solution")
     const handleDisableRating = () => {
         setShowRating(false)
     }
     const handleShowRating = () => {
         setShowRating(true)
     }
-
-
     const checkIfPenaltyOn = () => {
         if (!evaluation) {
             if (solutionExtended.assignment.completionDatetime < solutionExtended.creationDateTime) {
@@ -53,7 +53,7 @@ function SolutionPage() {
             </div>
             <div>
                 <span>Data ukończenia:  </span>
-                {format(parseISO(solutionExtended.assignment.completionDatetime.toString()), "dd.MM.yyyy HH:mm")}
+                {format(new Date(solutionExtended.assignment.completionDatetime.toString()), "dd.MM.yyyy HH:mm")}
             </div>
             {solutionExtended.comment.length > 0 && (
                 <div className="text-border_gray">
@@ -69,15 +69,15 @@ function SolutionPage() {
             </div>
             <div className="flex ">
                 <p className="mr-2">Przesłane pliki: </p>
-                {solutionExtended.id ? (
-                    <SolutionFile solutionId={solutionExtended.id}/>
+                {fileFromDb !== undefined ? (
+                    <SolutionFile fileFromDb={fileFromDb}/>
                 ) : (
                     <p>Brak</p>
                 )}
             </div>
             <div>
                 <span>Data przesłania zadania: </span>
-                {format(parseISO(solutionExtended.creationDateTime.toString()), "dd.MM.yyyy HH:mm")}
+                {format(new Date(solutionExtended.creationDateTime.toString()), "dd.MM.yyyy HH:mm")}
             </div>
             {(checkIfPenaltyOn()) &&
                 <div>
@@ -86,7 +86,7 @@ function SolutionPage() {
                 </div>}
             {evaluation === undefined ? (
                 <div>
-                    {solutionExtended.id && group && (
+                    {solutionExtended.id && group && fileFromDb!==undefined && (
                         <Link
                             to={`/group/${group.id}/advancedAssignment`}
                             state={{solutionExtended: solutionExtended}}

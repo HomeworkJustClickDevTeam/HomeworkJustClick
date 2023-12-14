@@ -5,11 +5,13 @@ import { selectRole } from "../../redux/roleSlice"
 import { useAppSelector } from "../../types/HooksRedux"
 import { useGetExtendedSolutionsByGroup } from "../customHooks/useGetExtendedSolutionsByGroup"
 import { ExtendedSolutionType } from "../../types/ExtendedSolutionType"
+import {useGetEvaluationsByGroup} from "../customHooks/useGetEvaluationsByGroup";
 
 function SolutionsTypesPage({ type }: { type: ExtendedSolutionType }) {
   const group = useAppSelector(selectGroup)
   const role = useAppSelector(selectRole)
   const solutionsExtended = useGetExtendedSolutionsByGroup(group?.id, type)
+  const evaluations = useGetEvaluationsByGroup(group?.id)
 
   if (role !== "Teacher") {
     return <NotFoundPage />
@@ -17,7 +19,7 @@ function SolutionsTypesPage({ type }: { type: ExtendedSolutionType }) {
 
   return (
     <div className='flex flex-col h-[calc(100vh-325px)] overflow-y-hidden'>
-      <ul className="flex flex-col gap-3 mt-4 ml-[7.5%] box-content overflow-y-scroll mb-4">
+      <ul className="flex flex-col gap-3 mt-4 ml-[7.5%] box-content  mb-4">
         {solutionsExtended.map((solutionExtended) => (
           <li
             key={
@@ -32,14 +34,13 @@ function SolutionsTypesPage({ type }: { type: ExtendedSolutionType }) {
               className="flex relative border-border_gray border w-[42.5%] h-16 rounded-lg font-lato text-xl items-center text-center gap-2"
             >
               <div className="flex-col pl-10 w-40 text-left">
-                <div>{solutionExtended.user.index}</div>
-                <div>{solutionExtended.user.name}</div>
+                <div>{solutionExtended.user.firstname}<br/> {solutionExtended.user.lastname}</div>
               </div>
               <div className="font-semibold underline text-left w-[40%]">
                 {solutionExtended.assignment.title}
               </div>
               <p className="absolute right-0 mr-10 font-semibold text-[28px]">
-                /{solutionExtended.assignment.max_points}
+                {type==="checked" && evaluations.find(evaluation => evaluation.solutionId === solutionExtended.id)?.result} /{solutionExtended.assignment.max_points}
               </p>
             </Link>
           </li>

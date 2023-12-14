@@ -9,7 +9,7 @@ function GroupStudentsDisplayer({groupId}: { groupId: string }) {
       <ul className='flex flex-col gap-1'>
         {students?.map((student) => (
           <GroupUserListElement isTeacher={false} userToShow={{
-            firstname: student.name as string,
+            firstname: student.firstname as string,
             lastname: student.lastname as string,
             id: student.id as number
           }} key={student.id}/>

@@ -1,11 +1,13 @@
 import { SolutionFile } from "./SolutionFile"
 import { AssignmentInterface } from "../../types/AssignmentInterface"
 import { SolutionInterface } from "../../types/SolutionInterface"
+import {useGetFile} from "../customHooks/useGetFile";
 
 export default function SolutionUncheckedStudentPage(props: {
   solution: SolutionInterface
   assignment: AssignmentInterface
 }) {
+  const fileFromDb = useGetFile(props.solution.id, "solution")
   return (
     <div className="relative flex flex-col mx-[7.5%] mt-4 border border-border_gray border-1 rounded-md pt-4 px-4 h-80 gap-2">
       <p>
@@ -24,8 +26,8 @@ export default function SolutionUncheckedStudentPage(props: {
       )}
       <div>
         <p className="font-semibold">Przesłane pliki: </p>
-        {props.solution ? (
-          <SolutionFile solutionId={props.solution.id} />
+        {fileFromDb !== undefined ? (
+          <SolutionFile fileFromDb={fileFromDb} />
         ) : (
           <p>Brak</p>
         )}

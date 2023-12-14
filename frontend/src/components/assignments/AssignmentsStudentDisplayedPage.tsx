@@ -3,15 +3,20 @@ import AssignmentListElement from "./AssignmentListElement"
 import { selectUserState } from "../../redux/userStateSlice"
 import { useAppSelector } from "../../types/HooksRedux"
 import { useGetAssignmentsByStudent } from "../customHooks/useGetAssignmentsByStudent"
+import {useGetAssignmentsByGroup} from "../customHooks/useGetAssignmentsByGroup";
+import {selectGroup} from "../../redux/groupSlice";
 
-export default function AssignmentsStudentDisplayedPage() {
+
+export default function AssignmentsStudentDisplayedPage({allAssignments}:{allAssignments:boolean}) {
   const userState = useAppSelector(selectUserState)
-  const assignments = useGetAssignmentsByStudent(userState?.id)
+  const group = useAppSelector(selectGroup)
+  const userAssignments = useGetAssignmentsByStudent(userState?.id)
+  const groupAssignments = useGetAssignmentsByGroup(group?.id)
 
   return (
     <div>
       <ul>
-        {assignments.map((assignment) => (
+        {(allAssignments ? userAssignments : groupAssignments).map((assignment) => (
           <li key={assignment.id}>
             <AssignmentListElement
               assignment={assignment}
