@@ -16,7 +16,7 @@ function SolutionPage() {
     const [solutionExtended] = useState<SolutionExtendedInterface>(
         state?.solution
     )
-    const [points, setPoints] = useState<number>()
+    const [points, setPoints] = useState<string>("0")
     const [showRating, setShowRating] = useState<boolean>(false)
     const evaluation = useGetEvaluationBySolution(solutionExtended.id);
     const userState = useAppSelector(selectUserState)
@@ -29,8 +29,6 @@ function SolutionPage() {
     const handleShowRating = () => {
         setShowRating(true)
     }
-
-
     const checkIfPenaltyOn = () => {
         if (!evaluation) {
             if (solutionExtended.assignment.completionDatetime < solutionExtended.creationDateTime) {
