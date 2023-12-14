@@ -96,7 +96,7 @@ export const ReportPage = () =>{
       {(reportedObject! as AssignmentInterface).max_points !== undefined && unfoldedElement === ReportPageUnfoldingElements.table
         ? <ReportAssignmentTable max_points={(reportedObject! as AssignmentInterface).max_points}
                                  assignmentReport={report as AssignmentReportModel}/>
-        : unfoldedElement === ReportPageUnfoldingElements.table && <ReportGroupTable groupReport={report as GroupReportModel}/>}
+        : unfoldedElement === ReportPageUnfoldingElements.table && (report as GroupReportModel).assignments !== undefined && <ReportGroupTable groupReport={report as GroupReportModel}/>}
     </button>
     <br/>
     <div onClick={() => handleUnfolding(ReportPageUnfoldingElements.histogram)}>
