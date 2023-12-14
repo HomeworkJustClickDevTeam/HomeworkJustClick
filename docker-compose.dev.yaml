@@ -21,6 +21,7 @@ services:
         - "8082:8082"
     depends_on:
         - mongodb
+        - mongo-express
 
 
   backend:
@@ -42,14 +43,14 @@ services:
   frontend:
     container_name: homework_just_click_frontend_dev
     environment:
-      - API_URL=http://homework_just_click_backend_api_dev/api
-      - MONGO_API_URL=http://homework_just_click_mongo_api_dev:8082/api/
-      - CORS_URL=http://homework_just_click_frontend_dev
+      - REACT_APP_API_URL=http://homework_just_click_backend_api_dev/api
+      - REACT_APP_MONGO_API_URL=http://homework_just_click_mongo_api_dev:8082/api/
+      - REACT_APP_CORS_URL=http://homework_just_click_frontend_dev
     build:
       context: ./frontend
       dockerfile: .Dockerfile.dev
     ports:
-      - "80:80"
+      - "3000:3000"
     depends_on:
       - backend
       - backend_mongo
