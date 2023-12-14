@@ -1,0 +1,50 @@
+version: "3.8"
+services:
+  backend_mongo:
+    container_name: homework_just_click_mongo_api
+    environment:
+      - API_URL=${{ secrets.API_URL }}
+      - MONGO_URL=${{ secrets.MONGO_URL }}
+      - CORS_URL=${{ secrets.CORS_URL }}
+    build:
+      context: ./Backend(MongoDB)
+      dockerfile: .Dockerfile
+    image: pioszymk/homework-just-click:backend_mongo
+    ports:
+        - "8082:8082"
+  
+  backend:
+    container_name: homework_just_click_backend_api
+    environment:
+      - DB_URL=${{ secrets.DB_URL }}
+      - DB_USERNAME=${{ secrets.DB_USERNAME }}
+      - DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+      - CORS_URL=${{ secrets.CORS_URL }}
+    build:
+      context: ./Backend
+      dockerfile: .Dockerfile
+    image: pioszymk/homework-just-click:backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - backend_mongo
+
+  frontend:
+    container_name: homework_just_click_frontend
+    environment:
+      - API_URL=${{ secrets.API_URL }}
+      - MONGO_API_URL=${{ secrets.MONGO_API_URL }}
+      - CORS_URL=${{ secrets.CORS_URL }}
+    build:
+      context: ./frontend
+      dockerfile: .Dockerfile
+    image: pioszymk/homework-just-click:frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+      - backend_mongo
+
+volumes:
+  data: {}
+

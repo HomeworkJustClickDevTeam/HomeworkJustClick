@@ -23,21 +23,21 @@ import {EvaluationReport} from "../types/EvaluationReport.model";
 
 
 const postgresqlDatabaseJSON = axios.create({
-    baseURL: "http://localhost:8080/api",
-    timeout: 8000,
-    headers: {
-        "Access-Control-Allow-Origin": "http://localhost:3000",
-        "Content-Type": "application/json",
-    },
+  baseURL: process.env.REACT_APP_API_URL,
+  timeout: 8000,
+  headers: {
+    "Access-Control-Allow-Origin": process.env.REACT_APP_CORS_URL,
+    "Content-Type": "application/json",
+  },
 })
 
 const postgresqlDatabaseTextPlain = axios.create({
-    baseURL: "http://localhost:8080/api",
-    timeout: 8000,
-    headers: {
-        "Access-Control-Allow-Origin": "http://localhost:3000",
-        "Content-Type": "text/plain",
-    },
+  baseURL: process.env.REACT_APP_API_URL,
+  timeout: 8000,
+  headers: {
+    "Access-Control-Allow-Origin": process.env.REACT_APP_CORS_URL,
+    "Content-Type": "text/plain",
+  },
 })
 
 postgresqlDatabaseJSON.interceptors.request.use(
