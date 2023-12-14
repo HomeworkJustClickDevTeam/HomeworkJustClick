@@ -2,7 +2,7 @@ import {UserInterface} from "./UserInterface";
 import {SolutionInterface} from "./SolutionInterface";
 import {GroupInterface} from "./GroupInterface";
 
-export class EvaluationModel {
+export class EvaluationExtendedModel {
   constructor(
     public id: number,
     public result: number,
@@ -13,5 +13,17 @@ export class EvaluationModel {
     public lastModifiedDateTime: Date,
     public grade:number,
     public reported: boolean
+  ) {}
+}
+export class EvaluationModel {
+  constructor(
+    public id: number,
+    public result: number,
+    public userId: number,
+    public solutionId: number,
+    public groupId:number,
+    public creationDateTime: Date,
+    public lastModifiedDateTime: Date,
+    public grade:number
   ) {}
 }

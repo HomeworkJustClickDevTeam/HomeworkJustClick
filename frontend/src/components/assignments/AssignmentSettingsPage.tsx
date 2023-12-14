@@ -155,7 +155,7 @@ export const AssignmentSettingsPage = ({handleSubmit,
               <p className="w-36">Data wykonania: </p>
               <ReactDatePicker
                 name="completionDatetime"
-                selected={assignment.completionDatetime}
+                selected={new Date(assignment.completionDatetime)}
                 onChange={handleDateChange}
                 showTimeSelect
                 timeFormat="HH:mm"

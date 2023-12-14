@@ -109,7 +109,7 @@ function SolutionAddPage({assignment}: AssignmentPropsInterface) {
             </div>
             <div>
                 <span className="font-semibold">Data ukończenia: </span>
-                {format(parseISO(assignment.completionDatetime.toString()), "dd.MM.yyyy, HH:mm")}
+                {format(new Date(assignment.completionDatetime.toString()), "dd.MM.yyyy, HH:mm")}
             </div>
             {fileFromDb !== undefined && <AssignmentFile assignmentId={assignment.id}/>}
             <label>

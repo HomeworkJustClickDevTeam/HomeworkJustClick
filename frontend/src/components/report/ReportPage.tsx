@@ -76,7 +76,7 @@ export const ReportPage = () =>{
     (reportedObject! as AssignmentInterface).max_points !== undefined ?
       <div>
         <div>RAPORT
-          ZADANIA: {(reportedObject! as AssignmentInterface).title} {format(parseISO((reportedObject! as AssignmentInterface).completionDatetime.toString()), "dd.MM.yyyy, HH:mm")}</div>
+          ZADANIA: {(reportedObject! as AssignmentInterface).title} {format(new Date((reportedObject! as AssignmentInterface).completionDatetime.toString()), "dd.MM.yyyy, HH:mm")}</div>
         <div>Maksymalna możliwa liczba punktów: {(reportedObject! as AssignmentInterface).max_points}</div>
         <br/>
         <div>Najwyższa liczba punktów: {(report as AssignmentReportModel).maxResult}</div>

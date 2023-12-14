@@ -1,26 +1,29 @@
 import { useEffect, useState } from "react"
 import { useAppDispatch } from "../../types/HooksRedux"
 import { setIsLoading } from "../../redux/isLoadingSlice"
-import { getEvaluationBySolutionPostgresService } from "../../services/postgresDatabaseServices"
-import { EvaluationExtendedModel } from "../../types/EvaluationExtendedModel"
+import {
+  getEvaluationBySolutionPostgresService,
+  getEvaluationsByGroupPostgresService
+} from "../../services/postgresDatabaseServices"
+import {EvaluationModel} from "../../types/EvaluationExtendedModel";
 
-export const useGetEvaluationBySolution = (
-  solutionId: number | undefined | null
+export const useGetEvaluationsByGroup = (
+  groupId: number | undefined | null
 ) => {
-  const [evaluation, setEvaluation] = useState<EvaluationExtendedModel | undefined>(
-    undefined
+  const [evaluations, setEvaluations] = useState<EvaluationModel[]>(
+    []
   )
   const dispatch = useAppDispatch()
 
   useEffect(() => {
     let mounted = true
-    if (solutionId !== undefined && solutionId !== null) {
+    if (groupId !== undefined && groupId !== null) {
       dispatch(setIsLoading(true))
-      getEvaluationBySolutionPostgresService(solutionId.toString())
+      getEvaluationsByGroupPostgresService(groupId.toString())
         .then((response) => {
           if (response !== null && response !== undefined) {
             if (mounted) {
-              setEvaluation(response.data)
+              setEvaluations(response.data)
             }
           }
         })
@@ -31,10 +34,10 @@ export const useGetEvaluationBySolution = (
             error.response.status === 404
           ) {
             if (mounted) {
-              setEvaluation(undefined)
+              setEvaluations([])
             }
           } else {
-            console.log("Error fetching evaluation:", error)
+            console.log("Error fetching evaluations:", error)
           }
         })
       dispatch(setIsLoading(false))
@@ -42,7 +45,7 @@ export const useGetEvaluationBySolution = (
     return () => {
       mounted = false
     }
-  }, [solutionId])
+  }, [groupId])
 
-  return evaluation
+  return evaluations
 }

@@ -53,7 +53,7 @@ function SolutionPage() {
             </div>
             <div>
                 <span>Data ukończenia:  </span>
-                {format(parseISO(solutionExtended.assignment.completionDatetime.toString()), "dd.MM.yyyy HH:mm")}
+                {format(new Date(solutionExtended.assignment.completionDatetime.toString()), "dd.MM.yyyy HH:mm")}
             </div>
             {solutionExtended.comment.length > 0 && (
                 <div className="text-border_gray">
@@ -77,7 +77,7 @@ function SolutionPage() {
             </div>
             <div>
                 <span>Data przesłania zadania: </span>
-                {format(parseISO(solutionExtended.creationDateTime.toString()), "dd.MM.yyyy HH:mm")}
+                {format(new Date(solutionExtended.creationDateTime.toString()), "dd.MM.yyyy HH:mm")}
             </div>
             {(checkIfPenaltyOn()) &&
                 <div>

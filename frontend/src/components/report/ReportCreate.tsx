@@ -127,7 +127,7 @@ export const ReportCreate = ({reportedObject, csvVersion
         <div>
           <div > <span className='font-semibold mr-1'>Nazwa zadania:</span> {reportedObject.title}</div>
           <br/>
-          <div><span className='font-semibold mr-1'>Termin:</span> {format(parseISO((reportedObject as AssignmentInterface).completionDatetime.toString()), "dd.MM.yyyy, HH:mm")}</div>
+          <div><span className='font-semibold mr-1'>Termin:</span> {format(new Date((reportedObject as AssignmentInterface).completionDatetime.toString()), "dd.MM.yyyy, HH:mm")}</div>
           <br/>
           <div><span className='font-semibold mr-1'>Punkty do zdobycia:</span> {(reportedObject as AssignmentInterface).max_points}</div>
           <br/>

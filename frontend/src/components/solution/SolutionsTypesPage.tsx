@@ -5,11 +5,13 @@ import { selectRole } from "../../redux/roleSlice"
 import { useAppSelector } from "../../types/HooksRedux"
 import { useGetExtendedSolutionsByGroup } from "../customHooks/useGetExtendedSolutionsByGroup"
 import { ExtendedSolutionType } from "../../types/ExtendedSolutionType"
+import {useGetEvaluationsByGroup} from "../customHooks/useGetEvaluationsByGroup";
 
 function SolutionsTypesPage({ type }: { type: ExtendedSolutionType }) {
   const group = useAppSelector(selectGroup)
   const role = useAppSelector(selectRole)
   const solutionsExtended = useGetExtendedSolutionsByGroup(group?.id, type)
+  const evaluations = useGetEvaluationsByGroup(group?.id)
 
   if (role !== "Teacher") {
     return <NotFoundPage />
@@ -38,7 +40,7 @@ function SolutionsTypesPage({ type }: { type: ExtendedSolutionType }) {
                 {solutionExtended.assignment.title}
               </div>
               <p className="absolute right-0 mr-10 font-semibold text-[28px]">
-                /{solutionExtended.assignment.max_points}
+                {type==="checked" && evaluations.find(evaluation => evaluation.solutionId === solutionExtended.id)?.result} /{solutionExtended.assignment.max_points}
               </p>
             </Link>
           </li>

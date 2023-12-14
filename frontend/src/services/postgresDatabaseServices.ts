@@ -291,6 +291,14 @@ export const getEvaluationBySolutionPostgresService = async (
     )
 }
 
+export const getEvaluationsByGroupPostgresService = async (
+  groupId: string | number
+) => {
+    return await postgresqlDatabaseJSON.get(
+      `/evaluation/byGroupId/${groupId}`
+    )
+}
+
 export const getExtendedSolutionsLateByGroupPostgresService = async (
     groupId: string
 ) => {
