@@ -120,19 +120,19 @@ export const ReportCreate = ({reportedObject, csvVersion
   }, []);
 
   if(reportCreate !== undefined) {
-    return <div className='w-[400px]  border border-black'>
-      <div style={{textAlign: "center"}}>RAPORT</div>
-      <br/>
+    return <div className='w-[400px]  border-2 border-black rounded-md pl-3'>
+      <div className='text-center mb-6 mt-2 font-bold'>RAPORT</div>
+
       {'title' in reportedObject?
         <div>
-          <div>Nazwa zadania: {reportedObject.title}</div>
+          <div > <span className='font-semibold mr-1'>Nazwa zadania:</span> {reportedObject.title}</div>
           <br/>
-          <div>Termin: {format(parseISO((reportedObject as AssignmentInterface).completionDatetime.toString()), "dd.MM.yyyy, HH:mm")}</div>
+          <div><span className='font-semibold mr-1'>Termin:</span> {format(parseISO((reportedObject as AssignmentInterface).completionDatetime.toString()), "dd.MM.yyyy, HH:mm")}</div>
           <br/>
-          <div>Punkty do zdobycia: {(reportedObject as AssignmentInterface).max_points}</div>
+          <div><span className='font-semibold mr-1'>Punkty do zdobycia:</span> {(reportedObject as AssignmentInterface).max_points}</div>
           <br/>
         </div>
-        : <div>Nazwa grupy: {(reportedObject as GroupInterface).name}</div>}<br/>
+          : <div><span className='font-semibold mr-1'>Nazwa grupy:</span> {(reportedObject as GroupInterface).name}</div>}
 
       <form onSubmit={(event) => {csvVersion ? handleCsvCreation(event) : handleReportCreation(event)}}>
         {csvVersion &&
@@ -151,9 +151,9 @@ export const ReportCreate = ({reportedObject, csvVersion
                                                           type={'checkbox'}
                                                           onChange={() => handleChangingState({...reportCreate, late: !reportCreate.late})}/><br/>
           </fieldset>}
-        <div>Przedziały do histogramu (%): <input type={"text"} value={histTextValue} onChange={(event) => setHistTextValue(event.target.value)}/></div>
-        <button type={"submit"}>Utwórz</button>
-        <button type={'reset'}>X</button>
+        <div className='mb-3 '><span className='font-semibold mr-1'>Przedziały do histogramu :</span> <input className='w-12 px-2 py-1 mr-2 ml-2 border-b solid black' type={"text"} value={histTextValue} onChange={(event) => setHistTextValue(event.target.value)}/>%</div>
+        <div className='flex justify-between pr-4 mb-2 '><button className='bg-main_blue text-white rounded-md text-sm p-1 px-2' type={"submit"}>Utwórz</button>
+          <button type={'reset'} className='bg-berry_red text-white rounded-md text-sm p-1 w-8'>X</button></div>
       </form>
     </div>
   }
