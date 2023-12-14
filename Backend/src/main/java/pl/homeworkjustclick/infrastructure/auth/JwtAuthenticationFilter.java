@@ -1,6 +1,5 @@
 package pl.homeworkjustclick.infrastructure.auth;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,7 +24,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
     private final InternalAuthenticationFilter internalAuthenticationFilter;
-    private final ObjectMapper objectMapper;
+    private final UserRequestValidator userRequestValidator;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
@@ -51,6 +50,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 authToken.setDetails(
                         new WebAuthenticationDetailsSource().buildDetails(cachedRequest)
                 );
+                userRequestValidator.validateUserInRequest(cachedRequest, userEmail, body);
                 internalAuthenticationFilter.filterInternal(cachedRequest, userEmail, body);
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
