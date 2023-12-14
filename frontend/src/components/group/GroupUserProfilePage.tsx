@@ -14,44 +14,50 @@ export default function GroupUserProfilePage() {
   const undoneAssignments = useGetAssignmentsByGroupAndStudent(group?.id, userProfileId as unknown as number, "undone")
 
   return (
-    <ul>
-      <li>Imię i nazwisko: {userProfile?.firstname} {userProfile?.lastname}</li>
-      <li>Indeks: {userProfile?.index}</li>
-      <li>
-        <dl>
-          <dt>Zrobione zadania:
-            <dd>
-              <ul>
-                {doneAssignments?.map((assignment) => {
-                  return (<li key={assignment.id}><AssignmentListElement optionalUserId={userProfile?.id?.toString()}
-                                                                         assignment={assignment}
-                                                                         idGroup={group?.id as unknown as string}/></li>)
-                })}
-              </ul>
-            </dd>
-          </dt>
-          <dt>Niezrobione zadania:
-            <dd>
-              <ul>
-                {undoneAssignments?.map((assignment) => {
-                  return (<li key={assignment.id}><AssignmentListElement optionalUserId={userProfile?.id?.toString()} assignment={assignment}
-                                                     idGroup={group?.id as unknown as string}/></li>)
-                })}
-              </ul>
-            </dd>
-          </dt>
-          <dt>Spoźnione nieoddane zadania:
-            <dd>
-              <ul>
-                {expiredUndoneAssignments?.map((assignment) => {
-                  return (<li key={assignment.id}><AssignmentListElement optionalUserId={userProfile?.id?.toString()} assignment={assignment}
-                                                     idGroup={group?.id as unknown as string}/></li>)
-                })}
-              </ul>
-            </dd>
-          </dt>
-        </dl>
-      </li>
-    </ul>
+      <div className='flex flex-col h-[calc(100vh-320px)] overflow-y-hidden'>
+        <p className='border-t border-t-black ml-32 w-[495px] mt-0.5'></p>
+        <ul className='flex flex-col gap-1 pt-2 pb-6 box-content overflow-y-scroll'>
+          <li className='ml-32'>Imię i nazwisko: {userProfile?.firstname} {userProfile?.lastname}</li>
+          <li className='ml-32'>Indeks: {userProfile?.index}</li>
+          <li>
+            <dl>
+              <dt >
+                <p className='ml-32 underline underline-offset-2'>Zrobione zadania:</p>
+                <dd>
+                  <ul className='ml-12'>
+                    {doneAssignments?.map((assignment) => {
+                      return (<li key={assignment.id}><AssignmentListElement optionalUserId={userProfile?.id?.toString()}
+                                                                             assignment={assignment}
+                                                                             idGroup={group?.id as unknown as string}/></li>)
+                    })}
+                  </ul>
+                </dd>
+              </dt>
+              <dt>
+                <p className='ml-32 underline underline-offset-2 mt-4'>Niezrobione zadania:</p>
+                <dd>
+                  <ul className='ml-12'>
+                    {undoneAssignments?.map((assignment) => {
+                      return (<li key={assignment.id}><AssignmentListElement optionalUserId={userProfile?.id?.toString()} assignment={assignment}
+                                                                             idGroup={group?.id as unknown as string}/></li>)
+                    })}
+                  </ul>
+                </dd>
+              </dt>
+              <dt>
+                <p className='ml-32 underline underline-offset-2 mt-4'>Spoźnione nieoddane zadania:</p>
+                <dd>
+                  <ul className='ml-12'>
+                    {expiredUndoneAssignments?.map((assignment) => {
+                      return (<li key={assignment.id}><AssignmentListElement optionalUserId={userProfile?.id?.toString()} assignment={assignment}
+                                                                             idGroup={group?.id as unknown as string}/></li>)
+                    })}
+                  </ul>
+                </dd>
+              </dt>
+            </dl>
+          </li>
+        </ul>
+      </div>
   )
 }
