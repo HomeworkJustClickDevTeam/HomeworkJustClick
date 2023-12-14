@@ -131,14 +131,14 @@ public class InternalAuthenticationFilter {
 
     private void filterTeacherInCommentFileTextDeleteOrPut(String path, int userId) {
         var pathSplit = path.split("/");
-        if (pathSplit.length == 3) {
+        if (pathSplit.length == 4) {
             var commentFileText = commentFileTextService.findById(Integer.parseInt(pathSplit[pathSplit.length - 1]));
             var comment = commentService.findById(commentFileText.getComment().getId());
             var assignmentId = comment.getAssignment().getId();
             var groupId = assignmentService.findById(assignmentId).getGroup().getId();
             checkForTeacherInGroup(userId, groupId);
         }
-        if (pathSplit.length == 4 || pathSplit.length == 5) {
+        if (pathSplit.length == 5 || pathSplit.length == 6) {
             var comment = commentService.findById(Integer.parseInt(pathSplit[4]));
             var assignmentId = comment.getAssignment().getId();
             var groupId = assignmentService.findById(assignmentId).getGroup().getId();
@@ -165,14 +165,14 @@ public class InternalAuthenticationFilter {
 
     private void filterTeacherInCommentFileImgDeleteOrPut(String path, int userId) {
         var pathSplit = path.split("/");
-        if (pathSplit.length == 3) {
+        if (pathSplit.length == 4) {
             var commentFileImg = commentFileImgService.findById(Integer.parseInt(pathSplit[pathSplit.length - 1]));
             var comment = commentService.findById(commentFileImg.getComment().getId());
             var assignmentId = comment.getAssignment().getId();
             var groupId = assignmentService.findById(assignmentId).getGroup().getId();
             checkForTeacherInGroup(userId, groupId);
         }
-        if (pathSplit.length == 4 || pathSplit.length == 5) {
+        if (pathSplit.length == 5 || pathSplit.length == 6) {
             var comment = commentService.findById(Integer.parseInt(pathSplit[4]));
             var assignmentId = comment.getAssignment().getId();
             var groupId = assignmentService.findById(assignmentId).getGroup().getId();
