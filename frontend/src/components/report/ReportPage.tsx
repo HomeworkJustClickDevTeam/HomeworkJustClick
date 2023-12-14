@@ -1,4 +1,4 @@
-import {format} from "date-fns";
+import {format, parseISO} from "date-fns";
 import {useLocation} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {AssignmentReportModel} from "../../types/AssignmentReport.model";
@@ -9,33 +9,33 @@ import {ReportCreate} from "./ReportCreate";
 import {AssignmentInterface} from "../../types/AssignmentInterface";
 import {GroupInterface} from "../../types/GroupInterface";
 import {Chart} from "react-google-charts";
+import {ReportPageUnfoldingElements} from "../../types/ReportPageUnfoldingElements";
 
 
-enum unfoldingElements{
-  histogram,
-  table
-}
+
 
 export const ReportPage = () =>{
   const {state} = useLocation()
   const [report, setReport] = useState<AssignmentReportModel|GroupReportModel|undefined>(undefined)
   const [csvCreateFormShown, setCsvCreateFormShown] = useState(false)
   const [reportedObject, setReportedObject] = useState<AssignmentInterface|GroupInterface|undefined>(undefined)
-  const [unfoldedElement, setUnfoldedElement] = useState<unfoldingElements|undefined>(undefined)
+  const [unfoldedElement, setUnfoldedElement] = useState<ReportPageUnfoldingElements|undefined>(undefined)
   const [histogramData, setHistogramData] = useState<any>([])
   const [histogramTitle, setHistogramTitle] = useState("")
-  const handleUnfolding = (clickedElement: unfoldingElements) => {
+
+  const handleUnfolding = (clickedElement: ReportPageUnfoldingElements) => {
     switch (clickedElement){
-      case unfoldingElements.histogram:
-        if(unfoldedElement === unfoldingElements.histogram) setUnfoldedElement(undefined)
+      case ReportPageUnfoldingElements.histogram:
+        if(unfoldedElement === ReportPageUnfoldingElements.histogram) setUnfoldedElement(undefined)
         else setUnfoldedElement(clickedElement)
         break
-      case unfoldingElements.table:
-        if(unfoldedElement === unfoldingElements.table) setUnfoldedElement(undefined)
+      case ReportPageUnfoldingElements.table:
+        if(unfoldedElement === ReportPageUnfoldingElements.table) setUnfoldedElement(undefined)
         else setUnfoldedElement(clickedElement)
         break
     }
   }
+
   const options = {
     title: histogramTitle,
     legend: { position: "top", maxLines: 1},
@@ -76,7 +76,7 @@ export const ReportPage = () =>{
     (reportedObject! as AssignmentInterface).max_points !== undefined ?
       <div>
         <div>RAPORT
-          ZADANIA: {(reportedObject! as AssignmentInterface).title} {format(new Date((reportedObject! as AssignmentInterface).completionDatetime), "dd.MM.yyyy, HH:mm")}</div>
+          ZADANIA: {(reportedObject! as AssignmentInterface).title} {format(parseISO((reportedObject! as AssignmentInterface).completionDatetime.toString()), "dd.MM.yyyy, HH:mm")}</div>
         <div>Maksymalna możliwa liczba punktów: {(reportedObject! as AssignmentInterface).max_points}</div>
         <br/>
         <div>Najwyższa liczba punktów: {(report as AssignmentReportModel).maxResult}</div>
@@ -91,17 +91,17 @@ export const ReportPage = () =>{
         <br/>
       </div>
       : <div>RAPORT GRUPY: {(reportedObject! as GroupInterface).name}</div>}
-    <button onClick={() => handleUnfolding(unfoldingElements.table)}>
+    <button onClick={() => handleUnfolding(ReportPageUnfoldingElements.table)}>
       TABELA:<br/>
-      {(reportedObject! as AssignmentInterface).max_points !== undefined && unfoldedElement === unfoldingElements.table
+      {(reportedObject! as AssignmentInterface).max_points !== undefined && unfoldedElement === ReportPageUnfoldingElements.table
         ? <ReportAssignmentTable max_points={(reportedObject! as AssignmentInterface).max_points}
                                  assignmentReport={report as AssignmentReportModel}/>
-        : unfoldedElement === unfoldingElements.table && <ReportGroupTable groupReport={report as GroupReportModel}/>}
+        : unfoldedElement === ReportPageUnfoldingElements.table && <ReportGroupTable groupReport={report as GroupReportModel}/>}
     </button>
     <br/>
-    <div onClick={() => handleUnfolding(unfoldingElements.histogram)}>
+    <div onClick={() => handleUnfolding(ReportPageUnfoldingElements.histogram)}>
       HISTOGRAM:<br/>
-      {unfoldedElement === unfoldingElements.histogram &&
+      {unfoldedElement === ReportPageUnfoldingElements.histogram &&
         <Chart
           chartType="Histogram"
           width="100%"

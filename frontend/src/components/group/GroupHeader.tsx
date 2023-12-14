@@ -8,51 +8,42 @@ import { useAppSelector } from "../../types/HooksRedux"
 import {FaCaretDown} from "react-icons/fa";
 import {GroupHomePageDisplayer} from "./GroupHomePageDisplayer";
 import {ca, ro} from "date-fns/locale";
+import {sortButtonValues} from "../../types/GroupHeaderStortButtonValues";
 
 //import {theme.colors.colorsArray: string[]} = require("../../../tailwind.config")
-//type sortButtonValue = "Wszystkie"|"Do wykonania"|"Zrobione"|"Zaległe"|"Zadania"|"Do sprawdzenia"|"Sprawdzone"|"Spóźnione"
 
-enum sortButtonValue{
-  toDo="Do wykonania",
-  assignments="Wszystkie",
-  done="Zrobione",
-  expired="Zaległe",
-  uncheck="Do sprawdzenia",
-  check="Sprawdzone",
-  late="Spóźnione"
-}
 function GroupHeader() {
   const location = useLocation()
   const navigate = useNavigate()
   const [locationSplit, setLocationSplit] = useState<string[]>(location.pathname.split("/"))
   const group= useAppSelector(selectGroup)
   const role = useAppSelector(selectRole)
-  const [sortButtonState, setSortButtonState] = useState<sortButtonValue>(role === "Teacher" ? sortButtonValue.uncheck:sortButtonValue.toDo)
+  const [sortButtonState, setSortButtonState] = useState<sortButtonValues>(role === "Teacher" ? sortButtonValues.uncheck:sortButtonValues.toDo)
   const [isOpen, setIsOpen] = useState(false)
 
   useEffect(()=>{
     setLocationSplit(location.pathname.split("/"))
     switch (location.pathname.split("/")[4]){
       case "todo":
-        setSortButtonState(sortButtonValue.toDo)
+        setSortButtonState(sortButtonValues.toDo)
         break
       case "done":
-        setSortButtonState(sortButtonValue.done)
+        setSortButtonState(sortButtonValues.done)
         break
       case "expired":
-        setSortButtonState(sortButtonValue.expired)
+        setSortButtonState(sortButtonValues.expired)
         break
       case "uncheck":
-        setSortButtonState(sortButtonValue.uncheck)
+        setSortButtonState(sortButtonValues.uncheck)
         break
       case "check":
-        setSortButtonState(sortButtonValue.check)
+        setSortButtonState(sortButtonValues.check)
         break
       case "late":
-        setSortButtonState(sortButtonValue.late)
+        setSortButtonState(sortButtonValues.late)
         break
       default:
-        if(location.pathname.split("/")[3] === "assignments") setSortButtonState(sortButtonValue.assignments)
+        if(location.pathname.split("/")[3] === "assignments") setSortButtonState(sortButtonValues.assignments)
         else if(location.pathname.split("/")[3] === undefined){
           if(role === "Teacher") navigate("solutions/uncheck")
           else if(role==="Student") navigate("assignments/todo")

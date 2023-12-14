@@ -6,7 +6,7 @@ import {
     createSolutionWithUserAndAssignmentPostgresService,
 } from "../../services/postgresDatabaseServices"
 import {AssignmentFile} from "../assignments/AssignmentFile"
-import {format} from "date-fns"
+import {format, parseISO} from "date-fns"
 import {AssignmentPropsInterface} from "../../types/AssignmentPropsInterface"
 import {SolutionCreateInterface} from "../../types/SolutionCreateInterface"
 import {selectUserState} from "../../redux/userStateSlice"
@@ -109,7 +109,7 @@ function SolutionAddPage({assignment}: AssignmentPropsInterface) {
             </div>
             <div>
                 <span className="font-semibold">Data ukończenia: </span>
-                {format(assignment.completionDatetime, "dd.MM.yyyy, HH:mm")}
+                {format(parseISO(assignment.completionDatetime.toString()), "dd.MM.yyyy, HH:mm")}
             </div>
             {fileFromDb !== undefined && <AssignmentFile assignmentId={assignment.id}/>}
             <label>

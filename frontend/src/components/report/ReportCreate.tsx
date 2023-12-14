@@ -1,4 +1,4 @@
-import {format} from "date-fns";
+import {format, parseISO} from "date-fns";
 import React, {useEffect, useState} from "react";
 import {AssignmentCreateReportModel} from "../../types/AssignmentCreateReport.model";
 import {GroupCreateReportModel} from "../../types/GroupCreateReport.model";
@@ -19,6 +19,8 @@ import {el} from "date-fns/locale";
 import {useUpdateEffect} from "usehooks-ts";
 import * as fs from "fs";
 import * as domain from "domain";
+
+
 export const ReportCreate = ({reportedObject, csvVersion
 }:{reportedObject: GroupInterface|AssignmentInterface, csvVersion: boolean}) =>{
   const [reportCreate, setReportCreate] = useState<AssignmentCreateReportModel|GroupCreateReportModel|undefined>(undefined)
@@ -62,7 +64,6 @@ export const ReportCreate = ({reportedObject, csvVersion
     if(reportCreate === undefined) return
     try {
       let response = null
-      console.log(reportCreate)
       if('assignmentId' in reportCreate) response = await createReportAssignmentCSV(reportCreate)
       else response = await createReportGroupCSV(reportCreate)
       if(response?.status === 200){
@@ -126,7 +127,7 @@ export const ReportCreate = ({reportedObject, csvVersion
         <div>
           <div>Nazwa zadania: {reportedObject.title}</div>
           <br/>
-          <div>Termin: {format(new Date((reportedObject as AssignmentInterface).completionDatetime), "dd.MM.yyyy, HH:mm")}</div>
+          <div>Termin: {format(parseISO((reportedObject as AssignmentInterface).completionDatetime.toString()), "dd.MM.yyyy, HH:mm")}</div>
           <br/>
           <div>Punkty do zdobycia: {(reportedObject as AssignmentInterface).max_points}</div>
           <br/>
