@@ -49,19 +49,14 @@ public class ReportService {
         var assignmentId = assignmentReportDto.getAssignmentId();
         var assignment = assignmentService.findById(assignmentReportDto.getAssignmentId());
         var solutions = solutionService.getSolutionsByAssignmentId(assignmentId);
-        if (solutions.isEmpty()) {
-            return AssignmentReportResponseDto.builder()
-                    .assignment(assignmentMapper.map(assignment))
-                    .description("Brak wysłanych rozwiązań")
-                    .build();
-        }
+        String description = null;
         var evaluations = evaluationService.getEvaluationsByAssignment(assignment.getId());
         var groupId = assignment.getGroup().getId();
         if (evaluations.isEmpty()) {
-            return AssignmentReportResponseDto.builder()
-                    .assignment(assignmentMapper.map(assignment))
-                    .description("Brak ocenionych rozwiązań")
-                    .build();
+            description = "Brak ocenionych rozwiązań";
+        }
+        if (solutions.isEmpty()) {
+            description = "Brak wysłanych rozwiązań";
         }
         var maxPoints = assignment.getMax_points();
         var studentsResults = createStudentsList(evaluations, maxPoints, groupId, assignmentId);
@@ -87,6 +82,7 @@ public class ReportService {
                     .hist(hist)
                     .studentsHist(studentsHist)
                     .students(studentsResults)
+                    .description(description)
                     .build();
         }
         return AssignmentReportResponseDto.builder()
@@ -99,6 +95,7 @@ public class ReportService {
                 .avgResultPercent(avgResultPercent)
                 .late(late)
                 .students(studentsResults)
+                .description(description)
                 .build();
     }
 
@@ -466,6 +463,7 @@ public class ReportService {
                             .result((double) 0)
                             .resultPercent((double) 0)
                             .description("Nie oceniono rozwiązania")
+                            .late(false)
                             .build()
             );
         });
@@ -475,6 +473,7 @@ public class ReportService {
                         .result((double) 0)
                         .resultPercent((double) 0)
                         .description("Nie wysłano rozwiązania")
+                        .late(false)
                         .build()
         ));
         return assignmentReportStudentResponseDtoList;

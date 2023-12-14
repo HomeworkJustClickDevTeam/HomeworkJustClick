@@ -56,6 +56,11 @@ public class EvaluationService {
         return evaluationOptional.map(this::buildEvaluationResponse).orElse(null);
     }
 
+    public List<EvaluationResponseDto> findAllByGroupId(Integer groupId) {
+        return repository.findAllByGroupId(groupId)
+                .stream().map(mapper::map).toList();
+    }
+
     @Transactional
     public EvaluationResponseDto add(Evaluation evaluation) {
         entityManager.persist(evaluation);

@@ -42,7 +42,7 @@ public class EvaluationController {
                     description = "List returned.",
                     content = @Content(
                             mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = Evaluation.class)))
+                            array = @ArraySchema(schema = @Schema(implementation = EvaluationResponseDto.class)))
             )
     )
     public List<EvaluationResponseDto> getAll() {
@@ -62,7 +62,7 @@ public class EvaluationController {
                             description = "OK.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = Evaluation.class))
+                                    schema = @Schema(implementation = EvaluationResponseDto.class))
                     )
             }
     )
@@ -85,7 +85,7 @@ public class EvaluationController {
                             description = "OK.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = Evaluation.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = EvaluationResponseExtendedDto.class))
                             )
                     )
             }
@@ -103,7 +103,7 @@ public class EvaluationController {
                             description = "OK.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = Evaluation.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = EvaluationResponseExtendedDto.class))
                             )
                     )
             }
@@ -121,7 +121,7 @@ public class EvaluationController {
                             description = "OK.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = Evaluation.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = EvaluationResponseExtendedDto.class))
                             )
                     )
             }
@@ -206,7 +206,7 @@ public class EvaluationController {
                     description = "List returned.",
                     content = @Content(
                             mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = Evaluation.class)))
+                            array = @ArraySchema(schema = @Schema(implementation = EvaluationResponseExtendedDto.class)))
             )
     )
     public List<EvaluationResponseExtendedDto> getAllExtended() {
@@ -226,7 +226,7 @@ public class EvaluationController {
                             description = "OK.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = Evaluation.class))
+                                    schema = @Schema(implementation = EvaluationResponseExtendedDto.class))
                     )
             }
     )
@@ -431,7 +431,7 @@ public class EvaluationController {
                             description = "OK.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = Evaluation.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = EvaluationResponseDto.class))
                             )
                     )
             }
@@ -458,7 +458,7 @@ public class EvaluationController {
                             description = "OK.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = Evaluation.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = EvaluationResponseDto.class))
                             )
                     )
             }
@@ -487,7 +487,7 @@ public class EvaluationController {
                             description = "OK.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = Evaluation.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = EvaluationResponseDto.class))
                             )
                     )
             }
@@ -516,7 +516,7 @@ public class EvaluationController {
                             description = "OK.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = Evaluation.class)
+                                    schema = @Schema(implementation = EvaluationResponseDto.class)
                             )
                     )
             }
@@ -533,6 +533,24 @@ public class EvaluationController {
         }
     }
 
+    @GetMapping("/evaluation/byGroupId/{groupId}")
+    @Operation(
+            summary = "Returns list of all evaluations associated with group with given id.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = EvaluationResponseDto.class))
+                            )
+                    )
+            }
+    )
+    public List<EvaluationResponseDto> getEvaluationsByGroupId(@PathVariable Integer groupId) {
+        return evaluationService.findAllByGroupId(groupId);
+    }
+
     @GetMapping("/extended/evaluations/byStudent/{student_id}")
     @Operation(
             summary = "Returns list of all evaluations associated with user with given id.",
@@ -547,7 +565,7 @@ public class EvaluationController {
                             description = "OK.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = Evaluation.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = EvaluationResponseExtendedDto.class))
                             )
                     )
             }
@@ -574,7 +592,7 @@ public class EvaluationController {
                             description = "OK.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = Evaluation.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = EvaluationResponseExtendedDto.class))
                             )
                     )
             }
@@ -603,7 +621,7 @@ public class EvaluationController {
                             description = "OK.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = Evaluation.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = EvaluationResponseExtendedDto.class))
                             )
                     )
             }
@@ -632,7 +650,7 @@ public class EvaluationController {
                             description = "OK.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = Evaluation.class)
+                                    schema = @Schema(implementation = EvaluationResponseExtendedDto.class)
                             )
                     )
             }
