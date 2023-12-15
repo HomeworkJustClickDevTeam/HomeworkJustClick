@@ -8,6 +8,15 @@ jobs:
   push_to_registry:
     name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest 
+    env:
+      API_URL: ${{ secrets.API_URL }}
+      MONGO_URL: ${{ secrets.MONGO_URL }}
+      DB_URL: ${{ secrets.DB_URL }}
+      DB_USERNAME: ${{ secrets.DB_USERNAME }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      CORS_URL: ${{ secrets.CORS_URL }}
+      MONGO_API_URL: ${{ secrets.MONGO_API_URL }}
+
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4
@@ -22,7 +31,7 @@ jobs:
         if: ${{ env.ACT }}
         name: Install `docker-compose` for local simulations
         with:
-          version: '2.14.2'
+          version: '2.18.1'
 
     
       - name: Build Docker image
