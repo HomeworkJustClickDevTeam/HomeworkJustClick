@@ -11,7 +11,7 @@ services:
   backend_mongo:
     container_name: homework_just_click_mongo_api_dev
     environment:
-      - API_URL=ttp://localhost:8080/api/
+      - API_URL=http://localhost:8080/api/
       - MONGO_URL=mongodb
       - CORS_URL=http://localhost:3000/
     build:
