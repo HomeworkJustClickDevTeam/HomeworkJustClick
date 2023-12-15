@@ -10,12 +10,14 @@ jobs:
     runs-on: ubuntu-latest 
     env:
       API_URL: ${{ secrets.API_URL }}
+      REACT_APP_API_URL: ${{ secrets.API_URL }}
       MONGO_URL: ${{ secrets.MONGO_URL }}
       DB_URL: ${{ secrets.DB_URL }}
       DB_USERNAME: ${{ secrets.DB_USERNAME }}
       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
       CORS_URL: ${{ secrets.CORS_URL }}
-      MONGO_API_URL: ${{ secrets.MONGO_API_URL }}
+      REACT_APP_CORS_URL: ${{ secrets.CORS_URL }}
+      REACT_APP_MONGO_API_URL: ${{ secrets.MONGO_API_URL }}
 
     steps:
       - name: Check out the repo

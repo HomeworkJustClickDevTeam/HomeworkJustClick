@@ -32,9 +32,9 @@ services:
   frontend:
     container_name: homework_just_click_frontend
     environment:
-      - API_URL=${API_URL}
-      - MONGO_API_URL=${MONGO_API_URL}
-      - CORS_URL=${CORS_URL}
+      - REACT_APP_API_URL=${API_URL}
+      - REACT_APP_MONGO_API_URL=${MONGO_API_URL}
+      - REACT_APP_CORS_URL=${CORS_URL}
     build:
       context: ./frontend
       dockerfile: .Dockerfile
