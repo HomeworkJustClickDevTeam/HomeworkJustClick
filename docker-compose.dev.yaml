@@ -11,9 +11,9 @@ services:
   backend_mongo:
     container_name: homework_just_click_mongo_api_dev
     environment:
-      - API_URL=http://homework_just_click_backend_api_dev/api
+      - API_URL=ttp://localhost:8080/api/
       - MONGO_URL=mongodb
-      - CORS_URL=http://homework_just_click_frontend_dev
+      - CORS_URL=http://localhost:3000/
     build:
       context: ./Backend(MongoDB)
       dockerfile: .Dockerfile.dev
@@ -30,7 +30,7 @@ services:
       - DB_URL=jdbc:postgresql://homework_just_click:5432/postgres
       - DB_USERNAME=postgres
       - DB_PASSWORD=123
-      - CORS_URL=http://homework_just_click_frontend_dev
+      - CORS_URL=http://localhost:3000/
     build:
       context: ./Backend
       dockerfile: .Dockerfile.dev
@@ -43,9 +43,9 @@ services:
   frontend:
     container_name: homework_just_click_frontend_dev
     environment:
-      - REACT_APP_API_URL=http://homework_just_click_backend_api_dev/api
-      - REACT_APP_MONGO_API_URL=http://homework_just_click_mongo_api_dev:8082/api/
-      - REACT_APP_CORS_URL=http://homework_just_click_frontend_dev
+      - API_URL=http://localhost:8080/api/
+      - MONGO_API_URL=http://localhost:80802/api/
+      - CORS_URL=http://localhost:3000/
     build:
       context: ./frontend
       dockerfile: .Dockerfile.dev
