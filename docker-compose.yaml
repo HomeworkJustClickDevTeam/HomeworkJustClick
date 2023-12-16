@@ -3,23 +3,23 @@ services:
   backend_mongo:
     container_name: homework_just_click_mongo_api
     environment:
-      - API_URL=${{ secrets.API_URL }}
-      - MONGO_URL=${{ secrets.MONGO_URL }}
-      - CORS_URL=${{ secrets.CORS_URL }}
+      - API_URL=${API_URL}
+      - MONGO_URL=${MONGO_URL}
+      - CORS_URL=${CORS_URL}
     build:
       context: ./Backend(MongoDB)
       dockerfile: .Dockerfile
     image: pioszymk/homework-just-click:backend_mongo
     ports:
-        - "8082:8082"
-  
+      - "8082:8082"
+
   backend:
     container_name: homework_just_click_backend_api
     environment:
-      - DB_URL=${{ secrets.DB_URL }}
-      - DB_USERNAME=${{ secrets.DB_USERNAME }}
-      - DB_PASSWORD=${{ secrets.DB_PASSWORD }}
-      - CORS_URL=${{ secrets.CORS_URL }}
+      - DB_URL=${DB_URL}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - CORS_URL=${CORS_URL}
     build:
       context: ./Backend
       dockerfile: .Dockerfile
@@ -32,9 +32,9 @@ services:
   frontend:
     container_name: homework_just_click_frontend
     environment:
-      - API_URL=${{ secrets.API_URL }}
-      - MONGO_API_URL=${{ secrets.MONGO_API_URL }}
-      - CORS_URL=${{ secrets.CORS_URL }}
+      - REACT_APP_API_URL=${API_URL}
+      - REACT_APP_MONGO_API_URL=${MONGO_API_URL}
+      - REACT_APP_CORS_URL=${CORS_URL}
     build:
       context: ./frontend
       dockerfile: .Dockerfile
@@ -47,4 +47,3 @@ services:
 
 volumes:
   data: {}
-
