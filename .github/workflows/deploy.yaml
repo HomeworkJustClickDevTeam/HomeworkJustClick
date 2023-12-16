@@ -19,6 +19,10 @@ jobs:
       REACT_APP_CORS_URL: ${{ secrets.CORS_URL }}
       REACT_APP_MONGO_API_URL: ${{ secrets.MONGO_API_URL }}
     steps:
+    - name: Debug Environment Variables
+      run: |
+        echo "API_URL: $API_URL"
+        echo "REACT_APP_CORS_URL: $MONGO_URL
     - name: Pull Docker images
       run: sudo docker pull pioszymk/homework-just-click -a
     - name: Delete Old docker containers
