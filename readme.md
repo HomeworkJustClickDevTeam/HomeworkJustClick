@@ -9,17 +9,18 @@ To run development environment using docker:
  ```bash
  docker-compose -f docker-compose.dev.yaml up -d
  ```
-
+When new changes are pulled, rebuild the images:
+```bash
+ docker-compose -f docker-compose.dev.yaml build
+ ```
+And then run docker-compose again:
+```bash
+ docker-compose -f docker-compose.dev.yaml up 
+ ```
 To run PostgreSQL backend type:
 ```bash
   docker run -dp 5432:5432 --name homework_just_click_db -e POSTGRES_PASSWORD=123 -d postgres
 ```
-
-To run MongoDB backend type:
-```bash
-  docker compose -f docker-compose.yaml up
-```
-or run file docker-compose.yaml
 
 Swagger UI (POSTGRES) link:
 ```bash
