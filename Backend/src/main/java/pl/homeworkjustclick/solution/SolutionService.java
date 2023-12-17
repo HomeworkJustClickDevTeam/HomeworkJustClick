@@ -40,6 +40,11 @@ public class SolutionService {
                 .orElseThrow(() -> new EntityNotFoundException("Solution with id = " + id + " not found"));
     }
 
+    public Solution findByEvaluationId(Integer evaluationId) {
+        return solutionRepository.getSolutionByEvaluationId(evaluationId)
+                .orElseThrow(() -> new EntityNotFoundException("Solution with evaluationId = " + evaluationId + "not found"));
+    }
+
     public Group getGroupBySolutionId(Integer solutionId) {
         return findById(solutionId).getGroup();
     }

@@ -71,5 +71,4 @@ public interface SolutionRepository extends JpaRepository<Solution, Integer> {
 
     @Query(value = "select s.* from _solution s join _evaluation e on s.id = e.solution_id where e.id = :evaluationId", nativeQuery = true)
     Optional<Solution> getSolutionByEvaluationId(@Param("evaluationId") Integer evaluationId);
-
 }
