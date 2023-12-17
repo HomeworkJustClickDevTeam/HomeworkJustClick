@@ -2,11 +2,11 @@ import axios, { AxiosRequestConfig } from "axios"
 import { getUser } from "./otherServices"
 
 const mongoDatabaseServices = axios.create({
-  baseURL: 'http://localhost:80802/api/',
+  baseURL: process.env.REACT_APP_MONGO_API_URL,
   timeout: 8082,
   headers: {
     "Content-Type": `multipart/form-data`,
-    "Access-Control-Allow-Origin": 'http://localhost:3000/',
+    "Access-Control-Allow-Origin": process.env.REACT_APP_CORS_URL,
     ...(getUser()?.token && {
       Authorization: `Bearer ${getUser()?.token}`,
     }),
