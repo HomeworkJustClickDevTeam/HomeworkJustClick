@@ -120,7 +120,7 @@ export const ReportCreate = ({reportedObject, csvVersion
   }, []);
 
   if(reportCreate !== undefined) {
-    return <div className='w-[400px]  border-2 border-black rounded-md pl-3'>
+    return <div className='w-[400px]  border-4 border-black rounded-md pl-3 shadow-lg'>
       <div className='text-center mb-6 mt-2 font-bold'>RAPORT</div>
 
       {'title' in reportedObject?
@@ -173,6 +173,7 @@ export const ReportCreate = ({reportedObject, csvVersion
         </div>
       </form>
     </div>
+
   }
   else {return null}
 }
