@@ -137,32 +137,32 @@ export const ReportCreate = ({reportedObject, csvVersion
       <form onSubmit={(event) => {csvVersion ? handleCsvCreation(event) : handleReportCreation(event)}}>
         {csvVersion &&
             <fieldset>
-                <legend>Elementy do wygenerowania:</legend>
-                Średnia punktów: <input checked={reportCreate.avgResult}
+                <legend className='mb-2 cn underline underline-offset-4'>Elementy do wygenerowania:</legend>
+                <div className='mb-1'>Średnia punktów: <input checked={reportCreate.avgResult}
                                         type={'checkbox'}
                                         onChange={() => handleChangingState({
                                           ...reportCreate,
                                           avgResult: !reportCreate.avgResult
-                                        })}/><br/>
-                Najwyższy wynik: <input checked={reportCreate.maxResult}
+                                        })}/></div>
+                <div className='mb-1'>Najwyższy wynik: <input checked={reportCreate.maxResult}
                                         type={'checkbox'}
                                         onChange={() => handleChangingState({
                                           ...reportCreate,
                                           maxResult: !reportCreate.maxResult
-                                        })}/><br/>
-                Najniższy wynik: <input checked={reportCreate.minResult}
+                                        })}/></div>
+              <div className='mb-1'>Najniższy wynik: <input checked={reportCreate.minResult}
                                         type={'checkbox'}
                                         onChange={() => handleChangingState({
                                           ...reportCreate,
                                           minResult: !reportCreate.minResult
-                                        })}/><br/>
-                Ilość zadań przesłanych po terminie: <input checked={reportCreate.late}
+                                        })}/></div>
+              <div className='mb-1'>Ilość zadań przesłanych po terminie: <input checked={reportCreate.late}
                                                             type={'checkbox'}
                                                             onChange={() => handleChangingState({
                                                               ...reportCreate,
                                                               late: !reportCreate.late
-                                                            })}/><br/>
-                <div className='mb-3 '><span className='font-semibold mr-1'>Przedziały do histogramu :</span> <input
+                                                            })}/></div>
+                <div className='mb-6 '><span className='font-semibold mr-1 '>Przedziały do histogramu :</span> <input
                     className='w-12 px-2 py-1 mr-2 ml-2 border-b solid black' type={"text"} value={histTextValue}
                     onChange={(event) => setHistTextValue(event.target.value)}/>%
                 </div>
