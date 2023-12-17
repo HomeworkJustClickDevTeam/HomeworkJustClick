@@ -1,4 +1,4 @@
-package pl.homeworkjustclick.infrastructure.config;
+package pl.homeworkjustclick.infrastructure.auth;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

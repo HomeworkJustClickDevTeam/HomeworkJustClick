@@ -111,7 +111,6 @@ export default function PointsTableForm(props: {
         tableFromList.id === table.id ? table : tableFromList
       )
     } else {
-      console.log(table)
       newTable?.push(table)
     }
     props.setEvaluationTable(newTable as Table[])

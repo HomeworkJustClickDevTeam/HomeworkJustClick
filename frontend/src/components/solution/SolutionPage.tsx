@@ -8,62 +8,36 @@ import {useAppSelector} from "../../types/HooksRedux";
 import {selectGroup} from "../../redux/groupSlice";
 import {selectUserState} from "../../redux/userStateSlice";
 import {useGetEvaluationPanelByUserIdAndAssigmentId} from "../customHooks/useGetEvaluationPanelByUserIdAndAssigmentId";
-import {EvaluationPanelAssigment} from "../../types/EvaluationPanelAssigment.model";
+import {format, parseISO} from "date-fns";
+import {useGetFile} from "../customHooks/useGetFile";
 
 function SolutionPage() {
     let {state} = useLocation()
     const [solutionExtended] = useState<SolutionExtendedInterface>(
         state?.solution
     )
-    const [points, setPoints] = useState<number>()
+    const [points, setPoints] = useState<string>("0")
     const [showRating, setShowRating] = useState<boolean>(false)
     const evaluation = useGetEvaluationBySolution(solutionExtended.id);
     const userState = useAppSelector(selectUserState)
     const evaluationPanel = useGetEvaluationPanelByUserIdAndAssigmentId(userState!.id, solutionExtended.assignment.id)
-    const [isChangedButtons, setIsChangedButtons] = useState<boolean>(false)
     const group = useAppSelector(selectGroup)
-
+    const fileFromDb = useGetFile(solutionExtended.id, "solution")
     const handleDisableRating = () => {
         setShowRating(false)
     }
     const handleShowRating = () => {
         setShowRating(true)
     }
-
-    function calculateMaxPointsWithoutTable() {
-        if (solutionExtended.assignment.completionDatetime > solutionExtended.creationDateTime) {
-            return solutionExtended.assignment.max_points
-        } else {
-            const pointsPenalty =
-                (solutionExtended.assignment.auto_penalty / 100) *
-                solutionExtended.assignment.max_points
-            return solutionExtended.assignment.max_points - pointsPenalty
-        }
-    }
-
-    function calculatePointsWithTable(evaluationPanel: EvaluationPanelAssigment) {
-        const todayDate = solutionExtended.creationDateTime
-        const completionDateTime = evaluationPanel.assignment.completionDatetime;
-        const penalty = evaluationPanel.assignment.auto_penalty;
-        evaluationPanel.evaluationPanel.buttons.map((button) => {
-            if (completionDateTime < todayDate) {
-                const pointPenalty = (penalty / 100) * button.points
-                button.points = button.points - pointPenalty
+    const checkIfPenaltyOn = () => {
+        if (!evaluation) {
+            if (solutionExtended.assignment.completionDatetime < solutionExtended.creationDateTime) {
+                if (solutionExtended.assignment.auto_penalty > 0) {
+                    return true
+                }
             }
-            return button
-        })
-        setIsChangedButtons(true)
-        return evaluationPanel.evaluationPanel.buttons[evaluationPanel.evaluationPanel.buttons.length - 1].points
-    }
-
-    function calculateMaxPoints() {
-
-        if (evaluationPanel && !isChangedButtons) {
-            return calculatePointsWithTable(evaluationPanel)
-        } else {
-            return calculateMaxPointsWithoutTable()
         }
-
+        return false
     }
 
     return (
@@ -76,6 +50,10 @@ function SolutionPage() {
             <div className="text-border_gray">
                 <span className="font-semibold">Opis zadania: </span>
                 {solutionExtended.assignment.taskDescription}
+            </div>
+            <div>
+                <span>Data ukończenia:  </span>
+                {format(new Date(solutionExtended.assignment.completionDatetime.toString()), "dd.MM.yyyy HH:mm")}
             </div>
             {solutionExtended.comment.length > 0 && (
                 <div className="text-border_gray">
@@ -91,15 +69,24 @@ function SolutionPage() {
             </div>
             <div className="flex ">
                 <p className="mr-2">Przesłane pliki: </p>
-                {solutionExtended.id ? (
-                    <SolutionFile solutionId={solutionExtended.id}/>
+                {fileFromDb !== undefined ? (
+                    <SolutionFile fileFromDb={fileFromDb}/>
                 ) : (
                     <p>Brak</p>
                 )}
             </div>
+            <div>
+                <span>Data przesłania zadania: </span>
+                {format(new Date(solutionExtended.creationDateTime.toString()), "dd.MM.yyyy HH:mm")}
+            </div>
+            {(checkIfPenaltyOn()) &&
+                <div>
+                    Zadanie wysłane po terminie, zostanie automatycznie naliczona
+                    kara {solutionExtended.assignment.auto_penalty}%
+                </div>}
             {evaluation === undefined ? (
                 <div>
-                    {solutionExtended.id && group && (
+                    {solutionExtended.id && group && fileFromDb!==undefined && (
                         <Link
                             to={`/group/${group.id}/advancedAssignment`}
                             state={{solutionExtended: solutionExtended}}
@@ -110,11 +97,14 @@ function SolutionPage() {
                     {showRating ? (
                         <div>
                             <Rating
-                                maxPoints={calculateMaxPoints()}
+                                maxPoints={!evaluationPanel ? solutionExtended.assignment.max_points : undefined}
                                 points={points}
                                 setPoints={setPoints}
                                 solutionId={solutionExtended.id}
                                 groupId={solutionExtended.assignment.groupId}
+                                assigmentCompletionDate={solutionExtended.assignment.completionDatetime}
+                                solutionCreationDate={solutionExtended.creationDateTime}
+                                penalty={solutionExtended.assignment.auto_penalty}
                                 evaluationPanelButtons={evaluationPanel ? evaluationPanel.evaluationPanel.buttons : undefined}
                             />
                             <button

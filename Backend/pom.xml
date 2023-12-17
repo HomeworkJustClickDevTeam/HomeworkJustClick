@@ -8,8 +8,8 @@
 		<version>3.2.0</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>pl.HomeworkJustClick</groupId>
-	<artifactId>HomeworkJustClick</artifactId>
+	<groupId>pl.homeworkjustclick</groupId>
+	<artifactId>homeworkjustclick</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>HomeworkJustClick</name>
 	<description>Projekt inżynierski</description>
@@ -150,5 +150,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
 </project>

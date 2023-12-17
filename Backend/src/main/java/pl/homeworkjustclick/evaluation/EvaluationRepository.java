@@ -41,4 +41,6 @@ public interface EvaluationRepository extends JpaRepository<Evaluation, Integer>
 
     @Query(value = "select e.* from _evaluation e join _evaluation_report er on e.id = er.evaluation_id where e.user_id = :userId and e.group_id = :groupId", nativeQuery = true)
     List<Evaluation> findReportedEvaluationsByUserIdAndGroupId(@Param("userId") Integer userId, @Param("groupId") Integer groupId);
+
+    List<Evaluation> findAllByGroupId(Integer groupId);
 }

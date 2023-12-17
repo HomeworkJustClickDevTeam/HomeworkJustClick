@@ -1,0 +1,85 @@
+version: "3.8"
+services:
+  homework_just_click:
+    image: postgres
+    container_name: homework_just_click
+    environment:
+      POSTGRES_PASSWORD: 123
+    ports:
+      - "5432:5432"
+
+  backend_mongo:
+    container_name: homework_just_click_mongo_api_dev
+    environment:
+      - API_URL=http://localhost:8080/api/
+      - MONGO_URL=mongodb
+      - CORS_URL=http://localhost:3000/
+    build:
+      context: ./Backend(MongoDB)
+      dockerfile: .Dockerfile.dev
+    ports:
+        - "8082:8082"
+    depends_on:
+        - mongodb
+        - mongo-express
+
+
+  backend:
+    container_name: homework_just_click_backend_api_dev
+    environment:
+      - DB_URL=jdbc:postgresql://homework_just_click:5432/postgres
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=123
+      - CORS_URL=http://localhost:3000/
+    build:
+      context: ./Backend
+      dockerfile: .Dockerfile.dev
+    ports:
+      - "8080:8080"
+    depends_on:
+      - homework_just_click
+      - backend_mongo
+
+  frontend:
+    container_name: homework_just_click_frontend_dev
+    environment:
+      - API_URL=http://localhost:8080/api/
+      - MONGO_API_URL=http://localhost:80802/api/
+      - CORS_URL=http://localhost:3000/
+    build:
+      context: ./frontend
+      dockerfile: .Dockerfile.dev
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+      - backend_mongo
+
+
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - 27017:27017
+    volumes:
+      - data:/data
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=rootuser
+      - MONGO_INITDB_ROOT_PASSWORD=rootpass
+
+
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=rootuser
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=rootpass
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+
+
+volumes:
+  data: {}
+

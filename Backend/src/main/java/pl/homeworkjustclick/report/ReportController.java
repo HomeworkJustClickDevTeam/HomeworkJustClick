@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.ResponseEntity;
@@ -54,9 +55,11 @@ public class ReportController {
                             description = "Jwt token invalid",
                             content = @Content
                     )
-            }
+            },
+            description = "Possible description in students list if:\n- student didn't send solution\n- solution is not yet evaluated\n\n" +
+                    "Possible description in assignment response if:\n- there aren't any solutions\n- there aren't any evaluations"
     )
-    public AssignmentReportResponseDto getAssignmentReport(@RequestBody AssignmentReportDto assignmentReportDto) {
+    public AssignmentReportResponseDto getAssignmentReport(@RequestBody @Valid AssignmentReportDto assignmentReportDto) {
         return service.createAssignmentReport(assignmentReportDto);
     }
 
@@ -81,9 +84,12 @@ public class ReportController {
                             description = "Jwt token invalid",
                             content = @Content
                     )
-            }
+            }, description = "Possible description in students list if:\n- student didn't send solution\n- solution is not yet evaluated\n\n" +
+            "Possible description in assignment response if:\n- there aren't any solutions\n- there aren't any evaluations\n\n" +
+            "Possible description in group response if\n- there are no assignments in group"
+
     )
-    public GroupReportResponseDto getGroupReport(@RequestBody GroupReportDto groupReportDto) {
+    public GroupReportResponseDto getGroupReport(@RequestBody @Valid GroupReportDto groupReportDto) {
         return service.createGroupReport(groupReportDto);
     }
 
@@ -110,7 +116,7 @@ public class ReportController {
                     )
             }
     )
-    public ResponseEntity<UrlResource> getAssignmentReportCsv(@RequestBody AssignmentReportDto assignmentReportDto) throws IOException {
+    public ResponseEntity<UrlResource> getAssignmentReportCsv(@RequestBody @Valid AssignmentReportDto assignmentReportDto) throws IOException {
         return service.createAssignmentCsvReport(assignmentReportDto);
     }
 
@@ -136,7 +142,7 @@ public class ReportController {
                     )
             }
     )
-    public ResponseEntity<UrlResource> getGroupReportCsv(@RequestBody GroupReportDto groupReportDto) throws IOException {
+    public ResponseEntity<UrlResource> getGroupReportCsv(@RequestBody @Valid GroupReportDto groupReportDto) throws IOException {
         return service.createGroupCsvReport(groupReportDto);
     }
 }

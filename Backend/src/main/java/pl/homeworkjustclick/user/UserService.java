@@ -2,6 +2,7 @@ package pl.homeworkjustclick.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.homeworkjustclick.infrastructure.exception.EntityNotFoundException;
 
 import java.util.List;
@@ -24,6 +25,12 @@ public class UserService {
     public User findById(int id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User with id = " + id + " not found"));
+    }
+
+    @Transactional(readOnly = true)
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("User with email = " + email + " not found"));
     }
 
     public Boolean add(User user) {

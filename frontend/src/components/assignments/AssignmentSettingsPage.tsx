@@ -19,14 +19,10 @@ interface AssignmentSettingsPagePropsInterface{
   evaluationTable:Table[],
   setAssignment: (assignment: (prevState: any) => any) => void,
   group: GroupInterface|null,
-  newAssignmentId?: number,
-  setComments: React.Dispatch<SetStateAction<CommentInterface[]>>
-  comments: CommentInterface[]
+  newAssignmentId?: number
 }
 
 export const AssignmentSettingsPage = ({handleSubmit,
-                                         comments,
-                                         setComments,
                                          assignment,
                                          chosenEvaluationTable,
                                          handleDelete,
@@ -159,7 +155,7 @@ export const AssignmentSettingsPage = ({handleSubmit,
               <p className="w-36">Data wykonania: </p>
               <ReactDatePicker
                 name="completionDatetime"
-                selected={assignment.completionDatetime}
+                selected={new Date(assignment.completionDatetime)}
                 onChange={handleDateChange}
                 showTimeSelect
                 timeFormat="HH:mm"
@@ -185,10 +181,10 @@ export const AssignmentSettingsPage = ({handleSubmit,
             </button>
           </form>
           <p className="mt-4 mb-2">Dodaj pliki: </p>
-          {'id' in assignment && newAssignmentId === undefined ?
+          {(assignment as AssignmentInterface).id !== undefined && newAssignmentId === undefined ?
           <AssignmentModifyFile
             toSend={toSend}
-            assignmentId={assignment.id}
+            assignmentId={(assignment as AssignmentInterface).id}
             setToNavigate={setToNavigate}
           />:
             <AssignmentAddFile

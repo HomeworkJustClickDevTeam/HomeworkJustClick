@@ -504,7 +504,6 @@ export const handleMouseMove = (event:React.MouseEvent,
     setCommentIndex(setPartOfCommentHovered(mouseXOnCanvas, mouseYOnCanvas, drawnComments, setCommentAction))
     setCommentsImage !== undefined && handleCursorAppearanceChange(canvasRef, commentAction)
   }
-  console.log(commentAction, canvasAction)
 }
 export const handleMouseDown = (event:React.MouseEvent,
                                 setCanvasAction:React.Dispatch<SetStateAction<CanvasActionsType>>,

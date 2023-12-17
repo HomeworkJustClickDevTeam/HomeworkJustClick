@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import pl.homeworkjustclick.BaseTestEntity;
-import pl.homeworkjustclick.infrastructure.auth.RegisterRequest;
+import pl.homeworkjustclick.infrastructure.auth.api.RegisterRequest;
 
 import java.nio.charset.StandardCharsets;
 

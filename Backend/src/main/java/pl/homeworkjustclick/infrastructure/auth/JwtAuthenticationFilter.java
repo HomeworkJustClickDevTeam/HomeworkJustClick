@@ -1,4 +1,4 @@
-package pl.homeworkjustclick.infrastructure.config;
+package pl.homeworkjustclick.infrastructure.auth;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -22,14 +23,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
+    private final InternalAuthenticationFilter internalAuthenticationFilter;
+    private final UserRequestValidator userRequestValidator;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
         final String userEmail;
+        var cachedRequest = new CachedBodyHttpServletRequest(request);
+        var body = cachedRequest.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            filterChain.doFilter(request, response);
+            filterChain.doFilter(cachedRequest, response);
             return;
         }
         jwt = authHeader.substring(7);
@@ -43,11 +48,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         userDetails.getAuthorities()
                 );
                 authToken.setDetails(
-                        new WebAuthenticationDetailsSource().buildDetails(request)
+                        new WebAuthenticationDetailsSource().buildDetails(cachedRequest)
                 );
+                userRequestValidator.validateUserInRequest(cachedRequest, userEmail, body);
+                internalAuthenticationFilter.filterInternal(cachedRequest, userEmail, body);
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         }
-        filterChain.doFilter(request, response);
+        filterChain.doFilter(cachedRequest, response);
     }
 }
