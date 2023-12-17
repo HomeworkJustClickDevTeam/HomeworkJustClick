@@ -52,9 +52,7 @@ public class SolutionService {
     public List<SolutionResponseDto> getAll() {
         List<Solution> solutionList = solutionRepository.findAll();
         List<SolutionResponseDto> responseList = new ArrayList<>();
-        solutionList.forEach(solution -> {
-            responseList.add(buildSolutionResponse(solution));
-        });
+        solutionList.forEach(solution -> responseList.add(buildSolutionResponse(solution)));
         return responseList;
     }
 
@@ -66,9 +64,7 @@ public class SolutionService {
     public List<SolutionResponseExtendedDto> getAllExtended() {
         List<Solution> solutionList = solutionRepository.findAll();
         List<SolutionResponseExtendedDto> responseList = new ArrayList<>();
-        solutionList.forEach(solution -> {
-            responseList.add(buildSolutionResponseExtended(solution));
-        });
+        solutionList.forEach(solution -> responseList.add(buildSolutionResponseExtended(solution)));
         return responseList;
     }
 
@@ -96,7 +92,6 @@ public class SolutionService {
         Optional<Assignment> assignment = assignmentRepository.findById(assignmentId);
         if (user.isPresent() && assignment.isPresent()) {
             List<User> userList = userRepository.getStudentsByGroupId(assignment.get().getGroup().getId());
-            System.out.println(assignment.get().getGroup().getId());
             AtomicBoolean ok = new AtomicBoolean(false);
             userList.forEach(user1 -> {
                 if (user1.getId() == userId) {
@@ -506,8 +501,8 @@ public class SolutionService {
                 .completionDatetime(assignment.getCompletionDatetime())
                 .title(assignment.getTitle())
                 .visible(assignment.getVisible())
-                .max_points(assignment.getMax_points())
-                .auto_penalty(assignment.getAuto_penalty())
+                .maxPoints(assignment.getMaxPoints())
+                .autoPenalty(assignment.getAutoPenalty())
                 .build();
 
         return SolutionResponseExtendedDto.builder()
@@ -601,10 +596,7 @@ public class SolutionService {
     }
 
     public Boolean checkIfSolutionWasLate(Solution solution) {
-        if (solution.getAssignment().getCompletionDatetime().isBefore(solution.getCreationDatetime())) {
-            return true;
-        }
-        return false;
+        return solution.getAssignment().getCompletionDatetime().isBefore(solution.getCreationDatetime());
     }
 
     public List<Solution> getSolutionsModelsByAssignmentId(Integer assignmentId) {

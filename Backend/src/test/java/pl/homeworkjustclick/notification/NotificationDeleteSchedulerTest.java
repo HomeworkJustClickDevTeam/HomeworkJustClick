@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
         "classpath:db/init_evaluation.sql",
         "classpath:db/init_notification.sql"
 })
-public class NotificationDeleteSchedulerTest extends BaseTestEntity {
+class NotificationDeleteSchedulerTest extends BaseTestEntity {
     @Autowired
     NotificationDeleteScheduler notificationDeleteScheduler;
     @Autowired

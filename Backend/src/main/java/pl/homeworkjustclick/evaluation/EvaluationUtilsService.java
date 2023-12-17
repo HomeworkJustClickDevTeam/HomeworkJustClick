@@ -9,7 +9,7 @@ import pl.homeworkjustclick.infrastructure.exception.EntityNotFoundException;
 public class EvaluationUtilsService {
     private final EvaluationRepository repository;
 
-    public Boolean existsBySolutionId(Integer solutionId) {
+    public boolean existsBySolutionId(Integer solutionId) {
         return repository.existsBySolutionId(solutionId);
     }
 

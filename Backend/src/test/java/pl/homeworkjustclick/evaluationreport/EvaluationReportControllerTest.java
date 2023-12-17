@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         "classpath:db/init_evaluation.sql",
         "classpath:db/init_evaluation_report.sql"
 })
-public class EvaluationReportControllerTest extends BaseTestEntity {
+class EvaluationReportControllerTest extends BaseTestEntity {
     @Autowired
     EvaluationReportRepository repository;
     @Autowired

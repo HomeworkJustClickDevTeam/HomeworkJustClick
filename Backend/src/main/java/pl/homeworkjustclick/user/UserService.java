@@ -40,7 +40,7 @@ public class UserService {
 
     public Boolean update(int id, User updatedUser) {
         if (userRepository.findById(id).isPresent()) {
-            User user = userRepository.getReferenceById(id);
+            User user = findById(id);
             if (!updatedUser.getFirstname().isEmpty() && !updatedUser.getFirstname().equals(user.getFirstname())) {
                 user.setFirstname(updatedUser.getFirstname());
             }
@@ -75,7 +75,7 @@ public class UserService {
 
     public Boolean changeIndexById(int id, int index) {
         if (userRepository.findById(id).isPresent()) {
-            User user = userRepository.findById(id).get();
+            User user = findById(id);
             user.setIndex(index);
             userRepository.save(user);
             return true;
@@ -86,7 +86,7 @@ public class UserService {
 
     public Boolean changeColorById(int id, int color) {
         if (userRepository.findById(id).isPresent()) {
-            User user = userRepository.findById(id).get();
+            User user = findById(id);
             user.setColor(color);
             userRepository.save(user);
             return true;

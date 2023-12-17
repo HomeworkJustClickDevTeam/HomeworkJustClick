@@ -14,6 +14,7 @@ import pl.homeworkjustclick.evaluation.EvaluationService;
 import pl.homeworkjustclick.group.GroupMapper;
 import pl.homeworkjustclick.group.GroupService;
 import pl.homeworkjustclick.infrastructure.exception.EntityNotFoundException;
+import pl.homeworkjustclick.infrastructure.exception.InternalException;
 import pl.homeworkjustclick.solution.SolutionService;
 import pl.homeworkjustclick.user.UserMapper;
 import pl.homeworkjustclick.user.UserService;
@@ -58,7 +59,7 @@ public class ReportService {
         if (solutions.isEmpty()) {
             description = "Brak wysłanych rozwiązań";
         }
-        var maxPoints = assignment.getMax_points();
+        var maxPoints = assignment.getMaxPoints();
         var studentsResults = createStudentsList(evaluations, maxPoints, groupId, assignmentId);
         var maxResult = calculateMaxResult(studentsResults);
         var maxResultPercent = roundDouble(maxResult * 100 / maxPoints);
@@ -134,28 +135,28 @@ public class ReportService {
         var headerLength = 2;
         var header = new ArrayList<>(List.of("nazwa zadania", "liczba punktów do zdobycia"));
         var end = new ArrayList<>(List.of("suma", "0"));
-        if (groupReportDto.getAvgResult()) {
+        if (groupReportDto.getAvgResult().equals(Boolean.TRUE)) {
             header.add("średni wynik");
             header.add("średni wynik %");
             end.add("0");
             end.add("0");
             headerLength += 2;
         }
-        if (groupReportDto.getMaxResult()) {
+        if (groupReportDto.getMaxResult().equals(Boolean.TRUE)) {
             header.add("najwyższy wynik");
             header.add("najwyższy wynik %");
             end.add("0");
             end.add("0");
             headerLength += 2;
         }
-        if (groupReportDto.getMinResult()) {
+        if (groupReportDto.getMinResult().equals(Boolean.TRUE)) {
             header.add("najniższy wynik");
             header.add("najniższy wynik %");
             end.add("0");
             end.add("0");
             headerLength += 2;
         }
-        if (groupReportDto.getLate()) {
+        if (groupReportDto.getLate().equals(Boolean.TRUE)) {
             header.add("liczba spóżnionych");
             end.add("0");
             headerLength += 1;
@@ -188,31 +189,31 @@ public class ReportService {
         for (var assignment : groupReport.getAssignments()) {
             var line = new String[header.size()];
             line[0] = assignment.getAssignment().getTitle();
-            line[1] = String.valueOf(assignment.getAssignment().getMax_points());
-            endLine[1] = String.valueOf(Double.parseDouble(endLine[1]) + assignment.getAssignment().getMax_points());
+            line[1] = String.valueOf(assignment.getAssignment().getMaxPoints());
+            endLine[1] = String.valueOf(Double.parseDouble(endLine[1]) + assignment.getAssignment().getMaxPoints());
             var k = 2;
-            if (groupReportDto.getAvgResult()) {
+            if (groupReportDto.getAvgResult().equals(Boolean.TRUE)) {
                 line[k] = String.valueOf(assignment.getAvgResult());
                 endLine[k] = String.valueOf(Double.parseDouble(endLine[k]) + assignment.getAvgResult());
                 line[k + 1] = String.valueOf(assignment.getAvgResultPercent());
                 endLine[k + 1] = String.valueOf(Double.parseDouble(endLine[k + 1]) + assignment.getAvgResultPercent());
                 k += 2;
             }
-            if (groupReportDto.getMaxResult()) {
+            if (groupReportDto.getMaxResult().equals(Boolean.TRUE)) {
                 line[k] = String.valueOf(assignment.getMaxResult());
                 endLine[k] = String.valueOf(Double.parseDouble(endLine[k]) + assignment.getMaxResult());
                 line[k + 1] = String.valueOf(assignment.getMaxResultPercent());
                 endLine[k + 1] = String.valueOf(Double.parseDouble(endLine[k + 1]) + assignment.getMaxResultPercent());
                 k += 2;
             }
-            if (groupReportDto.getMinResult()) {
+            if (groupReportDto.getMinResult().equals(Boolean.TRUE)) {
                 line[k] = String.valueOf(assignment.getMinResult());
                 endLine[k] = String.valueOf(Double.parseDouble(endLine[k + 1]) + assignment.getMinResult());
                 line[k + 1] = String.valueOf(assignment.getMinResultPercent());
                 endLine[k + 1] = String.valueOf(Double.parseDouble(endLine[k + 1]) + assignment.getMinResultPercent());
                 k += 2;
             }
-            if (groupReportDto.getLate()) {
+            if (groupReportDto.getLate().equals(Boolean.TRUE)) {
                 line[k] = String.valueOf(assignment.getLate());
                 endLine[k] = String.valueOf(Double.parseDouble(endLine[k]) + assignment.getLate());
             }
@@ -255,7 +256,9 @@ public class ReportService {
         dataLines.add(endLine);
         var fileName = "raport.csv";
         File csvOutputFile = new File(fileName);
-        csvOutputFile.createNewFile();
+        if (!csvOutputFile.createNewFile()) {
+            throw new InternalException("Error creating file");
+        }
         try (PrintWriter pw = new PrintWriter(csvOutputFile)) {
             dataLines.stream()
                     .map(this::convertToCSV)
@@ -270,22 +273,22 @@ public class ReportService {
         var dataLines = new ArrayList<String[]>();
         var headerLength = 2;
         var header = new ArrayList<>(List.of("nazwa zadania", "liczba punktów do zdobycia"));
-        if (assignmentReportDto.getAvgResult()) {
+        if (assignmentReportDto.getAvgResult().equals(Boolean.TRUE)) {
             header.add("średni wynik");
             header.add("średni wynik %");
             headerLength += 2;
         }
-        if (assignmentReportDto.getMaxResult()) {
+        if (assignmentReportDto.getMaxResult().equals(Boolean.TRUE)) {
             header.add("najwyższy wynik");
             header.add("najwyższy wynik %");
             headerLength += 2;
         }
-        if (assignmentReportDto.getMinResult()) {
+        if (assignmentReportDto.getMinResult().equals(Boolean.TRUE)) {
             header.add("najniższy wynik");
             header.add("najniższy wynik %");
             headerLength += 2;
         }
-        if (assignmentReportDto.getLate()) {
+        if (assignmentReportDto.getLate().equals(Boolean.TRUE)) {
             header.add("liczba spóżnionych");
             headerLength += 1;
         }
@@ -312,7 +315,7 @@ public class ReportService {
         int finalHeaderLength = headerLength;
         var line = new String[header.size()];
         line[0] = assignmentReport.getAssignment().getTitle();
-        line[1] = String.valueOf(assignmentReport.getAssignment().getMax_points());
+        line[1] = String.valueOf(assignmentReport.getAssignment().getMaxPoints());
         var k = 2;
         if (assignmentReportDto.getAvgResult()) {
             line[k] = String.valueOf(assignmentReport.getAvgResult());
@@ -352,7 +355,9 @@ public class ReportService {
         dataLines.add(line);
         var fileName = "raport.csv";
         File csvOutputFile = new File(fileName);
-        csvOutputFile.createNewFile();
+        if (!csvOutputFile.createNewFile()) {
+            throw new InternalException("Error creating file");
+        }
         try (PrintWriter pw = new PrintWriter(csvOutputFile)) {
             dataLines.stream()
                     .map(this::convertToCSV)

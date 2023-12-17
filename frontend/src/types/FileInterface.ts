@@ -3,5 +3,5 @@ export interface FileInterface{
   name: string
   format: string
   id: number
-  mongo_id:string
+  mongoId:string
 }

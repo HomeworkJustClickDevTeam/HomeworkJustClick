@@ -75,14 +75,14 @@ public class UserController {
         if (userService.getById(id).isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
-            return new ResponseEntity<>(userService.getById(id).get(), HttpStatus.OK);
+            return new ResponseEntity<>(userService.findById(id), HttpStatus.OK);
         }
     }
 
     @PostMapping("/user")
     @Hidden
     public ResponseEntity<Void> add(@RequestBody User user) {
-        if(userService.add(user)) {
+        if (userService.add(user).equals(Boolean.TRUE)) {
             return new ResponseEntity<>(HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
@@ -117,7 +117,7 @@ public class UserController {
 
     public ResponseEntity<Void> update(
             @PathVariable("userId") int id, @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Empty fields will be ignored. Id field is ignored but needed in JSON.") @RequestBody User updatedUser) {
-        if (userService.update(id, updatedUser)) {
+        if (userService.update(id, updatedUser).equals(Boolean.TRUE)) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else if (userService.update(id, updatedUser) == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -138,7 +138,7 @@ public class UserController {
             }
     )
     public ResponseEntity<Void> delete(@PathVariable("userId") int id) {
-        if (userService.delete(id)) {
+        if (userService.delete(id).equals(Boolean.TRUE)) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -157,7 +157,7 @@ public class UserController {
             }
     )
     public ResponseEntity<Void> updateIndex(@PathVariable("userId") int id, @RequestBody int index) {
-        if (userService.changeIndexById(id, index)) {
+        if (userService.changeIndexById(id, index).equals(Boolean.TRUE)) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -183,7 +183,7 @@ public class UserController {
     public ResponseEntity<Void> updateColor(@PathVariable("userId") int id, @RequestBody int color) {
         if (color < 0 || color >= 20) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } else if (userService.changeColorById(id, color)) {
+        } else if (userService.changeColorById(id, color).equals(Boolean.TRUE)) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

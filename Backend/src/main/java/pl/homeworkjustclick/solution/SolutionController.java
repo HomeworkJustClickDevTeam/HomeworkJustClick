@@ -215,7 +215,7 @@ public class SolutionController {
             }
     )
     public ResponseEntity<Void> updateUser(@PathVariable("userId") int userId, @PathVariable("solutionId") int id) {
-        if (solutionService.changeUserById(id, userId)) {
+        if (solutionService.changeUserById(id, userId).equals(Boolean.TRUE)) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -234,7 +234,7 @@ public class SolutionController {
             }
     )
     public ResponseEntity<Void> updateAssignment(@PathVariable("assignmentId") int assignmentId, @PathVariable("solutionId") int id) {
-        if (solutionService.changeAssignmentById(id, assignmentId)) {
+        if (solutionService.changeAssignmentById(id, assignmentId).equals(Boolean.TRUE)) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

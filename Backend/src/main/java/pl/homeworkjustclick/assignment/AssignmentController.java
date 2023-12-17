@@ -244,7 +244,7 @@ public class AssignmentController {
             }
     )
     public ResponseEntity<Void> delete(@PathVariable("assignmentId") int id) {
-        if (assignmentService.delete(id)) {
+        if (assignmentService.delete(id).equals(Boolean.TRUE)) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -264,7 +264,7 @@ public class AssignmentController {
             }
     )
     public ResponseEntity<Void> update(@PathVariable("assignmentId") int id, @RequestBody @Valid Assignment assignment) {
-        if (assignmentService.update(id, assignment)) {
+        if (assignmentService.update(id, assignment).equals(Boolean.TRUE)) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -283,7 +283,7 @@ public class AssignmentController {
             }
     )
     public ResponseEntity<Void> updateVisibility(@PathVariable("assignmentId") int id, @RequestBody Boolean visible) {
-        if (assignmentService.changeVisibility(id, visible)) {
+        if (assignmentService.changeVisibility(id, visible).equals(Boolean.TRUE)) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -303,7 +303,7 @@ public class AssignmentController {
     )
 
     public ResponseEntity<Void> updateTitle(@PathVariable("assignmentId") int id, @RequestBody String title) {
-        if (assignmentService.changeTitleById(id, title)) {
+        if (assignmentService.changeTitleById(id, title).equals(Boolean.TRUE)) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -322,7 +322,7 @@ public class AssignmentController {
             }
     )
     public ResponseEntity<Void> updateTaskDescription(@PathVariable("assignmentId") int id, @RequestBody String taskDescription) {
-        if (assignmentService.changeTaskDescriptionById(id, taskDescription)) {
+        if (assignmentService.changeTaskDescriptionById(id, taskDescription).equals(Boolean.TRUE)) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -341,7 +341,7 @@ public class AssignmentController {
             }
     )
     public ResponseEntity<Void> updateCompletionDatetime(@PathVariable("assignmentId") int id, @RequestBody OffsetDateTime completionDatetime) {
-        if (assignmentService.changeCompletionDatetime(id, completionDatetime)) {
+        if (assignmentService.changeCompletionDatetime(id, completionDatetime).equals(Boolean.TRUE)) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -360,7 +360,7 @@ public class AssignmentController {
             }
     )
     public ResponseEntity<Void> updateUser(@PathVariable("userId") int userId, @PathVariable("assignmentId") int assignmentId) {
-        if (assignmentService.changeUser(assignmentId, userId)) {
+        if (assignmentService.changeUser(assignmentId, userId).equals(Boolean.TRUE)) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -379,14 +379,14 @@ public class AssignmentController {
             }
     )
     public ResponseEntity<Void> updateGroup(@PathVariable("groupId") int groupId, @PathVariable("assignmentId") int assignmentId) {
-        if (assignmentService.changeGroup(assignmentId, groupId)) {
+        if (assignmentService.changeGroup(assignmentId, groupId).equals(Boolean.TRUE)) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    @PutMapping("/assignment/max_points/{assignmentId}")
+    @PutMapping("/assignment/maxPoints/{assignmentId}")
     @Operation(
             summary = "Changes max points of assignment with given id.",
             responses = {
@@ -398,14 +398,14 @@ public class AssignmentController {
             }
     )
     public ResponseEntity<Void> updatePoints(@PathVariable("assignmentId") int id, @RequestBody int points) {
-        if (assignmentService.changeMaxPoints(id, points)) {
+        if (assignmentService.changeMaxPoints(id, points).equals(Boolean.TRUE)) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    @PutMapping("/assignment/auto_penalty/{assignmentId}")
+    @PutMapping("/assignment/autoPenalty/{assignmentId}")
     @Operation(
             summary = "Changes auto penalty of assignment with given id.",
             responses = {
@@ -416,8 +416,8 @@ public class AssignmentController {
                     )
             }
     )
-    public ResponseEntity<Void> updatePenalty(@PathVariable("assignmentId") int id, @RequestBody int auto_penalty) {
-        if (assignmentService.changeAutoPenalty(id, auto_penalty)) {
+    public ResponseEntity<Void> updatePenalty(@PathVariable("assignmentId") int id, @RequestBody int autoPenalty) {
+        if (assignmentService.changeAutoPenalty(id, autoPenalty).equals(Boolean.TRUE)) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

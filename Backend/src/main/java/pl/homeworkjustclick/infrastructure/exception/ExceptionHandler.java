@@ -14,15 +14,21 @@ import java.util.Map;
 @ControllerAdvice
 @Slf4j
 public class ExceptionHandler {
+    private static final String TIMESTAMP = "timestamp";
+    private static final String STATUS = "status";
+    private static final String ERROR = "error";
+    private static final String MESSAGE = "message";
+    private static final String PATH = "path";
+
     @org.springframework.web.bind.annotation.ExceptionHandler(value = {EntityNotFoundException.class})
     public ResponseEntity<Object> resourceNotFoundException(EntityNotFoundException ex, WebRequest request) {
         log.error(ex.getMessage());
         Map<String, Object> body = new LinkedHashMap<>();
-        body.put("timestamp", LocalDateTime.now());
-        body.put("status", 404);
-        body.put("error", "Not Found");
-        body.put("message", ex.getMessage());
-        body.put("path", ((ServletWebRequest) request).getRequest().getRequestURI());
+        body.put(TIMESTAMP, LocalDateTime.now());
+        body.put(STATUS, 404);
+        body.put(ERROR, "Not Found");
+        body.put(MESSAGE, ex.getMessage());
+        body.put(PATH, ((ServletWebRequest) request).getRequest().getRequestURI());
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
 
@@ -30,11 +36,11 @@ public class ExceptionHandler {
     public ResponseEntity<Object> invalidArgumentException(InvalidArgumentException ex, WebRequest request) {
         log.error(ex.getMessage());
         Map<String, Object> body = new LinkedHashMap<>();
-        body.put("timestamp", LocalDateTime.now());
-        body.put("status", 400);
-        body.put("error", "Bad request");
-        body.put("message", ex.getMessage());
-        body.put("path", ((ServletWebRequest) request).getRequest().getRequestURI());
+        body.put(TIMESTAMP, LocalDateTime.now());
+        body.put(STATUS, 400);
+        body.put(ERROR, "Bad request");
+        body.put(MESSAGE, ex.getMessage());
+        body.put(PATH, ((ServletWebRequest) request).getRequest().getRequestURI());
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
@@ -42,11 +48,24 @@ public class ExceptionHandler {
     public ResponseEntity<Object> invalidUserException(InvalidUserException ex, WebRequest request) {
         log.error(ex.getMessage());
         Map<String, Object> body = new LinkedHashMap<>();
-        body.put("timestamp", LocalDateTime.now());
-        body.put("status", 400);
-        body.put("error", "Bad request");
-        body.put("message", ex.getMessage());
-        body.put("path", ((ServletWebRequest) request).getRequest().getRequestURI());
+        body.put(TIMESTAMP, LocalDateTime.now());
+        body.put(STATUS, 400);
+        body.put(ERROR, "Bad request");
+        body.put(MESSAGE, ex.getMessage());
+        body.put(PATH, ((ServletWebRequest) request).getRequest().getRequestURI());
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler(value = {InternalException.class})
+    public ResponseEntity<Object> internalException(InternalException ex, WebRequest request) {
+        log.error(ex.getMessage());
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put(TIMESTAMP, LocalDateTime.now());
+        body.put(STATUS, 500);
+        body.put(ERROR, "Internal server error");
+        body.put(MESSAGE, ex.getMessage());
+        body.put(PATH, ((ServletWebRequest) request).getRequest().getRequestURI());
+        return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR
+        );
     }
 }

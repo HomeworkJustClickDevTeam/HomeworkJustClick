@@ -18,8 +18,8 @@ public interface SolutionRepository extends JpaRepository<Solution, Integer> {
     @EntityGraph(attributePaths = "user")
     List<Solution> findAllByAssignmentId(Integer assignmentId);
 
-    @Query(value = "select COUNT(*) from _solution where assignment_id = :assignment_id", nativeQuery = true)
-    int countSolutionsByAssignmentId(@Param("assignment_id") int assignment_id);
+    @Query(value = "select COUNT(*) from _solution where assignment_id = :assignmentId", nativeQuery = true)
+    int countSolutionsByAssignmentId(@Param("assignmentId") int assignmentId);
 
     @Query(value = "select * from _solution where group_id = :groupId and user_id = :userId", nativeQuery = true)
     List<Solution> getSolutionsByUserAndGroup(@Param("userId") int userId, @Param("groupId") int groupId);
@@ -57,8 +57,8 @@ public interface SolutionRepository extends JpaRepository<Solution, Integer> {
     @Query(value = "select s.* from _solution s left outer join _evaluation e on s.id = e.solution_id where e.id is not null and s.assignment_id = :assignmentId", nativeQuery = true)
     List<Solution> getCheckedSolutionsByAssignment(@Param("assignmentId") int assignmentId);
 
-    @Query(value = "select s.* from _solution s left outer join _evaluation e on s.id = e.solution_id join _group_teacher gt on s.group_id = gt.group_id where e.id is not null and gt.user_id = :teacher_id", nativeQuery = true)
-    List<Solution> getCheckedSolutionsByTeacher(@Param("teacher_id") int teacher_id);
+    @Query(value = "select s.* from _solution s left outer join _evaluation e on s.id = e.solution_id join _group_teacher gt on s.group_id = gt.group_id where e.id is not null and gt.user_id = :teacherId", nativeQuery = true)
+    List<Solution> getCheckedSolutionsByTeacher(@Param("teacherId") int teacherId);
 
     @Query(value = "select COUNT(*) from _solution s join _evaluation e on s.id = e.solution_id where s.id = :solutionId", nativeQuery = true)
     int checkForEvaluationToSolution(@Param("solutionId") int solutionId);

@@ -6,7 +6,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface AssignmentRepository extends JpaRepository<Assignment, Integer> {
@@ -28,7 +27,4 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Integer>
 
     @Query(value = "select COUNT(*) from _assignment a join _solution s on a.id = s.assignment_id where a.id = :assignmentId", nativeQuery = true)
     int checkForSolutionToAssignment(@Param("assignmentId") int assignmentId);
-
-    @Query(value = "select a.* from _assignment a join _solution s on a.id = s.assignment_id join public._evaluation e on s.id = e.solution_id where e.id = :evaluationId", nativeQuery = true)
-    Optional<Assignment> findAssignmentByEvaluationId(@Param("evaluationId") Integer evaluationId);
 }

@@ -7,6 +7,7 @@ import pl.homeworkjustclick.evaluation.EvaluationRepository;
 import pl.homeworkjustclick.group.Group;
 import pl.homeworkjustclick.group.GroupRepository;
 import pl.homeworkjustclick.group.GroupResponseDto;
+import pl.homeworkjustclick.group.GroupService;
 import pl.homeworkjustclick.infrastructure.enums.CalendarStatus;
 import pl.homeworkjustclick.infrastructure.exception.EntityNotFoundException;
 import pl.homeworkjustclick.notification.NotificationCreateService;
@@ -14,6 +15,7 @@ import pl.homeworkjustclick.solution.SolutionRepository;
 import pl.homeworkjustclick.user.User;
 import pl.homeworkjustclick.user.UserRepository;
 import pl.homeworkjustclick.user.UserResponseDto;
+import pl.homeworkjustclick.user.UserService;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -26,15 +28,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @RequiredArgsConstructor
 public class AssignmentService {
     private final AssignmentRepository assignmentRepository;
-
     private final GroupRepository groupRepository;
-
     private final UserRepository userRepository;
-
     private final SolutionRepository solutionRepository;
-
     private final EvaluationRepository evaluationRepository;
     private final NotificationCreateService notificationCreateService;
+    private final UserService userService;
+    private final GroupService groupService;
 
     public Assignment findById(Integer id) {
         return assignmentRepository.findById(id)
@@ -44,18 +44,14 @@ public class AssignmentService {
     public List<AssignmentResponseDto> getAll() {
         List<Assignment> assignmentList = assignmentRepository.findAll();
         List<AssignmentResponseDto> responseList = new ArrayList<>();
-        assignmentList.forEach(assignment -> {
-            responseList.add(buildAssignmentResponse(assignment));
-        });
+        assignmentList.forEach(assignment -> responseList.add(buildAssignmentResponse(assignment)));
         return responseList;
     }
 
     public List<AssignmentResponseExtendedDto> getAllExtended() {
         List<Assignment> assignmentList = assignmentRepository.findAll();
         List<AssignmentResponseExtendedDto> responseList = new ArrayList<>();
-        assignmentList.forEach(assignment -> {
-            responseList.add(buildAssignmentResponseExtended(assignment));
-        });
+        assignmentList.forEach(assignment -> responseList.add(buildAssignmentResponseExtended(assignment)));
         return responseList;
     }
 
@@ -67,11 +63,6 @@ public class AssignmentService {
     public AssignmentResponseExtendedDto getByIdExtended(int id) {
         Optional<Assignment> assignmentOptional = assignmentRepository.findById(id);
         return assignmentOptional.map(this::buildAssignmentResponseExtended).orElse(null);
-    }
-
-    public Assignment findByEvaluationId(Integer evaluationId) {
-        return assignmentRepository.findAssignmentByEvaluationId(evaluationId)
-                .orElseThrow(() -> new EntityNotFoundException("Assignment with evaluationId = " + evaluationId + " not found"));
     }
 
     @Transactional
@@ -87,7 +78,7 @@ public class AssignmentService {
                 .completionDatetime(assignment.getCompletionDatetime())
                 .title(assignment.getTitle())
                 .visible(assignment.getVisible())
-                .max_points(assignment.getMax_points())
+                .maxPoints(assignment.getMaxPoints())
                 .build();
     }
 
@@ -121,7 +112,7 @@ public class AssignmentService {
                         .completionDatetime(assignment.getCompletionDatetime())
                         .title(assignment.getTitle())
                         .visible(assignment.getVisible())
-                        .max_points(assignment.getMax_points())
+                        .maxPoints(assignment.getMaxPoints())
                         .build();
             } else {
                 return AssignmentResponseDto.builder().forbidden(true).build();
@@ -156,11 +147,11 @@ public class AssignmentService {
         if (!updatedAssignment.getLastModifiedDatetime().equals(assignment.getLastModifiedDatetime())) {
             assignment.setLastModifiedDatetime(updatedAssignment.getLastModifiedDatetime());
         }
-        if (updatedAssignment.getMax_points() >= 0 && !updatedAssignment.getMax_points().equals(assignment.getMax_points())) {
-            assignment.setMax_points(updatedAssignment.getMax_points());
+        if (updatedAssignment.getMaxPoints() >= 0 && !updatedAssignment.getMaxPoints().equals(assignment.getMaxPoints())) {
+            assignment.setMaxPoints(updatedAssignment.getMaxPoints());
         }
-        if (updatedAssignment.getAuto_penalty() >= 0 && updatedAssignment.getAuto_penalty() <= 100 && !updatedAssignment.getAuto_penalty().equals(assignment.getAuto_penalty())) {
-            assignment.setAuto_penalty(updatedAssignment.getAuto_penalty());
+        if (updatedAssignment.getAutoPenalty() >= 0 && updatedAssignment.getAutoPenalty() <= 100 && !updatedAssignment.getAutoPenalty().equals(assignment.getAutoPenalty())) {
+            assignment.setAutoPenalty(updatedAssignment.getAutoPenalty());
         }
         updatedAssignment.setUser(assignment.getUser());
         updatedAssignment.setGroup(assignment.getGroup());
@@ -181,7 +172,7 @@ public class AssignmentService {
     @Transactional
     public Boolean changeTitleById(int id, String title) {
         if(assignmentRepository.findById(id).isPresent()){
-            Assignment assignment = assignmentRepository.findById(id).get();
+            Assignment assignment = findById(id);
             assignment.setTitle(title);
             assignmentRepository.save(assignment);
             return true;
@@ -193,7 +184,7 @@ public class AssignmentService {
     @Transactional
     public Boolean changeTaskDescriptionById(int id, String taskDescription) {
         if(assignmentRepository.findById(id).isPresent()){
-            Assignment assignment = assignmentRepository.findById(id).get();
+            Assignment assignment = findById(id);
             assignment.setTaskDescription(taskDescription);
             assignmentRepository.save(assignment);
             return true;
@@ -205,7 +196,7 @@ public class AssignmentService {
     @Transactional
     public Boolean changeCompletionDatetime(int id, OffsetDateTime completionDatetime) {
         if(assignmentRepository.findById(id).isPresent()){
-            Assignment assignment = assignmentRepository.findById(id).get();
+            Assignment assignment = findById(id);
             assignment.setCompletionDatetime(completionDatetime);
             assignmentRepository.save(assignment);
             return true;
@@ -217,7 +208,7 @@ public class AssignmentService {
     @Transactional
     public Boolean changeVisibility(int id, Boolean visible) {
         if(assignmentRepository.findById(id).isPresent()){
-            Assignment assignment = assignmentRepository.findById(id).get();
+            Assignment assignment = findById(id);
             assignment.setVisible(visible);
             assignmentRepository.save(assignment);
             return true;
@@ -229,10 +220,9 @@ public class AssignmentService {
 
     @Transactional
     public Boolean changeUser(int id, int userId) {
-        if(assignmentRepository.findById(id).isPresent() && userRepository.findById(userId).isPresent())
-        {
-            Assignment assignment = assignmentRepository.findById(id).get();
-            User user = userRepository.findById(userId).get();
+        if(assignmentRepository.findById(id).isPresent() && userRepository.findById(userId).isPresent()) {
+            Assignment assignment = findById(id);
+            User user = userService.findById(userId);
             assignment.setUser(user);
             assignmentRepository.save(assignment);
             return true;
@@ -244,10 +234,9 @@ public class AssignmentService {
 
     @Transactional
     public Boolean changeGroup(int id, int groupId) {
-        if(assignmentRepository.findById(id).isPresent() && groupRepository.findById(groupId).isPresent())
-        {
-            Assignment assignment = assignmentRepository.findById(id).get();
-            Group group = groupRepository.findById(groupId).get();
+        if(assignmentRepository.findById(id).isPresent() && groupRepository.findById(groupId).isPresent()) {
+            Assignment assignment = findById(id);
+            Group group = groupService.findById(groupId);
             assignment.setGroup(group);
             assignmentRepository.save(assignment);
             return true;
@@ -260,8 +249,8 @@ public class AssignmentService {
     @Transactional
     public Boolean changeMaxPoints(int id, int points) {
         if (assignmentRepository.findById(id).isPresent() && points >= 0) {
-            Assignment assignment = assignmentRepository.findById(id).get();
-            assignment.setMax_points(points);
+            Assignment assignment = findById(id);
+            assignment.setMaxPoints(points);
             assignmentRepository.save(assignment);
             return true;
         } else {
@@ -270,10 +259,10 @@ public class AssignmentService {
     }
 
     @Transactional
-    public Boolean changeAutoPenalty(int id, int auto_penalty) {
-        if (assignmentRepository.findById(id).isPresent() && auto_penalty >= 0 && auto_penalty <= 100) {
-            Assignment assignment = assignmentRepository.findById(id).get();
-            assignment.setAuto_penalty(auto_penalty);
+    public Boolean changeAutoPenalty(int id, int autoPenalty) {
+        if (assignmentRepository.findById(id).isPresent() && autoPenalty >= 0 && autoPenalty <= 100) {
+            Assignment assignment = findById(id);
+            assignment.setAutoPenalty(autoPenalty);
             assignmentRepository.save(assignment);
             return true;
         } else {
@@ -295,7 +284,7 @@ public class AssignmentService {
                     .completionDatetime(assignment.getCompletionDatetime())
                     .title(assignment.getTitle())
                     .visible(assignment.getVisible())
-                    .max_points(assignment.getMax_points())
+                    .maxPoints(assignment.getMaxPoints())
                     .build());
         }
         return assignmentResponsDtos;
@@ -320,7 +309,7 @@ public class AssignmentService {
                                 .completionDatetime(assignment.getCompletionDatetime())
                                 .title(assignment.getTitle())
                                 .visible(assignment.getVisible())
-                                .max_points(assignment.getMax_points())
+                                .maxPoints(assignment.getMaxPoints())
                                 .build()
                 );
             }
@@ -331,9 +320,7 @@ public class AssignmentService {
     public List<AssignmentResponseDto> getAllAssignmentsByGroupIdAndUserId(int groupId, int userId) {
         List<Assignment> assignmentList = assignmentRepository.getAllAssignmentsByGroupIdAndUserId(groupId, userId);
         List<AssignmentResponseDto> assignmentResponseDtoList = new ArrayList<>();
-        assignmentList.forEach(assignment -> {
-            assignmentResponseDtoList.add(buildAssignmentResponse(assignment));
-        });
+        assignmentList.forEach(assignment -> assignmentResponseDtoList.add(buildAssignmentResponse(assignment)));
         return assignmentResponseDtoList;
     }
 
@@ -342,9 +329,7 @@ public class AssignmentService {
         List<Assignment> doneAssignmentList = assignmentRepository.getDoneAssignmentsByGroupIdAndUserId(groupId, userId);
         assignmentList.removeAll(doneAssignmentList);
         List<AssignmentResponseDto> assignmentResponseDtoList = new ArrayList<>();
-        assignmentList.forEach(assignment -> {
-            assignmentResponseDtoList.add(buildAssignmentResponse(assignment));
-        });
+        assignmentList.forEach(assignment -> assignmentResponseDtoList.add(buildAssignmentResponse(assignment)));
         return assignmentResponseDtoList;
     }
 
@@ -353,27 +338,21 @@ public class AssignmentService {
         List<Assignment> doneAssignmentList = assignmentRepository.getDoneAssignmentsByStudent(studentId);
         assignmentList.removeAll(doneAssignmentList);
         List<AssignmentResponseDto> assignmentResponseDtoList = new ArrayList<>();
-        assignmentList.forEach(assignment -> {
-            assignmentResponseDtoList.add(buildAssignmentResponse(assignment));
-        });
+        assignmentList.forEach(assignment -> assignmentResponseDtoList.add(buildAssignmentResponse(assignment)));
         return assignmentResponseDtoList;
     }
 
     public List<AssignmentResponseDto> getDoneAssignmentsByGroupIdAndUserId(int groupId, int userId) {
         List<Assignment> assignmentList = assignmentRepository.getDoneAssignmentsByGroupIdAndUserId(groupId, userId);
         List<AssignmentResponseDto> assignmentResponseDtoList = new ArrayList<>();
-        assignmentList.forEach(assignment -> {
-            assignmentResponseDtoList.add(buildAssignmentResponse(assignment));
-        });
+        assignmentList.forEach(assignment -> assignmentResponseDtoList.add(buildAssignmentResponse(assignment)));
         return assignmentResponseDtoList;
     }
 
     public List<AssignmentResponseDto> getDoneAssignmentsByStudent(int studentId) {
         List<Assignment> assignmentList = assignmentRepository.getDoneAssignmentsByStudent(studentId);
         List<AssignmentResponseDto> assignmentResponseDtoList = new ArrayList<>();
-        assignmentList.forEach(assignment -> {
-            assignmentResponseDtoList.add(buildAssignmentResponse(assignment));
-        });
+        assignmentList.forEach(assignment -> assignmentResponseDtoList.add(buildAssignmentResponse(assignment)));
         return assignmentResponseDtoList;
     }
 
@@ -432,9 +411,7 @@ public class AssignmentService {
     public List<AssignmentResponseDto> getAllAssignmentsByStudent(int userId) {
         List<Assignment> assignmentList = assignmentRepository.getAllAssignmentsByStudent(userId);
         List<AssignmentResponseDto> assignmentResponseDtoList = new ArrayList<>();
-        assignmentList.forEach(assignment -> {
-            assignmentResponseDtoList.add(buildAssignmentResponse(assignment));
-        });
+        assignmentList.forEach(assignment -> assignmentResponseDtoList.add(buildAssignmentResponse(assignment)));
         return assignmentResponseDtoList;
     }
 
@@ -464,9 +441,7 @@ public class AssignmentService {
     public List<AssignmentResponseExtendedDto> getAllAssignmentsByGroupIdAndUserIdExtended(int groupId, int userId) {
         List<Assignment> assignmentList = assignmentRepository.getAllAssignmentsByGroupIdAndUserId(groupId, userId);
         List<AssignmentResponseExtendedDto> assignmentResponseList = new ArrayList<>();
-        assignmentList.forEach(assignment -> {
-            assignmentResponseList.add(buildAssignmentResponseExtended(assignment));
-        });
+        assignmentList.forEach(assignment -> assignmentResponseList.add(buildAssignmentResponseExtended(assignment)));
         return assignmentResponseList;
     }
 
@@ -475,9 +450,7 @@ public class AssignmentService {
         List<Assignment> doneAssignmentList = assignmentRepository.getDoneAssignmentsByGroupIdAndUserId(groupId, userId);
         assignmentList.removeAll(doneAssignmentList);
         List<AssignmentResponseExtendedDto> assignmentResponseList = new ArrayList<>();
-        assignmentList.forEach(assignment -> {
-            assignmentResponseList.add(buildAssignmentResponseExtended(assignment));
-        });
+        assignmentList.forEach(assignment -> assignmentResponseList.add(buildAssignmentResponseExtended(assignment)));
         return assignmentResponseList;
     }
 
@@ -486,27 +459,21 @@ public class AssignmentService {
         List<Assignment> doneAssignmentList = assignmentRepository.getDoneAssignmentsByStudent(studentId);
         assignmentList.removeAll(doneAssignmentList);
         List<AssignmentResponseExtendedDto> assignmentResponseList = new ArrayList<>();
-        assignmentList.forEach(assignment -> {
-            assignmentResponseList.add(buildAssignmentResponseExtended(assignment));
-        });
+        assignmentList.forEach(assignment -> assignmentResponseList.add(buildAssignmentResponseExtended(assignment)));
         return assignmentResponseList;
     }
 
     public List<AssignmentResponseExtendedDto> getDoneAssignmentsByGroupIdAndUserIdExtended(int groupId, int userId) {
         List<Assignment> assignmentList = assignmentRepository.getDoneAssignmentsByGroupIdAndUserId(groupId, userId);
         List<AssignmentResponseExtendedDto> assignmentResponseList = new ArrayList<>();
-        assignmentList.forEach(assignment -> {
-            assignmentResponseList.add(buildAssignmentResponseExtended(assignment));
-        });
+        assignmentList.forEach(assignment -> assignmentResponseList.add(buildAssignmentResponseExtended(assignment)));
         return assignmentResponseList;
     }
 
     public List<AssignmentResponseExtendedDto> getDoneAssignmentsByStudentExtended(int studentId) {
         List<Assignment> assignmentList = assignmentRepository.getDoneAssignmentsByStudent(studentId);
         List<AssignmentResponseExtendedDto> assignmentResponseList = new ArrayList<>();
-        assignmentList.forEach(assignment -> {
-            assignmentResponseList.add(buildAssignmentResponseExtended(assignment));
-        });
+        assignmentList.forEach(assignment -> assignmentResponseList.add(buildAssignmentResponseExtended(assignment)));
         return assignmentResponseList;
     }
 
@@ -565,9 +532,7 @@ public class AssignmentService {
     public List<AssignmentResponseExtendedDto> getAllAssignmentsByStudentExtended(int userId) {
         List<Assignment> assignmentList = assignmentRepository.getAllAssignmentsByStudent(userId);
         List<AssignmentResponseExtendedDto> assignmentResponseList = new ArrayList<>();
-        assignmentList.forEach(assignment -> {
-            assignmentResponseList.add(buildAssignmentResponseExtended(assignment));
-        });
+        assignmentList.forEach(assignment -> assignmentResponseList.add(buildAssignmentResponseExtended(assignment)));
         return assignmentResponseList;
     }
 
@@ -582,8 +547,8 @@ public class AssignmentService {
                 .completionDatetime(assignment.getCompletionDatetime())
                 .title(assignment.getTitle())
                 .visible(assignment.getVisible())
-                .max_points(assignment.getMax_points())
-                .auto_penalty(assignment.getAuto_penalty())
+                .maxPoints(assignment.getMaxPoints())
+                .autoPenalty(assignment.getAutoPenalty())
                 .build();
     }
 
@@ -618,8 +583,8 @@ public class AssignmentService {
                 .completionDatetime(assignment.getCompletionDatetime())
                 .title(assignment.getTitle())
                 .visible(assignment.getVisible())
-                .max_points(assignment.getMax_points())
-                .auto_penalty(assignment.getAuto_penalty())
+                .maxPoints(assignment.getMaxPoints())
+                .autoPenalty(assignment.getAutoPenalty())
                 .build();
     }
 
@@ -634,8 +599,8 @@ public class AssignmentService {
                 .lastModifiedDatetime(assignment.getLastModifiedDatetime())
                 .title(assignment.getTitle())
                 .visible(assignment.getVisible())
-                .max_points(assignment.getMax_points())
-                .auto_penalty(assignment.getAuto_penalty())
+                .maxPoints(assignment.getMaxPoints())
+                .autoPenalty(assignment.getAutoPenalty())
                 .status(status)
                 .build();
     }

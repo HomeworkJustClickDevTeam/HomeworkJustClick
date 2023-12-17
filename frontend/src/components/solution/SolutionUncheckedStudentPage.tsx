@@ -36,7 +36,7 @@ export default function SolutionUncheckedStudentPage(props: {
       <div className="absolute bottom-0 left-0 mb-6 ml-4">
         <p>Wynik: </p>
         <p className="font-bold text-xl mt-4">
-          ? /{props.assignment.max_points} - Praca jeszcze nie została
+          ? /{props.assignment.maxPoints} - Praca jeszcze nie została
           sprawdzona{" "}
         </p>
       </div>

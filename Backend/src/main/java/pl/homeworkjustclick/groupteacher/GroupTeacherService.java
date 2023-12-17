@@ -4,8 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.homeworkjustclick.group.GroupRepository;
+import pl.homeworkjustclick.group.GroupService;
 import pl.homeworkjustclick.groupstudent.GroupStudentRepository;
 import pl.homeworkjustclick.user.UserRepository;
+import pl.homeworkjustclick.user.UserService;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,14 +15,12 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class GroupTeacherService {
-
     private final GroupTeacherRepository groupTeacherRepository;
-
     private final GroupRepository groupRepository;
-
     private final UserRepository userRepository;
-
     private final GroupStudentRepository groupStudentRepository;
+    private final UserService userService;
+    private final GroupService groupService;
 
     public List<GroupTeacher> getAll() {
         return groupTeacherRepository.findAll();
@@ -47,25 +47,13 @@ public class GroupTeacherService {
     }
 
     @Transactional
-    public Boolean changeDescriptionById (int id, String description) {
-        if (groupTeacherRepository.findById(id).isPresent()) {
-            GroupTeacher groupTeacher = groupTeacherRepository.findById(id).get();
-            groupTeacher.setDescription(description);
-            groupTeacherRepository.save(groupTeacher);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    @Transactional
     public Boolean addTeacherToGroup(int groupId, int teacherId) {
         int groupTeacherCheck = groupTeacherRepository.checkForTeacherInGroup(teacherId, groupId);
         int groupStudentCheck = groupStudentRepository.checkForStudentInGroup(teacherId, groupId);
         if (groupTeacherCheck != 0 || groupStudentCheck != 0) {
             return null;
         } else if (groupRepository.findById(groupId).isPresent() && userRepository.findById(teacherId).isPresent()) {
-            GroupTeacher groupTeacher = new GroupTeacher(groupRepository.findById(groupId).get(), userRepository.findById(teacherId).get(), "");
+            GroupTeacher groupTeacher = new GroupTeacher(groupService.findById(groupId), userService.findById(teacherId), "");
             groupTeacherRepository.save(groupTeacher);
             return true;
         } else {

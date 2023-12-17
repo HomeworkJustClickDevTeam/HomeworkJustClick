@@ -24,7 +24,7 @@ function AssignmentListElement({assignment,
           <div className="text-border_gray">{format(new Date(assignment.completionDatetime.toString()), "dd.MM.yyyy, HH:mm")}</div>
         </div>
         {createReportButton && handleGenerateReportButtonClick && <Link to={`#`} type={"button"} onClick={()=>{handleGenerateReportButtonClick()}}>Wygeneruj raport</Link>}
-        <div className="mr-10 font-semibold text-[28px]">{"/" + assignment.max_points}</div>
+        <div className="mr-10 font-semibold text-[28px]">{"/" + assignment.maxPoints}</div>
       </Link>
       {unfoldedPieChartAssignment?.id === assignment.id && <div><br/><AssignmentPieChart assignment={assignment}/></div>}
     </>

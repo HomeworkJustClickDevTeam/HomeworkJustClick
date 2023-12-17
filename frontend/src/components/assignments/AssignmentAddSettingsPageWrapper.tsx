@@ -27,8 +27,8 @@ function AssignmentAddSettingsPageWrapper() {
     completionDatetime: new Date(),
     taskDescription: "",
     visible: true,
-    max_points: 1,
-    auto_penalty: 50,
+    maxPoints: 1,
+    autoPenalty: 50,
   })
   const [toSend, setToSend] = useState<boolean>(false)
   const [idAssignment, setIdAssignment] = useState<number>()

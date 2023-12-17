@@ -6,6 +6,7 @@ import lombok.*;
 import pl.homeworkjustclick.assignment.AssignmentResponseDto;
 import pl.homeworkjustclick.user.UserSimpleResponseDto;
 
+import java.io.Serializable;
 import java.time.OffsetDateTime;
 
 @Data
@@ -14,7 +15,7 @@ import java.time.OffsetDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CommentResponseDto {
+public class CommentResponseDto implements Serializable {
     @Schema(example = "0")
     private int id;
     @Schema(example = "Example title")

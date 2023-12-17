@@ -15,8 +15,8 @@ public class AssignmentMapper {
                 .completionDatetime(assignment.getCompletionDatetime())
                 .title(assignment.getTitle())
                 .visible(assignment.getVisible())
-                .max_points(assignment.getMax_points())
-                .auto_penalty(assignment.getAuto_penalty())
+                .maxPoints(assignment.getMaxPoints())
+                .autoPenalty(assignment.getAutoPenalty())
                 .build();
     }
 }

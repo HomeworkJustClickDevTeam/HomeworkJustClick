@@ -29,7 +29,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DataJpaTest
-public class FileRepositoryTest {
+class FileRepositoryTest {
 
     @Autowired
     private UserRepository userRepository;

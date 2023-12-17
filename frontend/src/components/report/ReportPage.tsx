@@ -73,11 +73,11 @@ export const ReportPage = () =>{
   return <div>
     {(reportedObject! as AssignmentInterface).title !== undefined &&
     (reportedObject! as AssignmentInterface).completionDatetime !== undefined &&
-    (reportedObject! as AssignmentInterface).max_points !== undefined ?
+    (reportedObject! as AssignmentInterface).maxPoints !== undefined ?
       <div>
         <div>RAPORT
           ZADANIA: {(reportedObject! as AssignmentInterface).title} {format(new Date((reportedObject! as AssignmentInterface).completionDatetime.toString()), "dd.MM.yyyy, HH:mm")}</div>
-        <div>Maksymalna możliwa liczba punktów: {(reportedObject! as AssignmentInterface).max_points}</div>
+        <div>Maksymalna możliwa liczba punktów: {(reportedObject! as AssignmentInterface).maxPoints}</div>
         <br/>
         <div>Najwyższa liczba punktów: {(report as AssignmentReportModel).maxResult}</div>
         <br/>
@@ -93,8 +93,8 @@ export const ReportPage = () =>{
       : <div>RAPORT GRUPY: {(reportedObject! as GroupInterface).name}</div>}
     <button onClick={() => handleUnfolding(ReportPageUnfoldingElements.table)}>
       TABELA:<br/>
-      {(reportedObject! as AssignmentInterface).max_points !== undefined && unfoldedElement === ReportPageUnfoldingElements.table
-        ? <ReportAssignmentTable max_points={(reportedObject! as AssignmentInterface).max_points}
+      {(reportedObject! as AssignmentInterface).maxPoints !== undefined && unfoldedElement === ReportPageUnfoldingElements.table
+        ? <ReportAssignmentTable maxPoints={(reportedObject! as AssignmentInterface).maxPoints}
                                  assignmentReport={report as AssignmentReportModel}/>
         : unfoldedElement === ReportPageUnfoldingElements.table && (report as GroupReportModel).assignments !== undefined && <ReportGroupTable groupReport={report as GroupReportModel}/>}
     </button>

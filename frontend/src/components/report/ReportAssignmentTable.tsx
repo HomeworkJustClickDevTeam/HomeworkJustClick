@@ -1,6 +1,6 @@
 import {AssignmentReportModel} from "../../types/AssignmentReport.model";
 
-export const ReportAssignmentTable = ({assignmentReport, max_points}:{assignmentReport: AssignmentReportModel, max_points: number}) =>{
+export const ReportAssignmentTable = ({assignmentReport, maxPoints}:{assignmentReport: AssignmentReportModel, maxPoints: number}) =>{
   return (
     <table>
       <tbody>
@@ -10,7 +10,7 @@ export const ReportAssignmentTable = ({assignmentReport, max_points}:{assignment
         </tr>
         <tr>
           <th>Punkty</th>
-          {assignmentReport.students.map((studentResult, index) =><td key={index}>{studentResult.result}/{max_points}</td>)}
+          {assignmentReport.students.map((studentResult, index) =><td key={index}>{studentResult.result}/{maxPoints}</td>)}
         </tr>
         <tr>
           <th>Procenty</th>

@@ -2,6 +2,7 @@ package pl.homeworkjustclick.infrastructure.auth;
 
 import jakarta.servlet.ReadListener;
 import jakarta.servlet.ServletInputStream;
+import pl.homeworkjustclick.infrastructure.exception.InternalException;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -25,7 +26,7 @@ public class CachedBodyServletInputStream extends ServletInputStream {
         try {
             return cachedBodyInputStream.available() == 0;
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new InternalException("Error");
         }
     }
 

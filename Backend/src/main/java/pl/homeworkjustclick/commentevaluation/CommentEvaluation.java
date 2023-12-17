@@ -8,6 +8,8 @@ import lombok.*;
 import pl.homeworkjustclick.comment.Comment;
 import pl.homeworkjustclick.evaluation.Evaluation;
 
+import java.io.Serializable;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -16,7 +18,7 @@ import pl.homeworkjustclick.evaluation.Evaluation;
 @Table(name = "_comment_evaluation")
 @Getter
 @Setter
-public class CommentEvaluation {
+public class CommentEvaluation implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

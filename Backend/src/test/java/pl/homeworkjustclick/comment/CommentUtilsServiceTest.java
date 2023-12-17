@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
         "classpath:db/init_comment_file_img.sql",
         "classpath:db/init_comment_file_text.sql"
 })
-public class CommentUtilsServiceTest extends BaseTestEntity {
+class CommentUtilsServiceTest extends BaseTestEntity {
     @Autowired
     CommentUtilsService commentUtilsService;
     @Autowired

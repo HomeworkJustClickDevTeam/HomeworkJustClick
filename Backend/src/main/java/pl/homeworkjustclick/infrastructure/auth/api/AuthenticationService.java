@@ -141,7 +141,7 @@ public class AuthenticationService {
     }
 
     private Boolean emailCheck(String email) {
-        String pattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
+        String pattern = "^([a-z0-9_\\.-]+\\@[\\da-z\\.-]+\\.[a-z\\.]{2,6})$";
         Pattern p = java.util.regex.Pattern.compile(pattern);
         return p.matcher(email).matches();
     }
