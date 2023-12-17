@@ -47,14 +47,13 @@ public class GroupStudentService {
     }
 
     @Transactional
-    public Boolean addStudentToGroup (int group_id, int student_id) {
-        int groupTeacherCheck = groupTeacherRepository.checkForTeacherInGroup(student_id, group_id);
-        int groupStudentCheck = groupStudentRepository.checkForStudentInGroup(student_id, group_id);
-        if(groupTeacherCheck != 0 || groupStudentCheck != 0){
+    public Boolean addStudentToGroup(int groupId, int studentId) {
+        int groupTeacherCheck = groupTeacherRepository.checkForTeacherInGroup(studentId, groupId);
+        int groupStudentCheck = groupStudentRepository.checkForStudentInGroup(studentId, groupId);
+        if (groupTeacherCheck != 0 || groupStudentCheck != 0) {
             return null;
-        }
-        else if (groupRepository.findById(group_id).isPresent() && userRepository.findById(student_id).isPresent()) {
-            GroupStudent groupStudent = new GroupStudent(groupRepository.findById(group_id).get(), userRepository.findById(student_id).get(), "");
+        } else if (groupRepository.findById(groupId).isPresent() && userRepository.findById(studentId).isPresent()) {
+            GroupStudent groupStudent = new GroupStudent(groupRepository.findById(groupId).get(), userRepository.findById(studentId).get(), "");
             groupStudentRepository.save(groupStudent);
             return true;
         } else {
@@ -63,9 +62,9 @@ public class GroupStudentService {
     }
 
     @Transactional
-    public Boolean deleteStudentFromGroup (int group_id, int student_id) {
-        if (groupStudentRepository.checkForStudentInGroup(student_id, group_id) != 0){
-            GroupStudent groupStudent = groupStudentRepository.getGroupStudentObjectByStudentAndGroup(student_id, group_id);
+    public Boolean deleteStudentFromGroup(int groupId, int studentId) {
+        if (groupStudentRepository.checkForStudentInGroup(studentId, groupId) != 0) {
+            GroupStudent groupStudent = groupStudentRepository.getGroupStudentObjectByStudentAndGroup(studentId, groupId);
             groupStudentRepository.deleteById(groupStudent.getId());
             return true;
         } else {
@@ -73,8 +72,8 @@ public class GroupStudentService {
         }
     }
 
-    public Boolean checkForStudentInGroup(int student_id, int group_id) {
-        int groupStudentCheck = groupStudentRepository.checkForStudentInGroup(student_id, group_id);
+    public Boolean checkForStudentInGroup(int studentId, int groupId) {
+        int groupStudentCheck = groupStudentRepository.checkForStudentInGroup(studentId, groupId);
         return groupStudentCheck != 0;
     }
 }

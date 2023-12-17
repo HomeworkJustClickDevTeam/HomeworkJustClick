@@ -115,12 +115,12 @@ public class GroupService {
         }
     }
 
-    public List<Group> getGroupsByTeacher(int teacher_id) {
-        return groupRepository.getGroupsByTeacherId(teacher_id);
+    public List<Group> getGroupsByTeacher(int teacherId) {
+        return groupRepository.getGroupsByTeacherId(teacherId);
     }
 
-    public List<Group> getGroupsByStudent(int student_id) {
-        return groupRepository.getGroupsByStudentId(student_id);
+    public List<Group> getGroupsByStudent(int studentId) {
+        return groupRepository.getGroupsByStudentId(studentId);
     }
 
 }

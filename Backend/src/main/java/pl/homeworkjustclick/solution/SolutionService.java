@@ -86,30 +86,30 @@ public class SolutionService {
     }
 
     @Transactional
-    public SolutionResponseDto addWithUserAndAssignment(Solution solution, int user_id, int assignment_id) {
-        Optional<User> user = userRepository.findById(user_id);
-        Optional<Assignment> assignment = assignmentRepository.findById(assignment_id);
-        if(user.isPresent() && assignment.isPresent()) {
+    public SolutionResponseDto addWithUserAndAssignment(Solution solution, int userId, int assignmentId) {
+        Optional<User> user = userRepository.findById(userId);
+        Optional<Assignment> assignment = assignmentRepository.findById(assignmentId);
+        if (user.isPresent() && assignment.isPresent()) {
             List<User> userList = userRepository.getStudentsByGroupId(assignment.get().getGroup().getId());
             System.out.println(assignment.get().getGroup().getId());
             AtomicBoolean ok = new AtomicBoolean(false);
             userList.forEach(user1 -> {
-                if (user1.getId() == user_id) {
+                if (user1.getId() == userId) {
                     ok.set(true);
                 }
             });
-            if (solutionRepository.getSolutionByUserAndAssignment(user_id, assignment_id).isPresent()) {
+            if (solutionRepository.getSolutionByUserAndAssignment(userId, assignmentId).isPresent()) {
                 ok.set(false);
             }
-            if(ok.get()) {
+            if (ok.get()) {
                 solution.setAssignment(assignment.get());
                 solution.setUser(user.get());
                 solution.setGroup(assignment.get().getGroup());
                 entityManager.persist(solution);
                 return SolutionResponseDto.builder()
                         .id(solution.getId())
-                        .userId(user_id)
-                        .assignmentId(assignment_id)
+                        .userId(userId)
+                        .assignmentId(assignmentId)
                         .groupId(assignment.get().getGroup().getId())
                         .creationDateTime(solution.getCreationDatetime())
                         .lastModifiedDatetime(solution.getLastModifiedDatetime())
@@ -194,161 +194,133 @@ public class SolutionService {
         return solutionResponsDtos;
     }
 
-    public List<SolutionResponseDto> getLateSolutionsByGroup(int group_id) {
-        List<Solution> solutions = solutionRepository.getSolutionsByGroupId(group_id);
+    public List<SolutionResponseDto> getLateSolutionsByGroup(int groupId) {
+        List<Solution> solutions = solutionRepository.getSolutionsByGroupId(groupId);
         List<Solution> lateSolutions = new ArrayList<>();
         solutions.forEach(solution -> {
-            if(solution.getAssignment().getCompletionDatetime().isBefore(solution.getCreationDatetime())) {
+            if (solution.getAssignment().getCompletionDatetime().isBefore(solution.getCreationDatetime())) {
                 lateSolutions.add(solution);
             }
         });
         List<SolutionResponseDto> responseList = new ArrayList<>();
-        lateSolutions.forEach(solution -> {
-            responseList.add(buildSolutionResponse(solution));
-        });
+        lateSolutions.forEach(solution -> responseList.add(buildSolutionResponse(solution)));
         return responseList;
     }
 
-    public List<SolutionResponseDto> getLateSolutionsByUserAndGroup(int user_id, int group_id) {
-        List<Solution> solutions = solutionRepository.getSolutionsByUserAndGroup(user_id, group_id);
+    public List<SolutionResponseDto> getLateSolutionsByUserAndGroup(int userId, int groupId) {
+        List<Solution> solutions = solutionRepository.getSolutionsByUserAndGroup(userId, groupId);
         List<Solution> lateSolutions = new ArrayList<>();
         solutions.forEach(solution -> {
-            if(solution.getAssignment().getCompletionDatetime().isBefore(solution.getCreationDatetime())) {
+            if (solution.getAssignment().getCompletionDatetime().isBefore(solution.getCreationDatetime())) {
                 lateSolutions.add(solution);
             }
         });
         List<SolutionResponseDto> responseList = new ArrayList<>();
-        lateSolutions.forEach(solution -> {
-            responseList.add(buildSolutionResponse(solution));
-        });
+        lateSolutions.forEach(solution -> responseList.add(buildSolutionResponse(solution)));
         return responseList;
     }
 
-    public List<SolutionResponseDto> getLateSolutionsByAssignment(int assignment_id) {
-        List<Solution> solutions = solutionRepository.findAllByAssignmentId(assignment_id);
+    public List<SolutionResponseDto> getLateSolutionsByAssignment(int assignmentId) {
+        List<Solution> solutions = solutionRepository.findAllByAssignmentId(assignmentId);
         List<Solution> lateSolutions = new ArrayList<>();
         solutions.forEach(solution -> {
-            if(solution.getAssignment().getCompletionDatetime().isBefore(solution.getCreationDatetime())) {
+            if (solution.getAssignment().getCompletionDatetime().isBefore(solution.getCreationDatetime())) {
                 lateSolutions.add(solution);
             }
         });
         List<SolutionResponseDto> responseList = new ArrayList<>();
-        lateSolutions.forEach(solution -> {
-            responseList.add(buildSolutionResponse(solution));
-        });
+        lateSolutions.forEach(solution -> responseList.add(buildSolutionResponse(solution)));
         return responseList;
     }
 
-    public List<SolutionResponseDto> getLateSolutionsByStudent(int user_id) {
-        List<Solution> solutions = solutionRepository.getSolutionsByUser(user_id);
+    public List<SolutionResponseDto> getLateSolutionsByStudent(int userId) {
+        List<Solution> solutions = solutionRepository.getSolutionsByUser(userId);
         List<Solution> lateSolutions = new ArrayList<>();
         solutions.forEach(solution -> {
-            if(solution.getAssignment().getCompletionDatetime().isBefore(solution.getCreationDatetime())) {
+            if (solution.getAssignment().getCompletionDatetime().isBefore(solution.getCreationDatetime())) {
                 lateSolutions.add(solution);
             }
         });
         List<SolutionResponseDto> responseList = new ArrayList<>();
-        lateSolutions.forEach(solution -> {
-            responseList.add(buildSolutionResponse(solution));
-        });
+        lateSolutions.forEach(solution -> responseList.add(buildSolutionResponse(solution)));
         return responseList;
     }
 
-    public List<SolutionResponseDto> getUncheckedSolutionsByGroup(int group_id) {
-        List<Solution> solutions = solutionRepository.getUncheckedSolutionsByGroup(group_id);
+    public List<SolutionResponseDto> getUncheckedSolutionsByGroup(int groupId) {
+        List<Solution> solutions = solutionRepository.getUncheckedSolutionsByGroup(groupId);
         List<SolutionResponseDto> responseList = new ArrayList<>();
-        solutions.forEach(solution -> {
-            responseList.add(buildSolutionResponse(solution));
-        });
+        solutions.forEach(solution -> responseList.add(buildSolutionResponse(solution)));
         return responseList;
     }
 
-    public List<SolutionResponseDto> getCheckedSolutionsByGroup(int group_id) {
-        List<Solution> solutions = solutionRepository.getCheckedSolutionsByGroup(group_id);
+    public List<SolutionResponseDto> getCheckedSolutionsByGroup(int groupId) {
+        List<Solution> solutions = solutionRepository.getCheckedSolutionsByGroup(groupId);
 
         List<SolutionResponseDto> responseList = new ArrayList<>();
-        solutions.forEach(solution -> {
-            responseList.add(buildSolutionResponse(solution));
-        });
+        solutions.forEach(solution -> responseList.add(buildSolutionResponse(solution)));
         return responseList;
     }
 
-    public List<SolutionResponseDto> getUncheckedSolutionsByStudent(int student_id) {
-        List<Solution> solutions = solutionRepository.getUncheckedSolutionsByStudent(student_id);
+    public List<SolutionResponseDto> getUncheckedSolutionsByStudent(int studentId) {
+        List<Solution> solutions = solutionRepository.getUncheckedSolutionsByStudent(studentId);
         List<SolutionResponseDto> responseList = new ArrayList<>();
-        solutions.forEach(solution -> {
-            responseList.add(buildSolutionResponse(solution));
-        });
+        solutions.forEach(solution -> responseList.add(buildSolutionResponse(solution)));
         return responseList;
     }
 
-    public List<SolutionResponseDto> getCheckedSolutionsByStudent(int student_id) {
-        List<Solution> solutions = solutionRepository.getCheckedSolutionsByStudent(student_id);
+    public List<SolutionResponseDto> getCheckedSolutionsByStudent(int studentId) {
+        List<Solution> solutions = solutionRepository.getCheckedSolutionsByStudent(studentId);
         List<SolutionResponseDto> responseList = new ArrayList<>();
-        solutions.forEach(solution -> {
-            responseList.add(buildSolutionResponse(solution));
-        });
+        solutions.forEach(solution -> responseList.add(buildSolutionResponse(solution)));
         return responseList;
     }
 
-    public List<SolutionResponseDto> getUncheckedSolutionsByStudentAndGroup(int student_id, int group_id) {
-        List<Solution> solutions = solutionRepository.getUncheckedSolutionsByStudentAndGroup(student_id, group_id);
+    public List<SolutionResponseDto> getUncheckedSolutionsByStudentAndGroup(int studentId, int groupId) {
+        List<Solution> solutions = solutionRepository.getUncheckedSolutionsByStudentAndGroup(studentId, groupId);
         List<SolutionResponseDto> responseList = new ArrayList<>();
-        solutions.forEach(solution -> {
-            responseList.add(buildSolutionResponse(solution));
-        });
+        solutions.forEach(solution -> responseList.add(buildSolutionResponse(solution)));
         return responseList;
     }
 
-    public List<SolutionResponseDto> getCheckedSolutionsByStudentAndGroup(int student_id, int group_id) {
-        List<Solution> solutions = solutionRepository.getCheckedSolutionsByStudentAndGroup(student_id, group_id);
+    public List<SolutionResponseDto> getCheckedSolutionsByStudentAndGroup(int studentId, int groupId) {
+        List<Solution> solutions = solutionRepository.getCheckedSolutionsByStudentAndGroup(studentId, groupId);
         List<SolutionResponseDto> responseList = new ArrayList<>();
-        solutions.forEach(solution -> {
-            responseList.add(buildSolutionResponse(solution));
-        });
+        solutions.forEach(solution -> responseList.add(buildSolutionResponse(solution)));
         return responseList;
     }
 
-    public List<SolutionResponseDto> getUncheckedSolutionsByAssignment(int assignment_id) {
-        List<Solution> solutions = solutionRepository.getUncheckedSolutionsByAssignment(assignment_id);
+    public List<SolutionResponseDto> getUncheckedSolutionsByAssignment(int assignmentId) {
+        List<Solution> solutions = solutionRepository.getUncheckedSolutionsByAssignment(assignmentId);
         List<SolutionResponseDto> responseList = new ArrayList<>();
-        solutions.forEach(solution -> {
-            responseList.add(buildSolutionResponse(solution));
-        });
+        solutions.forEach(solution -> responseList.add(buildSolutionResponse(solution)));
         return responseList;
     }
 
-    public List<SolutionResponseDto> getCheckedSolutionsByAssignment(int assignment_id) {
-        List<Solution> solutions = solutionRepository.getCheckedSolutionsByAssignment(assignment_id);
+    public List<SolutionResponseDto> getCheckedSolutionsByAssignment(int assignmentId) {
+        List<Solution> solutions = solutionRepository.getCheckedSolutionsByAssignment(assignmentId);
         List<SolutionResponseDto> responseList = new ArrayList<>();
-        solutions.forEach(solution -> {
-            responseList.add(buildSolutionResponse(solution));
-        });
+        solutions.forEach(solution -> responseList.add(buildSolutionResponse(solution)));
         return responseList;
     }
 
-    public List<SolutionResponseDto> getUncheckedSolutionsByTeacher(int teacher_id) {
-        List<Solution> solutions = solutionRepository.getUncheckedSolutionsByTeacher(teacher_id);
+    public List<SolutionResponseDto> getUncheckedSolutionsByTeacher(int teacherId) {
+        List<Solution> solutions = solutionRepository.getUncheckedSolutionsByTeacher(teacherId);
         List<SolutionResponseDto> responseList = new ArrayList<>();
-        solutions.forEach(solution -> {
-            responseList.add(buildSolutionResponse(solution));
-        });
+        solutions.forEach(solution -> responseList.add(buildSolutionResponse(solution)));
         return responseList;
     }
 
-    public List<SolutionResponseDto> getCheckedSolutionsByTeacher(int teacher_id) {
-        List<Solution> solutions = solutionRepository.getCheckedSolutionsByTeacher(teacher_id);
+    public List<SolutionResponseDto> getCheckedSolutionsByTeacher(int teacherId) {
+        List<Solution> solutions = solutionRepository.getCheckedSolutionsByTeacher(teacherId);
         List<SolutionResponseDto> responseList = new ArrayList<>();
-        solutions.forEach(solution -> {
-            responseList.add(buildSolutionResponse(solution));
-        });
+        solutions.forEach(solution -> responseList.add(buildSolutionResponse(solution)));
         return responseList;
     }
 
     public List<SolutionResponseExtendedDto> getSolutionsByGroupIdExtended(int id) {
         List<Solution> solutions = solutionRepository.getSolutionsByGroupId(id);
         List<SolutionResponseExtendedDto> solutionResponses = new ArrayList<>();
-        for(Solution solution : solutions) {
+        for (Solution solution : solutions) {
             solutionResponses.add(buildSolutionResponseExtended(solution));
         }
         return solutionResponses;
@@ -357,159 +329,131 @@ public class SolutionService {
     public List<SolutionResponseExtendedDto> getSolutionsByAssignmentIdExtended(int id) {
         List<Solution> solutions = solutionRepository.findAllByAssignmentId(id);
         List<SolutionResponseExtendedDto> solutionResponses = new ArrayList<>();
-        for(Solution solution : solutions) {
+        for (Solution solution : solutions) {
             solutionResponses.add(buildSolutionResponseExtended(solution));
         }
         return solutionResponses;
     }
 
-    public List<SolutionResponseExtendedDto> getLateSolutionsByGroupExtended(int group_id) {
-        List<Solution> solutions = solutionRepository.getSolutionsByGroupId(group_id);
+    public List<SolutionResponseExtendedDto> getLateSolutionsByGroupExtended(int groupId) {
+        List<Solution> solutions = solutionRepository.getSolutionsByGroupId(groupId);
         List<Solution> lateSolutions = new ArrayList<>();
         solutions.forEach(solution -> {
-            if(solution.getAssignment().getCompletionDatetime().isBefore(solution.getCreationDatetime())) {
+            if (solution.getAssignment().getCompletionDatetime().isBefore(solution.getCreationDatetime())) {
                 lateSolutions.add(solution);
             }
         });
         List<SolutionResponseExtendedDto> responseList = new ArrayList<>();
-        lateSolutions.forEach(solution -> {
-            responseList.add(buildSolutionResponseExtended(solution));
-        });
+        lateSolutions.forEach(solution -> responseList.add(buildSolutionResponseExtended(solution)));
         return responseList;
     }
 
-    public List<SolutionResponseExtendedDto> getLateSolutionsByUserAndGroupExtended(int user_id, int group_id) {
-        List<Solution> solutions = solutionRepository.getSolutionsByUserAndGroup(user_id, group_id);
+    public List<SolutionResponseExtendedDto> getLateSolutionsByUserAndGroupExtended(int userId, int groupId) {
+        List<Solution> solutions = solutionRepository.getSolutionsByUserAndGroup(userId, groupId);
         List<Solution> lateSolutions = new ArrayList<>();
         solutions.forEach(solution -> {
-            if(solution.getAssignment().getCompletionDatetime().isBefore(solution.getCreationDatetime())) {
+            if (solution.getAssignment().getCompletionDatetime().isBefore(solution.getCreationDatetime())) {
                 lateSolutions.add(solution);
             }
         });
         List<SolutionResponseExtendedDto> responseList = new ArrayList<>();
-        lateSolutions.forEach(solution -> {
-            responseList.add(buildSolutionResponseExtended(solution));
-        });
+        lateSolutions.forEach(solution -> responseList.add(buildSolutionResponseExtended(solution)));
         return responseList;
     }
 
-    public List<SolutionResponseExtendedDto> getLateSolutionsByAssignmentExtended(int assignment_id) {
-        List<Solution> solutions = solutionRepository.findAllByAssignmentId(assignment_id);
+    public List<SolutionResponseExtendedDto> getLateSolutionsByAssignmentExtended(int assignmentId) {
+        List<Solution> solutions = solutionRepository.findAllByAssignmentId(assignmentId);
         List<Solution> lateSolutions = new ArrayList<>();
         solutions.forEach(solution -> {
-            if(solution.getAssignment().getCompletionDatetime().isBefore(solution.getCreationDatetime())) {
+            if (solution.getAssignment().getCompletionDatetime().isBefore(solution.getCreationDatetime())) {
                 lateSolutions.add(solution);
             }
         });
         List<SolutionResponseExtendedDto> responseList = new ArrayList<>();
-        lateSolutions.forEach(solution -> {
-            responseList.add(buildSolutionResponseExtended(solution));
-        });
+        lateSolutions.forEach(solution -> responseList.add(buildSolutionResponseExtended(solution)));
         return responseList;
     }
 
-    public List<SolutionResponseExtendedDto> getLateSolutionsByStudentExtended(int user_id) {
-        List<Solution> solutions = solutionRepository.getSolutionsByUser(user_id);
+    public List<SolutionResponseExtendedDto> getLateSolutionsByStudentExtended(int userId) {
+        List<Solution> solutions = solutionRepository.getSolutionsByUser(userId);
         List<Solution> lateSolutions = new ArrayList<>();
         solutions.forEach(solution -> {
-            if(solution.getAssignment().getCompletionDatetime().isBefore(solution.getCreationDatetime())) {
+            if (solution.getAssignment().getCompletionDatetime().isBefore(solution.getCreationDatetime())) {
                 lateSolutions.add(solution);
             }
         });
         List<SolutionResponseExtendedDto> responseList = new ArrayList<>();
-        lateSolutions.forEach(solution -> {
-            responseList.add(buildSolutionResponseExtended(solution));
-        });
+        lateSolutions.forEach(solution -> responseList.add(buildSolutionResponseExtended(solution)));
         return responseList;
     }
 
-    public List<SolutionResponseExtendedDto> getUncheckedSolutionsByGroupExtended(int group_id) {
-        List<Solution> solutions = solutionRepository.getUncheckedSolutionsByGroup(group_id);
+    public List<SolutionResponseExtendedDto> getUncheckedSolutionsByGroupExtended(int groupId) {
+        List<Solution> solutions = solutionRepository.getUncheckedSolutionsByGroup(groupId);
         List<SolutionResponseExtendedDto> responseList = new ArrayList<>();
-        solutions.forEach(solution -> {
-            responseList.add(buildSolutionResponseExtended(solution));
-        });
+        solutions.forEach(solution -> responseList.add(buildSolutionResponseExtended(solution)));
         return responseList;
     }
 
-    public List<SolutionResponseExtendedDto> getCheckedSolutionsByGroupExtended(int group_id) {
-        List<Solution> solutions = solutionRepository.getCheckedSolutionsByGroup(group_id);
+    public List<SolutionResponseExtendedDto> getCheckedSolutionsByGroupExtended(int groupId) {
+        List<Solution> solutions = solutionRepository.getCheckedSolutionsByGroup(groupId);
         List<SolutionResponseExtendedDto> responseList = new ArrayList<>();
-        solutions.forEach(solution -> {
-            responseList.add(buildSolutionResponseExtended(solution));
-        });
+        solutions.forEach(solution -> responseList.add(buildSolutionResponseExtended(solution)));
         return responseList;
     }
 
-    public List<SolutionResponseExtendedDto> getUncheckedSolutionsByStudentExtended(int student_id) {
-        List<Solution> solutions = solutionRepository.getUncheckedSolutionsByStudent(student_id);
+    public List<SolutionResponseExtendedDto> getUncheckedSolutionsByStudentExtended(int studentId) {
+        List<Solution> solutions = solutionRepository.getUncheckedSolutionsByStudent(studentId);
         List<SolutionResponseExtendedDto> responseList = new ArrayList<>();
-        solutions.forEach(solution -> {
-            responseList.add(buildSolutionResponseExtended(solution));
-        });
+        solutions.forEach(solution -> responseList.add(buildSolutionResponseExtended(solution)));
         return responseList;
     }
 
-    public List<SolutionResponseExtendedDto> getCheckedSolutionsByStudentExtended(int student_id) {
-        List<Solution> solutions = solutionRepository.getCheckedSolutionsByStudent(student_id);
+    public List<SolutionResponseExtendedDto> getCheckedSolutionsByStudentExtended(int studentId) {
+        List<Solution> solutions = solutionRepository.getCheckedSolutionsByStudent(studentId);
         List<SolutionResponseExtendedDto> responseList = new ArrayList<>();
-        solutions.forEach(solution -> {
-            responseList.add(buildSolutionResponseExtended(solution));
-        });
+        solutions.forEach(solution -> responseList.add(buildSolutionResponseExtended(solution)));
         return responseList;
     }
 
-    public List<SolutionResponseExtendedDto> getUncheckedSolutionsByStudentAndGroupExtended(int student_id, int group_id) {
-        List<Solution> solutions = solutionRepository.getUncheckedSolutionsByStudentAndGroup(student_id, group_id);
+    public List<SolutionResponseExtendedDto> getUncheckedSolutionsByStudentAndGroupExtended(int studentId, int groupId) {
+        List<Solution> solutions = solutionRepository.getUncheckedSolutionsByStudentAndGroup(studentId, groupId);
         List<SolutionResponseExtendedDto> responseList = new ArrayList<>();
-        solutions.forEach(solution -> {
-            responseList.add(buildSolutionResponseExtended(solution));
-        });
+        solutions.forEach(solution -> responseList.add(buildSolutionResponseExtended(solution)));
         return responseList;
     }
 
-    public List<SolutionResponseExtendedDto> getCheckedSolutionsByStudentAndGroupExtended(int student_id, int group_id) {
-        List<Solution> solutions = solutionRepository.getCheckedSolutionsByStudentAndGroup(student_id, group_id);
+    public List<SolutionResponseExtendedDto> getCheckedSolutionsByStudentAndGroupExtended(int studentId, int groupId) {
+        List<Solution> solutions = solutionRepository.getCheckedSolutionsByStudentAndGroup(studentId, groupId);
         List<SolutionResponseExtendedDto> responseList = new ArrayList<>();
-        solutions.forEach(solution -> {
-            responseList.add(buildSolutionResponseExtended(solution));
-        });
+        solutions.forEach(solution -> responseList.add(buildSolutionResponseExtended(solution)));
         return responseList;
     }
 
-    public List<SolutionResponseExtendedDto> getUncheckedSolutionsByAssignmentExtended(int assignment_id) {
-        List<Solution> solutions = solutionRepository.getUncheckedSolutionsByAssignment(assignment_id);
+    public List<SolutionResponseExtendedDto> getUncheckedSolutionsByAssignmentExtended(int assignmentId) {
+        List<Solution> solutions = solutionRepository.getUncheckedSolutionsByAssignment(assignmentId);
         List<SolutionResponseExtendedDto> responseList = new ArrayList<>();
-        solutions.forEach(solution -> {
-            responseList.add(buildSolutionResponseExtended(solution));
-        });
+        solutions.forEach(solution -> responseList.add(buildSolutionResponseExtended(solution)));
         return responseList;
     }
 
-    public List<SolutionResponseExtendedDto> getCheckedSolutionsByAssignmentExtended(int assignment_id) {
-        List<Solution> solutions = solutionRepository.getCheckedSolutionsByAssignment(assignment_id);
+    public List<SolutionResponseExtendedDto> getCheckedSolutionsByAssignmentExtended(int assignmentId) {
+        List<Solution> solutions = solutionRepository.getCheckedSolutionsByAssignment(assignmentId);
         List<SolutionResponseExtendedDto> responseList = new ArrayList<>();
-        solutions.forEach(solution -> {
-            responseList.add(buildSolutionResponseExtended(solution));
-        });
+        solutions.forEach(solution -> responseList.add(buildSolutionResponseExtended(solution)));
         return responseList;
     }
 
-    public List<SolutionResponseExtendedDto> getUncheckedSolutionsByTeacherExtended(int teacher_id) {
-        List<Solution> solutions = solutionRepository.getUncheckedSolutionsByTeacher(teacher_id);
+    public List<SolutionResponseExtendedDto> getUncheckedSolutionsByTeacherExtended(int teacherId) {
+        List<Solution> solutions = solutionRepository.getUncheckedSolutionsByTeacher(teacherId);
         List<SolutionResponseExtendedDto> responseList = new ArrayList<>();
-        solutions.forEach(solution -> {
-            responseList.add(buildSolutionResponseExtended(solution));
-        });
+        solutions.forEach(solution -> responseList.add(buildSolutionResponseExtended(solution)));
         return responseList;
     }
 
-    public List<SolutionResponseExtendedDto> getCheckedSolutionsByTeacherExtended(int teacher_id) {
-        List<Solution> solutions = solutionRepository.getCheckedSolutionsByTeacher(teacher_id);
+    public List<SolutionResponseExtendedDto> getCheckedSolutionsByTeacherExtended(int teacherId) {
+        List<Solution> solutions = solutionRepository.getCheckedSolutionsByTeacher(teacherId);
         List<SolutionResponseExtendedDto> responseList = new ArrayList<>();
-        solutions.forEach(solution -> {
-            responseList.add(buildSolutionResponseExtended(solution));
-        });
+        solutions.forEach(solution -> responseList.add(buildSolutionResponseExtended(solution)));
         return responseList;
     }
 
@@ -585,38 +529,22 @@ public class SolutionService {
                 .build();
     }
 
-    public boolean checkForEvaluationToSolution(int solution_id) {
-        return solutionRepository.checkForEvaluationToSolution(solution_id) != 0;
+    public boolean checkForEvaluationToSolution(int solutionId) {
+        return solutionRepository.checkForEvaluationToSolution(solutionId) != 0;
     }
 
-    public boolean checkForFileToSolution(int solution_id) {
-        Optional<Solution> solutionOptional = solutionRepository.findById(solution_id);
+    public boolean checkForFileToSolution(int solutionId) {
+        Optional<Solution> solutionOptional = solutionRepository.findById(solutionId);
         if (solutionOptional.isPresent()) {
             Solution solution = solutionOptional.get();
             return !solution.getFiles().isEmpty();
         } else return false;
     }
 
-    public SolutionResponseDto getCheckedSolutionByUserAssignmentGroup(int user_id, int group_id, int assignment_id) {
-        if(assignmentRepository.findById(assignment_id).isPresent() && groupRepository.findById(group_id).isPresent() && userRepository.findById(user_id).isPresent()){
-            Optional<Solution> solution = solutionRepository.getCheckedSolutionByUserAssignmentGroup(assignment_id, user_id, group_id);
-            if (solution.isPresent()){
-                return buildSolutionResponse(solution.get());
-            }
-            else{
-                return SolutionResponseDto.builder().build();
-            }
-        }
-        else{
-            return SolutionResponseDto.builder().forbidden(true).build();
-        }
-
-    }
-
-    public SolutionResponseDto getUncheckedSolutionByUserAssignmentGroup(int user_id, int group_id, int assignment_id) {
-        if(assignmentRepository.findById(assignment_id).isPresent() && groupRepository.findById(group_id).isPresent() && userRepository.findById(user_id).isPresent()){
-            Optional<Solution> solution = solutionRepository.getUncheckedSolutionByUserAssignmentGroup(assignment_id, user_id, group_id);
-            if (solution.isPresent()){
+    public SolutionResponseDto getCheckedSolutionByUserAssignmentGroup(int userId, int groupId, int assignmentId) {
+        if (assignmentRepository.findById(assignmentId).isPresent() && groupRepository.findById(groupId).isPresent() && userRepository.findById(userId).isPresent()) {
+            Optional<Solution> solution = solutionRepository.getCheckedSolutionByUserAssignmentGroup(assignmentId, userId, groupId);
+            if (solution.isPresent()) {
                 return buildSolutionResponse(solution.get());
             } else {
                 return SolutionResponseDto.builder().build();
@@ -627,9 +555,23 @@ public class SolutionService {
 
     }
 
-    public List<SolutionResponseCalendarDto> getSolutionsByTeacherCalender(int teacher_id) {
-        List<Solution> checkedSolutionsList = solutionRepository.getCheckedSolutionsByTeacher(teacher_id);
-        List<Solution> uncheckedSolutionsList = solutionRepository.getUncheckedSolutionsByTeacher(teacher_id);
+    public SolutionResponseDto getUncheckedSolutionByUserAssignmentGroup(int userId, int groupId, int assignmentId) {
+        if (assignmentRepository.findById(assignmentId).isPresent() && groupRepository.findById(groupId).isPresent() && userRepository.findById(userId).isPresent()) {
+            Optional<Solution> solution = solutionRepository.getUncheckedSolutionByUserAssignmentGroup(assignmentId, userId, groupId);
+            if (solution.isPresent()) {
+                return buildSolutionResponse(solution.get());
+            } else {
+                return SolutionResponseDto.builder().build();
+            }
+        } else {
+            return SolutionResponseDto.builder().forbidden(true).build();
+        }
+
+    }
+
+    public List<SolutionResponseCalendarDto> getSolutionsByTeacherCalender(int teacherId) {
+        List<Solution> checkedSolutionsList = solutionRepository.getCheckedSolutionsByTeacher(teacherId);
+        List<Solution> uncheckedSolutionsList = solutionRepository.getUncheckedSolutionsByTeacher(teacherId);
         List<Solution> expiredUncheckedSolutionsList = new ArrayList<>();
         List<Solution> nonExpiredUncheckedSolutionsList = new ArrayList<>();
         for (Solution solution : uncheckedSolutionsList) {
@@ -651,10 +593,6 @@ public class SolutionService {
         }
         response.sort(Comparator.comparing(SolutionResponseCalendarDto::getCreationDateTime));
         return response;
-    }
-
-    public Optional<Solution> getSolutionByEvaluationId(Integer evaluationId) {
-        return solutionRepository.getSolutionByEvaluationId(evaluationId);
     }
 
     public Boolean checkIfSolutionWasLate(Solution solution) {

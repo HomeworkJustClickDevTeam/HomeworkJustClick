@@ -95,11 +95,11 @@ public class UserService {
         }
     }
 
-    public List<User> getTeachersByGroup(int group_id) {
-        return userRepository.getTeachersByGroupId(group_id);
+    public List<User> getTeachersByGroup(int groupId) {
+        return userRepository.getTeachersByGroupId(groupId);
     }
 
-    public List<User> getStudentsByGroup(int group_id) {
-        return userRepository.getStudentsByGroupId(group_id);
+    public List<User> getStudentsByGroup(int groupId) {
+        return userRepository.getStudentsByGroupId(groupId);
     }
 }
