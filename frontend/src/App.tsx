@@ -32,86 +32,91 @@ import {ReportPage} from "./components/report/ReportPage";
 import {EvaluationsStudentPage} from "./components/evaluation/EvaluationsStudentPage";
 
 function App() {
-  return (
-    <Routes>
-      <Route element={<LoggedOutUserRoute/>}>
-        <Route
-          path="/home"
-          element={<HomeGuestPage/>}
-        />
-        <Route path="/login" element={<LoginPage/>}/>
-        <Route path="/register" element={<RegisterPage/>}/>
-      </Route>
-      <Route element={<LoggedInUserRoute/>}>
-        <Route
-          path="/"
-          element={<HomePage/>}
-        />
-        <Route
-          path="/:id/assignments"
-          element={<AssignmentsStudentDisplayedPage allAssignments={true}/>}
-        />
-        <Route path="/settings" element={<UserSettingsPage/>}/>
-        <Route path="/create/group" element={<GroupCreatePage/>}/>
-        <Route path="/group/:idGroup" element={<GroupPage/>}>
-          <Route path="settings" element={<GroupSettingsPage/>}/>
-          <Route path="users" element={<GroupUsersPage/>}/>
-          <Route
-            path="userProfileInGroup/:userProfileId"
-            element={<GroupUserProfilePage/>}
-          />
-          <Route
-            path="assignments"
-            element={<RoleBasedRoute renderForStudent={<AssignmentsStudentDisplayedPage allAssignments={false}/>} renderForTeacher={<AssignmentsGroupTeacherDisplayedPage/>}/>}
-          />
-          <Route
-            path="assignments/done"
-            element={<AssignmentsTypesPage type={"done" as AssignmentsType}/>}
-          />
-          <Route
-            path="assignments/expired"
-            element={<AssignmentsTypesPage type={"expiredUndone" as AssignmentsType}/>}
-          />
-          <Route
-            path="assignments/todo"
-            element={<AssignmentsTypesPage type={"undone" as AssignmentsType}/>}
-          />
-          <Route path="assignments/add" element={<AssignmentAddSettingsPageWrapper/>}/>
-          <Route
-            path="assignment/:idAssignment"
-            element={<AssignmentSpecPage/>}
-          />
-          <Route
-            path="solution/:idUser/:idAssignment"
-            element={<SolutionPage/>}/>
-          <Route
-            path="solutions/uncheck"
-            element={<SolutionsTypesPage type={"unchecked" as ExtendedSolutionType}/>}
-          />
-          <Route
-            path="solutions/late"
-            element={<SolutionsTypesPage type={"late" as ExtendedSolutionType}/>}
-          />
-          <Route
-            path="solutions/check"
-            element={<SolutionsTypesPage type={"checked" as ExtendedSolutionType}/>}
-          />
-          <Route
-           path="report"
-           element={<ReportPage/>}
-          />
-          <Route
-            path="evaluations"
-            element={<EvaluationsStudentPage/>}
-          />
+    return (
+        <Routes>
+            <Route element={<LoggedOutUserRoute/>}>
+                <Route
+                    path="/home"
+                    element={<HomeGuestPage/>}
+                />
+                <Route path="/login" element={<LoginPage/>}/>
+                <Route path="/register" element={<RegisterPage/>}/>
+            </Route>
+            <Route element={<LoggedInUserRoute/>}>
+                <Route
+                    path="/"
+                    element={<HomePage/>}
+                />
+                <Route
+                    path="/:id/assignments"
+                    element={<AssignmentsStudentDisplayedPage allAssignments={true}/>}
+                />
+                <Route path="/settings" element={<UserSettingsPage/>}/>
+                <Route path="/create/group" element={<GroupCreatePage/>}/>
+                <Route path="/group/:idGroup" element={<GroupPage/>}>
+                    <Route path="settings" element={<GroupSettingsPage/>}/>
+                    <Route path="users" element={<GroupUsersPage/>}/>
+                    <Route
+                        path="userProfileInGroup/:userProfileId"
+                        element={<GroupUserProfilePage/>}
+                    />
+                    <Route
+                        path="assignments"
+                        element={<RoleBasedRoute
+                            renderForStudent={<AssignmentsStudentDisplayedPage allAssignments={false}/>}
+                            renderForTeacher={<AssignmentsGroupTeacherDisplayedPage/>}/>}
+                    />
+                    <Route
+                        path="assignments/done"
+                        element={<AssignmentsTypesPage type={"done" as AssignmentsType}/>}
+                    />
+                    <Route
+                        path="assignments/expired"
+                        element={<AssignmentsTypesPage type={"expiredUndone" as AssignmentsType}/>}
+                    />
+                    <Route
+                        path="assignments/todo"
+                        element={<AssignmentsTypesPage type={"undone" as AssignmentsType}/>}
+                    />
+                    <Route path="assignments/add" element={<AssignmentAddSettingsPageWrapper/>}/>
+                    <Route
+                        path="assignment/:idAssignment"
+                        element={<AssignmentSpecPage/>}
+                    />
+                    <Route
+                        path="solution/:idUser/:idAssignment"
+                        element={<SolutionPage/>}/>
+                    <Route
+                        path="solutions/uncheck"
+                        element={<SolutionsTypesPage type={ExtendedSolutionType.checked}/>}
+                    />
+                    <Route
+                        path="solutions/late"
+                        element={<SolutionsTypesPage type={ExtendedSolutionType.checked}/>}
+                    />
+                    <Route
+                        path="solutions/check"
+                        element={<SolutionsTypesPage type={ExtendedSolutionType.checked}/>}
+                    />
+                    <Route path="evaluation/reported"
+                           element={<EvaluationReportedPage/>}/>
+                    <Route
+                        path="report"
+                        element={<ReportPage/>}
+                    />
+                    <Route
+                        path="evaluations"
+                        element={<EvaluationsStudentPage/>}
+                    />
 
-        </Route>
-        <Route path="/group/:idGroup/advancedAssignment" element={
-          <RoleBasedRoute renderForStudent={<SolutionCheckedAdvancedPage/>} renderForTeacher={<AdvancedEvaluationPage/>}/>}/>
-      </Route>
-      <Route path="*" element={<NotFoundPage/>}/>
-    </Routes>
-  )
+                </Route>
+                <Route path="/group/:idGroup/advancedAssignment" element={
+                    <RoleBasedRoute renderForStudent={<SolutionCheckedAdvancedPage/>}
+                                    renderForTeacher={<AdvancedEvaluationPage/>}/>}/>
+            </Route>
+            <Route path="*" element={<NotFoundPage/>}/>
+        </Routes>
+    )
 }
 
 export default App
