@@ -13,6 +13,7 @@ module.exports = {
             'light_gray': '#9ca3af',
             'lilly-bg': 'rgba(109, 141, 255, 0.12)',
             'berry_red': '#990000',
+            'dark_grey' : '#504F51',
             'scarlet': '#FF2400',
             black: colors.black,
             current: 'currentColor',
