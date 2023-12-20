@@ -8,6 +8,7 @@ import {GroupInterface} from "../../types/GroupInterface";
 import {useNavigate} from "react-router-dom";
 import {AssignmentAddFile} from "./AssignmentAddFile";
 import {CommentInterface} from "../../types/CommentInterface";
+import {setHours, setMinutes} from "date-fns";
 
 interface AssignmentSettingsPagePropsInterface{
   handleSubmit: (event: React.FormEvent) => void,
@@ -159,6 +160,9 @@ export const AssignmentSettingsPage = ({handleSubmit,
                 onChange={handleDateChange}
                 showTimeSelect
                 timeFormat="HH:mm"
+                minDate={new Date()}
+                minTime={new Date()}
+                maxTime={setHours(setMinutes(new Date(), 59), 23)}
                 timeIntervals={15}
                 dateFormat="yyyy-MM-dd HH:mm"
                 className="pl-1 ml-2 border-b-2 border-b-light_gray w-36 cursor-pointer"
