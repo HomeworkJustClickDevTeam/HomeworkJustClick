@@ -111,7 +111,7 @@ function SolutionAddPage({assignment}: AssignmentPropsInterface) {
                 <span className="font-semibold">Data ukończenia: </span>
                 {format(new Date(assignment.completionDatetime.toString()), "dd.MM.yyyy, HH:mm")}
             </div>
-            {fileFromDb !== undefined && <AssignmentFile assignmentId={assignment.id}/>}
+            {fileFromDb !== undefined && <>Plik do zadania:<AssignmentFile assignmentId={assignment.id}/></>}
             <label>
                 Moje rozwiązania:
                 <input name="file" type="file" className='pl-2' onChange={(e) => handleChangeFile(e)}/>

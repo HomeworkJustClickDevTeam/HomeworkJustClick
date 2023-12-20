@@ -180,7 +180,7 @@ export const AssignmentSettingsPage = ({handleSubmit,
               Zapisz
             </button>
           </form>
-          <p className="mt-4 mb-2">Dodaj pliki: </p>
+          <p className="mt-4 mb-2">Nowy plik: </p>
           {(assignment as AssignmentInterface).id !== undefined && newAssignmentId === undefined ?
           <AssignmentModifyFile
             toSend={toSend}
