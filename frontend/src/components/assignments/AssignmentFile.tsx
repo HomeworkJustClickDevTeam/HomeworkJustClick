@@ -14,11 +14,11 @@ export function AssignmentFile(props: { assignmentId: number }) {
     }
   }
   return (
-    <>
+    <div>
       {file!==undefined &&
       <button key={file.name} onClick={handleDownload}>
         {file.name}
       </button>}
-    </>
+    </div>
   )
 }

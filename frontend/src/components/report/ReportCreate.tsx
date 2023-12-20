@@ -21,8 +21,10 @@ import * as fs from "fs";
 import * as domain from "domain";
 
 
-export const ReportCreate = ({reportedObject, csvVersion
-}:{reportedObject: GroupInterface|AssignmentInterface, csvVersion: boolean}) =>{
+export const ReportCreate = ({reportedObject, csvVersion, closeReportCreator}:
+                               {reportedObject: GroupInterface|AssignmentInterface,
+                                csvVersion: boolean,
+                                closeReportCreator: ()=>void}) =>{
   const [reportCreate, setReportCreate] = useState<AssignmentCreateReportModel|GroupCreateReportModel|undefined>(undefined)
   const navigate = useNavigate()
   const group = useAppSelector(selectGroup)
@@ -169,7 +171,7 @@ export const ReportCreate = ({reportedObject, csvVersion
             </fieldset>}
         <div className='flex justify-between pr-4 mb-2 '>
           <button className='bg-main_blue text-white rounded-md text-sm p-1 px-2' type={"submit"}>Utwórz</button>
-          <button type={'reset'} className='bg-berry_red text-white rounded-md text-sm p-1 w-8'>X</button>
+          <button type={'button'} onClick={() => closeReportCreator()} className='bg-berry_red text-white rounded-md text-sm p-1 w-8'>X</button>
         </div>
       </form>
     </div>

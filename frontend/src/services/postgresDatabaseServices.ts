@@ -307,6 +307,14 @@ export const getExtendedSolutionsLateByGroupPostgresService = async (
     )
 }
 
+export const getSolutionsLateByGroupPostgresService = async (
+  groupId: string
+) => {
+    return await postgresqlDatabaseJSON.get(
+      `/solutions/lateByGroup/${groupId}`
+    )
+}
+
 export const getExtendedSolutionsUncheckedByGroupPostgresService = async (
     groupId: string
 ) => {
@@ -315,11 +323,27 @@ export const getExtendedSolutionsUncheckedByGroupPostgresService = async (
     )
 }
 
+export const getSolutionsUncheckedByGroupPostgresService = async (
+  groupId: string
+) => {
+    return await postgresqlDatabaseJSON.get(
+      `/solutions/uncheckedByGroup/${groupId}`
+    )
+}
+
 export const getExtendedSolutionsCheckedByGroupPostgresService = async (
     groupId: string
 ) => {
     return await postgresqlDatabaseJSON.get(
         `/extended/solutions/checkedByGroup/${groupId}`
+    )
+}
+
+export const getSolutionsCheckedByGroupPostgresService = async (
+  groupId: string
+) => {
+    return await postgresqlDatabaseJSON.get(
+      `/solutions/checkedByGroup/${groupId}`
     )
 }
 

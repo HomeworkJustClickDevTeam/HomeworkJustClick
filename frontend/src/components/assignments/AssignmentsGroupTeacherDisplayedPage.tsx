@@ -53,7 +53,7 @@ function AssignmentsGroupTeacherDisplayedPage() {
             ))}
         </ul>
         <div className='absolute right-0 top-[20px] bg-white'>
-          {chosenObjectsReport && <ReportCreate csvVersion={false} reportedObject={chosenObjectsReport}/>}
+          {chosenObjectsReport && <ReportCreate closeReportCreator={()=> setChosenObjectsReport(undefined)} csvVersion={false} reportedObject={chosenObjectsReport}/>}
         </div>
       </div>
 

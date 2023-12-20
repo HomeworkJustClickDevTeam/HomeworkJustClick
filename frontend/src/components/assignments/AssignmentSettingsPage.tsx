@@ -8,6 +8,7 @@ import {GroupInterface} from "../../types/GroupInterface";
 import {useNavigate} from "react-router-dom";
 import {AssignmentAddFile} from "./AssignmentAddFile";
 import {CommentInterface} from "../../types/CommentInterface";
+import {setHours, setMinutes} from "date-fns";
 
 interface AssignmentSettingsPagePropsInterface{
   handleSubmit: (event: React.FormEvent) => void,
@@ -159,6 +160,9 @@ export const AssignmentSettingsPage = ({handleSubmit,
                 onChange={handleDateChange}
                 showTimeSelect
                 timeFormat="HH:mm"
+                minDate={new Date()}
+                minTime={new Date()}
+                maxTime={setHours(setMinutes(new Date(), 59), 23)}
                 timeIntervals={15}
                 dateFormat="yyyy-MM-dd HH:mm"
                 className="pl-1 ml-2 border-b-2 border-b-light_gray w-36 cursor-pointer"
@@ -180,7 +184,7 @@ export const AssignmentSettingsPage = ({handleSubmit,
               Zapisz
             </button>
           </form>
-          <p className="mt-4 mb-2">Dodaj pliki: </p>
+          <p className="mt-4 mb-2">Nowy plik: </p>
           {(assignment as AssignmentInterface).id !== undefined && newAssignmentId === undefined ?
           <AssignmentModifyFile
             toSend={toSend}

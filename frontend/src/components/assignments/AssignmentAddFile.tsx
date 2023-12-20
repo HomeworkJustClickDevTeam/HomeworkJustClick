@@ -33,9 +33,8 @@ export function AssignmentAddFile(props: AssignmentAddFilePropsInterface) {
   }
 
   return (
-    <>
+    <div>
       <input type="file" onChange={handleChangeFile} />
-      <div> {file && `${file.name} - ${file.type}`}</div>{" "}
-    </>
+    </div>
   )
 }
