@@ -6,11 +6,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class FileResponseDto {
+public class FileResponseDto implements Serializable {
     @Schema(example = "0")
     private int id;
     @Schema(example = "Example file")
@@ -18,5 +20,5 @@ public class FileResponseDto {
     @Schema(example = ".txt")
     private String format;
     @Schema(example = "0")
-    private String mongo_id;
+    private String mongoId;
 }

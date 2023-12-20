@@ -1,7 +1,6 @@
 package pl.homeworkjustclick.evaluationreport;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -9,12 +8,10 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/evaluation_report")
@@ -35,7 +32,7 @@ public class EvaluationReportController {
 
     @GetMapping("byEvaluationId/{evaluationId}")
     @Operation(
-            summary = "Returns paged list of evaluationReports by evaluationId.",
+            summary = "Returns list of evaluationReports by evaluationId.",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -49,20 +46,15 @@ public class EvaluationReportController {
                             description = "Jwt token invalid",
                             content = @Content
                     )
-            },
-            parameters = {
-                    @Parameter(name = "page", example = "0", description = "default = 0"),
-                    @Parameter(name = "size", example = "20", description = "default = 10"),
-                    @Parameter(name = "sort", example = "comment,desc", description = "default = id,asc")
             }
     )
-    public EvaluationReportResponseDto getEvaluationReportByEvaluationId(@PathVariable Integer evaluationId, @Parameter(hidden = true) @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+    public EvaluationReportResponseDto getEvaluationReportByEvaluationId(@PathVariable Integer evaluationId) {
         return service.getEvaluationReportByEvaluationId(evaluationId);
     }
 
     @GetMapping("byTeacherId/{teacherId}")
     @Operation(
-            summary = "Returns paged list of evaluationReports by teacherId.",
+            summary = "Returns list of evaluationReports by teacherId.",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -76,20 +68,15 @@ public class EvaluationReportController {
                             description = "Jwt token invalid",
                             content = @Content
                     )
-            },
-            parameters = {
-                    @Parameter(name = "page", example = "0", description = "default = 0"),
-                    @Parameter(name = "size", example = "20", description = "default = 10"),
-                    @Parameter(name = "sort", example = "comment,desc", description = "default = id,asc")
             }
     )
-    public Slice<EvaluationReportResponseDto> getEvaluationReportByTeacherId(@PathVariable Integer teacherId, @Parameter(hidden = true) @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
-        return service.getEvaluationReportsByTeacherId(teacherId, pageable);
+    public List<EvaluationReportResponseDto> getEvaluationReportByTeacherId(@PathVariable Integer teacherId) {
+        return service.getEvaluationReportsByTeacherId(teacherId);
     }
 
     @GetMapping("byStudentId/{studentId}")
     @Operation(
-            summary = "Returns paged list of evaluationReports by studentId.",
+            summary = "Returns list of evaluationReports by studentId.",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -103,20 +90,15 @@ public class EvaluationReportController {
                             description = "Jwt token invalid",
                             content = @Content
                     )
-            },
-            parameters = {
-                    @Parameter(name = "page", example = "0", description = "default = 0"),
-                    @Parameter(name = "size", example = "20", description = "default = 10"),
-                    @Parameter(name = "sort", example = "comment,desc", description = "default = id,asc")
             }
     )
-    public Slice<EvaluationReportResponseDto> getEvaluationReportByStudentId(@PathVariable Integer studentId, @Parameter(hidden = true) @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
-        return service.getEvaluationReportsByStudentId(studentId, pageable);
+    public List<EvaluationReportResponseDto> getEvaluationReportByStudentId(@PathVariable Integer studentId) {
+        return service.getEvaluationReportsByStudentId(studentId);
     }
 
     @GetMapping("byGroupId/{groupId}")
     @Operation(
-            summary = "Returns paged list of evaluationReports by groupId.",
+            summary = "Returns list of evaluationReports by groupId.",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -130,20 +112,15 @@ public class EvaluationReportController {
                             description = "Jwt token invalid",
                             content = @Content
                     )
-            },
-            parameters = {
-                    @Parameter(name = "page", example = "0", description = "default = 0"),
-                    @Parameter(name = "size", example = "20", description = "default = 10"),
-                    @Parameter(name = "sort", example = "comment,desc", description = "default = id,asc")
             }
     )
-    public Slice<EvaluationReportResponseDto> getEvaluationReportByGroupId(@PathVariable Integer groupId, @Parameter(hidden = true) @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
-        return service.getEvaluationReportsByGroupId(groupId, pageable);
+    public List<EvaluationReportResponseDto> getEvaluationReportByGroupId(@PathVariable Integer groupId) {
+        return service.getEvaluationReportsByGroupId(groupId);
     }
 
     @GetMapping("byTeacherIdAndGroupId/{teacherId}/{groupId}")
     @Operation(
-            summary = "Returns paged list of evaluationReports by teacherId and groupId.",
+            summary = "Returns list of evaluationReports by teacherId and groupId.",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -157,20 +134,15 @@ public class EvaluationReportController {
                             description = "Jwt token invalid",
                             content = @Content
                     )
-            },
-            parameters = {
-                    @Parameter(name = "page", example = "0", description = "default = 0"),
-                    @Parameter(name = "size", example = "20", description = "default = 10"),
-                    @Parameter(name = "sort", example = "comment,desc", description = "default = id,asc")
             }
     )
-    public Slice<EvaluationReportResponseDto> getEvaluationReportByTeacherIdAndGroupId(@PathVariable Integer teacherId, @PathVariable Integer groupId, @Parameter(hidden = true) @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
-        return service.getEvaluationReportsByTeacherIdAndGroupId(teacherId, groupId, pageable);
+    public List<EvaluationReportResponseDto> getEvaluationReportByTeacherIdAndGroupId(@PathVariable Integer teacherId, @PathVariable Integer groupId) {
+        return service.getEvaluationReportsByTeacherIdAndGroupId(teacherId, groupId);
     }
 
     @GetMapping("byStudentIdAndGroupId/{studentId}/{groupId}")
     @Operation(
-            summary = "Returns paged list of evaluationReports by studentId and groupId.",
+            summary = "Returns list of evaluationReports by studentId and groupId.",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -184,15 +156,10 @@ public class EvaluationReportController {
                             description = "Jwt token invalid",
                             content = @Content
                     )
-            },
-            parameters = {
-                    @Parameter(name = "page", example = "0", description = "default = 0"),
-                    @Parameter(name = "size", example = "20", description = "default = 10"),
-                    @Parameter(name = "sort", example = "comment,desc", description = "default = id,asc")
             }
     )
-    public Slice<EvaluationReportResponseDto> getEvaluationReportByStudentIdAndGroupId(@PathVariable Integer studentId, @PathVariable Integer groupId, @Parameter(hidden = true) @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
-        return service.getEvaluationReportsByStudentIdAndGroupId(studentId, groupId, pageable);
+    public List<EvaluationReportResponseDto> getEvaluationReportByStudentIdAndGroupId(@PathVariable Integer studentId, @PathVariable Integer groupId) {
+        return service.getEvaluationReportsByStudentIdAndGroupId(studentId, groupId);
     }
 
     @PostMapping

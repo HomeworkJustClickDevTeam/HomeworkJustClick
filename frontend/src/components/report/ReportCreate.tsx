@@ -129,7 +129,7 @@ export const ReportCreate = ({reportedObject, csvVersion
           <br/>
           <div><span className='font-semibold mr-1'>Termin:</span> {format(new Date((reportedObject as AssignmentInterface).completionDatetime.toString()), "dd.MM.yyyy, HH:mm")}</div>
           <br/>
-          <div><span className='font-semibold mr-1'>Punkty do zdobycia:</span> {(reportedObject as AssignmentInterface).max_points}</div>
+          <div><span className='font-semibold mr-1'>Punkty do zdobycia:</span> {(reportedObject as AssignmentInterface).maxPoints}</div>
           <br/>
         </div>
           : <div><span className='font-semibold mr-1'>Nazwa grupy:</span> {(reportedObject as GroupInterface).name}</div>}

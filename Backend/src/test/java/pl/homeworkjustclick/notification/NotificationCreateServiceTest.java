@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         "classpath:db/init_assignment.sql",
         "classpath:db/init_solution.sql"
 })
-public class NotificationCreateServiceTest extends BaseTestEntity {
+class NotificationCreateServiceTest extends BaseTestEntity {
     @Autowired
     UserRepository userRepository;
     @Autowired
@@ -111,8 +111,8 @@ public class NotificationCreateServiceTest extends BaseTestEntity {
                 .completionDatetime(OffsetDateTime.now())
                 .title("test")
                 .visible(true)
-                .max_points(100)
-                .auto_penalty(0)
+                .maxPoints(100)
+                .autoPenalty(0)
                 .build();
     }
 }

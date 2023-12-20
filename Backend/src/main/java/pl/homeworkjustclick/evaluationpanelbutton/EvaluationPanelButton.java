@@ -6,6 +6,8 @@ import lombok.*;
 import pl.homeworkjustclick.evaluationbutton.EvaluationButton;
 import pl.homeworkjustclick.evaluationpanel.EvaluationPanel;
 
+import java.io.Serializable;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -14,7 +16,7 @@ import pl.homeworkjustclick.evaluationpanel.EvaluationPanel;
 @Table(name = "_evaluation_panel_button")
 @Getter
 @Setter
-public class EvaluationPanelButton {
+public class EvaluationPanelButton implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)

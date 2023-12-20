@@ -12,14 +12,14 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class AuthenticationControllerTest extends BaseTestEntity {
+class AuthenticationControllerTest extends BaseTestEntity {
 
     @Autowired
     UserRepository userRepository;
 
 
     @Test
-    public void shouldRegisterUser() throws Exception {
+    void shouldRegisterUser() throws Exception {
         var registerRequest = RegisterRequest.builder()
                 .email("test@test.pl")
                 .firstname("test")

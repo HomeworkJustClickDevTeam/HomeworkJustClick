@@ -75,7 +75,7 @@ public class SolutionController {
         return responseList;
     }
 
-    @GetMapping("/solution/{solution_id}")
+    @GetMapping("/solution/{solutionId}")
     @Operation(
             summary = "Returns solution by it's id.",
             responses = {
@@ -97,7 +97,7 @@ public class SolutionController {
                     )
             }
     )
-    public ResponseEntity<SolutionResponseDto> getById(@PathVariable("solution_id") int id) {
+    public ResponseEntity<SolutionResponseDto> getById(@PathVariable("solutionId") int id) {
         SolutionResponseDto solution = solutionService.getById(id);
         if (solution != null) {
             return new ResponseEntity<>(solution, HttpStatus.OK);
@@ -106,7 +106,7 @@ public class SolutionController {
         }
     }
 
-    @GetMapping("/extended/solution/{solution_id}")
+    @GetMapping("/extended/solution/{solutionId}")
     @Operation(
             summary = "Returns solution by it's id.",
             responses = {
@@ -128,7 +128,7 @@ public class SolutionController {
                     )
             }
     )
-    public ResponseEntity<SolutionResponseExtendedDto> getByIdExtended(@PathVariable("solution_id") int id) {
+    public ResponseEntity<SolutionResponseExtendedDto> getByIdExtended(@PathVariable("solutionId") int id) {
         SolutionResponseExtendedDto solution = solutionService.getByIdExtended(id);
         if (solution != null) {
             return new ResponseEntity<>(solution, HttpStatus.OK);
@@ -144,7 +144,7 @@ public class SolutionController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/solution/{solution_id}")
+    @DeleteMapping("/solution/{solutionId}")
     @Operation(
             summary = "Deletes solution with given id.",
             responses = {
@@ -156,11 +156,11 @@ public class SolutionController {
             }
     )
 
-    public void delete(@PathVariable("solution_id") int id) {
+    public void delete(@PathVariable("solutionId") int id) {
         solutionService.delete(id);
     }
 
-    @PostMapping("/solution/withUserAndAssignment/{user_id}/{assignment_id}")
+    @PostMapping("/solution/withUserAndAssignment/{userId}/{assignmentId}")
     @Operation(
             summary = "Creates solution with user and assignment already attached to it.",
             responses = {
@@ -192,9 +192,9 @@ public class SolutionController {
     )
     public ResponseEntity<SolutionResponseDto> addWithUserAndAssignment(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Fields: 'creationDatetime', 'lastModifiedDatetime', 'id' can not be changed manually but are needed in JSON. 'lastModifiedDatetime' updates by itself when the solution object changes. 'creationDatetime' is unchangeable.")
-            @RequestBody Solution solution, @PathVariable("user_id") int user_id, @PathVariable("assignment_id") int assignment_id) {
-        SolutionResponseDto response = solutionService.addWithUserAndAssignment(solution, user_id, assignment_id);
-        if(response.getId()!=0) {
+            @RequestBody Solution solution, @PathVariable("userId") int userId, @PathVariable("assignmentId") int assignmentId) {
+        SolutionResponseDto response = solutionService.addWithUserAndAssignment(solution, userId, assignmentId);
+        if (response.getId() != 0) {
             return new ResponseEntity<>(response, HttpStatus.OK);
         } else if (response.isForbidden()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -203,7 +203,7 @@ public class SolutionController {
         }
     }
 
-    @PutMapping("/solution/user/{user_id}/{solution_id}")
+    @PutMapping("/solution/user/{userId}/{solutionId}")
     @Operation(
             summary = "Changes user associated with solution.",
             responses = {
@@ -214,15 +214,15 @@ public class SolutionController {
                     )
             }
     )
-    public ResponseEntity<Void> updateUser(@PathVariable("user_id") int userId, @PathVariable("solution_id") int id){
-        if(solutionService.changeUserById(id, userId)){
+    public ResponseEntity<Void> updateUser(@PathVariable("userId") int userId, @PathVariable("solutionId") int id) {
+        if (solutionService.changeUserById(id, userId).equals(Boolean.TRUE)) {
             return new ResponseEntity<>(HttpStatus.OK);
-        }
-        else {
+        } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-    @PutMapping("/solution/assignment/{assignment_id}/{solution_id}")
+
+    @PutMapping("/solution/assignment/{assignmentId}/{solutionId}")
     @Operation(
             summary = "Changes assignment associated with solution.",
             responses = {
@@ -233,11 +233,10 @@ public class SolutionController {
                     )
             }
     )
-    public ResponseEntity<Void> updateAssignment(@PathVariable("assignment_id") int assignmentId, @PathVariable("solution_id") int id){
-        if(solutionService.changeAssignmentById(id, assignmentId)){
+    public ResponseEntity<Void> updateAssignment(@PathVariable("assignmentId") int assignmentId, @PathVariable("solutionId") int id) {
+        if (solutionService.changeAssignmentById(id, assignmentId).equals(Boolean.TRUE)) {
             return new ResponseEntity<>(HttpStatus.OK);
-        }
-        else {
+        } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
@@ -263,12 +262,11 @@ public class SolutionController {
                     )
             }
     )
-    @GetMapping("/solutions/byGroup/{group_id}")
-    public ResponseEntity<List<SolutionResponseDto>> getSolutionsByGroupId(@PathVariable("group_id") int id) {
-        if(solutionService.getSolutionsByGroupId(id).isEmpty()){
+    @GetMapping("/solutions/byGroup/{groupId}")
+    public ResponseEntity<List<SolutionResponseDto>> getSolutionsByGroupId(@PathVariable("groupId") int id) {
+        if (solutionService.getSolutionsByGroupId(id).isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        else {
+        } else {
             List<SolutionResponseDto> responseList = solutionService.getSolutionsByGroupId(id);
             responseList.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
             return new ResponseEntity<>(responseList, HttpStatus.OK);
@@ -296,12 +294,11 @@ public class SolutionController {
                     )
             }
     )
-    @GetMapping("/solutions/byAssignment/{assignment_id}")
-    public ResponseEntity<List<SolutionResponseDto>> getSolutionsByAssignmentId(@PathVariable("assignment_id") int id) {
-        if(solutionService.getSolutionsByAssignmentId(id).isEmpty()){
+    @GetMapping("/solutions/byAssignment/{assignmentId}")
+    public ResponseEntity<List<SolutionResponseDto>> getSolutionsByAssignmentId(@PathVariable("assignmentId") int id) {
+        if (solutionService.getSolutionsByAssignmentId(id).isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        else {
+        } else {
             List<SolutionResponseDto> responseList = solutionService.getSolutionsByAssignmentId(id);
             responseList.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
             return new ResponseEntity<>(responseList, HttpStatus.OK);
@@ -329,13 +326,12 @@ public class SolutionController {
                     )
             }
     )
-    @GetMapping("/solutions/lateByGroup/{group_id}")
-    public ResponseEntity<List<SolutionResponseDto>> getLateSolutionsByGroupId(@PathVariable("group_id") int group_id) {
-        if(solutionService.getLateSolutionsByGroup(group_id).isEmpty()){
+    @GetMapping("/solutions/lateByGroup/{groupId}")
+    public ResponseEntity<List<SolutionResponseDto>> getLateSolutionsByGroupId(@PathVariable("groupId") int groupId) {
+        if (solutionService.getLateSolutionsByGroup(groupId).isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        else {
-            List<SolutionResponseDto> responseList = solutionService.getLateSolutionsByGroup(group_id);
+        } else {
+            List<SolutionResponseDto> responseList = solutionService.getLateSolutionsByGroup(groupId);
             responseList.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
         }
@@ -362,13 +358,12 @@ public class SolutionController {
                     )
             }
     )
-    @GetMapping("/solutions/lateByGroupAndStudent/{group_id}/{student_id}")
-    public ResponseEntity<List<SolutionResponseDto>> getLateSolutionsByGroupIdAndStudentId(@PathVariable("group_id") int group_id, @PathVariable("student_id") int student_id) {
-        if(solutionService.getLateSolutionsByUserAndGroup(student_id, group_id).isEmpty()){
+    @GetMapping("/solutions/lateByGroupAndStudent/{groupId}/{studentId}")
+    public ResponseEntity<List<SolutionResponseDto>> getLateSolutionsByGroupIdAndStudentId(@PathVariable("groupId") int groupId, @PathVariable("studentId") int studentId) {
+        if (solutionService.getLateSolutionsByUserAndGroup(studentId, groupId).isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        else {
-            List<SolutionResponseDto> responseList = solutionService.getLateSolutionsByUserAndGroup(student_id, group_id);
+        } else {
+            List<SolutionResponseDto> responseList = solutionService.getLateSolutionsByUserAndGroup(studentId, groupId);
             responseList.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
@@ -395,13 +390,12 @@ public class SolutionController {
                     )
             }
     )
-    @GetMapping("/solutions/lateByAssignment/{assignment_id}")
-    public ResponseEntity<List<SolutionResponseDto>> getLateSolutionsByAssignmentId(@PathVariable("assignment_id") int assignment_id) {
-        if(solutionService.getLateSolutionsByAssignment(assignment_id).isEmpty()){
+    @GetMapping("/solutions/lateByAssignment/{assignmentId}")
+    public ResponseEntity<List<SolutionResponseDto>> getLateSolutionsByAssignmentId(@PathVariable("assignmentId") int assignmentId) {
+        if (solutionService.getLateSolutionsByAssignment(assignmentId).isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        else {
-            List<SolutionResponseDto> responseList = solutionService.getLateSolutionsByAssignment(assignment_id);
+        } else {
+            List<SolutionResponseDto> responseList = solutionService.getLateSolutionsByAssignment(assignmentId);
             responseList.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
@@ -428,19 +422,18 @@ public class SolutionController {
                     )
             }
     )
-    @GetMapping("/solutions/lateByStudent/{student_id}")
-    public ResponseEntity<List<SolutionResponseDto>> getLateSolutionsByStudentId(@PathVariable("student_id") int student_id) {
-        if(solutionService.getLateSolutionsByStudent(student_id).isEmpty()){
+    @GetMapping("/solutions/lateByStudent/{studentId}")
+    public ResponseEntity<List<SolutionResponseDto>> getLateSolutionsByStudentId(@PathVariable("studentId") int studentId) {
+        if (solutionService.getLateSolutionsByStudent(studentId).isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        else {
-            List<SolutionResponseDto> responseList = solutionService.getLateSolutionsByStudent(student_id);
+        } else {
+            List<SolutionResponseDto> responseList = solutionService.getLateSolutionsByStudent(studentId);
             responseList.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
 
-    @GetMapping("/solutions/uncheckedByGroup/{group_id}")
+    @GetMapping("/solutions/uncheckedByGroup/{groupId}")
     @Operation(
             summary = "Returns list of all unchecked solutions in the group.",
             responses = {
@@ -462,18 +455,17 @@ public class SolutionController {
                     )
             }
     )
-    ResponseEntity<List<SolutionResponseDto>> getUncheckedSolutionsByGroup(@PathVariable("group_id") int group_id) {
-        List<SolutionResponseDto> response = solutionService.getUncheckedSolutionsByGroup(group_id);
-        if(response.isEmpty()){
+    ResponseEntity<List<SolutionResponseDto>> getUncheckedSolutionsByGroup(@PathVariable("groupId") int groupId) {
+        List<SolutionResponseDto> response = solutionService.getUncheckedSolutionsByGroup(groupId);
+        if (response.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        else {
+        } else {
             response.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
 
-    @GetMapping("/solutions/uncheckedByStudent/{student_id}")
+    @GetMapping("/solutions/uncheckedByStudent/{studentId}")
     @Operation(
             summary = "Returns list of all unchecked solutions by a given student.",
             responses = {
@@ -495,18 +487,17 @@ public class SolutionController {
                     )
             }
     )
-    ResponseEntity<List<SolutionResponseDto>> getUncheckedSolutionsByStudent(@PathVariable("student_id") int student_id) {
-        List<SolutionResponseDto> response = solutionService.getUncheckedSolutionsByStudent(student_id);
-        if(response.isEmpty()){
+    ResponseEntity<List<SolutionResponseDto>> getUncheckedSolutionsByStudent(@PathVariable("studentId") int studentId) {
+        List<SolutionResponseDto> response = solutionService.getUncheckedSolutionsByStudent(studentId);
+        if (response.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        else {
+        } else {
             response.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
 
-    @GetMapping("/solutions/uncheckedByStudentAndGroup/{student_id}/{group_id}")
+    @GetMapping("/solutions/uncheckedByStudentAndGroup/{studentId}/{groupId}")
     @Operation(
             summary = "Returns list of all unchecked solutions by a given student in a group.",
             responses = {
@@ -528,18 +519,17 @@ public class SolutionController {
                     )
             }
     )
-    ResponseEntity<List<SolutionResponseDto>> getUncheckedSolutionsByStudentAndGroup(@PathVariable("student_id") int student_id, @PathVariable("group_id") int group_id) {
-        List<SolutionResponseDto> response = solutionService.getUncheckedSolutionsByStudentAndGroup(student_id, group_id);
-        if(response.isEmpty()){
+    ResponseEntity<List<SolutionResponseDto>> getUncheckedSolutionsByStudentAndGroup(@PathVariable("studentId") int studentId, @PathVariable("groupId") int groupId) {
+        List<SolutionResponseDto> response = solutionService.getUncheckedSolutionsByStudentAndGroup(studentId, groupId);
+        if (response.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        else {
+        } else {
             response.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
 
-    @GetMapping("/solutions/uncheckedByAssignment/{assignment_id}")
+    @GetMapping("/solutions/uncheckedByAssignment/{assignmentId}")
     @Operation(
             summary = "Returns list of all unchecked solutions for a given assignment.",
             responses = {
@@ -561,18 +551,17 @@ public class SolutionController {
                     )
             }
     )
-    ResponseEntity<List<SolutionResponseDto>> getUncheckedSolutionsByAssignment(@PathVariable("assignment_id") int assignment_id) {
-        List<SolutionResponseDto> response = solutionService.getUncheckedSolutionsByAssignment(assignment_id);
-        if(response.isEmpty()){
+    ResponseEntity<List<SolutionResponseDto>> getUncheckedSolutionsByAssignment(@PathVariable("assignmentId") int assignmentId) {
+        List<SolutionResponseDto> response = solutionService.getUncheckedSolutionsByAssignment(assignmentId);
+        if (response.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        else {
+        } else {
             response.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
 
-    @GetMapping("/solutions/uncheckedByTeacher/{teacher_id}")
+    @GetMapping("/solutions/uncheckedByTeacher/{teacherId}")
     @Operation(
             summary = "Returns list of all unchecked solutions by a given teacher.",
             responses = {
@@ -594,18 +583,17 @@ public class SolutionController {
                     )
             }
     )
-    ResponseEntity<List<SolutionResponseDto>> getUncheckedSolutionsByTeacher(@PathVariable("teacher_id") int teacher_id) {
-        List<SolutionResponseDto> response = solutionService.getUncheckedSolutionsByTeacher(teacher_id);
-        if(response.isEmpty()){
+    ResponseEntity<List<SolutionResponseDto>> getUncheckedSolutionsByTeacher(@PathVariable("teacherId") int teacherId) {
+        List<SolutionResponseDto> response = solutionService.getUncheckedSolutionsByTeacher(teacherId);
+        if (response.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        else {
+        } else {
             response.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
 
-    @GetMapping("/solutions/checkedByGroup/{group_id}")
+    @GetMapping("/solutions/checkedByGroup/{groupId}")
     @Operation(
             summary = "Returns list of all checked solutions in the group.",
             responses = {
@@ -627,18 +615,17 @@ public class SolutionController {
                     )
             }
     )
-    ResponseEntity<List<SolutionResponseDto>> getCheckedSolutionsByGroup(@PathVariable("group_id") int group_id) {
-        List<SolutionResponseDto> response = solutionService.getCheckedSolutionsByGroup(group_id);
-        if(response.isEmpty()){
+    ResponseEntity<List<SolutionResponseDto>> getCheckedSolutionsByGroup(@PathVariable("groupId") int groupId) {
+        List<SolutionResponseDto> response = solutionService.getCheckedSolutionsByGroup(groupId);
+        if (response.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        else {
+        } else {
             response.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
 
-    @GetMapping("/solutions/checkedByStudent/{student_id}")
+    @GetMapping("/solutions/checkedByStudent/{studentId}")
     @Operation(
             summary = "Returns list of all checked solutions by a given student.",
             responses = {
@@ -660,18 +647,17 @@ public class SolutionController {
                     )
             }
     )
-    ResponseEntity<List<SolutionResponseDto>> getCheckedSolutionsByStudent(@PathVariable("student_id") int student_id) {
-        List<SolutionResponseDto> response = solutionService.getCheckedSolutionsByStudent(student_id);
-        if(response.isEmpty()){
+    ResponseEntity<List<SolutionResponseDto>> getCheckedSolutionsByStudent(@PathVariable("studentId") int studentId) {
+        List<SolutionResponseDto> response = solutionService.getCheckedSolutionsByStudent(studentId);
+        if (response.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        else {
+        } else {
             response.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
 
-    @GetMapping("/solutions/checkedByStudentAndGroup/{student_id}/{group_id}")
+    @GetMapping("/solutions/checkedByStudentAndGroup/{studentId}/{groupId}")
     @Operation(
             summary = "Returns list of all checked solutions by a given student in a group.",
             responses = {
@@ -693,18 +679,17 @@ public class SolutionController {
                     )
             }
     )
-    ResponseEntity<List<SolutionResponseDto>> getCheckedSolutionsByStudentAndGroup(@PathVariable("student_id") int student_id, @PathVariable("group_id") int group_id) {
-        List<SolutionResponseDto> response = solutionService.getCheckedSolutionsByStudentAndGroup(student_id, group_id);
-        if(response.isEmpty()){
+    ResponseEntity<List<SolutionResponseDto>> getCheckedSolutionsByStudentAndGroup(@PathVariable("studentId") int studentId, @PathVariable("groupId") int groupId) {
+        List<SolutionResponseDto> response = solutionService.getCheckedSolutionsByStudentAndGroup(studentId, groupId);
+        if (response.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        else {
+        } else {
             response.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
 
-    @GetMapping("/solutions/checkedByAssignment/{assignment_id}")
+    @GetMapping("/solutions/checkedByAssignment/{assignmentId}")
     @Operation(
             summary = "Returns list of all checked solutions for a given assignment.",
             responses = {
@@ -726,18 +711,17 @@ public class SolutionController {
                     )
             }
     )
-    ResponseEntity<List<SolutionResponseDto>> getCheckedSolutionsByAssignment(@PathVariable("assignment_id") int assignment_id) {
-        List<SolutionResponseDto> response = solutionService.getCheckedSolutionsByAssignment(assignment_id);
-        if(response.isEmpty()){
+    ResponseEntity<List<SolutionResponseDto>> getCheckedSolutionsByAssignment(@PathVariable("assignmentId") int assignmentId) {
+        List<SolutionResponseDto> response = solutionService.getCheckedSolutionsByAssignment(assignmentId);
+        if (response.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        else {
+        } else {
             response.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
 
-    @GetMapping("/solutions/checkedByTeacher/{teacher_id}")
+    @GetMapping("/solutions/checkedByTeacher/{teacherId}")
     @Operation(
             summary = "Returns list of all checked solutions by a given teacher.",
             responses = {
@@ -759,12 +743,11 @@ public class SolutionController {
                     )
             }
     )
-    ResponseEntity<List<SolutionResponseDto>> getCheckedSolutionsByTeacher(@PathVariable("teacher_id") int teacher_id) {
-        List<SolutionResponseDto> response = solutionService.getCheckedSolutionsByTeacher(teacher_id);
-        if(response.isEmpty()){
+    ResponseEntity<List<SolutionResponseDto>> getCheckedSolutionsByTeacher(@PathVariable("teacherId") int teacherId) {
+        List<SolutionResponseDto> response = solutionService.getCheckedSolutionsByTeacher(teacherId);
+        if (response.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        else {
+        } else {
             response.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
@@ -791,12 +774,11 @@ public class SolutionController {
                     )
             }
     )
-    @GetMapping("/extended/solutions/byGroup/{group_id}")
-    public ResponseEntity<List<SolutionResponseExtendedDto>> getSolutionsByGroupIdExtended(@PathVariable("group_id") int id) {
-        if(solutionService.getSolutionsByGroupIdExtended(id).isEmpty()){
+    @GetMapping("/extended/solutions/byGroup/{groupId}")
+    public ResponseEntity<List<SolutionResponseExtendedDto>> getSolutionsByGroupIdExtended(@PathVariable("groupId") int id) {
+        if (solutionService.getSolutionsByGroupIdExtended(id).isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        else {
+        } else {
             List<SolutionResponseExtendedDto> responseList = solutionService.getSolutionsByGroupIdExtended(id);
             responseList.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
             return new ResponseEntity<>(responseList, HttpStatus.OK);
@@ -824,12 +806,11 @@ public class SolutionController {
                     )
             }
     )
-    @GetMapping("/extended/solutions/byAssignment/{assignment_id}")
-    public ResponseEntity<List<SolutionResponseExtendedDto>> getSolutionsByAssignmentIdExtended(@PathVariable("assignment_id") int id) {
-        if(solutionService.getSolutionsByAssignmentIdExtended(id).isEmpty()){
+    @GetMapping("/extended/solutions/byAssignment/{assignmentId}")
+    public ResponseEntity<List<SolutionResponseExtendedDto>> getSolutionsByAssignmentIdExtended(@PathVariable("assignmentId") int id) {
+        if (solutionService.getSolutionsByAssignmentIdExtended(id).isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        else {
+        } else {
             List<SolutionResponseExtendedDto> responseList = solutionService.getSolutionsByAssignmentIdExtended(id);
             responseList.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
             return new ResponseEntity<>(responseList, HttpStatus.OK);
@@ -857,13 +838,12 @@ public class SolutionController {
                     )
             }
     )
-    @GetMapping("/extended/solutions/lateByGroup/{group_id}")
-    public ResponseEntity<List<SolutionResponseExtendedDto>> getLateSolutionsByGroupIdExtended(@PathVariable("group_id") int group_id) {
-        if(solutionService.getLateSolutionsByGroupExtended(group_id).isEmpty()){
+    @GetMapping("/extended/solutions/lateByGroup/{groupId}")
+    public ResponseEntity<List<SolutionResponseExtendedDto>> getLateSolutionsByGroupIdExtended(@PathVariable("groupId") int groupId) {
+        if (solutionService.getLateSolutionsByGroupExtended(groupId).isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        else {
-            List<SolutionResponseExtendedDto> responseList = solutionService.getLateSolutionsByGroupExtended(group_id);
+        } else {
+            List<SolutionResponseExtendedDto> responseList = solutionService.getLateSolutionsByGroupExtended(groupId);
             responseList.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
         }
@@ -890,13 +870,12 @@ public class SolutionController {
                     )
             }
     )
-    @GetMapping("/extended/solutions/lateByGroupAndStudent/{group_id}/{student_id}")
-    public ResponseEntity<List<SolutionResponseExtendedDto>> getLateSolutionsByGroupIdAndStudentIdExtended(@PathVariable("group_id") int group_id, @PathVariable("student_id") int student_id) {
-        if(solutionService.getLateSolutionsByUserAndGroupExtended(student_id, group_id).isEmpty()){
+    @GetMapping("/extended/solutions/lateByGroupAndStudent/{groupId}/{studentId}")
+    public ResponseEntity<List<SolutionResponseExtendedDto>> getLateSolutionsByGroupIdAndStudentIdExtended(@PathVariable("groupId") int groupId, @PathVariable("studentId") int studentId) {
+        if (solutionService.getLateSolutionsByUserAndGroupExtended(studentId, groupId).isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        else {
-            List<SolutionResponseExtendedDto> responseList = solutionService.getLateSolutionsByUserAndGroupExtended(student_id, group_id);
+        } else {
+            List<SolutionResponseExtendedDto> responseList = solutionService.getLateSolutionsByUserAndGroupExtended(studentId, groupId);
             responseList.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
@@ -923,13 +902,12 @@ public class SolutionController {
                     )
             }
     )
-    @GetMapping("/extended/solutions/lateByAssignment/{assignment_id}")
-    public ResponseEntity<List<SolutionResponseExtendedDto>> getLateSolutionsByAssignmentIdExtended(@PathVariable("assignment_id") int assignment_id) {
-        if(solutionService.getLateSolutionsByAssignmentExtended(assignment_id).isEmpty()){
+    @GetMapping("/extended/solutions/lateByAssignment/{assignmentId}")
+    public ResponseEntity<List<SolutionResponseExtendedDto>> getLateSolutionsByAssignmentIdExtended(@PathVariable("assignmentId") int assignmentId) {
+        if (solutionService.getLateSolutionsByAssignmentExtended(assignmentId).isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        else {
-            List<SolutionResponseExtendedDto> responseList = solutionService.getLateSolutionsByAssignmentExtended(assignment_id);
+        } else {
+            List<SolutionResponseExtendedDto> responseList = solutionService.getLateSolutionsByAssignmentExtended(assignmentId);
             responseList.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
@@ -956,19 +934,18 @@ public class SolutionController {
                     )
             }
     )
-    @GetMapping("/extended/solutions/lateByStudent/{student_id}")
-    public ResponseEntity<List<SolutionResponseExtendedDto>> getLateSolutionsByStudentIdExtended(@PathVariable("student_id") int student_id) {
-        if(solutionService.getLateSolutionsByStudentExtended(student_id).isEmpty()){
+    @GetMapping("/extended/solutions/lateByStudent/{studentId}")
+    public ResponseEntity<List<SolutionResponseExtendedDto>> getLateSolutionsByStudentIdExtended(@PathVariable("studentId") int studentId) {
+        if (solutionService.getLateSolutionsByStudentExtended(studentId).isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        else {
-            List<SolutionResponseExtendedDto> responseList = solutionService.getLateSolutionsByStudentExtended(student_id);
+        } else {
+            List<SolutionResponseExtendedDto> responseList = solutionService.getLateSolutionsByStudentExtended(studentId);
             responseList.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
 
-    @GetMapping("/extended/solutions/uncheckedByGroup/{group_id}")
+    @GetMapping("/extended/solutions/uncheckedByGroup/{groupId}")
     @Operation(
             summary = "Returns list of all unchecked solutions in the group.",
             responses = {
@@ -990,18 +967,17 @@ public class SolutionController {
                     )
             }
     )
-    ResponseEntity<List<SolutionResponseExtendedDto>> getUncheckedSolutionsByGroupExtended(@PathVariable("group_id") int group_id) {
-        List<SolutionResponseExtendedDto> response = solutionService.getUncheckedSolutionsByGroupExtended(group_id);
-        if(response.isEmpty()){
+    ResponseEntity<List<SolutionResponseExtendedDto>> getUncheckedSolutionsByGroupExtended(@PathVariable("groupId") int groupId) {
+        List<SolutionResponseExtendedDto> response = solutionService.getUncheckedSolutionsByGroupExtended(groupId);
+        if (response.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        else {
+        } else {
             response.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
 
-    @GetMapping("/extended/solutions/uncheckedByStudent/{student_id}")
+    @GetMapping("/extended/solutions/uncheckedByStudent/{studentId}")
     @Operation(
             summary = "Returns list of all unchecked solutions by a given student.",
             responses = {
@@ -1023,18 +999,17 @@ public class SolutionController {
                     )
             }
     )
-    ResponseEntity<List<SolutionResponseExtendedDto>> getUncheckedSolutionsByStudentExtended(@PathVariable("student_id") int student_id) {
-        List<SolutionResponseExtendedDto> response = solutionService.getUncheckedSolutionsByStudentExtended(student_id);
-        if(response.isEmpty()){
+    ResponseEntity<List<SolutionResponseExtendedDto>> getUncheckedSolutionsByStudentExtended(@PathVariable("studentId") int studentId) {
+        List<SolutionResponseExtendedDto> response = solutionService.getUncheckedSolutionsByStudentExtended(studentId);
+        if (response.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        else {
+        } else {
             response.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
 
-    @GetMapping("/extended/solutions/uncheckedByStudentAndGroup/{student_id}/{group_id}")
+    @GetMapping("/extended/solutions/uncheckedByStudentAndGroup/{studentId}/{groupId}")
     @Operation(
             summary = "Returns list of all unchecked solutions by a given student in a group.",
             responses = {
@@ -1056,18 +1031,17 @@ public class SolutionController {
                     )
             }
     )
-    ResponseEntity<List<SolutionResponseExtendedDto>> getUncheckedSolutionsByStudentAndGroupExtended(@PathVariable("student_id") int student_id, @PathVariable("group_id") int group_id) {
-        List<SolutionResponseExtendedDto> response = solutionService.getUncheckedSolutionsByStudentAndGroupExtended(student_id, group_id);
-        if(response.isEmpty()){
+    ResponseEntity<List<SolutionResponseExtendedDto>> getUncheckedSolutionsByStudentAndGroupExtended(@PathVariable("studentId") int studentId, @PathVariable("groupId") int groupId) {
+        List<SolutionResponseExtendedDto> response = solutionService.getUncheckedSolutionsByStudentAndGroupExtended(studentId, groupId);
+        if (response.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        else {
+        } else {
             response.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
 
-    @GetMapping("/extended/solutions/uncheckedByAssignment/{assignment_id}")
+    @GetMapping("/extended/solutions/uncheckedByAssignment/{assignmentId}")
     @Operation(
             summary = "Returns list of all unchecked solutions for a given assignment.",
             responses = {
@@ -1089,18 +1063,17 @@ public class SolutionController {
                     )
             }
     )
-    ResponseEntity<List<SolutionResponseExtendedDto>> getUncheckedSolutionsByAssignmentExtended(@PathVariable("assignment_id") int assignment_id) {
-        List<SolutionResponseExtendedDto> response = solutionService.getUncheckedSolutionsByAssignmentExtended(assignment_id);
-        if(response.isEmpty()){
+    ResponseEntity<List<SolutionResponseExtendedDto>> getUncheckedSolutionsByAssignmentExtended(@PathVariable("assignmentId") int assignmentId) {
+        List<SolutionResponseExtendedDto> response = solutionService.getUncheckedSolutionsByAssignmentExtended(assignmentId);
+        if (response.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        else {
+        } else {
             response.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
 
-    @GetMapping("/extended/solutions/uncheckedByTeacher/{teacher_id}")
+    @GetMapping("/extended/solutions/uncheckedByTeacher/{teacherId}")
     @Operation(
             summary = "Returns list of all unchecked solutions by a given teacher.",
             responses = {
@@ -1122,18 +1095,17 @@ public class SolutionController {
                     )
             }
     )
-    ResponseEntity<List<SolutionResponseExtendedDto>> getUncheckedSolutionsByTeacherExtended(@PathVariable("teacher_id") int teacher_id) {
-        List<SolutionResponseExtendedDto> response = solutionService.getUncheckedSolutionsByTeacherExtended(teacher_id);
-        if(response.isEmpty()){
+    ResponseEntity<List<SolutionResponseExtendedDto>> getUncheckedSolutionsByTeacherExtended(@PathVariable("teacherId") int teacherId) {
+        List<SolutionResponseExtendedDto> response = solutionService.getUncheckedSolutionsByTeacherExtended(teacherId);
+        if (response.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        else {
+        } else {
             response.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
 
-    @GetMapping("/extended/solutions/checkedByGroup/{group_id}")
+    @GetMapping("/extended/solutions/checkedByGroup/{groupId}")
     @Operation(
             summary = "Returns list of all checked solutions in the group.",
             responses = {
@@ -1155,18 +1127,17 @@ public class SolutionController {
                     )
             }
     )
-    ResponseEntity<List<SolutionResponseExtendedDto>> getCheckedSolutionsByGroupExtended(@PathVariable("group_id") int group_id) {
-        List<SolutionResponseExtendedDto> response = solutionService.getCheckedSolutionsByGroupExtended(group_id);
-        if(response.isEmpty()){
+    ResponseEntity<List<SolutionResponseExtendedDto>> getCheckedSolutionsByGroupExtended(@PathVariable("groupId") int groupId) {
+        List<SolutionResponseExtendedDto> response = solutionService.getCheckedSolutionsByGroupExtended(groupId);
+        if (response.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        else {
+        } else {
             response.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
 
-    @GetMapping("/extended/solutions/checkedByStudent/{student_id}")
+    @GetMapping("/extended/solutions/checkedByStudent/{studentId}")
     @Operation(
             summary = "Returns list of all checked solutions by a given student.",
             responses = {
@@ -1188,18 +1159,17 @@ public class SolutionController {
                     )
             }
     )
-    ResponseEntity<List<SolutionResponseExtendedDto>> getCheckedSolutionsByStudentExtended(@PathVariable("student_id") int student_id) {
-        List<SolutionResponseExtendedDto> response = solutionService.getCheckedSolutionsByStudentExtended(student_id);
-        if(response.isEmpty()){
+    ResponseEntity<List<SolutionResponseExtendedDto>> getCheckedSolutionsByStudentExtended(@PathVariable("studentId") int studentId) {
+        List<SolutionResponseExtendedDto> response = solutionService.getCheckedSolutionsByStudentExtended(studentId);
+        if (response.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        else {
+        } else {
             response.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
 
-    @GetMapping("/extended/solutions/checkedByStudentAndGroup/{student_id}/{group_id}")
+    @GetMapping("/extended/solutions/checkedByStudentAndGroup/{studentId}/{groupId}")
     @Operation(
             summary = "Returns list of all checked solutions by a given student in a group.",
             responses = {
@@ -1221,18 +1191,17 @@ public class SolutionController {
                     )
             }
     )
-    ResponseEntity<List<SolutionResponseExtendedDto>> getCheckedSolutionsByStudentAndGroupExtended(@PathVariable("student_id") int student_id, @PathVariable("group_id") int group_id) {
-        List<SolutionResponseExtendedDto> response = solutionService.getCheckedSolutionsByStudentAndGroupExtended(student_id, group_id);
-        if(response.isEmpty()){
+    ResponseEntity<List<SolutionResponseExtendedDto>> getCheckedSolutionsByStudentAndGroupExtended(@PathVariable("studentId") int studentId, @PathVariable("groupId") int groupId) {
+        List<SolutionResponseExtendedDto> response = solutionService.getCheckedSolutionsByStudentAndGroupExtended(studentId, groupId);
+        if (response.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        else {
+        } else {
             response.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
 
-    @GetMapping("/extended/solutions/checkedByAssignment/{assignment_id}")
+    @GetMapping("/extended/solutions/checkedByAssignment/{assignmentId}")
     @Operation(
             summary = "Returns list of all checked solutions for a given assignment.",
             responses = {
@@ -1254,18 +1223,17 @@ public class SolutionController {
                     )
             }
     )
-    ResponseEntity<List<SolutionResponseExtendedDto>> getCheckedSolutionsByAssignmentExtended(@PathVariable("assignment_id") int assignment_id) {
-        List<SolutionResponseExtendedDto> response = solutionService.getCheckedSolutionsByAssignmentExtended(assignment_id);
-        if(response.isEmpty()){
+    ResponseEntity<List<SolutionResponseExtendedDto>> getCheckedSolutionsByAssignmentExtended(@PathVariable("assignmentId") int assignmentId) {
+        List<SolutionResponseExtendedDto> response = solutionService.getCheckedSolutionsByAssignmentExtended(assignmentId);
+        if (response.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        else {
+        } else {
             response.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
 
-    @GetMapping("/extended/solutions/checkedByTeacher/{teacher_id}")
+    @GetMapping("/extended/solutions/checkedByTeacher/{teacherId}")
     @Operation(
             summary = "Returns list of all checked solutions by a given teacher.",
             responses = {
@@ -1287,18 +1255,17 @@ public class SolutionController {
                     )
             }
     )
-    ResponseEntity<List<SolutionResponseExtendedDto>> getCheckedSolutionsByTeacherExtended(@PathVariable("teacher_id") int teacher_id) {
-        List<SolutionResponseExtendedDto> response = solutionService.getCheckedSolutionsByTeacherExtended(teacher_id);
-        if(response.isEmpty()){
+    ResponseEntity<List<SolutionResponseExtendedDto>> getCheckedSolutionsByTeacherExtended(@PathVariable("teacherId") int teacherId) {
+        List<SolutionResponseExtendedDto> response = solutionService.getCheckedSolutionsByTeacherExtended(teacherId);
+        if (response.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        else {
+        } else {
             response.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
 
-    @GetMapping("/solution/checkForEvaluation/{solution_id}")
+    @GetMapping("/solution/checkForEvaluation/{solutionId}")
     @Operation(
             summary = "Checks if solution with given id has any evaluation attached to it. Returns true if so, false otherwise. False may also indicate that there is no solution in the DB with given id.",
             responses = {
@@ -1312,11 +1279,11 @@ public class SolutionController {
                     )
             }
     )
-    public ResponseEntity<Boolean> checkForEvaluationToSolution(@PathVariable("solution_id") int id) {
+    public ResponseEntity<Boolean> checkForEvaluationToSolution(@PathVariable("solutionId") int id) {
         return new ResponseEntity<>(solutionService.checkForEvaluationToSolution(id), HttpStatus.OK);
     }
 
-    @GetMapping("/solution/getCheckedSolutionByUserAssignmentGroup/{user_id}/{assignment_id}/{group_id}")
+    @GetMapping("/solution/getCheckedSolutionByUserAssignmentGroup/{userId}/{assignmentId}/{groupId}")
     @Operation(
             summary = "Returns checked solution for a given user, assignment and group.",
             responses = {
@@ -1346,19 +1313,18 @@ public class SolutionController {
                     )
             }
     )
-    public ResponseEntity<SolutionResponseDto> getCheckedSolutionByUserAssignmentGroup(@PathVariable("user_id") int userId, @PathVariable("assignment_id") int assignmentId, @PathVariable("group_id") int groupId) {
+    public ResponseEntity<SolutionResponseDto> getCheckedSolutionByUserAssignmentGroup(@PathVariable("userId") int userId, @PathVariable("assignmentId") int assignmentId, @PathVariable("groupId") int groupId) {
         SolutionResponseDto solutionResponseDto = solutionService.getCheckedSolutionByUserAssignmentGroup(userId, groupId, assignmentId);
         if (solutionResponseDto.isForbidden()) {
             return new ResponseEntity<>(solutionResponseDto, HttpStatus.BAD_REQUEST);
         } else if (solutionResponseDto.getId() != 0) {
             return new ResponseEntity<>(solutionResponseDto, HttpStatus.OK);
-        }
-        else {
+        } else {
             return new ResponseEntity<>(solutionResponseDto, HttpStatus.NOT_FOUND);
         }
     }
 
-    @GetMapping("/solution/getUncheckedSolutionByUserAssignmentGroup/{user_id}/{assignment_id}/{group_id}")
+    @GetMapping("/solution/getUncheckedSolutionByUserAssignmentGroup/{userId}/{assignmentId}/{groupId}")
     @Operation(
             summary = "Returns unchecked solution for a given user, assignment and group.",
             responses = {
@@ -1388,19 +1354,18 @@ public class SolutionController {
                     )
             }
     )
-    public ResponseEntity<SolutionResponseDto> getUncheckedSolutionByUserAssignmentGroup(@PathVariable("user_id") int userId, @PathVariable("assignment_id") int assignmentId, @PathVariable("group_id") int groupId) {
+    public ResponseEntity<SolutionResponseDto> getUncheckedSolutionByUserAssignmentGroup(@PathVariable("userId") int userId, @PathVariable("assignmentId") int assignmentId, @PathVariable("groupId") int groupId) {
         SolutionResponseDto solutionResponseDto = solutionService.getUncheckedSolutionByUserAssignmentGroup(userId, groupId, assignmentId);
         if (solutionResponseDto.isForbidden()) {
             return new ResponseEntity<>(solutionResponseDto, HttpStatus.BAD_REQUEST);
         } else if (solutionResponseDto.getId() != 0) {
             return new ResponseEntity<>(solutionResponseDto, HttpStatus.OK);
-        }
-        else {
+        } else {
             return new ResponseEntity<>(solutionResponseDto, HttpStatus.NOT_FOUND);
         }
     }
 
-    @GetMapping("/solution/checkForFile/{solution_id}")
+    @GetMapping("/solution/checkForFile/{solutionId}")
     @Operation(
             summary = "Checks if solution with given id has any file attached to it. Returns true if so, false otherwise. False may also indicate that there is no solution in the DB with given id.",
             responses = {
@@ -1414,11 +1379,11 @@ public class SolutionController {
                     )
             }
     )
-    public ResponseEntity<Boolean> checkForFileToSolution(@PathVariable("solution_id") int solution_id) {
-        return new ResponseEntity<>(solutionService.checkForFileToSolution(solution_id), HttpStatus.OK);
+    public ResponseEntity<Boolean> checkForFileToSolution(@PathVariable("solutionId") int solutionId) {
+        return new ResponseEntity<>(solutionService.checkForFileToSolution(solutionId), HttpStatus.OK);
     }
 
-    @GetMapping("/solutions/calendarListByTeacher/{teacher_id}")
+    @GetMapping("/solutions/calendarListByTeacher/{teacherId}")
     @Operation(
             summary = "Returns list of all teacher's solutions to calendar.",
             responses = {
@@ -1436,7 +1401,7 @@ public class SolutionController {
                     )
             }
     )
-    public ResponseEntity<List<SolutionResponseCalendarDto>> getSolutionsByTeacherCalendar(@PathVariable("teacher_id") int teacher_id) {
-        return new ResponseEntity<>(solutionService.getSolutionsByTeacherCalender(teacher_id), HttpStatus.OK);
+    public ResponseEntity<List<SolutionResponseCalendarDto>> getSolutionsByTeacherCalendar(@PathVariable("teacherId") int teacherId) {
+        return new ResponseEntity<>(solutionService.getSolutionsByTeacherCalender(teacherId), HttpStatus.OK);
     }
 }

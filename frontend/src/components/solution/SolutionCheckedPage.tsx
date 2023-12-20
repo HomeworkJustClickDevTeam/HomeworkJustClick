@@ -46,7 +46,7 @@ export default function SolutionCheckedPage(props: {
             <div className="absolute bottom-0 left-0 mb-6 ml-4">
                 <p>Wynik: </p>
                 <p className="font-bold text-xl mt-4">
-                    {evaluation?.result}/{props.assignment.max_points}
+                    {evaluation?.result}/{props.assignment.maxPoints}
                 </p>
             </div>
             {(userRole === 'Student' && evaluation) && <ReportGrade evaluationId={evaluation.id}/>}

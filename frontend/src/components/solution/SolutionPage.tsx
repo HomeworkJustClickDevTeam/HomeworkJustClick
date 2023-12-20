@@ -32,7 +32,7 @@ function SolutionPage() {
     const checkIfPenaltyOn = () => {
         if (!evaluation) {
             if (solutionExtended.assignment.completionDatetime < solutionExtended.creationDateTime) {
-                if (solutionExtended.assignment.auto_penalty > 0) {
+                if (solutionExtended.assignment.autoPenalty > 0) {
                     return true
                 }
             }
@@ -64,7 +64,7 @@ function SolutionPage() {
             <div className="absolute right-0 top-0 mr-8 mt-2 flex flex-col">
                 <div className="mb-4 font-semibold">Punkty:</div>
                 <div className="ml-20 font-bold text-xl ">
-                    {points} /{solutionExtended.assignment.max_points}
+                    {points} /{solutionExtended.assignment.maxPoints}
                 </div>
             </div>
             <div className="flex ">
@@ -82,7 +82,7 @@ function SolutionPage() {
             {(checkIfPenaltyOn()) &&
                 <div>
                     Zadanie wysłane po terminie, zostanie automatycznie naliczona
-                    kara {solutionExtended.assignment.auto_penalty}%
+                    kara {solutionExtended.assignment.autoPenalty}%
                 </div>}
             {evaluation === undefined ? (
                 <div>
@@ -97,14 +97,14 @@ function SolutionPage() {
                     {showRating ? (
                         <div>
                             <Rating
-                                maxPoints={!evaluationPanel ? solutionExtended.assignment.max_points : undefined}
+                                maxPoints={!evaluationPanel ? solutionExtended.assignment.maxPoints : undefined}
                                 points={points}
                                 setPoints={setPoints}
                                 solutionId={solutionExtended.id}
                                 groupId={solutionExtended.assignment.groupId}
                                 assigmentCompletionDate={solutionExtended.assignment.completionDatetime}
                                 solutionCreationDate={solutionExtended.creationDateTime}
-                                penalty={solutionExtended.assignment.auto_penalty}
+                                penalty={solutionExtended.assignment.autoPenalty}
                                 evaluationPanelButtons={evaluationPanel ? evaluationPanel.evaluationPanel.buttons : undefined}
                             />
                             <button

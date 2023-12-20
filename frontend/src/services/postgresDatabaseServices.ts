@@ -139,7 +139,7 @@ export const createFileWithAssignmentPostgresService = async (
     return await postgresqlDatabaseJSON.post(
         `file/withAssignment/${assignmentId}`,
         {
-            mongo_id: mongoId,
+            mongoId: mongoId,
             format: format,
             name: name,
         }
@@ -170,7 +170,7 @@ export const createFileWithSolutionPostgresService = async (
     solutionId: string | number
 ) => {
     return await postgresqlDatabaseJSON.post(`/file/withSolution/${solutionId}`, {
-        mongo_id: mongoId,
+        mongoId: mongoId,
         format: format,
         name: name,
     })

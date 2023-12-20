@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         "classpath:db/init_evaluation.sql",
         "classpath:db/init_evaluation_report.sql"
 })
-public class EvaluationReportTest extends BaseTestEntity {
+class EvaluationReportControllerTest extends BaseTestEntity {
     @Autowired
     EvaluationReportRepository repository;
     @Autowired
@@ -53,7 +53,7 @@ public class EvaluationReportTest extends BaseTestEntity {
         var userId = userRepository.findByEmail("zofia_danielska@gmail.com").get().getId();
         mockMvc.perform(get("/api/evaluation_report/byTeacherId/" + userId))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.totalElements").value(2))
+                .andExpect(jsonPath("$.length()").value(2))
                 .andReturn();
     }
 
@@ -62,7 +62,7 @@ public class EvaluationReportTest extends BaseTestEntity {
         var userId = userRepository.findByEmail("anna_malinowska@gmail.com").get().getId();
         mockMvc.perform(get("/api/evaluation_report/byStudentId/" + userId))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.totalElements").value(2))
+                .andExpect(jsonPath("$.length()").value(2))
                 .andReturn();
     }
 
@@ -71,7 +71,7 @@ public class EvaluationReportTest extends BaseTestEntity {
         var groupId = groupRepository.findAll().get(0).getId();
         mockMvc.perform(get("/api/evaluation_report/byGroupId/" + groupId))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.totalElements").value(2))
+                .andExpect(jsonPath("$.length()").value(2))
                 .andReturn();
     }
 
@@ -81,7 +81,7 @@ public class EvaluationReportTest extends BaseTestEntity {
         var groupId = groupRepository.getGroupsByTeacherId(userId).get(0).getId();
         mockMvc.perform(get("/api/evaluation_report/byTeacherIdAndGroupId/" + userId + "/" + groupId))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.totalElements").value(2))
+                .andExpect(jsonPath("$.length()").value(2))
                 .andReturn();
     }
 
@@ -91,7 +91,7 @@ public class EvaluationReportTest extends BaseTestEntity {
         var groupId = groupRepository.getGroupsByStudentId(userId).get(0).getId();
         mockMvc.perform(get("/api/evaluation_report/byStudentIdAndGroupId/" + userId + "/" + groupId))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.totalElements").value(2))
+                .andExpect(jsonPath("$.length()").value(2))
                 .andReturn();
     }
 

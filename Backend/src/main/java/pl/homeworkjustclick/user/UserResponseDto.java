@@ -7,11 +7,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import pl.homeworkjustclick.infrastructure.enums.Role;
 
+import java.io.Serializable;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserResponseDto {
+public class UserResponseDto implements Serializable {
     @Schema(example = "0")
     int id;
     @Schema(example = "jan_kowalski@gmail.com")

@@ -52,7 +52,7 @@ export function AssignmentModifyFile(props: {
     const fetchFileData = async () => {
       if (databaseFile.length > 0) {
         try {
-          const response = await getFileMongoService(databaseFile[0]?.mongo_id, {responseType: "arraybuffer"})
+          const response = await getFileMongoService(databaseFile[0]?.mongoId, {responseType: "arraybuffer"})
           const fileData = response.data
           const type = databaseFile[0].format
           const file = new File([fileData], databaseFile[0].name, {type})

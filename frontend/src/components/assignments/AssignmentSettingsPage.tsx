@@ -80,7 +80,7 @@ export const AssignmentSettingsPage = ({handleSubmit,
       const chosenTable = evaluationTable.filter(table => table.id === +event.target.value)[0]
       setAssignment(prevState => (
         {...assignment,
-          max_points: Math.max(...chosenTable.buttons.map(button => button.points))})
+          maxPoints: Math.max(...chosenTable.buttons.map(button => button.points))})
       )
     }
 
@@ -124,11 +124,11 @@ export const AssignmentSettingsPage = ({handleSubmit,
               Maksymalne punkty
               <input
                 disabled={chosenEvaluationTable !== -1}
-                name="max_points"
+                name="maxPoints"
                 type="number"
                 onChange={(event)=>handleNumberChange(event)}
                 min="0"
-                value={assignment.max_points}
+                value={assignment.maxPoints}
                 className="pl-1 ml-2 border-b-2 border-b-light_gray cursor-pointer w-12"
               />
             </label>
@@ -141,13 +141,13 @@ export const AssignmentSettingsPage = ({handleSubmit,
               {" "}
               Kara za wysłanie po terminie (%)
               <input
-                name="auto_penalty"
+                name="autoPenalty"
                 type="number"
                 onChange={handleNumberChange}
                 min="0"
                 max="100"
                 step="25"
-                value={assignment.auto_penalty}
+                value={assignment.autoPenalty}
                 className="pl-1 ml-2 border-b-2 border-b-light_gray cursor-pointer w-12"
               />
             </label>

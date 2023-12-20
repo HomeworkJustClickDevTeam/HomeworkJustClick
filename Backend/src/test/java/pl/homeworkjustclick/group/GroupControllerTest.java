@@ -17,10 +17,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         "classpath:db/init_group_teacher.sql"
 })
 @WithMockUser
-public class GroupControllerTest extends BaseTestEntity {
+class GroupControllerTest extends BaseTestEntity {
 
     @Test
-    public void shouldGetAllGroups() throws Exception {
+    void shouldGetAllGroups() throws Exception {
         mockMvc.perform(get("/api/groups"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(3));

@@ -8,13 +8,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import pl.homeworkjustclick.infrastructure.enums.CalendarStatus;
 
+import java.io.Serializable;
 import java.time.OffsetDateTime;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class SolutionResponseCalendarDto {
+public class SolutionResponseCalendarDto implements Serializable {
     @Schema(example = "0")
     private int id;
     @Schema(example = "0")

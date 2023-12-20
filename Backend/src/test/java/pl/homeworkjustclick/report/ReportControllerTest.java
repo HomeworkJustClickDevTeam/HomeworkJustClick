@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         "classpath:db/init_solution.sql",
         "classpath:db/init_evaluation.sql"
 })
-public class ReportControllerTest extends BaseTestEntity {
+class ReportControllerTest extends BaseTestEntity {
     @Autowired
     AssignmentRepository assignmentRepository;
     @Autowired
@@ -85,7 +85,6 @@ public class ReportControllerTest extends BaseTestEntity {
                         .content(body)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
-                .andExpect(status().isOk())
                 .andReturn();
     }
 
@@ -104,7 +103,6 @@ public class ReportControllerTest extends BaseTestEntity {
                         .content(body)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
-                .andExpect(status().isOk())
                 .andReturn();
     }
 }

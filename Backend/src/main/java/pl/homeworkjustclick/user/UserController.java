@@ -53,7 +53,7 @@ public class UserController {
         return userService.getAll();
     }
 
-    @GetMapping("/user/{user_id}")
+    @GetMapping("/user/{userId}")
     @Operation(
             summary = "Returns user by his id.",
             responses = {
@@ -71,26 +71,25 @@ public class UserController {
                     )
             }
     )
-    public ResponseEntity<User> getById(@PathVariable("user_id") int id) {
-        if(userService.getById(id).isEmpty()){
+    public ResponseEntity<User> getById(@PathVariable("userId") int id) {
+        if (userService.getById(id).isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        else {
-            return new ResponseEntity<>(userService.getById(id).get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(userService.findById(id), HttpStatus.OK);
         }
     }
 
     @PostMapping("/user")
     @Hidden
     public ResponseEntity<Void> add(@RequestBody User user) {
-        if(userService.add(user)) {
+        if (userService.add(user).equals(Boolean.TRUE)) {
             return new ResponseEntity<>(HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
     }
 
-    @PutMapping("/user/{user_id}")
+    @PutMapping("/user/{userId}")
     @Operation(
             summary = "Changes user with given id.",
             description = "Change whole User object for a given id.",
@@ -117,38 +116,36 @@ public class UserController {
     )
 
     public ResponseEntity<Void> update(
-            @PathVariable("user_id") int id,@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Empty fields will be ignored. Id field is ignored but needed in JSON.") @RequestBody User updatedUser){
-        if(userService.update(id, updatedUser)){
+            @PathVariable("userId") int id, @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Empty fields will be ignored. Id field is ignored but needed in JSON.") @RequestBody User updatedUser) {
+        if (userService.update(id, updatedUser).equals(Boolean.TRUE)) {
             return new ResponseEntity<>(HttpStatus.OK);
-        }
-        else if(userService.update(id, updatedUser) == null) {
+        } else if (userService.update(id, updatedUser) == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        else {
+        } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
-    @DeleteMapping("/user/{user_id}")
+    @DeleteMapping("/user/{userId}")
     @Operation(
             summary = "Deletes user with given id.",
             responses = {
-                @ApiResponse(
-                        responseCode = "404",
-                        description = "Missing user with this id.",
-                        content = @Content
-                )
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Missing user with this id.",
+                            content = @Content
+                    )
             }
     )
-    public ResponseEntity<Void> delete (@PathVariable("user_id") int id) {
-        if(userService.delete(id)) {
+    public ResponseEntity<Void> delete(@PathVariable("userId") int id) {
+        if (userService.delete(id).equals(Boolean.TRUE)) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    @PutMapping("/user/index/{user_id}")
+    @PutMapping("/user/index/{userId}")
     @Operation(
             summary = "Changes index of user with given id.",
             responses = {
@@ -159,15 +156,15 @@ public class UserController {
                     )
             }
     )
-    public ResponseEntity<Void> updateIndex(@PathVariable("user_id") int id, @RequestBody int index){
-        if(userService.changeIndexById(id, index)){
+    public ResponseEntity<Void> updateIndex(@PathVariable("userId") int id, @RequestBody int index) {
+        if (userService.changeIndexById(id, index).equals(Boolean.TRUE)) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    @PutMapping("/user/color/{user_id}")
+    @PutMapping("/user/color/{userId}")
     @Operation(
             summary = "Changes color of user with given id.",
             responses = {
@@ -183,18 +180,17 @@ public class UserController {
                     )
             }
     )
-    public ResponseEntity<Void> updateColor(@PathVariable("user_id") int id, @RequestBody int color){
-        if(color < 0 || color >= 20) {
+    public ResponseEntity<Void> updateColor(@PathVariable("userId") int id, @RequestBody int color) {
+        if (color < 0 || color >= 20) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        else if(userService.changeColorById(id, color)){
+        } else if (userService.changeColorById(id, color).equals(Boolean.TRUE)) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    @GetMapping("/user/getTeachersByGroup/{group_id}")
+    @GetMapping("/user/getTeachersByGroup/{groupId}")
     @Operation(
             summary = "Returns list of all teachers within a given group.",
             responses = {
@@ -212,17 +208,15 @@ public class UserController {
                     )
             }
     )
-    public ResponseEntity<List<User>> getTeachersByGroup(@PathVariable("group_id") int group_id) {
-        if(userService.getTeachersByGroup(group_id).isEmpty())
-        {
+    public ResponseEntity<List<User>> getTeachersByGroup(@PathVariable("groupId") int groupId) {
+        if (userService.getTeachersByGroup(groupId).isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        else {
-            return new ResponseEntity<>(userService.getTeachersByGroup(group_id), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(userService.getTeachersByGroup(groupId), HttpStatus.OK);
         }
     }
 
-    @GetMapping("/user/getStudentsByGroup/{group_id}")
+    @GetMapping("/user/getStudentsByGroup/{groupId}")
     @Operation(
             summary = "Returns list of all students within a given group.",
             responses = {
@@ -240,13 +234,11 @@ public class UserController {
                     )
             }
     )
-    public ResponseEntity<List<User>> getStudentsByGroup(@PathVariable("group_id") int group_id) {
-        if(userService.getStudentsByGroup(group_id).isEmpty())
-        {
+    public ResponseEntity<List<User>> getStudentsByGroup(@PathVariable("groupId") int groupId) {
+        if (userService.getStudentsByGroup(groupId).isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        else {
-            return new ResponseEntity<>(userService.getStudentsByGroup(group_id), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(userService.getStudentsByGroup(groupId), HttpStatus.OK);
         }
     }
 
@@ -290,7 +282,7 @@ public class UserController {
         };
     }
 
-    @PostMapping("/refreshToken/{user_id}")
+    @PostMapping("/refreshToken/{userId}")
     @Operation(
             summary = "Allows user to refresh his token",
             responses = {
@@ -304,7 +296,7 @@ public class UserController {
                     )
             }
     )
-    public ResponseEntity<AuthenticationResponseDto> refreshToken(@PathVariable int user_id) {
-        return new ResponseEntity<>(authenticationService.refreshToken(user_id), HttpStatus.OK);
+    public ResponseEntity<AuthenticationResponseDto> refreshToken(@PathVariable int userId) {
+        return new ResponseEntity<>(authenticationService.refreshToken(userId), HttpStatus.OK);
     }
 }

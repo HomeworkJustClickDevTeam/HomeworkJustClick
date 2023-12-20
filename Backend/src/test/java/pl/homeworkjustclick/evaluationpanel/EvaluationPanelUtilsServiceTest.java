@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
         "classpath:db/init_assignment.sql",
         "classpath:db/init_evaluation_panel.sql"
 })
-public class EvaluationPanelUtilsServiceTest extends BaseTestEntity {
+class EvaluationPanelUtilsServiceTest extends BaseTestEntity {
     @Autowired
     EvaluationPanelRepository evaluationPanelRepository;
     @Autowired

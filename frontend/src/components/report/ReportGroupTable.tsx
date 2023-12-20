@@ -54,7 +54,7 @@ export const ReportGroupTable = ({groupReport}:{groupReport: GroupReportModel}) 
           return(
             <tr key={index}>
               <td>{assignmentReport.assignment.title}</td>
-              <td>{assignmentReport.assignment.max_points}</td>
+              <td>{assignmentReport.assignment.maxPoints}</td>
               <td>{assignmentReport.maxResult}</td>
               <td>{assignmentReport.minResult}</td>
               <td>{assignmentReport.avgResult} ({assignmentReport.avgResultPercent}%)</td>

@@ -1,6 +1,6 @@
 import {AssignmentReportModel} from "../../types/AssignmentReport.model";
 
-export const ReportAssignmentTable = ({assignmentReport, max_points}:{assignmentReport: AssignmentReportModel, max_points: number}) =>{
+export const ReportAssignmentTable = ({assignmentReport, maxPoints}:{assignmentReport: AssignmentReportModel, maxPoints: number}) =>{
   return (
 
     <table className='my-6 w-full  overflow-x-auto'>
@@ -11,7 +11,7 @@ export const ReportAssignmentTable = ({assignmentReport, max_points}:{assignment
         </tr>
         <tr className='w-full '>
           <th className='pr-4 text-sm py-2 border-r-2 border-b-2 border-light_gray uppercase'>Punkty</th>
-          {assignmentReport.students.map((studentResult, index) =><td className={(studentResult.result/max_points)>=0.5 ?'w-[200px] px-6 overflow-hidden text-center border border-border_gray' : 'text-berry_red w-[200px] px-6 overflow-hidden text-center border border-[#DEDEDE] border-x-border_gray'} key={index}>{studentResult.result}/{max_points}</td>)}
+          {assignmentReport.students.map((studentResult, index) =><td className={(studentResult.result/maxPoints)>=0.5 ?'w-[200px] px-6 overflow-hidden text-center border border-border_gray' : 'text-berry_red w-[200px] px-6 overflow-hidden text-center border border-[#DEDEDE] border-x-border_gray'} key={index}>{studentResult.result}/{maxPoints}</td>)}
         </tr>
         <tr className='w-full'>
           <th className='pr-4 text-sm py-2 border-r-2 border-light_gray uppercase'>Procenty</th>

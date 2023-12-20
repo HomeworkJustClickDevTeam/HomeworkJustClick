@@ -8,13 +8,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import pl.homeworkjustclick.infrastructure.enums.CalendarStatus;
 
+import java.io.Serializable;
 import java.time.OffsetDateTime;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AssignmentResponseCalendarDto {
+public class AssignmentResponseCalendarDto implements Serializable {
     @Schema(example = "0")
     private int id;
     @Schema(example = "Example title")
@@ -33,8 +34,8 @@ public class AssignmentResponseCalendarDto {
     @JsonIgnore
     private boolean forbidden;
     @Schema(example = "10")
-    private int max_points;
+    private int maxPoints;
     @Schema(example = "50")
-    private int auto_penalty;
+    private int autoPenalty;
     private CalendarStatus status;
 }
