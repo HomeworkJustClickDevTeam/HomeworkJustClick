@@ -1,5 +1,5 @@
 import {Link, useLocation} from "react-router-dom"
-import {useState} from "react"
+import {useEffect, useState} from "react"
 import {Rating} from "../evaluation/Rating"
 import {SolutionFile} from "./SolutionFile"
 import {SolutionExtendedInterface} from "../../types/SolutionExtendedInterface"
@@ -40,6 +40,11 @@ function SolutionPage() {
         return false
     }
 
+    useEffect(()=>{
+      if(evaluation){
+          setPoints(evaluation.result.toString())
+      }
+    }, [evaluation?.result])
     return (
         <div
             className="relative flex flex-col mx-[7.5%] mt-4 border border-border_gray border-1 rounded-md pt-4 px-4 h-96 gap-2">

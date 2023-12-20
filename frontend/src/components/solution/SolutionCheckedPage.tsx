@@ -54,7 +54,7 @@ export default function SolutionCheckedPage(props: {
                 </p>
             </div>
             {(userRole === 'Student' && evaluation) && <ReportGrade evaluationId={evaluation.id}/>}
-            {commentsImage !== undefined || txtComments !== undefined && <Link
+            {(commentsImage !== undefined) || (txtComments !== undefined) && <Link
                 to={`/group/${props.solution.groupId}/advancedAssignment`}
                 state={{
                     solutionExtended: {

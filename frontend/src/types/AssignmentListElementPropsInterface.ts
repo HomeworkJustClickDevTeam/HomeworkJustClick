@@ -8,4 +8,5 @@ export interface AssignmentListElementPropsInterface extends AssignmentPropsInte
   handleGenerateReportButtonClick?: () => void
   unfoldedPieChartAssignment?: AssignmentInterface
   handleAssignmentClick?: (clickedAssignment: AssignmentInterface) => void
+  resultPoints?: number
 }

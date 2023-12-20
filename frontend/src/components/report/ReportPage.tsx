@@ -112,7 +112,7 @@ export const ReportPage = () =>{
       <div className='mb-3 w-full'>
         <button onClick={() => setCsvCreateFormShown(true)}>Pobierz raport CSV</button>
         <div className='flex justify-center'>{csvCreateFormShown && reportedObject !== undefined &&
-            <ReportCreate reportedObject={reportedObject} csvVersion={true}/>}</div>
+            <ReportCreate closeReportCreator={()=>setCsvCreateFormShown(false)} reportedObject={reportedObject} csvVersion={true}/>}</div>
       </div>
   </div>
   </div>
