@@ -3,5 +3,4 @@ export interface UserRegisterInterface {
   lastname: string
   email: string
   password: string
-  secondPassword: string
 }
