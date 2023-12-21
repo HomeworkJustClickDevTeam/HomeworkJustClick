@@ -4,10 +4,10 @@ import { createAsyncThunk } from "@reduxjs/toolkit"
 import { loginPostgresService } from "./postgresDatabaseServices"
 
 
-export const parseJwt = (token:string):any => {
-  try{
+export const parseJwt = (token: string): any => {
+  try {
     return JSON.parse((window.atob(token.split('.')[1])))
-  }catch (error){
+  } catch (error) {
     return null
   }
 }
@@ -19,11 +19,11 @@ export const getUser = (): (UserInterface | null) => {
 
 export const loginUser = createAsyncThunk(
   "userState/login",
-  async (userData:UserLoginInterface) => {
-    try{
+  async (userData: UserLoginInterface) => {
+    try {
       const response = await loginPostgresService(userData)
       localStorage.setItem("user", JSON.stringify(response.data))
       return response.data
-    }catch (error) {return error}
+    } catch (error) { throw error }
   }
 )
