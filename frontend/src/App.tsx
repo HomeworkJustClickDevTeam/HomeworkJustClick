@@ -31,10 +31,14 @@ import SolutionCheckedPage from "./components/solution/SolutionCheckedPage";
 import {SolutionCheckedAdvancedPage} from "./components/solution/SolutionCheckedAdvancedPage";
 import {ReportPage} from "./components/report/ReportPage";
 import {EvaluationsStudentPage} from "./components/evaluation/EvaluationsStudentPage";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   return (
+      <>
     <Routes>
+
       <Route element={<LoggedOutUserRoute/>}>
         <Route
           path="/home"
@@ -112,6 +116,8 @@ function App() {
       </Route>
       <Route path="*" element={<NotFoundPage/>}/>
     </Routes>
+        <ToastContainer limit={2}></ToastContainer>
+      </>
   )
 }
 

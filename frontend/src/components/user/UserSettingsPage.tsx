@@ -1,7 +1,7 @@
 import React from "react"
 import UserGeneralSettingsPage from "./UserGeneralSettingsPage"
 import UserSecuritySettingsPage from "./UserSecuritySettingsPage"
-import UserAppearanceSettingsPage from "./UserAppearanceSettingsPage"
+
 import UserMarkingTablesSettingsPage from "./UserMarkingTablesSettingsPage"
 
 export default function UserSettingsPage(): JSX.Element {
@@ -15,13 +15,6 @@ export default function UserSettingsPage(): JSX.Element {
             <p>
               <p className='font-semibold underline my-1 underline-offset-2'>Ogólne </p>
               <UserGeneralSettingsPage/>
-            </p>
-          </li>
-          <hr className='w-32 border-solid border-[1px] mb-2 border-main_blue'/>
-          <li className='pb-4'>
-            <p>
-              <p className='font-semibold underline my-1 underline-offset-2'>Wygląd </p>
-              <UserAppearanceSettingsPage/>
             </p>
           </li>
           <hr className='w-32 border-solid border-[1px] mb-2 border-main_blue'/>
