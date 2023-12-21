@@ -4,7 +4,6 @@ import left_circle from "./left_circle.svg"
 import Smile from "./Smile.svg"
 import { UserRegisterInterface } from "../../types/UserRegisterInterface"
 import { FieldValues, useForm } from "react-hook-form"
-import { error } from "console"
 
 const RegisterPage = () => {
   const {
