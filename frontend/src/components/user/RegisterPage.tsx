@@ -110,10 +110,6 @@ const RegisterPage = () => {
                 minLength: {
                   value: 8,
                   message: "Hasło musi mieć conajmnej 8 znaków"
-                },
-                pattern: {
-                  value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/,
-                  message: 'Hasło musi zawierać conajmniej jedną małą i wielką literę oraz cyfrę'
                 }
               })}
               type="password"
