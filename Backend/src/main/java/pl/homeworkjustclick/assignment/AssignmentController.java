@@ -1097,4 +1097,38 @@ public class AssignmentController {
     public ResponseEntity<List<AssignmentResponseCalendarDto>> getAssignmentsByStudentCalendar(@PathVariable("studentId") int studentId) {
         return new ResponseEntity<>(assignmentService.getAssignmentsByStudentCalendar(studentId), HttpStatus.OK);
     }
+
+    @GetMapping("/assignments/byStudentWithEvaluation/{studentId}")
+    @Operation(
+            summary = "Returns list of all student's assignments with evaluations.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = AssignmentWithEvaluationResponseDto.class))
+                            )
+                    )
+            }
+    )
+    public List<AssignmentWithEvaluationResponseDto> getAssignmentsWithEvaluationsByStudent(@PathVariable("studentId") int studentId) {
+        return assignmentService.getAllAssignmentsByStudentWithEvaluations(studentId);
+    }
+
+    @GetMapping("/assignments/byStudentAndGroupWithEvaluation/{studentId}/{groupId}")
+    @Operation(
+            summary = "Returns list of all student's in group assignments with evaluations.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = AssignmentWithEvaluationResponseDto.class))
+                            )
+                    )
+            }
+    )
+    public List<AssignmentWithEvaluationResponseDto> getAssignmentsWithEvaluationsByStudentAndGroup(@PathVariable("studentId") int studentId, @PathVariable("groupId") int groupId) {
+        return assignmentService.getAllAssignmentsByStudentAndGroupWithEvaluations(studentId, groupId);
+    }
 }

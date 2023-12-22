@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.homeworkjustclick.evaluation.EvaluationRepository;
+import pl.homeworkjustclick.evaluation.EvaluationService;
 import pl.homeworkjustclick.group.Group;
 import pl.homeworkjustclick.group.GroupRepository;
 import pl.homeworkjustclick.group.GroupResponseDto;
@@ -35,6 +36,8 @@ public class AssignmentService {
     private final NotificationCreateService notificationCreateService;
     private final UserService userService;
     private final GroupService groupService;
+    private final EvaluationService evaluationService;
+    private final AssignmentMapper assignmentMapper;
 
     public Assignment findById(Integer id) {
         return assignmentRepository.findById(id)
@@ -534,6 +537,26 @@ public class AssignmentService {
         List<AssignmentResponseExtendedDto> assignmentResponseList = new ArrayList<>();
         assignmentList.forEach(assignment -> assignmentResponseList.add(buildAssignmentResponseExtended(assignment)));
         return assignmentResponseList;
+    }
+
+    public List<AssignmentWithEvaluationResponseDto> getAllAssignmentsByStudentWithEvaluations(int userId) {
+        var assignmentList = assignmentRepository.getAllAssignmentsByStudent(userId);
+        var responseList = new ArrayList<AssignmentWithEvaluationResponseDto>();
+        assignmentList.forEach(assignment -> {
+            var evaluation = evaluationService.findAllEvaluationsByStudentAndAssignment(userId, assignment.getId());
+            responseList.add(assignmentMapper.map(assignment, evaluation));
+        });
+        return responseList;
+    }
+
+    public List<AssignmentWithEvaluationResponseDto> getAllAssignmentsByStudentAndGroupWithEvaluations(int userId, int groupId) {
+        var assignmentList = assignmentRepository.getAllAssignmentsByStudentAndGroup(userId, groupId);
+        var responseList = new ArrayList<AssignmentWithEvaluationResponseDto>();
+        assignmentList.forEach(assignment -> {
+            var evaluation = evaluationService.findAllEvaluationsByStudentAndAssignment(userId, assignment.getId());
+            responseList.add(assignmentMapper.map(assignment, evaluation));
+        });
+        return responseList;
     }
 
     private AssignmentResponseDto buildAssignmentResponse(Assignment assignment) {
