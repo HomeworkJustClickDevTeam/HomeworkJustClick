@@ -79,7 +79,7 @@ function App() {
           />
           <Route
             path="assignments/todo"
-            element={<AssignmentsTypesPage type={"undone" as AssignmentsType}/>}
+            element={<AssignmentsTypesPage type={"nonExpiredUndone" as AssignmentsType}/>}
           />
           <Route path="assignments/add" element={<AssignmentAddSettingsPageWrapper/>}/>
           <Route
