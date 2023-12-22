@@ -5,7 +5,7 @@ import { setIsLoading } from "../../redux/isLoadingSlice"
 import {
   getAssignmentsByStudentPostgresService,
   getAssignmentsDoneByStudentPostgresService,
-  getAssignmentsExpiredUndoneByStudentPostgresService,
+  getAssignmentsExpiredUndoneByStudentPostgresService, getAssignmentsNonExpiredUndoneByStudentPostgresService,
   getAssignmentsUndoneByStudentPostgresService
 } from "../../services/postgresDatabaseServices"
 import {AssignmentsType} from "../../types/AssignmentsType";
@@ -31,6 +31,9 @@ export const useGetAssignmentsByStudent = (studentId:number|undefined|null, filt
               break
             case "expiredUndone":
               response = await getAssignmentsExpiredUndoneByStudentPostgresService(studentId.toString())
+              break
+            case  "nonExpiredUndone":
+              response = await getAssignmentsNonExpiredUndoneByStudentPostgresService(studentId.toString())
               break
           }
           if(response?.status === 200){

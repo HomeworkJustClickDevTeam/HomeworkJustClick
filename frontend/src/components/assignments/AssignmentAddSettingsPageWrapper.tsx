@@ -2,11 +2,12 @@ import { useNavigate } from "react-router-dom"
 import React, { ChangeEvent, useEffect, useState } from "react"
 import {
   addEvaluationPanelToAssignmentPostgresService,
-  createAssignmentWithUserAndGroupPostgresService, createListOfCommentsPostgresService
+  createAssignmentWithUserAndGroupPostgresService,
+  createFileWithAssignmentPostgresService,
+  createListOfCommentsPostgresService
 } from "../../services/postgresDatabaseServices"
 import ReactDatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
-import { AssignmentAddFile } from "./AssignmentAddFile"
 import { AssignmentToSendInterface } from "../../types/AssignmentToSendInterface"
 import { selectGroup } from "../../redux/groupSlice"
 import { useSelector } from "react-redux"
@@ -17,6 +18,8 @@ import {useGetEvaluationTable} from "../customHooks/useGetEvaluationTable";
 import {useGetCommentsByUserAndAssignment} from "../customHooks/useGetCommentsByUserAndAssignment";
 import {CommentInterface} from "../../types/CommentInterface";
 import {CommentCreateInterface} from "../../types/CommentCreateInterface";
+import {toast} from "react-toastify";
+import {postFileMongoService} from "../../services/mongoDatabaseServices";
 
 function AssignmentAddSettingsPageWrapper() {
   const navigate = useNavigate()
@@ -30,42 +33,63 @@ function AssignmentAddSettingsPageWrapper() {
     maxPoints: 1,
     autoPenalty: 50,
   })
-  const [toSend, setToSend] = useState<boolean>(false)
   const [idAssignment, setIdAssignment] = useState<number>()
   const group = useSelector(selectGroup)
   const {evaluationTable} = useGetEvaluationTable(userState!.id)
   const [chosenEvaluationTable, setChosenEvaluationTable] = useState<number>(-1)
-
-  function handleSubmit(event: React.FormEvent) {
+  const [newFile, setNewFile] = useState<File|undefined>(undefined)
+  async function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
-    if (userState) {
-      createAssignmentWithUserAndGroupPostgresService(
-        userState.id.toString(),
-        group?.id as unknown as string,
+    try {
+      let response = null
+      let newAssignmentResponse = await createAssignmentWithUserAndGroupPostgresService(
+        userState!.id.toString(),
+        group!.id.toString(),
         assignment
       )
-        .then(async (response) => {
-          if (response?.status === 200) {
-            setIdAssignment(response.data.id)
-            setToSend(true)
-            if(chosenEvaluationTable !== -1)
-              return await addEvaluationPanelToAssignmentPostgresService({assignmentId: response.data.id, evaluationPanelId: chosenEvaluationTable})
-
-          }
-        })
-        .then(()=> navigate(`/group/${group!.id}/assignments`))
-        .catch((error) => console.log(error))
+      if(newAssignmentResponse?.status !== 200){
+        toast.error("Błąd, podczas tworzenia zadania.")
+        return
+      }
+      setIdAssignment(newAssignmentResponse.data.id)
+      if(chosenEvaluationTable !== -1)
+        response = await addEvaluationPanelToAssignmentPostgresService({assignmentId: newAssignmentResponse.data.id, evaluationPanelId: chosenEvaluationTable})
+      if(response?.status !== 201 && chosenEvaluationTable !== -1){
+        toast.error("Nie przypisano tabelę oceniania do zadania.")
+        return
+      }
+      if(newFile === undefined) {
+        toast.success("Pomyślnie dodano zadanie.")
+        navigate(`/group/${group!.id}/assignments`)
+        return
+      }
+      const formData = new FormData()
+      formData.append('file', newFile)
+      let responseMongo = await postFileMongoService(formData)
+      if(responseMongo?.status !== 200) return
+      response = await createFileWithAssignmentPostgresService(
+        `${responseMongo.data.id}`,
+        responseMongo.data.format,
+        responseMongo.data.name,
+        newAssignmentResponse.data.id.toString())
+      if(response?.status == 200)
+        toast.success("Pomyślnie zaktualizowano zadanie.")
+      else toast.error("Błąd podczas zmiany pliku.")
+      navigate(`/group/${group!.id}/assignments`)
     }
+    catch (e){
+      toast.error("Błąd, podczas tworzenia zadania.")
+      console.error(e)}
   }
 
   return (
     <AssignmentSettingsPage handleSubmit={handleSubmit}
                             assignment={assignment}
-                            toSend={toSend}
-                            setAssignment={setAssignment} evaluationTable={evaluationTable}
+                            setNewFile={setNewFile}
+                            setAssignment={setAssignment}
+                            evaluationTable={evaluationTable}
                             chosenEvaluationTable={chosenEvaluationTable}
                             setChosenEvaluationTable={setChosenEvaluationTable}
-                            group={group}
                             newAssignmentId={idAssignment}/>
   )
 }
