@@ -353,6 +353,24 @@ export const getAssignmentsByStudentPostgresService = async (
     return await postgresqlDatabaseJSON.get("/assignments/byStudent/" + userId)
 }
 
+export const getAssignmentsDoneByStudentPostgresService = async (
+  userId: string
+) => {
+    return await postgresqlDatabaseJSON.get("/assignments/doneByStudent/" + userId)
+}
+
+export const getAssignmentsUndoneByStudentPostgresService = async (
+  userId: string
+) => {
+    return await postgresqlDatabaseJSON.get("/assignments/undoneByStudent/" + userId)
+}
+
+export const getAssignmentsExpiredUndoneByStudentPostgresService = async (
+  userId: string
+) => {
+    return await postgresqlDatabaseJSON.get("/assignments/expiredUndoneByStudent/" + userId)
+}
+
 export const getAssignmentsDoneByGroupAndStudentPostgresService = async (
     groupId: string,
     userId: string

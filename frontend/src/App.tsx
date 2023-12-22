@@ -15,7 +15,7 @@ import AssignmentSpecPage from "./components/assignments/AssignmentSpecPage"
 import GroupUsersPage from "./components/group/GroupUsersPage"
 import NotFoundPage from "./components/errors/NotFoundPage"
 import AssignmentsTypesPage from "./components/assignments/AssignmentsTypesPage"
-import AssignmentsStudentDisplayedPage from "./components/assignments/AssignmentsStudentDisplayedPage"
+import AssignmentsMainPage from "./components/assignments/AssignmentsMainPage"
 import SolutionsTypesPage from "./components/solution/SolutionsTypesPage"
 import SolutionPage from "./components/solution/SolutionPage"
 import UserSettingsPage from "./components/user/UserSettingsPage"
@@ -33,12 +33,12 @@ import {ReportPage} from "./components/report/ReportPage";
 import {EvaluationsStudentPage} from "./components/evaluation/EvaluationsStudentPage";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import {AssignmentsStudentGroupPage} from "./components/assignments/AssignmentsStudentGroupPage";
 
 function App() {
   return (
       <>
     <Routes>
-
       <Route element={<LoggedOutUserRoute/>}>
         <Route
           path="/home"
@@ -54,7 +54,7 @@ function App() {
         />
         <Route
           path="/:id/assignments"
-          element={<AssignmentsStudentDisplayedPage allAssignments={true}/>}
+          element={<AssignmentsMainPage/>}
         />
         <Route path="/settings" element={<UserSettingsPage/>}/>
         <Route path="/create/group" element={<GroupCreatePage/>}/>
@@ -67,7 +67,7 @@ function App() {
           />
           <Route
             path="assignments"
-            element={<RoleBasedRoute renderForStudent={<AssignmentsStudentDisplayedPage allAssignments={false}/>} renderForTeacher={<AssignmentsGroupTeacherDisplayedPage/>}/>}
+            element={<RoleBasedRoute renderForStudent={<AssignmentsStudentGroupPage/>} renderForTeacher={<AssignmentsGroupTeacherDisplayedPage/>}/>}
           />
           <Route
             path="assignments/done"
