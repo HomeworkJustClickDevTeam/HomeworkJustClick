@@ -172,7 +172,7 @@ public class GroupController {
             }
     )
     public ResponseEntity<Void> updateColor(@PathVariable("groupId") int id, @RequestBody int color) {
-        if (color < 0 || color >= 20) {
+        if (color < 0 || color >= 19) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else if (groupService.changeColorById(id, color).equals(Boolean.TRUE)) {
             return new ResponseEntity<>(HttpStatus.OK);
@@ -235,7 +235,7 @@ public class GroupController {
         }
     }
 
-    @PostMapping("/group/withTeacher/{groupId}")
+    @PostMapping("/group/withTeacher/{teacherId}")
     @Operation(
             summary = "Creates group with user as a teacher already associated with it the group.",
             responses = {
@@ -258,10 +258,10 @@ public class GroupController {
                     )
             }
     )
-    public ResponseEntity<GroupResponseDto> addWithTeacher(@PathVariable("groupId") int id, @RequestBody Group group) {
-        GroupResponseDto response = groupService.add(group);
+    public ResponseEntity<GroupResponseDto> addWithTeacher(@PathVariable("teacherId") int id, @RequestBody Group group) {
         Optional<User> user = userService.getById(id);
         if (user.isPresent()) {
+            GroupResponseDto response = groupService.add(group);
             GroupTeacher groupTeacher = new GroupTeacher(group, user.get(), "");
             if (groupTeacherService.add(groupTeacher).equals(Boolean.TRUE)) {
                 return new ResponseEntity<>(response, HttpStatus.OK);
