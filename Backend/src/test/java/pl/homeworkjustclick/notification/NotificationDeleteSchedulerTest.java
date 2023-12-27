@@ -6,6 +6,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.jdbc.Sql;
 import pl.homeworkjustclick.BaseTestEntity;
 
+import java.time.OffsetDateTime;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @WithMockUser
@@ -34,12 +36,17 @@ class NotificationDeleteSchedulerTest extends BaseTestEntity {
     }
 
     @Test
-    void shouldDeleteAllReadNotifications() {
+    void shouldDeleteAllReadNotificationsOlderThan3Days() {
         var notifications = notificationRepository.findAll();
         var expectedSize = notifications.size() - 2;
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 6; i++) {
             var notification = notifications.get(i);
             notification.setRead(true);
+            notificationRepository.save(notification);
+        }
+        for (int i = 0; i < 2; i++) {
+            var notification = notifications.get(i);
+            notification.setDate(OffsetDateTime.now().minusDays(3).minusMinutes(1));
             notificationRepository.save(notification);
         }
         notificationDeleteScheduler.deleteReadNotifications();

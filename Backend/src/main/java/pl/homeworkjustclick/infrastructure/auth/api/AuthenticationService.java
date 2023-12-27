@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.homeworkjustclick.infrastructure.auth.JwtService;
 import pl.homeworkjustclick.infrastructure.enums.Role;
+import pl.homeworkjustclick.infrastructure.exception.EntityNotFoundException;
 import pl.homeworkjustclick.user.User;
 import pl.homeworkjustclick.user.UserRepository;
 
@@ -91,7 +92,7 @@ public class AuthenticationService {
         } catch (BadCredentialsException e) {
             return AuthenticationResponseDto.builder().token(null).id(0).role(Role.NONE).message("Password incorrect!").build();
         }
-        user.setPassword(salt + passwordEncoder.encode(request.getNewPassword()));
+        user.setPassword(passwordEncoder.encode(salt + request.getNewPassword()));
         userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
         var id = user.getId();
@@ -99,7 +100,7 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponseDto refreshToken(int id) {
-        var user = userRepository.findById(id).orElseThrow();
+        var user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found!"));
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponseDto.builder().token(jwtToken).id(user.getId()).role(user.getRole()).message("ok").color(user.getColor()).name(user.getFirstname()).lastname(user.getLastname()).index(user.getIndex()).build();
     }
