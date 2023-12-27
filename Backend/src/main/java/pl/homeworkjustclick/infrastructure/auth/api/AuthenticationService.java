@@ -52,32 +52,6 @@ public class AuthenticationService {
         }
     }
 
-    public AuthenticationResponseDto registerAdmin(RegisterRequest request) {
-        Optional<User> optionalUser = userRepository.findByEmail(request.getEmail());
-        if (!emailCheck(request.getEmail())){
-            return AuthenticationResponseDto.builder().token(null).id(0).role(Role.NONE).message("E-mail not valid!").build();
-        }
-        if(optionalUser.isPresent()) {
-            return AuthenticationResponseDto.builder().token(null).id(0).role(Role.NONE).message("E-mail already taken!").build();
-        } else {
-            var salt = generateRandomSalt();
-            var user = User.builder()
-                    .email(request.getEmail())
-                    .password(salt + passwordEncoder.encode(request.getPassword()))
-                    .role(Role.ADMIN)
-                    .isVerified(true)
-                    .firstname(request.getFirstname())
-                    .lastname(request.getLastname())
-                    .salt(salt)
-                    .build();
-            userRepository.save(user);
-            user.setColor(user.getId()%20);
-            userRepository.save(user);
-            var jwtToken = jwtService.generateToken(user);
-            return AuthenticationResponseDto.builder().token(jwtToken).id(user.getId()).name(user.getFirstname()).lastname(user.getLastname()).role(user.getRole()).color(user.getColor()).index(user.getIndex()).message("ok").build();
-        }
-    }
-
     public AuthenticationResponseDto authenticate(AuthenticationRequest request) {
         if(userRepository.findByEmail(request.getEmail()).isEmpty()){
             return AuthenticationResponseDto.builder().token(null).id(0).role(Role.NONE).message("User not found!").build();
