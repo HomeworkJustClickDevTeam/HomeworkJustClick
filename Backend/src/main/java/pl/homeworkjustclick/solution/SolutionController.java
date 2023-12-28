@@ -1,6 +1,5 @@
 package pl.homeworkjustclick.solution;
 
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -135,13 +134,6 @@ public class SolutionController {
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-    }
-
-    @PostMapping("/solution")
-    @Hidden
-    public ResponseEntity<SolutionResponseDto> add(@RequestBody Solution solution) {
-        SolutionResponseDto response = solutionService.add(solution);
-        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/solution/{solutionId}")
@@ -333,7 +325,7 @@ public class SolutionController {
         } else {
             List<SolutionResponseDto> responseList = solutionService.getLateSolutionsByGroup(groupId);
             responseList.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
-            return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
 
@@ -845,7 +837,7 @@ public class SolutionController {
         } else {
             List<SolutionResponseExtendedDto> responseList = solutionService.getLateSolutionsByGroupExtended(groupId);
             responseList.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
-            return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
 
