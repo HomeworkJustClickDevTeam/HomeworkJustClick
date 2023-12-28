@@ -208,25 +208,6 @@ class EvaluationControllerTest extends BaseTestEntity {
                 .andReturn();
     }
 
-    private EvaluationDto createEvaluationDto(Double result, Double grade, Boolean reported, Integer userId, Integer solutionId, Integer groupId) {
-        if (userId == 1) {
-            userId = userRepository.findByEmail("anna_malinowska@gmail.com").get().getId();
-        }
-        if (groupId == 1) {
-            groupId = groupRepository.getGroupsByTeacherId(userId).get(0).getId();
-        }
-        if (solutionId == 1) {
-            solutionId = solutionRepository.getUncheckedSolutionsByGroup(groupId).get(0).getId();
-        }
-        return EvaluationDto.builder()
-                .result(result)
-                .grade(grade)
-                .userId(userId)
-                .solutionId(solutionId)
-                .groupId(groupId)
-                .build();
-    }
-
     @Test
     void shouldGetEvaluationById() throws Exception {
         var evaluation = evaluationRepository.findAll().get(0);
@@ -555,5 +536,25 @@ class EvaluationControllerTest extends BaseTestEntity {
                 .andExpect(status().isNotFound())
                 .andReturn();
         assertEquals(0, evaluationRepository.findAll().size());
+    }
+
+
+    private EvaluationDto createEvaluationDto(Double result, Double grade, Boolean reported, Integer userId, Integer solutionId, Integer groupId) {
+        if (userId == 1) {
+            userId = userRepository.findByEmail("anna_malinowska@gmail.com").get().getId();
+        }
+        if (groupId == 1) {
+            groupId = groupRepository.getGroupsByTeacherId(userId).get(0).getId();
+        }
+        if (solutionId == 1) {
+            solutionId = solutionRepository.getUncheckedSolutionsByGroup(groupId).get(0).getId();
+        }
+        return EvaluationDto.builder()
+                .result(result)
+                .grade(grade)
+                .userId(userId)
+                .solutionId(solutionId)
+                .groupId(groupId)
+                .build();
     }
 }
