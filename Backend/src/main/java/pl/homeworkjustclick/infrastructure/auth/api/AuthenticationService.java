@@ -49,7 +49,7 @@ public class AuthenticationService {
             user.setColor(user.getId()%20);
             userRepository.save(user);
             var jwtToken = jwtService.generateToken(user);
-            return AuthenticationResponseDto.builder().token(jwtToken).id(user.getId()).name(user.getFirstname()).lastname(user.getLastname()).role(user.getRole()).color(user.getColor()).index(user.getIndex()).message("ok").build();
+            return AuthenticationResponseDto.builder().token(jwtToken).id(user.getId()).firstname(user.getFirstname()).lastname(user.getLastname()).role(user.getRole()).color(user.getColor()).index(user.getIndex()).message("ok").build();
         }
     }
 
@@ -72,7 +72,7 @@ public class AuthenticationService {
         }
         var jwtToken = jwtService.generateToken(user);
         var id = user.getId();
-        return AuthenticationResponseDto.builder().token(jwtToken).id(id).role(user.getRole()).message("ok").color(user.getColor()).name(user.getFirstname()).lastname(user.getLastname()).index(user.getIndex()).build();
+        return AuthenticationResponseDto.builder().token(jwtToken).id(id).role(user.getRole()).message("ok").color(user.getColor()).firstname(user.getFirstname()).lastname(user.getLastname()).index(user.getIndex()).build();
     }
 
     public AuthenticationResponseDto changePassword(ChangePasswordRequest request) {
@@ -96,13 +96,13 @@ public class AuthenticationService {
         userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
         var id = user.getId();
-        return AuthenticationResponseDto.builder().token(jwtToken).id(id).role(user.getRole()).message("ok").color(user.getColor()).name(user.getFirstname()).lastname(user.getLastname()).index(user.getIndex()).build();
+        return AuthenticationResponseDto.builder().token(jwtToken).id(id).role(user.getRole()).message("ok").color(user.getColor()).firstname(user.getFirstname()).lastname(user.getLastname()).index(user.getIndex()).build();
     }
 
     public AuthenticationResponseDto refreshToken(int id) {
         var user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found!"));
         var jwtToken = jwtService.generateToken(user);
-        return AuthenticationResponseDto.builder().token(jwtToken).id(user.getId()).role(user.getRole()).message("ok").color(user.getColor()).name(user.getFirstname()).lastname(user.getLastname()).index(user.getIndex()).build();
+        return AuthenticationResponseDto.builder().token(jwtToken).id(user.getId()).role(user.getRole()).message("ok").color(user.getColor()).firstname(user.getFirstname()).lastname(user.getLastname()).index(user.getIndex()).build();
     }
 
     public Boolean checkToken(String token) {
