@@ -6,6 +6,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.jdbc.Sql;
 import pl.homeworkjustclick.BaseTestEntity;
+import pl.homeworkjustclick.groupstudent.GroupStudentRepository;
 import pl.homeworkjustclick.user.UserRepository;
 
 import java.nio.charset.StandardCharsets;
@@ -28,6 +29,8 @@ class GroupControllerTest extends BaseTestEntity {
     GroupRepository groupRepository;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    GroupStudentRepository groupStudentRepository;
 
     @Test
     void shouldGetAllGroups() throws Exception {
@@ -442,6 +445,38 @@ class GroupControllerTest extends BaseTestEntity {
     void shouldNotDeleteNotExistingStudentFromNotExistingGroup() throws Exception {
         mockMvc.perform(delete("/api/group/deleteStudent/{userId}/{groupId}", 9999, 9999))
                 .andExpect(status().is4xxClientError())
+                .andReturn();
+    }
+
+    @Test
+    void shouldAddAndDeleteTeacherFromGroup() throws Exception {
+        var user1 = userRepository.findAll().get(0);
+        var user2 = userRepository.findAll().get(1);
+        var group = groupRepository.getGroupsByTeacherId(user1.getId()).get(0);
+        groupStudentRepository.deleteAll();
+        mockMvc.perform(post("/api/group/addTeacher/{userId}/{groupId}", user2.getId(), group.getId()))
+                .andExpect(status().is2xxSuccessful())
+                .andReturn();
+        mockMvc.perform(delete("/api/group/deleteTeacher/{userId}/{groupId}", user1.getId(), group.getId()))
+                .andExpect(status().isOk())
+                .andReturn();
+    }
+
+    @Test
+    void shouldNotDeleteTeacherFromGroupWhenIdIsFromStudent() throws Exception {
+        var user = userRepository.findAll().get(0);
+        var group = groupRepository.getGroupsByStudentId(user.getId()).get(0);
+        mockMvc.perform(delete("/api/group/deleteTeacher/{userId}/{groupId}", user.getId(), group.getId()))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+    }
+
+    @Test
+    void shouldNotDeleteOnlyTeacherFromGroup() throws Exception {
+        var user = userRepository.findAll().get(0);
+        var group = groupRepository.getGroupsByTeacherId(user.getId()).get(0);
+        mockMvc.perform(delete("/api/group/deleteTeacher/{userId}/{groupId}", user.getId(), group.getId()))
+                .andExpect(status().isBadRequest())
                 .andReturn();
     }
 

@@ -9,9 +9,6 @@ import pl.homeworkjustclick.groupteacher.GroupTeacherRepository;
 import pl.homeworkjustclick.user.UserRepository;
 import pl.homeworkjustclick.user.UserService;
 
-import java.util.List;
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class GroupStudentService {
@@ -21,30 +18,6 @@ public class GroupStudentService {
     private final UserRepository userRepository;
     private final UserService userService;
     private final GroupService groupService;
-
-    public List<GroupStudent> getAll() {
-        return groupStudentRepository.findAll();
-    }
-
-    public Optional<GroupStudent> getById(int id) {
-        return groupStudentRepository.findById(id);
-    }
-
-    @Transactional
-    public Boolean add(GroupStudent groupStudent) {
-        groupStudentRepository.save(groupStudent);
-        return true;
-    }
-
-    @Transactional
-    public Boolean delete(int id) {
-        if(groupStudentRepository.existsById(id)) {
-            groupStudentRepository.deleteById(id);
-            return true;
-        } else {
-            return false;
-        }
-    }
 
     @Transactional
     public Boolean addStudentToGroup(int groupId, int studentId) {
