@@ -104,26 +104,6 @@ public class FileController {
         }
     }
 
-    @PostMapping("/file/listWithAssignment/{assignmentId}")
-    @Operation(
-            summary = "Creates list of files with assignment attached to them.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "404",
-                            description = "No assignment with this id in the DB.",
-                            content = @Content
-                    )
-            }
-    )
-    public ResponseEntity<Void> addListWithAssignment(@RequestBody List<File> fileList, @PathVariable("assignmentId") int id) {
-        boolean response = fileService.addListWithAssignment(fileList, id);
-        if (response) {
-            return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
     @PostMapping("/file/withSolution/{solutionId}")
     @Operation(
             summary = "Creates file with solution attached to it.",
@@ -149,26 +129,6 @@ public class FileController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
             return ResponseEntity.ok(response);
-        }
-    }
-
-    @PostMapping("/file/listWithSolution/{solutionId}")
-    @Operation(
-            summary = "Creates list of files with solution attached to them.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "404",
-                            description = "No solution with this id in the DB.",
-                            content = @Content
-                    )
-            }
-    )
-    public ResponseEntity<Void> addListWithSolution(@RequestBody List<File> fileList, @PathVariable("solutionId") int id) {
-        boolean response = fileService.addListWithSolution(fileList, id);
-        if (response) {
-            return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 

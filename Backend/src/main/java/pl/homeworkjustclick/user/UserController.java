@@ -126,25 +126,6 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("/user/{userId}")
-    @Operation(
-            summary = "Deletes user with given id.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "404",
-                            description = "Missing user with this id.",
-                            content = @Content
-                    )
-            }
-    )
-    public ResponseEntity<Void> delete(@PathVariable("userId") int id) {
-        if (userService.delete(id).equals(Boolean.TRUE)) {
-            return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
     @PutMapping("/user/index/{userId}")
     @Operation(
             summary = "Changes index of user with given id.",

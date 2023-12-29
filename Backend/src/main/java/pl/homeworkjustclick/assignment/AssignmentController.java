@@ -1,6 +1,5 @@
 package pl.homeworkjustclick.assignment;
 
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -188,13 +187,6 @@ public class AssignmentController {
             responseList.sort(Comparator.comparing(AssignmentResponseExtendedDto::getCompletionDatetime));
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
-    }
-
-    @PostMapping("/assignment")
-    @Hidden
-    public ResponseEntity<AssignmentResponseDto> add(@RequestBody @Valid Assignment assignment) {
-        AssignmentResponseDto response = assignmentService.add(assignment);
-        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/assignment/withUserAndGroup/{userId}/{groupId}")

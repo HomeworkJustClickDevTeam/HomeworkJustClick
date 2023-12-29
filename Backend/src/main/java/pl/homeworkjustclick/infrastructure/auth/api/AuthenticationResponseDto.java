@@ -25,7 +25,7 @@ public class AuthenticationResponseDto implements Serializable {
     @Schema(example = "0")
     private int color;
     @Schema(example = "Exampler")
-    private String name;
+    private String firstname;
     @Schema(example = "Examplowski")
     private String lastname;
     @Schema(example = "6969")
