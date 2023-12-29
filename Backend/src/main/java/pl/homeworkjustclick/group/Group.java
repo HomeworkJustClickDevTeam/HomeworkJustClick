@@ -39,7 +39,7 @@ public class Group implements Serializable {
 
     @Schema(example = "Example desc")
     @Column(name="description")
-    @Size(max = 255)
+    @Size(max = 65)
     private String description;
 
     @Schema(example = "0")
