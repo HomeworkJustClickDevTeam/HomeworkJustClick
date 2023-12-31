@@ -2,21 +2,21 @@ import {useAppDispatch} from "../../types/HooksRedux";
 import {useEffect, useState} from "react";
 import {EvaluationReportResponse} from "../../types/EvaluationReportResponseModel";
 import {setIsLoading} from "../../redux/isLoadingSlice";
-import {getEvaluationReportByEvaluationId} from "../../services/postgresDatabaseServices";
+import {getEvaluationReportByGroup} from "../../services/postgresDatabaseServices";
 
-export const useGetReportedEvaluation = (evaluationId: number | undefined | null) => {
+export const useGetReportedEvaluations = (groupId: number | undefined | null) => {
     const dispatch = useAppDispatch();
-    const [evaluationReportResponse, setEvaluationReportResponse] = useState<EvaluationReportResponse>();
+    const [evaluationReportsResponse, setEvaluationReportsResponse] = useState<EvaluationReportResponse[]>();
 
     useEffect(() => {
             let mounted = true
-            if (evaluationId) {
+            if (groupId !== undefined && groupId !== null) {
                 dispatch(setIsLoading(true))
-                getEvaluationReportByEvaluationId(evaluationId)
+                getEvaluationReportByGroup(groupId)
                     .then((response) => {
                         if (response !== null && response !== undefined) {
                             if (mounted) {
-                                setEvaluationReportResponse(response.data)
+                                setEvaluationReportsResponse(response.data)
                             }
                         }
                     })
@@ -27,7 +27,7 @@ export const useGetReportedEvaluation = (evaluationId: number | undefined | null
                             error.response.status === 404
                         ) {
                             if (mounted) {
-                                setEvaluationReportResponse(undefined)
+                                setEvaluationReportsResponse([])
                             }
                         } else {
                             console.log("Error fetching user:", error)
@@ -40,7 +40,7 @@ export const useGetReportedEvaluation = (evaluationId: number | undefined | null
                 mounted = false
             }
         },
-        [evaluationId]
+        [groupId]
     )
-    return evaluationReportResponse
+    return evaluationReportsResponse
 }

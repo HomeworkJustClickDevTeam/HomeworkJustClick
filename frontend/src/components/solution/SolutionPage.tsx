@@ -8,8 +8,9 @@ import {useAppSelector} from "../../types/HooksRedux";
 import {selectGroup} from "../../redux/groupSlice";
 import {selectUserState} from "../../redux/userStateSlice";
 import {useGetEvaluationPanelByUserIdAndAssigmentId} from "../customHooks/useGetEvaluationPanelByUserIdAndAssigmentId";
-import {format, parseISO} from "date-fns";
+import {format} from "date-fns";
 import {useGetFile} from "../customHooks/useGetFile";
+import {useGetReportedEvaluation} from "../customHooks/useGetReportedEvaluation";
 
 function SolutionPage() {
     let {state} = useLocation()
@@ -19,6 +20,7 @@ function SolutionPage() {
     const [points, setPoints] = useState<string>("0")
     const [showRating, setShowRating] = useState<boolean>(false)
     const evaluation = useGetEvaluationBySolution(solutionExtended.id);
+    const reportedEvaluation = useGetReportedEvaluation(evaluation?.id)
     const userState = useAppSelector(selectUserState)
     const evaluationPanel = useGetEvaluationPanelByUserIdAndAssigmentId(userState!.id, solutionExtended.assignment.id)
     const group = useAppSelector(selectGroup)
@@ -40,10 +42,10 @@ function SolutionPage() {
         return false
     }
 
-    useEffect(()=>{
-      if(evaluation){
-          setPoints(evaluation.result.toString())
-      }
+    useEffect(() => {
+        if (evaluation) {
+            setPoints(evaluation.result.toString())
+        }
     }, [evaluation?.result])
     return (
         <div
@@ -91,7 +93,7 @@ function SolutionPage() {
                 </div>}
             {evaluation === undefined ? (
                 <div>
-                    {solutionExtended.id && group && fileFromDb!==undefined && (
+                    {solutionExtended.id && group && fileFromDb !== undefined && (
                         <Link
                             to={`/group/${group.id}/advancedAssignment`}
                             state={{solutionExtended: solutionExtended}}
@@ -129,6 +131,9 @@ function SolutionPage() {
                     )}
                 </div>
             ) : null}
+            {
+                reportedEvaluation && <div>Uwaga ucznia do zadania: {reportedEvaluation.comment} </div>
+            }
         </div>
     )
 }

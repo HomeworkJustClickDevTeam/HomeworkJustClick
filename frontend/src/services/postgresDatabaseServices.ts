@@ -679,5 +679,8 @@ export const addEvaluationReport = async (evaluationReport: EvaluationReport) =>
 
 }
 export const getEvaluationReportByGroup = async (groupId : number) =>{
-    return await postgresqlDatabaseJSON.get(`evaluation_report/${groupId}`);
+    return await postgresqlDatabaseJSON.get(`evaluation_report/byGroupId/${groupId}`);
+}
+export const getEvaluationReportByEvaluationId = async (evaluationId:number) =>{
+    return await postgresqlDatabaseJSON.get(`evaluation_report/byEvaluationId/${evaluationId}`)
 }
