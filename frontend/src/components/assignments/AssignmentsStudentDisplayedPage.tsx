@@ -15,8 +15,8 @@ export default function AssignmentsStudentDisplayedPage({allAssignments}:{allAss
   const userAssignments = useGetAssignmentsByStudent(userState?.id)
   const groupAssignments = useGetAssignmentsByGroup(group?.id)
   return (
-    <div>
-      <ul>
+    <div className=' flex flex-col h-[calc(100vh-325px)] overflow-y-hidden w-full'>
+      <ul className='relative h-[420px] box-content overflow-y-auto w-full'>
         {(allAssignments ? userAssignments : groupAssignments).map((assignment) => (
           <li key={assignment.id}>
             <AssignmentListElement
