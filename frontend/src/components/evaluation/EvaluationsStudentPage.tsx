@@ -16,7 +16,7 @@ export const EvaluationsStudentPage = () =>{
   }
 
   return (
-    <div>
+    <div >
       {assignments.map((assignment)=>{
         return <AssignmentListElement assignment={assignment} key={assignment.id} unfoldedPieChartAssignment={unfoldedPieChartAssignment} handleAssignmentClick={handleAssignmentClick}/>
       })}

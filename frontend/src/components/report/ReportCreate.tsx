@@ -122,7 +122,7 @@ export const ReportCreate = ({reportedObject, csvVersion, closeReportCreator}:
   }, []);
 
   if(reportCreate !== undefined) {
-    return <div className='w-[400px]  border-4 border-black rounded-md pl-3 shadow-lg'>
+    return <div className='w-[400px]  border-4 border-black rounded-md pl-3 shadow-lg '>
       <div className='text-center mb-6 mt-2 font-bold'>RAPORT</div>
 
       {'title' in reportedObject?
@@ -169,7 +169,7 @@ export const ReportCreate = ({reportedObject, csvVersion, closeReportCreator}:
                     onChange={(event) => setHistTextValue(event.target.value)}/>%
                 </div>
             </fieldset>}
-        <div className='flex justify-between pr-4 mb-2 '>
+        <div className='flex justify-between pr-4 mb-2  align-bottom mt-4'>
           <button className='bg-main_blue text-white rounded-md text-sm p-1 px-2' type={"submit"}>Utwórz</button>
           <button type={'button'} onClick={() => closeReportCreator()} className='bg-berry_red text-white rounded-md text-sm p-1 w-8'>X</button>
         </div>

@@ -17,6 +17,7 @@ import {useGetEvaluationTable} from "../customHooks/useGetEvaluationTable";
 import {useGetCommentsByUserAndAssignment} from "../customHooks/useGetCommentsByUserAndAssignment";
 import {CommentInterface} from "../../types/CommentInterface";
 import {CommentCreateInterface} from "../../types/CommentCreateInterface";
+import {toast} from "react-toastify";
 
 function AssignmentAddSettingsPageWrapper() {
   const navigate = useNavigate()
@@ -53,6 +54,9 @@ function AssignmentAddSettingsPageWrapper() {
 
           }
         })
+          .then(() => {
+            toast.success('Zadanie zostało utworzone', {autoClose: 2000, hideProgressBar: false})
+          })
         .then(()=> navigate(`/group/${group!.id}/assignments`))
         .catch((error) => console.log(error))
     }

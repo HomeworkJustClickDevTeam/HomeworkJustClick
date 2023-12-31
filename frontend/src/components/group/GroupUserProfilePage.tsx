@@ -14,7 +14,7 @@ export default function GroupUserProfilePage() {
   const undoneAssignments = useGetAssignmentsByGroupAndStudent(group?.id, userProfileId as unknown as number, "undone")
 
   return (
-      <div className='flex flex-col h-[calc(100vh-320px)] overflow-y-hidden'>
+      <div className='flex flex-col h-[calc(100vh-332px)] overflow-y-hidden'>
         <p className='border-t border-t-black ml-32 w-[495px] mt-0.5'></p>
         <ul className='flex flex-col gap-1 pt-2 pb-6 box-content overflow-y-scroll'>
           <li className='ml-32'>Imię i nazwisko: {userProfile?.firstname} {userProfile?.lastname}</li>
