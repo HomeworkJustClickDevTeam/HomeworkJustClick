@@ -55,10 +55,10 @@ export const ReportGroupTable = ({groupReport}:{groupReport: GroupReportModel}) 
           return(
             <tr key={index}>
               <td className='pr-4 text-sm py-2 border-r-2 border-b-2 border-light_gray font-semibold text-center'>{assignmentReport.assignment.title}</td>
-              <td className=' px-6 overflow-hidden text-center border border-border_gray border-r-2'>{assignmentReport.assignment.maxPoints}</td>
-              <td className=' px-6 overflow-hidden text-center border border-border_gray border-r-2'>{assignmentReport.maxResult}</td>
-              <td className=' px-6 overflow-hidden text-center border border-border_gray border-r-2'>{assignmentReport.minResult}</td>
-              <td className=' px-6 overflow-hidden text-center border border-border_gray border-r-2'>{assignmentReport.avgResult} ({assignmentReport.avgResultPercent}%)</td>
+              <td className=' px-6  text-center border border-border_gray border-r-2'>{assignmentReport.assignment.maxPoints}</td>
+              <td className=' px-6  text-center border border-border_gray border-r-2'>{assignmentReport.maxResult}</td>
+              <td className=' px-6  text-center border border-border_gray border-r-2'>{assignmentReport.minResult}</td>
+              <td className=' px-6  text-center border border-border_gray border-r-2'>{assignmentReport.avgResult} ({assignmentReport.avgResultPercent}%)</td>
               <td className='pattern-dots pattern-main_blue pattern-bg-white pattern-size-6 pattern-opacity-40'></td>
               {renderStudentsResults(assignmentReport.assignment.title)}
             </tr>
