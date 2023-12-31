@@ -27,15 +27,14 @@ function AssignmentAddSettingsPageWrapper() {
     completionDatetime: new Date(),
     taskDescription: "",
     visible: true,
-    max_points: 1,
-    auto_penalty: 50,
+    maxPoints: 1,
+    autoPenalty: 50,
   })
   const [toSend, setToSend] = useState<boolean>(false)
   const [idAssignment, setIdAssignment] = useState<number>()
   const group = useSelector(selectGroup)
   const {evaluationTable} = useGetEvaluationTable(userState!.id)
   const [chosenEvaluationTable, setChosenEvaluationTable] = useState<number>(-1)
-  const [comments, setComments] = useState<CommentInterface[]>([])
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
@@ -52,13 +51,6 @@ function AssignmentAddSettingsPageWrapper() {
             if(chosenEvaluationTable !== -1)
               return await addEvaluationPanelToAssignmentPostgresService({assignmentId: response.data.id, evaluationPanelId: chosenEvaluationTable})
 
-            if(comments.length > 0){
-              const commentsWithAssignmentId :CommentCreateInterface[]= []
-              comments.forEach(comment =>{
-                commentsWithAssignmentId.push({...comment, assignmentId: response.data.id})
-              })
-              return await createListOfCommentsPostgresService(commentsWithAssignmentId)
-            }
           }
         })
         .then(()=> navigate(`/group/${group!.id}/assignments`))

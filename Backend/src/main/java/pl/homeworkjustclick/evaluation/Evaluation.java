@@ -12,6 +12,7 @@ import pl.homeworkjustclick.group.Group;
 import pl.homeworkjustclick.solution.Solution;
 import pl.homeworkjustclick.user.User;
 
+import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,7 @@ import java.util.List;
 @Table(name = "_evaluation")
 @Getter
 @Setter
-public class Evaluation {
+public class Evaluation implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)

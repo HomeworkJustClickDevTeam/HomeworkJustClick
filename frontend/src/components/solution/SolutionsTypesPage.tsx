@@ -3,15 +3,18 @@ import NotFoundPage from "../errors/NotFoundPage"
 import { selectGroup } from "../../redux/groupSlice"
 import { selectRole } from "../../redux/roleSlice"
 import { useAppSelector } from "../../types/HooksRedux"
-import { useGetExtendedSolutionsByGroup } from "../customHooks/useGetExtendedSolutionsByGroup"
+import { useGetSolutionsByGroup } from "../customHooks/useGetSolutionsByGroup"
 import { ExtendedSolutionType } from "../../types/ExtendedSolutionType"
 import {useGetEvaluationsByGroup} from "../customHooks/useGetEvaluationsByGroup";
+import {SolutionExtendedInterface} from "../../types/SolutionExtendedInterface";
+import {SolutionInterface} from "../../types/SolutionInterface";
 
 function SolutionsTypesPage({ type }: { type: ExtendedSolutionType }) {
   const group = useAppSelector(selectGroup)
   const role = useAppSelector(selectRole)
-  const solutionsExtended = useGetExtendedSolutionsByGroup(group?.id, type)
-  const evaluations = useGetEvaluationsByGroup(group?.id)
+  const solutionsExtended = useGetSolutionsByGroup(group?.id, type, true) as SolutionExtendedInterface[]
+  const evaluations = useGetEvaluationsByGroup(group!.id)
+
 
   if (role !== "Teacher") {
     return <NotFoundPage />
@@ -40,7 +43,7 @@ function SolutionsTypesPage({ type }: { type: ExtendedSolutionType }) {
                 {solutionExtended.assignment.title}
               </div>
               <p className="absolute right-0 mr-10 font-semibold text-[28px]">
-                {type==="checked" && evaluations.find(evaluation => evaluation.solutionId === solutionExtended.id)?.result} /{solutionExtended.assignment.max_points}
+                {type==="checked" && evaluations.find(evaluation => evaluation.solutionId === solutionExtended.id)?.result} /{solutionExtended.assignment.maxPoints}
               </p>
             </Link>
           </li>

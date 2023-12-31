@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.homeworkjustclick.infrastructure.auth.JwtService;
 import pl.homeworkjustclick.infrastructure.enums.Role;
+import pl.homeworkjustclick.infrastructure.exception.EntityNotFoundException;
 import pl.homeworkjustclick.user.User;
 import pl.homeworkjustclick.user.UserRepository;
 
@@ -48,33 +49,7 @@ public class AuthenticationService {
             user.setColor(user.getId()%20);
             userRepository.save(user);
             var jwtToken = jwtService.generateToken(user);
-            return AuthenticationResponseDto.builder().token(jwtToken).id(user.getId()).name(user.getFirstname()).lastname(user.getLastname()).role(user.getRole()).color(user.getColor()).index(user.getIndex()).message("ok").build();
-        }
-    }
-
-    public AuthenticationResponseDto registerAdmin(RegisterRequest request) {
-        Optional<User> optionalUser = userRepository.findByEmail(request.getEmail());
-        if (!emailCheck(request.getEmail())){
-            return AuthenticationResponseDto.builder().token(null).id(0).role(Role.NONE).message("E-mail not valid!").build();
-        }
-        if(optionalUser.isPresent()) {
-            return AuthenticationResponseDto.builder().token(null).id(0).role(Role.NONE).message("E-mail already taken!").build();
-        } else {
-            var salt = generateRandomSalt();
-            var user = User.builder()
-                    .email(request.getEmail())
-                    .password(salt + passwordEncoder.encode(request.getPassword()))
-                    .role(Role.ADMIN)
-                    .isVerified(true)
-                    .firstname(request.getFirstname())
-                    .lastname(request.getLastname())
-                    .salt(salt)
-                    .build();
-            userRepository.save(user);
-            user.setColor(user.getId()%20);
-            userRepository.save(user);
-            var jwtToken = jwtService.generateToken(user);
-            return AuthenticationResponseDto.builder().token(jwtToken).id(user.getId()).name(user.getFirstname()).lastname(user.getLastname()).role(user.getRole()).color(user.getColor()).index(user.getIndex()).message("ok").build();
+            return AuthenticationResponseDto.builder().token(jwtToken).id(user.getId()).firstname(user.getFirstname()).lastname(user.getLastname()).role(user.getRole()).color(user.getColor()).index(user.getIndex()).message("ok").build();
         }
     }
 
@@ -97,7 +72,7 @@ public class AuthenticationService {
         }
         var jwtToken = jwtService.generateToken(user);
         var id = user.getId();
-        return AuthenticationResponseDto.builder().token(jwtToken).id(id).role(user.getRole()).message("ok").color(user.getColor()).name(user.getFirstname()).lastname(user.getLastname()).index(user.getIndex()).build();
+        return AuthenticationResponseDto.builder().token(jwtToken).id(id).role(user.getRole()).message("ok").color(user.getColor()).firstname(user.getFirstname()).lastname(user.getLastname()).index(user.getIndex()).build();
     }
 
     public AuthenticationResponseDto changePassword(ChangePasswordRequest request) {
@@ -117,17 +92,17 @@ public class AuthenticationService {
         } catch (BadCredentialsException e) {
             return AuthenticationResponseDto.builder().token(null).id(0).role(Role.NONE).message("Password incorrect!").build();
         }
-        user.setPassword(salt + passwordEncoder.encode(request.getNewPassword()));
+        user.setPassword(passwordEncoder.encode(salt + request.getNewPassword()));
         userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
         var id = user.getId();
-        return AuthenticationResponseDto.builder().token(jwtToken).id(id).role(user.getRole()).message("ok").color(user.getColor()).name(user.getFirstname()).lastname(user.getLastname()).index(user.getIndex()).build();
+        return AuthenticationResponseDto.builder().token(jwtToken).id(id).role(user.getRole()).message("ok").color(user.getColor()).firstname(user.getFirstname()).lastname(user.getLastname()).index(user.getIndex()).build();
     }
 
     public AuthenticationResponseDto refreshToken(int id) {
-        var user = userRepository.findById(id).orElseThrow();
+        var user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found!"));
         var jwtToken = jwtService.generateToken(user);
-        return AuthenticationResponseDto.builder().token(jwtToken).id(user.getId()).role(user.getRole()).message("ok").color(user.getColor()).name(user.getFirstname()).lastname(user.getLastname()).index(user.getIndex()).build();
+        return AuthenticationResponseDto.builder().token(jwtToken).id(user.getId()).role(user.getRole()).message("ok").color(user.getColor()).firstname(user.getFirstname()).lastname(user.getLastname()).index(user.getIndex()).build();
     }
 
     public Boolean checkToken(String token) {
@@ -141,7 +116,7 @@ public class AuthenticationService {
     }
 
     private Boolean emailCheck(String email) {
-        String pattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
+        String pattern = "^([a-z0-9_\\.-]+\\@[\\da-z\\.-]+\\.[a-z\\.]{2,6})$";
         Pattern p = java.util.regex.Pattern.compile(pattern);
         return p.matcher(email).matches();
     }

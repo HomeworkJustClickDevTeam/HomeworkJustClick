@@ -6,11 +6,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class GroupResponseDto {
+public class GroupResponseDto implements Serializable {
     @Schema(example = "0")
     private int id;
     @Schema(example = "Example group name")

@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import pl.homeworkjustclick.evaluation.Evaluation;
 
+import java.io.Serializable;
+
 @Builder
 @Data
 @NoArgsConstructor
@@ -13,7 +15,7 @@ import pl.homeworkjustclick.evaluation.Evaluation;
 @Table(name = "_evaluation_report")
 @Getter
 @Setter
-public class EvaluationReport {
+public class EvaluationReport implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)

@@ -24,15 +24,19 @@ import {LoggedOutUserRoute} from "./components/route/LoggedOutUserRoute"
 import {AssignmentsType} from "./types/AssignmentsType"
 import {ExtendedSolutionType} from "./types/ExtendedSolutionType"
 import {RoleBasedRoute} from "./components/route/RoleBasedRoute";
+import SolutionCheckedPage from "./components/solution/SolutionCheckedPage";
 import {SolutionCheckedAdvancedPage} from "./components/solution/SolutionCheckedAdvancedPage";
 import AdvancedEvaluationPage from "./components/evaluation/AdvancedEvaluationPage";
 import NotFoundPage from "./components/errors/NotFoundPage";
 import {EvaluationReportedPage} from "./components/evaluation/EvaluationReportedPage";
 import {ReportPage} from "./components/report/ReportPage";
 import {EvaluationsStudentPage} from "./components/evaluation/EvaluationsStudentPage";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
     return (
+        <>
         <Routes>
             <Route element={<LoggedOutUserRoute/>}>
                 <Route
@@ -109,14 +113,15 @@ function App() {
                         element={<EvaluationsStudentPage/>}
                     />
 
-                </Route>
-                <Route path="/group/:idGroup/advancedAssignment" element={
-                    <RoleBasedRoute renderForStudent={<SolutionCheckedAdvancedPage/>}
-                                    renderForTeacher={<AdvancedEvaluationPage/>}/>}/>
-            </Route>
-            <Route path="*" element={<NotFoundPage/>}/>
-        </Routes>
-    )
+        </Route>
+        <Route path="/group/:idGroup/advancedAssignment" element={
+          <RoleBasedRoute renderForStudent={<SolutionCheckedAdvancedPage/>} renderForTeacher={<AdvancedEvaluationPage/>}/>}/>
+      </Route>
+      <Route path="*" element={<NotFoundPage/>}/>
+    </Routes>
+        <ToastContainer limit={2}></ToastContainer>
+      </>
+  )
 }
 
 export default App

@@ -41,15 +41,22 @@ public class InternalAuthenticationFilter {
     private final EvaluationReportService evaluationReportService;
     private final ObjectMapper objectMapper;
 
+    private static final String HTTP_METHOD_POST = "POST";
+    private static final String HTTP_METHOD_DELETE = "DELETE";
+    private static final String HTTP_METHOD_PUT = "PUT";
+
     public void filterInternal(HttpServletRequest request, String userMail, String body) throws JsonProcessingException {
         var path = request.getServletPath();
         var pathSplit = path.split("/");
         var user = userService.findByEmail(userMail);
+        if (pathSplit.length < 2) {
+            return;
+        }
         if (pathSplit[2].equals("assignment")) {
-            filterAssignment(request, user.getId(), body, path);
+            filterAssignment(request, user.getId(), path);
         }
         if (pathSplit[2].equals("solution")) {
-            filterSolution(request, user.getId(), body, path);
+            filterSolution(request, user.getId(), path);
         }
         if (pathSplit[2].equals("evaluation")) {
             filterEvaluation(request, user.getId(), body, path);
@@ -67,22 +74,22 @@ public class InternalAuthenticationFilter {
             filterEvaluationReport(request, user.getId(), body, path);
         }
         if (pathSplit[2].equals("report")) {
-            filterReport(request, user.getId(), body, path);
+            filterReport(user.getId(), body, path);
         }
         if (pathSplit[2].equals("group")) {
-            filterGroup(request, user.getId(), body, path);
+            filterGroup(request, user.getId(), path);
         }
     }
 
-    private void filterGroup(HttpServletRequest request, int userId, String body, String path) {
+    private void filterGroup(HttpServletRequest request, int userId, String path) {
         var pathSplit = path.split("/");
-        if (request.getMethod().equals("POST") && pathSplit[2].equals("addTeacher")) {
+        if (request.getMethod().equals(HTTP_METHOD_POST) && pathSplit[2].equals("addTeacher")) {
             var groupId = pathSplit[pathSplit.length - 1];
             checkForTeacherInGroup(userId, Integer.parseInt(groupId));
         }
     }
 
-    private void filterReport(HttpServletRequest request, int userId, String body, String path) throws JsonProcessingException {
+    private void filterReport(int userId, String body, String path) throws JsonProcessingException {
         var pathSplit = path.split("/");
         if (pathSplit[pathSplit.length - 1].equals("assignment_csv")) {
             var report = objectMapper.readValue(body, AssignmentReportDto.class);
@@ -97,10 +104,10 @@ public class InternalAuthenticationFilter {
     }
 
     private void filterEvaluationReport(HttpServletRequest request, int userId, String body, String path) throws JsonProcessingException {
-        if (request.getMethod().equals("POST")) {
-            filterStudentInEvaluationReportPost(path, userId, body);
+        if (request.getMethod().equals(HTTP_METHOD_POST)) {
+            filterStudentInEvaluationReportPost(userId, body);
         }
-        if (request.getMethod().equals("DELETE") || request.getMethod().equals("PUT")) {
+        if (request.getMethod().equals(HTTP_METHOD_DELETE) || request.getMethod().equals(HTTP_METHOD_PUT)) {
             filterFilterStudentInEvaluationReportDeleteOrPut(path, userId);
         }
     }
@@ -113,7 +120,7 @@ public class InternalAuthenticationFilter {
         checkForStudentInGroup(userId, groupId);
     }
 
-    private void filterStudentInEvaluationReportPost(String path, int userId, String body) throws JsonProcessingException {
+    private void filterStudentInEvaluationReportPost(int userId, String body) throws JsonProcessingException {
         var evaluationReport = objectMapper.readValue(body, EvaluationReportDto.class);
         var evaluation = evaluationService.findById(evaluationReport.getEvaluationId());
         var groupId = evaluation.getGroup().getId();
@@ -121,10 +128,10 @@ public class InternalAuthenticationFilter {
     }
 
     private void filterCommentFileText(HttpServletRequest request, int userId, String body, String path) throws JsonProcessingException {
-        if (request.getMethod().equals("POST")) {
-            filterTeacherInCommentFileTextPost(path, userId, body);
+        if (request.getMethod().equals(HTTP_METHOD_POST)) {
+            filterTeacherInCommentFileTextPost(userId, body);
         }
-        if (request.getMethod().equals("DELETE") || request.getMethod().equals("PUT")) {
+        if (request.getMethod().equals(HTTP_METHOD_DELETE) || request.getMethod().equals(HTTP_METHOD_PUT)) {
             filterTeacherInCommentFileTextDeleteOrPut(path, userId);
         }
     }
@@ -146,7 +153,7 @@ public class InternalAuthenticationFilter {
         }
     }
 
-    private void filterTeacherInCommentFileTextPost(String path, int userId, String body) throws JsonProcessingException {
+    private void filterTeacherInCommentFileTextPost(int userId, String body) throws JsonProcessingException {
         var commentFileText = objectMapper.readValue(body, CommentFileTextDto.class);
         var comment = commentService.findById(commentFileText.getCommentId());
         var assignmentId = comment.getAssignment().getId();
@@ -155,10 +162,10 @@ public class InternalAuthenticationFilter {
     }
 
     private void filterCommentFileImg(HttpServletRequest request, int userId, String body, String path) throws JsonProcessingException {
-        if (request.getMethod().equals("POST")) {
-            filterTeacherInCommentFileImgPost(path, userId, body);
+        if (request.getMethod().equals(HTTP_METHOD_POST)) {
+            filterTeacherInCommentFileImgPost(userId, body);
         }
-        if (request.getMethod().equals("DELETE") || request.getMethod().equals("PUT")) {
+        if (request.getMethod().equals(HTTP_METHOD_DELETE) || request.getMethod().equals(HTTP_METHOD_PUT)) {
             filterTeacherInCommentFileImgDeleteOrPut(path, userId);
         }
     }
@@ -180,7 +187,7 @@ public class InternalAuthenticationFilter {
         }
     }
 
-    private void filterTeacherInCommentFileImgPost(String path, int userId, String body) throws JsonProcessingException {
+    private void filterTeacherInCommentFileImgPost(int userId, String body) throws JsonProcessingException {
         var commentFileImg = objectMapper.readValue(body, CommentFileImgDto.class);
         var comment = commentService.findById(commentFileImg.getCommentId());
         var assignmentId = comment.getAssignment().getId();
@@ -189,10 +196,10 @@ public class InternalAuthenticationFilter {
     }
 
     private void filterComment(HttpServletRequest request, int userId, String body, String path) throws JsonProcessingException {
-        if (request.getMethod().equals("POST")) {
+        if (request.getMethod().equals(HTTP_METHOD_POST)) {
             filterTeacherInCommentPost(path, userId, body);
         }
-        if (request.getMethod().equals("DELETE") || request.getMethod().equals("PUT")) {
+        if (request.getMethod().equals(HTTP_METHOD_DELETE) || request.getMethod().equals(HTTP_METHOD_PUT)) {
             filterTeacherInCommentDeleteOrPut(path, userId);
         }
     }
@@ -226,10 +233,10 @@ public class InternalAuthenticationFilter {
     }
 
     private void filterEvaluation(HttpServletRequest request, int userId, String body, String path) throws JsonProcessingException {
-        if (request.getMethod().equals("POST")) {
-            filterTeacherInEvaluationPost(path, userId, body);
+        if (request.getMethod().equals(HTTP_METHOD_POST)) {
+            filterTeacherInEvaluationPost(userId, body);
         }
-        if (request.getMethod().equals("DELETE") || request.getMethod().equals("PUT")) {
+        if (request.getMethod().equals(HTTP_METHOD_DELETE) || request.getMethod().equals(HTTP_METHOD_PUT)) {
             filterTeacherInEvaluationDeleteOrPut(path, userId);
         }
     }
@@ -242,17 +249,17 @@ public class InternalAuthenticationFilter {
         checkForTeacherInGroup(userId, groupId);
     }
 
-    private void filterTeacherInEvaluationPost(String path, int userId, String body) throws JsonProcessingException {
+    private void filterTeacherInEvaluationPost(int userId, String body) throws JsonProcessingException {
         var evaluation = objectMapper.readValue(body, EvaluationDto.class);
         var groupId = evaluation.getGroupId();
         checkForTeacherInGroup(userId, groupId);
     }
 
-    private void filterSolution(HttpServletRequest request, Integer userId, String body, String path) {
-        if (request.getMethod().equals("POST")) {
+    private void filterSolution(HttpServletRequest request, Integer userId, String path) {
+        if (request.getMethod().equals(HTTP_METHOD_POST)) {
             filterStudentInSolutionPost(path, userId);
         }
-        if (request.getMethod().equals("DELETE") || request.getMethod().equals("PUT")) {
+        if (request.getMethod().equals(HTTP_METHOD_DELETE) || request.getMethod().equals(HTTP_METHOD_PUT)) {
             filterStudentInSolutionDeleteOrPut(path, userId);
         }
     }
@@ -273,11 +280,11 @@ public class InternalAuthenticationFilter {
         checkForStudentInGroup(userId, groupId);
     }
 
-    private void filterAssignment(HttpServletRequest request, Integer userId, String body, String path) {
-        if (request.getMethod().equals("POST")) {
+    private void filterAssignment(HttpServletRequest request, Integer userId, String path) {
+        if (request.getMethod().equals(HTTP_METHOD_POST)) {
             filterTeacherInAssignmentPost(path, userId);
         }
-        if (request.getMethod().equals("DELETE") || request.getMethod().equals("PUT")) {
+        if (request.getMethod().equals(HTTP_METHOD_DELETE) || request.getMethod().equals(HTTP_METHOD_PUT)) {
             filterTeacherInAssignmentDeleteOrPut(path, userId);
         }
     }
@@ -297,13 +304,13 @@ public class InternalAuthenticationFilter {
     }
 
     private void checkForTeacherInGroup(Integer userId, Integer groupId) {
-        if (!groupTeacherService.checkForTeacherInGroup(userId, groupId)) {
+        if (groupTeacherService.checkForTeacherInGroup(userId, groupId).equals(Boolean.FALSE)) {
             throw new InvalidUserException("User is not a teacher in group");
         }
     }
 
     private void checkForStudentInGroup(Integer userId, Integer groupId) {
-        if (!groupStudentService.checkForStudentInGroup(userId, groupId)) {
+        if (groupStudentService.checkForStudentInGroup(userId, groupId).equals(Boolean.FALSE)) {
             throw new InvalidUserException("User is not a student in group");
         }
     }

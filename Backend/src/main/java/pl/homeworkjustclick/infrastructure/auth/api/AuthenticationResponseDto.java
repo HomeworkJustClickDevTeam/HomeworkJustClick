@@ -7,11 +7,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import pl.homeworkjustclick.infrastructure.enums.Role;
 
+import java.io.Serializable;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthenticationResponseDto {
+public class AuthenticationResponseDto implements Serializable {
     @Schema(example = "Bearer ...")
     private String token;
     @Schema(example = "0")
@@ -23,7 +25,7 @@ public class AuthenticationResponseDto {
     @Schema(example = "0")
     private int color;
     @Schema(example = "Exampler")
-    private String name;
+    private String firstname;
     @Schema(example = "Examplowski")
     private String lastname;
     @Schema(example = "6969")

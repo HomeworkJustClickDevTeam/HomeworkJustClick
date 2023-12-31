@@ -23,20 +23,20 @@ export const ReportGrade = (props:
     }
 
     return (
-        <>
+        <div>
             {isButtonClicked ? (
                 <>
-                    <div>
+                    <>
                         <label> Komentarz
                             <input type="text" onChange={(event) => changeComment(event)} value={comment}/>
                         </label>
                         <button onClick={reportGrade}>Wyślij zgłoszenie</button>
                         <button onClick={() => setIsButtonClicked(false)}>Anuluj</button>
-                    </div>
+                    </>
                 </>
             ) : (
                 <button onClick={() => setIsButtonClicked(true)}>Zgłoś ocenę</button>
             )}
-        </>
+        </div>
     )
 }

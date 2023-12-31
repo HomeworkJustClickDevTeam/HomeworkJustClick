@@ -44,7 +44,7 @@ export default function GroupUsersSettingsListElement(props: GroupUsersSettingsL
   }
   const ThreeDotsSettingsButtons = () => {
     return (
-      <ul className='ml-2 text-left'>
+      <ul className='ml-2 text-left border border-border_gray rounded-md px-3'>
         <li>
           <button onClick={handleUserDeletion} className='text-scarlet'>Usuń z grupy</button>
         </li>

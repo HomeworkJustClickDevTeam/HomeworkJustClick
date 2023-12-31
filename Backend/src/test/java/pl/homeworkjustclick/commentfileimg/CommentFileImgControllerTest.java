@@ -38,7 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         "classpath:db/init_comment_file_img.sql",
         "classpath:db/init_comment_file_text.sql"
 })
-public class CommentFileImgControllerTest extends BaseTestEntity {
+class CommentFileImgControllerTest extends BaseTestEntity {
     @Autowired
     CommentFileImgRepository commentFileImgRepository;
 

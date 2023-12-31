@@ -1,17 +1,19 @@
 package pl.homeworkjustclick.evaluationreport;
 
 import lombok.*;
-import pl.homeworkjustclick.assignment.AssignmentResponseDto;
 import pl.homeworkjustclick.evaluation.EvaluationResponseDto;
+import pl.homeworkjustclick.solution.SolutionResponseExtendedDto;
+
+import java.io.Serializable;
 
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EvaluationReportResponseDto {
+public class EvaluationReportResponseDto implements Serializable {
     private Integer id;
     private String comment;
     private EvaluationResponseDto evaluation;
-    private AssignmentResponseDto assignment;
+    private SolutionResponseExtendedDto solution;
 }

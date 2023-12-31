@@ -54,29 +54,6 @@ public class AuthenticationController {
         }
     }
 
-    @PostMapping("/register/admin")
-    @Operation(
-            summary = "Serves registration purpose to get authentication token and add user as an admin to DB.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "400",
-                            description = "Email has been taken or is not in correct format.",
-                            content = @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = AuthenticationResponseDto.class)
-                            )
-                    )
-            }
-    )
-    public ResponseEntity<AuthenticationResponseDto> registerAdmin(@RequestBody RegisterRequest request) {
-        AuthenticationResponseDto response = authenticationService.registerAdmin(request);
-        if(response.getMessage().equals("ok")) {
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-        }
-    }
-
     @PostMapping("/authenticate")
     @Operation(
             summary = "Serves authentication purpose mainly to get authentication token.",

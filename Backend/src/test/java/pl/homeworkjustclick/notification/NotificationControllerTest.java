@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         "classpath:db/init_evaluation.sql",
         "classpath:db/init_notification.sql"
 })
-public class NotificationControllerTest extends BaseTestEntity {
+class NotificationControllerTest extends BaseTestEntity {
     @Autowired
     NotificationRepository notificationRepository;
     @Autowired

@@ -8,6 +8,6 @@ export interface AssignmentInterface {
   creationDatetime: Date
   lastModifiedDatetime: Date
   completionDatetime: Date
-  max_points: number
-  auto_penalty: number
+  maxPoints: number
+  autoPenalty: number
 }

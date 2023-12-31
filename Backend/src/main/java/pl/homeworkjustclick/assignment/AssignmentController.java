@@ -1,6 +1,5 @@
 package pl.homeworkjustclick.assignment;
 
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -76,7 +75,7 @@ public class AssignmentController {
         return responseList;
     }
 
-    @GetMapping("/assignment/{assignment_id}")
+    @GetMapping("/assignment/{assignmentId}")
     @Operation(
             summary = "Returns assignment by it's id.",
             responses = {
@@ -95,7 +94,7 @@ public class AssignmentController {
                     )
             }
     )
-    public ResponseEntity<AssignmentResponseDto> getById(@PathVariable("assignment_id") int id) {
+    public ResponseEntity<AssignmentResponseDto> getById(@PathVariable("assignmentId") int id) {
         AssignmentResponseDto assignmentResponseDto = assignmentService.getById(id);
         if (assignmentResponseDto != null) {
             return new ResponseEntity<>(assignmentResponseDto, HttpStatus.OK);
@@ -104,7 +103,7 @@ public class AssignmentController {
         }
     }
 
-    @GetMapping("/extended/assignment/{assignment_id}")
+    @GetMapping("/extended/assignment/{assignmentId}")
     @Operation(
             summary = "Returns assignment by it's id.",
             responses = {
@@ -123,16 +122,16 @@ public class AssignmentController {
                     )
             }
     )
-    public ResponseEntity<AssignmentResponseExtendedDto> getByIdExtended(@PathVariable("assignment_id") int id) {
+    public ResponseEntity<AssignmentResponseExtendedDto> getByIdExtended(@PathVariable("assignmentId") int id) {
         AssignmentResponseExtendedDto assignmentResponse = assignmentService.getByIdExtended(id);
-        if(assignmentResponse!=null) {
+        if (assignmentResponse != null) {
             return new ResponseEntity<>(assignmentResponse, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    @GetMapping("/assignments/byGroupId/{group_id}")
+    @GetMapping("/assignments/byGroupId/{groupId}")
     @Operation(
             summary = "Returns list of all assignments in the given group.",
             responses = {
@@ -151,18 +150,17 @@ public class AssignmentController {
                     )
             }
     )
-    public ResponseEntity<List<AssignmentResponseDto>> getAssignmentsByGroupId(@PathVariable("group_id") int id) {
+    public ResponseEntity<List<AssignmentResponseDto>> getAssignmentsByGroupId(@PathVariable("groupId") int id) {
         List<AssignmentResponseDto> responseList = assignmentService.getAssignmentsByGroupId(id);
-        if(responseList.isEmpty()){
-            return new ResponseEntity<>(responseList,HttpStatus.NOT_FOUND);
-        }
-        else {
+        if (responseList.isEmpty()) {
+            return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
+        } else {
             responseList.sort(Comparator.comparing(AssignmentResponseDto::getCompletionDatetime));
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
 
-    @GetMapping("/extended/assignments/byGroupId/{group_id}")
+    @GetMapping("/extended/assignments/byGroupId/{groupId}")
     @Operation(
             summary = "Returns list of all assignments in the given group.",
             responses = {
@@ -181,25 +179,17 @@ public class AssignmentController {
                     )
             }
     )
-    public ResponseEntity<List<AssignmentResponseExtendedDto>> getAssignmentsByGroupIdExtended(@PathVariable("group_id") int id) {
+    public ResponseEntity<List<AssignmentResponseExtendedDto>> getAssignmentsByGroupIdExtended(@PathVariable("groupId") int id) {
         List<AssignmentResponseExtendedDto> responseList = assignmentService.getAssignmentsByGroupIdExtended(id);
-        if(responseList.isEmpty()){
-            return new ResponseEntity<>(responseList,HttpStatus.NOT_FOUND);
-        }
-        else {
+        if (responseList.isEmpty()) {
+            return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
+        } else {
             responseList.sort(Comparator.comparing(AssignmentResponseExtendedDto::getCompletionDatetime));
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
 
-    @PostMapping("/assignment")
-    @Hidden
-    public ResponseEntity<AssignmentResponseDto> add(@RequestBody @Valid Assignment assignment) {
-        AssignmentResponseDto response = assignmentService.add(assignment);
-        return ResponseEntity.ok(response);
-    }
-
-    @PostMapping("/assignment/withUserAndGroup/{user_id}/{group_id}")
+    @PostMapping("/assignment/withUserAndGroup/{userId}/{groupId}")
     @Operation(
             summary = "Creates assignment with user and group already attached to it.",
             responses = {
@@ -223,9 +213,9 @@ public class AssignmentController {
                     )
             }
     )
-    public ResponseEntity<AssignmentResponseDto> addWithUserAndGroup(@PathVariable("user_id") int user_id, @PathVariable("group_id") int group_id, @RequestBody @Valid Assignment assignment) {
-        AssignmentResponseDto response = assignmentService.addWithUserAndGroup(assignment, user_id, group_id);
-        if(response.getId()!=0) {
+    public ResponseEntity<AssignmentResponseDto> addWithUserAndGroup(@PathVariable("userId") int userId, @PathVariable("groupId") int groupId, @RequestBody @Valid Assignment assignment) {
+        AssignmentResponseDto response = assignmentService.addWithUserAndGroup(assignment, userId, groupId);
+        if (response.getId() != 0) {
             return new ResponseEntity<>(response, HttpStatus.OK);
         } else if (response.isForbidden()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -234,7 +224,7 @@ public class AssignmentController {
         }
     }
 
-    @DeleteMapping("/assignment/{assignment_id}")
+    @DeleteMapping("/assignment/{assignmentId}")
     @Operation(
             summary = "Deletes assignment with given id.",
             responses = {
@@ -245,16 +235,15 @@ public class AssignmentController {
                     )
             }
     )
-    public ResponseEntity<Void> delete (@PathVariable("assignment_id") int id){
-        if(assignmentService.delete(id)){
+    public ResponseEntity<Void> delete(@PathVariable("assignmentId") int id) {
+        if (assignmentService.delete(id).equals(Boolean.TRUE)) {
             return new ResponseEntity<>(HttpStatus.OK);
-        }
-        else {
+        } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    @PutMapping("/assignment/{assignment_id}")
+    @PutMapping("/assignment/{assignmentId}")
     @Operation(
             summary = "Changes assignment with given id.",
             description = "Change whole assignment object for a given id.",
@@ -266,15 +255,15 @@ public class AssignmentController {
                     )
             }
     )
-    public ResponseEntity<Void> update(@PathVariable("assignment_id") int id, @RequestBody @Valid Assignment assignment) {
-        if(assignmentService.update(id, assignment)) {
+    public ResponseEntity<Void> update(@PathVariable("assignmentId") int id, @RequestBody @Valid Assignment assignment) {
+        if (assignmentService.update(id, assignment).equals(Boolean.TRUE)) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    @PutMapping("/assignment/visibility/{assignment_id}")
+    @PutMapping("/assignment/visibility/{assignmentId}")
     @Operation(
             summary = "Changes visibility of assignment with given id.",
             responses = {
@@ -285,15 +274,15 @@ public class AssignmentController {
                     )
             }
     )
-    public ResponseEntity<Void> updateVisibility(@PathVariable("assignment_id") int id, @RequestBody Boolean visible){
-        if(assignmentService.changeVisibility(id, visible)){
+    public ResponseEntity<Void> updateVisibility(@PathVariable("assignmentId") int id, @RequestBody Boolean visible) {
+        if (assignmentService.changeVisibility(id, visible).equals(Boolean.TRUE)) {
             return new ResponseEntity<>(HttpStatus.OK);
-        }
-        else {
+        } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-    @PutMapping("/assignment/title/{assignment_id}")
+
+    @PutMapping("/assignment/title/{assignmentId}")
     @Operation(
             summary = "Changes title of assignment with given id.",
             responses = {
@@ -305,16 +294,15 @@ public class AssignmentController {
             }
     )
 
-    public ResponseEntity<Void> updateTitle(@PathVariable("assignment_id") int id, @RequestBody String title){
-        if(assignmentService.changeTitleById(id, title)){
+    public ResponseEntity<Void> updateTitle(@PathVariable("assignmentId") int id, @RequestBody String title) {
+        if (assignmentService.changeTitleById(id, title).equals(Boolean.TRUE)) {
             return new ResponseEntity<>(HttpStatus.OK);
-        }
-        else{
+        } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    @PutMapping("/assignment/taskDescription/{assignment_id}")
+    @PutMapping("/assignment/taskDescription/{assignmentId}")
     @Operation(
             summary = "Changes task description of assignment with given id.",
             responses = {
@@ -325,16 +313,15 @@ public class AssignmentController {
                     )
             }
     )
-    public ResponseEntity<Void> updateTaskDescription(@PathVariable("assignment_id") int id, @RequestBody String taskDescription){
-        if(assignmentService.changeTaskDescriptionById(id, taskDescription)){
+    public ResponseEntity<Void> updateTaskDescription(@PathVariable("assignmentId") int id, @RequestBody String taskDescription) {
+        if (assignmentService.changeTaskDescriptionById(id, taskDescription).equals(Boolean.TRUE)) {
             return new ResponseEntity<>(HttpStatus.OK);
-        }
-        else{
+        } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    @PutMapping("/assignment/completionDatetime/{assignment_id}")
+    @PutMapping("/assignment/completionDatetime/{assignmentId}")
     @Operation(
             summary = "Changes completion time of assignment with given id.",
             responses = {
@@ -345,16 +332,15 @@ public class AssignmentController {
                     )
             }
     )
-    public ResponseEntity<Void> updateCompletionDatetime(@PathVariable("assignment_id") int id, @RequestBody OffsetDateTime completionDatetime){
-        if(assignmentService.changeCompletionDatetime(id, completionDatetime)){
+    public ResponseEntity<Void> updateCompletionDatetime(@PathVariable("assignmentId") int id, @RequestBody OffsetDateTime completionDatetime) {
+        if (assignmentService.changeCompletionDatetime(id, completionDatetime).equals(Boolean.TRUE)) {
             return new ResponseEntity<>(HttpStatus.OK);
-        }
-        else{
+        } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    @PutMapping("/assignment/user/{user_id}/{assignment_id}")
+    @PutMapping("/assignment/user/{userId}/{assignmentId}")
     @Operation(
             summary = "Changes user of assignment with given id.",
             responses = {
@@ -365,16 +351,15 @@ public class AssignmentController {
                     )
             }
     )
-    public ResponseEntity<Void> updateUser(@PathVariable("user_id") int userId, @PathVariable("assignment_id") int assignmentId){
-        if(assignmentService.changeUser(assignmentId, userId)){
+    public ResponseEntity<Void> updateUser(@PathVariable("userId") int userId, @PathVariable("assignmentId") int assignmentId) {
+        if (assignmentService.changeUser(assignmentId, userId).equals(Boolean.TRUE)) {
             return new ResponseEntity<>(HttpStatus.OK);
-        }
-        else {
+        } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    @PutMapping("/assignment/group/{group_id}/{assignment_id}")
+    @PutMapping("/assignment/group/{groupId}/{assignmentId}")
     @Operation(
             summary = "Changes group of assignment with given id.",
             responses = {
@@ -385,16 +370,15 @@ public class AssignmentController {
                     )
             }
     )
-    public ResponseEntity<Void> updateGroup(@PathVariable("group_id") int groupId, @PathVariable("assignment_id") int assignmentId){
-        if(assignmentService.changeGroup(assignmentId, groupId)){
+    public ResponseEntity<Void> updateGroup(@PathVariable("groupId") int groupId, @PathVariable("assignmentId") int assignmentId) {
+        if (assignmentService.changeGroup(assignmentId, groupId).equals(Boolean.TRUE)) {
             return new ResponseEntity<>(HttpStatus.OK);
-        }
-        else {
+        } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    @PutMapping("/assignment/max_points/{assignment_id}")
+    @PutMapping("/assignment/maxPoints/{assignmentId}")
     @Operation(
             summary = "Changes max points of assignment with given id.",
             responses = {
@@ -405,15 +389,15 @@ public class AssignmentController {
                     )
             }
     )
-    public ResponseEntity<Void> updatePoints(@PathVariable("assignment_id") int id, @RequestBody int points) {
-        if (assignmentService.changeMaxPoints(id, points)) {
+    public ResponseEntity<Void> updatePoints(@PathVariable("assignmentId") int id, @RequestBody int points) {
+        if (assignmentService.changeMaxPoints(id, points).equals(Boolean.TRUE)) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    @PutMapping("/assignment/auto_penalty/{assignment_id}")
+    @PutMapping("/assignment/autoPenalty/{assignmentId}")
     @Operation(
             summary = "Changes auto penalty of assignment with given id.",
             responses = {
@@ -424,15 +408,15 @@ public class AssignmentController {
                     )
             }
     )
-    public ResponseEntity<Void> updatePenalty(@PathVariable("assignment_id") int id, @RequestBody int auto_penalty) {
-        if (assignmentService.changeAutoPenalty(id, auto_penalty)) {
+    public ResponseEntity<Void> updatePenalty(@PathVariable("assignmentId") int id, @RequestBody int autoPenalty) {
+        if (assignmentService.changeAutoPenalty(id, autoPenalty).equals(Boolean.TRUE)) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    @GetMapping("/assignments/unchecked/{group_id}")
+    @GetMapping("/assignments/unchecked/{groupId}")
     @Operation(
             summary = "Returns list of unchecked assignments from group with given id.",
             responses = {
@@ -450,9 +434,9 @@ public class AssignmentController {
                     )
             }
     )
-    public ResponseEntity<List<AssignmentResponseDto>> getUncheckedAssignmentsInGroup(@PathVariable("group_id") int group_id) {
-        List<AssignmentResponseDto> responseList = assignmentService.getUncheckedAssignmentsByGroup(group_id);
-        if(responseList.isEmpty()){
+    public ResponseEntity<List<AssignmentResponseDto>> getUncheckedAssignmentsInGroup(@PathVariable("groupId") int groupId) {
+        List<AssignmentResponseDto> responseList = assignmentService.getUncheckedAssignmentsByGroup(groupId);
+        if (responseList.isEmpty()) {
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
         } else {
             responseList.sort(Comparator.comparing(AssignmentResponseDto::getCompletionDatetime));
@@ -460,7 +444,7 @@ public class AssignmentController {
         }
     }
 
-    @GetMapping("/assignments/allByGroupAndStudent/{group_id}/{student_id}")
+    @GetMapping("/assignments/allByGroupAndStudent/{groupId}/{studentId}")
     @Operation(
             summary = "Returns list of assignments of a student for a given group.",
             responses = {
@@ -478,9 +462,9 @@ public class AssignmentController {
                     )
             }
     )
-    public ResponseEntity<List<AssignmentResponseDto>> getAllAssignmentsByUserAndGroup(@PathVariable("group_id") int group_id, @PathVariable("student_id") int user_id) {
-        List<AssignmentResponseDto> responseList = assignmentService.getAllAssignmentsByGroupIdAndUserId(group_id, user_id);
-        if(responseList.isEmpty()){
+    public ResponseEntity<List<AssignmentResponseDto>> getAllAssignmentsByUserAndGroup(@PathVariable("groupId") int groupId, @PathVariable("studentId") int userId) {
+        List<AssignmentResponseDto> responseList = assignmentService.getAllAssignmentsByGroupIdAndUserId(groupId, userId);
+        if (responseList.isEmpty()) {
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
         } else {
             responseList.sort(Comparator.comparing(AssignmentResponseDto::getCompletionDatetime));
@@ -488,7 +472,7 @@ public class AssignmentController {
         }
     }
 
-    @GetMapping("/assignments/undoneByGroupAndStudent/{group_id}/{student_id}")
+    @GetMapping("/assignments/undoneByGroupAndStudent/{groupId}/{studentId}")
     @Operation(
             summary = "Returns list of undone assignments of a student for a given group.",
             responses = {
@@ -506,9 +490,9 @@ public class AssignmentController {
                     )
             }
     )
-    public ResponseEntity<List<AssignmentResponseDto>> getUndoneAssignmentsByGroupAndStudent(@PathVariable("group_id") int group_id, @PathVariable("student_id") int student_id) {
-        List<AssignmentResponseDto> responseList = assignmentService.getUndoneAssignmentsByGroupIdAndUserId(group_id, student_id);
-        if(responseList.isEmpty()){
+    public ResponseEntity<List<AssignmentResponseDto>> getUndoneAssignmentsByGroupAndStudent(@PathVariable("groupId") int groupId, @PathVariable("studentId") int studentId) {
+        List<AssignmentResponseDto> responseList = assignmentService.getUndoneAssignmentsByGroupIdAndUserId(groupId, studentId);
+        if (responseList.isEmpty()) {
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
         } else {
             responseList.sort(Comparator.comparing(AssignmentResponseDto::getCompletionDatetime));
@@ -516,7 +500,7 @@ public class AssignmentController {
         }
     }
 
-    @GetMapping("/assignments/undoneByStudent/{student_id}")
+    @GetMapping("/assignments/undoneByStudent/{studentId}")
     @Operation(
             summary = "Returns list of undone assignments of a student.",
             responses = {
@@ -534,9 +518,9 @@ public class AssignmentController {
                     )
             }
     )
-    public ResponseEntity<List<AssignmentResponseDto>> getUndoneAssignmentsByStudent(@PathVariable("student_id") int student_id) {
-        List<AssignmentResponseDto> responseList = assignmentService.getUndoneAssignmentsByStudent(student_id);
-        if(responseList.isEmpty()){
+    public ResponseEntity<List<AssignmentResponseDto>> getUndoneAssignmentsByStudent(@PathVariable("studentId") int studentId) {
+        List<AssignmentResponseDto> responseList = assignmentService.getUndoneAssignmentsByStudent(studentId);
+        if (responseList.isEmpty()) {
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
         } else {
             responseList.sort(Comparator.comparing(AssignmentResponseDto::getCompletionDatetime));
@@ -544,7 +528,7 @@ public class AssignmentController {
         }
     }
 
-    @GetMapping("/assignments/doneByGroupAndStudent/{group_id}/{student_id}")
+    @GetMapping("/assignments/doneByGroupAndStudent/{groupId}/{studentId}")
     @Operation(
             summary = "Returns list of done assignments of a student in the group.",
             responses = {
@@ -562,9 +546,9 @@ public class AssignmentController {
                     )
             }
     )
-    public ResponseEntity<List<AssignmentResponseDto>> getDoneAssignmentsByGroupAndStudent(@PathVariable("group_id") int group_id, @PathVariable("student_id") int student_id) {
-        List<AssignmentResponseDto> responseList = assignmentService.getDoneAssignmentsByGroupIdAndUserId(group_id, student_id);
-        if(responseList.isEmpty()){
+    public ResponseEntity<List<AssignmentResponseDto>> getDoneAssignmentsByGroupAndStudent(@PathVariable("groupId") int groupId, @PathVariable("studentId") int studentId) {
+        List<AssignmentResponseDto> responseList = assignmentService.getDoneAssignmentsByGroupIdAndUserId(groupId, studentId);
+        if (responseList.isEmpty()) {
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
         } else {
             responseList.sort(Comparator.comparing(AssignmentResponseDto::getCompletionDatetime));
@@ -572,7 +556,7 @@ public class AssignmentController {
         }
     }
 
-    @GetMapping("/assignments/doneByStudent/{student_id}")
+    @GetMapping("/assignments/doneByStudent/{studentId}")
     @Operation(
             summary = "Returns list of done assignments of a student.",
             responses = {
@@ -590,9 +574,9 @@ public class AssignmentController {
                     )
             }
     )
-    public ResponseEntity<List<AssignmentResponseDto>> getDoneAssignmentsByStudent(@PathVariable("student_id") int student_id) {
-        List<AssignmentResponseDto> responseList = assignmentService.getDoneAssignmentsByStudent(student_id);
-        if(responseList.isEmpty()){
+    public ResponseEntity<List<AssignmentResponseDto>> getDoneAssignmentsByStudent(@PathVariable("studentId") int studentId) {
+        List<AssignmentResponseDto> responseList = assignmentService.getDoneAssignmentsByStudent(studentId);
+        if (responseList.isEmpty()) {
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
         } else {
             responseList.sort(Comparator.comparing(AssignmentResponseDto::getCompletionDatetime));
@@ -600,7 +584,7 @@ public class AssignmentController {
         }
     }
 
-    @GetMapping("/assignments/expiredUndoneByGroupAndStudent/{group_id}/{student_id}")
+    @GetMapping("/assignments/expiredUndoneByGroupAndStudent/{groupId}/{studentId}")
     @Operation(
             summary = "Returns list of undone expired assignments of a student in the group.",
             responses = {
@@ -618,9 +602,9 @@ public class AssignmentController {
                     )
             }
     )
-    public ResponseEntity<List<AssignmentResponseDto>> getExpiredUndoneAssignmentsByGroupAndStudent(@PathVariable("group_id") int group_id, @PathVariable("student_id") int student_id) {
-        List<AssignmentResponseDto> responseList = assignmentService.getExpiredUndoneAssignmentsByGroupIdAndUserId(group_id, student_id);
-        if(responseList.isEmpty()){
+    public ResponseEntity<List<AssignmentResponseDto>> getExpiredUndoneAssignmentsByGroupAndStudent(@PathVariable("groupId") int groupId, @PathVariable("studentId") int studentId) {
+        List<AssignmentResponseDto> responseList = assignmentService.getExpiredUndoneAssignmentsByGroupIdAndUserId(groupId, studentId);
+        if (responseList.isEmpty()) {
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
         } else {
             responseList.sort(Comparator.comparing(AssignmentResponseDto::getCompletionDatetime));
@@ -628,7 +612,7 @@ public class AssignmentController {
         }
     }
 
-    @GetMapping("/assignments/expiredUndoneByStudent/{student_id}")
+    @GetMapping("/assignments/expiredUndoneByStudent/{studentId}")
     @Operation(
             summary = "Returns list of undone expired assignments of a student.",
             responses = {
@@ -646,17 +630,17 @@ public class AssignmentController {
                     )
             }
     )
-    public ResponseEntity<List<AssignmentResponseDto>> getExpiredUndoneAssignmentsByStudent(@PathVariable("student_id") int student_id) {
-        List<AssignmentResponseDto> responseList = assignmentService.getExpiredUndoneAssignmentsByStudent(student_id);
-        if(responseList.isEmpty()){
+    public ResponseEntity<List<AssignmentResponseDto>> getExpiredUndoneAssignmentsByStudent(@PathVariable("studentId") int studentId) {
+        List<AssignmentResponseDto> responseList = assignmentService.getExpiredUndoneAssignmentsByStudent(studentId);
+        if (responseList.isEmpty()) {
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
-        }else {
+        } else {
             responseList.sort(Comparator.comparing(AssignmentResponseDto::getCompletionDatetime));
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
 
-    @GetMapping("/assignments/nonExpiredUndoneByGroupAndStudent/{group_id}/{student_id}")
+    @GetMapping("/assignments/nonExpiredUndoneByGroupAndStudent/{groupId}/{studentId}")
     @Operation(
             summary = "Returns list of undone non expired assignments of a student and group.",
             responses = {
@@ -674,17 +658,17 @@ public class AssignmentController {
                     )
             }
     )
-    public ResponseEntity<List<AssignmentResponseDto>> getNonExpiredUndoneAssignmentsByGroupAndStudent(@PathVariable("group_id") int group_id, @PathVariable("student_id") int student_id) {
-        List<AssignmentResponseDto> responseList = assignmentService.getNonExpiredUndoneAssignmentsByGroupIdAndUserId(group_id, student_id);
-        if(responseList.isEmpty()){
+    public ResponseEntity<List<AssignmentResponseDto>> getNonExpiredUndoneAssignmentsByGroupAndStudent(@PathVariable("groupId") int groupId, @PathVariable("studentId") int studentId) {
+        List<AssignmentResponseDto> responseList = assignmentService.getNonExpiredUndoneAssignmentsByGroupIdAndUserId(groupId, studentId);
+        if (responseList.isEmpty()) {
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
-        }else {
+        } else {
             responseList.sort(Comparator.comparing(AssignmentResponseDto::getCompletionDatetime));
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
 
-    @GetMapping("/assignments/nonExpiredUndoneByStudent/{student_id}")
+    @GetMapping("/assignments/nonExpiredUndoneByStudent/{studentId}")
     @Operation(
             summary = "Returns list of undone non expired assignments of a student.",
             responses = {
@@ -702,9 +686,9 @@ public class AssignmentController {
                     )
             }
     )
-    public ResponseEntity<List<AssignmentResponseDto>> getNonExpiredUndoneAssignmentsByStudent(@PathVariable("student_id") int student_id) {
-        List<AssignmentResponseDto> responseList = assignmentService.getNonExpiredUndoneAssignmentsByStudent(student_id);
-        if(responseList.isEmpty()){
+    public ResponseEntity<List<AssignmentResponseDto>> getNonExpiredUndoneAssignmentsByStudent(@PathVariable("studentId") int studentId) {
+        List<AssignmentResponseDto> responseList = assignmentService.getNonExpiredUndoneAssignmentsByStudent(studentId);
+        if (responseList.isEmpty()) {
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
         } else {
             responseList.sort(Comparator.comparing(AssignmentResponseDto::getCompletionDatetime));
@@ -712,7 +696,7 @@ public class AssignmentController {
         }
     }
 
-    @GetMapping("/assignments/byStudent/{student_id}")
+    @GetMapping("/assignments/byStudent/{studentId}")
     @Operation(
             summary = "Returns list of all student's assignments.",
             responses = {
@@ -730,9 +714,9 @@ public class AssignmentController {
                     )
             }
     )
-    public ResponseEntity<List<AssignmentResponseDto>> getAllStudentAssignments(@PathVariable("student_id") int id) {
+    public ResponseEntity<List<AssignmentResponseDto>> getAllStudentAssignments(@PathVariable("studentId") int id) {
         List<AssignmentResponseDto> responseList = assignmentService.getAllAssignmentsByStudent(id);
-        if(responseList.isEmpty()){
+        if (responseList.isEmpty()) {
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
         } else {
             responseList.sort(Comparator.comparing(AssignmentResponseDto::getCompletionDatetime));
@@ -740,7 +724,7 @@ public class AssignmentController {
         }
     }
 
-    @GetMapping("/extended/assignments/unchecked/{group_id}")
+    @GetMapping("/extended/assignments/unchecked/{groupId}")
     @Operation(
             summary = "Returns list of unchecked assignments from group with given id.",
             responses = {
@@ -758,9 +742,9 @@ public class AssignmentController {
                     )
             }
     )
-    public ResponseEntity<List<AssignmentResponseExtendedDto>> getUncheckedAssignmentsInGroupExtended(@PathVariable("group_id") int group_id) {
-        List<AssignmentResponseExtendedDto> responseList = assignmentService.getUncheckedAssignmentsByGroupExtended(group_id);
-        if(responseList.isEmpty()){
+    public ResponseEntity<List<AssignmentResponseExtendedDto>> getUncheckedAssignmentsInGroupExtended(@PathVariable("groupId") int groupId) {
+        List<AssignmentResponseExtendedDto> responseList = assignmentService.getUncheckedAssignmentsByGroupExtended(groupId);
+        if (responseList.isEmpty()) {
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
         } else {
             responseList.sort(Comparator.comparing(AssignmentResponseExtendedDto::getCompletionDatetime));
@@ -768,7 +752,7 @@ public class AssignmentController {
         }
     }
 
-    @GetMapping("/extended/assignments/allByGroupAndStudent/{group_id}/{student_id}")
+    @GetMapping("/extended/assignments/allByGroupAndStudent/{groupId}/{studentId}")
     @Operation(
             summary = "Returns list of assignments of a student for a given group.",
             responses = {
@@ -786,9 +770,9 @@ public class AssignmentController {
                     )
             }
     )
-    public ResponseEntity<List<AssignmentResponseExtendedDto>> getAllAssignmentsByUserAndGroupExtended(@PathVariable("group_id") int group_id, @PathVariable("student_id") int user_id) {
-        List<AssignmentResponseExtendedDto> responseList = assignmentService.getAllAssignmentsByGroupIdAndUserIdExtended(group_id, user_id);
-        if(responseList.isEmpty()){
+    public ResponseEntity<List<AssignmentResponseExtendedDto>> getAllAssignmentsByUserAndGroupExtended(@PathVariable("groupId") int groupId, @PathVariable("studentId") int userId) {
+        List<AssignmentResponseExtendedDto> responseList = assignmentService.getAllAssignmentsByGroupIdAndUserIdExtended(groupId, userId);
+        if (responseList.isEmpty()) {
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
         } else {
             responseList.sort(Comparator.comparing(AssignmentResponseExtendedDto::getCompletionDatetime));
@@ -796,7 +780,7 @@ public class AssignmentController {
         }
     }
 
-    @GetMapping("/extended/assignments/undoneByGroupAndStudent/{group_id}/{student_id}")
+    @GetMapping("/extended/assignments/undoneByGroupAndStudent/{groupId}/{studentId}")
     @Operation(
             summary = "Returns list of undone assignments of a student for a given group.",
             responses = {
@@ -814,9 +798,9 @@ public class AssignmentController {
                     )
             }
     )
-    public ResponseEntity<List<AssignmentResponseExtendedDto>> getUndoneAssignmentsByGroupAndStudentExtended(@PathVariable("group_id") int group_id, @PathVariable("student_id") int student_id) {
-        List<AssignmentResponseExtendedDto> responseList = assignmentService.getUndoneAssignmentsByGroupIdAndUserIdExtended(group_id, student_id);
-        if(responseList.isEmpty()){
+    public ResponseEntity<List<AssignmentResponseExtendedDto>> getUndoneAssignmentsByGroupAndStudentExtended(@PathVariable("groupId") int groupId, @PathVariable("studentId") int studentId) {
+        List<AssignmentResponseExtendedDto> responseList = assignmentService.getUndoneAssignmentsByGroupIdAndUserIdExtended(groupId, studentId);
+        if (responseList.isEmpty()) {
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
         } else {
             responseList.sort(Comparator.comparing(AssignmentResponseExtendedDto::getCompletionDatetime));
@@ -824,7 +808,7 @@ public class AssignmentController {
         }
     }
 
-    @GetMapping("/extended/assignments/undoneByStudent/{student_id}")
+    @GetMapping("/extended/assignments/undoneByStudent/{studentId}")
     @Operation(
             summary = "Returns list of undone assignments of a student.",
             responses = {
@@ -842,9 +826,9 @@ public class AssignmentController {
                     )
             }
     )
-    public ResponseEntity<List<AssignmentResponseExtendedDto>> getUndoneAssignmentsByStudentExtended(@PathVariable("student_id") int student_id) {
-        List<AssignmentResponseExtendedDto> responseList = assignmentService.getUndoneAssignmentsByStudentExtended(student_id);
-        if(responseList.isEmpty()){
+    public ResponseEntity<List<AssignmentResponseExtendedDto>> getUndoneAssignmentsByStudentExtended(@PathVariable("studentId") int studentId) {
+        List<AssignmentResponseExtendedDto> responseList = assignmentService.getUndoneAssignmentsByStudentExtended(studentId);
+        if (responseList.isEmpty()) {
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
         } else {
             responseList.sort(Comparator.comparing(AssignmentResponseExtendedDto::getCompletionDatetime));
@@ -852,7 +836,7 @@ public class AssignmentController {
         }
     }
 
-    @GetMapping("/extended/assignments/doneByGroupAndStudent/{group_id}/{student_id}")
+    @GetMapping("/extended/assignments/doneByGroupAndStudent/{groupId}/{studentId}")
     @Operation(
             summary = "Returns list of done assignments of a student in the group.",
             responses = {
@@ -870,9 +854,9 @@ public class AssignmentController {
                     )
             }
     )
-    public ResponseEntity<List<AssignmentResponseExtendedDto>> getDoneAssignmentsByGroupAndStudentExtended(@PathVariable("group_id") int group_id, @PathVariable("student_id") int student_id) {
-        List<AssignmentResponseExtendedDto> responseList = assignmentService.getDoneAssignmentsByGroupIdAndUserIdExtended(group_id, student_id);
-        if(responseList.isEmpty()){
+    public ResponseEntity<List<AssignmentResponseExtendedDto>> getDoneAssignmentsByGroupAndStudentExtended(@PathVariable("groupId") int groupId, @PathVariable("studentId") int studentId) {
+        List<AssignmentResponseExtendedDto> responseList = assignmentService.getDoneAssignmentsByGroupIdAndUserIdExtended(groupId, studentId);
+        if (responseList.isEmpty()) {
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
         } else {
             responseList.sort(Comparator.comparing(AssignmentResponseExtendedDto::getCompletionDatetime));
@@ -880,7 +864,7 @@ public class AssignmentController {
         }
     }
 
-    @GetMapping("/extended/assignments/doneByStudent/{student_id}")
+    @GetMapping("/extended/assignments/doneByStudent/{studentId}")
     @Operation(
             summary = "Returns list of done assignments of a student.",
             responses = {
@@ -898,9 +882,9 @@ public class AssignmentController {
                     )
             }
     )
-    public ResponseEntity<List<AssignmentResponseExtendedDto>> getDoneAssignmentsByStudentExtended(@PathVariable("student_id") int student_id) {
-        List<AssignmentResponseExtendedDto> responseList = assignmentService.getDoneAssignmentsByStudentExtended(student_id);
-        if(responseList.isEmpty()){
+    public ResponseEntity<List<AssignmentResponseExtendedDto>> getDoneAssignmentsByStudentExtended(@PathVariable("studentId") int studentId) {
+        List<AssignmentResponseExtendedDto> responseList = assignmentService.getDoneAssignmentsByStudentExtended(studentId);
+        if (responseList.isEmpty()) {
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
         } else {
             responseList.sort(Comparator.comparing(AssignmentResponseExtendedDto::getCompletionDatetime));
@@ -908,7 +892,7 @@ public class AssignmentController {
         }
     }
 
-    @GetMapping("/extended/assignments/expiredUndoneByGroupAndStudent/{group_id}/{student_id}")
+    @GetMapping("/extended/assignments/expiredUndoneByGroupAndStudent/{groupId}/{studentId}")
     @Operation(
             summary = "Returns list of undone expired assignments of a student in the group.",
             responses = {
@@ -926,9 +910,9 @@ public class AssignmentController {
                     )
             }
     )
-    public ResponseEntity<List<AssignmentResponseExtendedDto>> getExpiredUndoneAssignmentsByGroupAndStudentExtended(@PathVariable("group_id") int group_id, @PathVariable("student_id") int student_id) {
-        List<AssignmentResponseExtendedDto> responseList = assignmentService.getExpiredUndoneAssignmentsByGroupIdAndUserIdExtended(group_id, student_id);
-        if(responseList.isEmpty()){
+    public ResponseEntity<List<AssignmentResponseExtendedDto>> getExpiredUndoneAssignmentsByGroupAndStudentExtended(@PathVariable("groupId") int groupId, @PathVariable("studentId") int studentId) {
+        List<AssignmentResponseExtendedDto> responseList = assignmentService.getExpiredUndoneAssignmentsByGroupIdAndUserIdExtended(groupId, studentId);
+        if (responseList.isEmpty()) {
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
         } else {
             responseList.sort(Comparator.comparing(AssignmentResponseExtendedDto::getCompletionDatetime));
@@ -936,7 +920,7 @@ public class AssignmentController {
         }
     }
 
-    @GetMapping("/extended/assignments/expiredUndoneByStudent/{student_id}")
+    @GetMapping("/extended/assignments/expiredUndoneByStudent/{studentId}")
     @Operation(
             summary = "Returns list of undone expired assignments of a student.",
             responses = {
@@ -954,17 +938,17 @@ public class AssignmentController {
                     )
             }
     )
-    public ResponseEntity<List<AssignmentResponseExtendedDto>> getExpiredUndoneAssignmentsByStudentExtended(@PathVariable("student_id") int student_id) {
-        List<AssignmentResponseExtendedDto> responseList = assignmentService.getExpiredUndoneAssignmentsByStudentExtended(student_id);
-        if(responseList.isEmpty()){
+    public ResponseEntity<List<AssignmentResponseExtendedDto>> getExpiredUndoneAssignmentsByStudentExtended(@PathVariable("studentId") int studentId) {
+        List<AssignmentResponseExtendedDto> responseList = assignmentService.getExpiredUndoneAssignmentsByStudentExtended(studentId);
+        if (responseList.isEmpty()) {
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
-        }else {
+        } else {
             responseList.sort(Comparator.comparing(AssignmentResponseExtendedDto::getCompletionDatetime));
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
 
-    @GetMapping("/extended/assignments/nonExpiredUndoneByGroupAndStudent/{group_id}/{student_id}")
+    @GetMapping("/extended/assignments/nonExpiredUndoneByGroupAndStudent/{groupId}/{studentId}")
     @Operation(
             summary = "Returns list of undone non expired assignments of a student and group.",
             responses = {
@@ -982,17 +966,17 @@ public class AssignmentController {
                     )
             }
     )
-    public ResponseEntity<List<AssignmentResponseExtendedDto>> getNonExpiredUndoneAssignmentsByGroupAndStudentExtended(@PathVariable("group_id") int group_id, @PathVariable("student_id") int student_id) {
-        List<AssignmentResponseExtendedDto> responseList = assignmentService.getNonExpiredUndoneAssignmentsByGroupIdAndUserIdExtended(group_id, student_id);
-        if(responseList.isEmpty()){
+    public ResponseEntity<List<AssignmentResponseExtendedDto>> getNonExpiredUndoneAssignmentsByGroupAndStudentExtended(@PathVariable("groupId") int groupId, @PathVariable("studentId") int studentId) {
+        List<AssignmentResponseExtendedDto> responseList = assignmentService.getNonExpiredUndoneAssignmentsByGroupIdAndUserIdExtended(groupId, studentId);
+        if (responseList.isEmpty()) {
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
-        }else {
+        } else {
             responseList.sort(Comparator.comparing(AssignmentResponseExtendedDto::getCompletionDatetime));
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
 
-    @GetMapping("/extended/assignments/nonExpiredUndoneByStudent/{student_id}")
+    @GetMapping("/extended/assignments/nonExpiredUndoneByStudent/{studentId}")
     @Operation(
             summary = "Returns list of undone non expired assignments of a student.",
             responses = {
@@ -1010,9 +994,9 @@ public class AssignmentController {
                     )
             }
     )
-    public ResponseEntity<List<AssignmentResponseExtendedDto>> getNonExpiredUndoneAssignmentsByStudentExtended(@PathVariable("student_id") int student_id) {
-        List<AssignmentResponseExtendedDto> responseList = assignmentService.getNonExpiredUndoneAssignmentsByStudentExtended(student_id);
-        if(responseList.isEmpty()){
+    public ResponseEntity<List<AssignmentResponseExtendedDto>> getNonExpiredUndoneAssignmentsByStudentExtended(@PathVariable("studentId") int studentId) {
+        List<AssignmentResponseExtendedDto> responseList = assignmentService.getNonExpiredUndoneAssignmentsByStudentExtended(studentId);
+        if (responseList.isEmpty()) {
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
         } else {
             responseList.sort(Comparator.comparing(AssignmentResponseExtendedDto::getCompletionDatetime));
@@ -1020,7 +1004,7 @@ public class AssignmentController {
         }
     }
 
-    @GetMapping("/extended/assignments/byStudent/{student_id}")
+    @GetMapping("/extended/assignments/byStudent/{studentId}")
     @Operation(
             summary = "Returns list of all student's assignments.",
             responses = {
@@ -1038,9 +1022,9 @@ public class AssignmentController {
                     )
             }
     )
-    public ResponseEntity<List<AssignmentResponseExtendedDto>> getAllStudentAssignmentsExtended(@PathVariable("student_id") int id) {
+    public ResponseEntity<List<AssignmentResponseExtendedDto>> getAllStudentAssignmentsExtended(@PathVariable("studentId") int id) {
         List<AssignmentResponseExtendedDto> responseList = assignmentService.getAllAssignmentsByStudentExtended(id);
-        if(responseList.isEmpty()){
+        if (responseList.isEmpty()) {
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
         } else {
             responseList.sort(Comparator.comparing(AssignmentResponseExtendedDto::getCompletionDatetime));
@@ -1048,7 +1032,7 @@ public class AssignmentController {
         }
     }
 
-    @GetMapping("/assignment/checkForSolution/{assignment_id}")
+    @GetMapping("/assignment/checkForSolution/{assignmentId}")
     @Operation(
             summary = "Checks if assignment with given id has any solution attached to it. Returns true if so, false otherwise. False may also indicate that there is no assignment in the DB with given id.",
             responses = {
@@ -1062,11 +1046,11 @@ public class AssignmentController {
                     )
             }
     )
-    public ResponseEntity<Boolean> checkForSolutionToAssignment(@PathVariable("assignment_id") int id) {
+    public ResponseEntity<Boolean> checkForSolutionToAssignment(@PathVariable("assignmentId") int id) {
         return new ResponseEntity<>(assignmentService.checkForSolutionToAssignment(id), HttpStatus.OK);
     }
 
-    @GetMapping("/assignment/checkForFile/{assignment_id}")
+    @GetMapping("/assignment/checkForFile/{assignmentId}")
     @Operation(
             summary = "Checks if assignment with given id has any file attached to it. Returns true if so, false otherwise. False may also indicate that there is no assignment in the DB with given id.",
             responses = {
@@ -1080,11 +1064,11 @@ public class AssignmentController {
                     )
             }
     )
-    public ResponseEntity<Boolean> checkForFileToAssignment(@PathVariable("assignment_id") int assignment_id) {
-        return new ResponseEntity<>(assignmentService.checkForFileToAssignment(assignment_id), HttpStatus.OK);
+    public ResponseEntity<Boolean> checkForFileToAssignment(@PathVariable("assignmentId") int assignmentId) {
+        return new ResponseEntity<>(assignmentService.checkForFileToAssignment(assignmentId), HttpStatus.OK);
     }
 
-    @GetMapping("/assignments/calendarListByStudent/{student_id}")
+    @GetMapping("/assignments/calendarListByStudent/{studentId}")
     @Operation(
             summary = "Returns list of all student's assignments to calendar.",
             responses = {
@@ -1102,7 +1086,41 @@ public class AssignmentController {
                     )
             }
     )
-    public ResponseEntity<List<AssignmentResponseCalendarDto>> getAssignmentsByStudentCalendar(@PathVariable("student_id") int student_id) {
-        return new ResponseEntity<>(assignmentService.getAssignmentsByStudentCalendar(student_id), HttpStatus.OK);
+    public ResponseEntity<List<AssignmentResponseCalendarDto>> getAssignmentsByStudentCalendar(@PathVariable("studentId") int studentId) {
+        return new ResponseEntity<>(assignmentService.getAssignmentsByStudentCalendar(studentId), HttpStatus.OK);
+    }
+
+    @GetMapping("/assignments/byStudentWithEvaluation/{studentId}")
+    @Operation(
+            summary = "Returns list of all student's assignments with evaluations.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = AssignmentWithEvaluationResponseDto.class))
+                            )
+                    )
+            }
+    )
+    public List<AssignmentWithEvaluationResponseDto> getAssignmentsWithEvaluationsByStudent(@PathVariable("studentId") int studentId) {
+        return assignmentService.getAllAssignmentsByStudentWithEvaluations(studentId);
+    }
+
+    @GetMapping("/assignments/byStudentAndGroupWithEvaluation/{studentId}/{groupId}")
+    @Operation(
+            summary = "Returns list of all student's in group assignments with evaluations.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = AssignmentWithEvaluationResponseDto.class))
+                            )
+                    )
+            }
+    )
+    public List<AssignmentWithEvaluationResponseDto> getAssignmentsWithEvaluationsByStudentAndGroup(@PathVariable("studentId") int studentId, @PathVariable("groupId") int groupId) {
+        return assignmentService.getAllAssignmentsByStudentAndGroupWithEvaluations(studentId, groupId);
     }
 }

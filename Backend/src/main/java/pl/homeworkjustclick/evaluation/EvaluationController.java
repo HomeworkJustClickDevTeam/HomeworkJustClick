@@ -1,6 +1,5 @@
 package pl.homeworkjustclick.evaluation;
 
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -66,10 +65,10 @@ public class EvaluationController {
                     )
             }
     )
-    @GetMapping("/evaluations/{evaluation_id}")
-    public ResponseEntity<EvaluationResponseDto> getById(@PathVariable("evaluation_id") int id) {
+    @GetMapping("/evaluations/{evaluationId}")
+    public ResponseEntity<EvaluationResponseDto> getById(@PathVariable("evaluationId") int id) {
         EvaluationResponseDto evaluation = evaluationService.getById(id);
-        if(evaluation != null) {
+        if (evaluation != null) {
             return new ResponseEntity<>(evaluation, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -186,12 +185,12 @@ public class EvaluationController {
             },
             deprecated = true
     )
-    @PostMapping("/evaluation/withUserAndSolution/{user_id}/{solution_id}")
-    public ResponseEntity<EvaluationResponseDto> addWithUserAndSolution(@RequestBody Evaluation evaluation, @PathVariable("user_id") int user_id, @PathVariable("solution_id") int solution_id) {
-        EvaluationResponseDto response = evaluationService.addWithUserAndSolution(evaluation, user_id, solution_id);
-        if(response.getId()!=0) {
+    @PostMapping("/evaluation/withUserAndSolution/{userId}/{solutionId}")
+    public ResponseEntity<EvaluationResponseDto> addWithUserAndSolution(@RequestBody Evaluation evaluation, @PathVariable("userId") int userId, @PathVariable("solutionId") int solutionId) {
+        EvaluationResponseDto response = evaluationService.addWithUserAndSolution(evaluation, userId, solutionId);
+        if (response.getId() != 0) {
             return new ResponseEntity<>(response, HttpStatus.OK);
-        } else if (response.isForbidden()){
+        } else if (response.isForbidden()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -230,52 +229,11 @@ public class EvaluationController {
                     )
             }
     )
-    @GetMapping("/extended/evaluations/{evaluation_id}")
-    public ResponseEntity<EvaluationResponseExtendedDto> getByIdExtended(@PathVariable("evaluation_id") int id) {
+    @GetMapping("/extended/evaluations/{evaluationId}")
+    public ResponseEntity<EvaluationResponseExtendedDto> getByIdExtended(@PathVariable("evaluationId") int id) {
         EvaluationResponseExtendedDto evaluation = evaluationService.getByIdExtended(id);
-        if(evaluation != null) {
+        if (evaluation != null) {
             return new ResponseEntity<>(evaluation, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @PostMapping("/extended/evaluation")
-    @Hidden
-    public ResponseEntity<EvaluationResponseExtendedDto> addExtended(@RequestBody Evaluation evaluation) {
-        EvaluationResponseExtendedDto response = evaluationService.addExtended(evaluation);
-        return ResponseEntity.ok(response);
-    }
-    @Operation(
-            summary = "Creates evaluation with user and solution already attached to it.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "404",
-                            description = "No user or solution with those ids in the DB.",
-                            content = @Content
-                    ),
-                    @ApiResponse(
-                            responseCode = "400",
-                            description = "The user is not a teacher in the group associated with the solution with given id.",
-                            content = @Content
-                    ),
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "OK.",
-                            content = @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = EvaluationResponseDto.class))
-                    )
-            },
-            deprecated = true
-    )
-    @PostMapping("/extended/evaluation/withUserAndSolution/{user_id}/{solution_id}")
-    public ResponseEntity<EvaluationResponseExtendedDto> addWithUserAndSolutionExtended(@RequestBody Evaluation evaluation, @PathVariable("user_id") int user_id, @PathVariable("solution_id") int solution_id) {
-        EvaluationResponseExtendedDto response = evaluationService.addWithUserAndSolutionExtended(evaluation, user_id, solution_id);
-        if(response.getId()!=0) {
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } else if (response.isForbidden()){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -296,8 +254,8 @@ public class EvaluationController {
                     )
             }
     )
-    @DeleteMapping("/evaluation/{evaluation_id}")
-    public void delete(@PathVariable("evaluation_id") int id) {
+    @DeleteMapping("/evaluation/{evaluationId}")
+    public void delete(@PathVariable("evaluationId") int id) {
         evaluationService.delete(id);
     }
 
@@ -333,91 +291,7 @@ public class EvaluationController {
         return evaluationService.update(evaluationId, evaluationDto);
     }
 
-    @PutMapping("/evaluation/result/{evaluation_id}")
-    @Operation(
-            summary = "Changes the result of evaluation with given id.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "404",
-                            description = "Missing evaluation with this id.",
-                            content = @Content
-                    )
-            },
-            deprecated = true
-    )
-    public ResponseEntity<Void> updateResult(@PathVariable("evaluation_id") int id, @RequestBody Double result){
-        if(evaluationService.changeResultById(id, result)){
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-    }
-    @PutMapping("/evaluation/user/{user_id}/{evaluation_id}")
-    @Operation(
-            summary = "Changes the user of evaluation with given id.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "404",
-                            description = "Missing evaluation or user with the id.",
-                            content = @Content
-                    )
-            },
-            deprecated = true
-    )
-    public ResponseEntity<Void> updateUser(@PathVariable("user_id") int userId, @PathVariable("evaluation_id") int id){
-        if(evaluationService.changeUserById(id, userId)){
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @PutMapping("/evaluation/solution/{solution_id}/{evaluation_id}")
-    @Operation(
-            summary = "Changes the solution of evaluation with given id.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "404",
-                            description = "Missing evaluation or solution with the id.",
-                            content = @Content
-                    )
-            },
-            deprecated = true
-    )
-    public ResponseEntity<Void> updateSolution(@PathVariable("solution_id") int solutionId, @PathVariable("evaluation_id") int id){
-        if(evaluationService.changeSolutionById(id, solutionId)){
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @PutMapping("/evaluation/grade/{evaluation_id}")
-    @Operation(
-            summary = "Changes the grade of evaluation with given id.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "404",
-                            description = "Missing evaluation with the id.",
-                            content = @Content
-                    )
-            },
-            deprecated = true
-    )
-    public ResponseEntity<Void> updateGrade(@RequestBody Double grade, @PathVariable("evaluation_id") int id){
-        if(evaluationService.changeGradeById(id, grade)){
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @GetMapping("/evaluations/byStudent/{student_id}")
+    @GetMapping("/evaluations/byStudent/{studentId}")
     @Operation(
             summary = "Returns list of all evaluations associated with user with given id.",
             responses = {
@@ -436,15 +310,15 @@ public class EvaluationController {
                     )
             }
     )
-    public ResponseEntity<List<EvaluationResponseDto>> getAllEvaluationsByStudent(@PathVariable("student_id") int student_id) {
-        List<EvaluationResponseDto> response = evaluationService.getAllEvaluationsByStudent(student_id);
-        if(response.isEmpty()){
+    public ResponseEntity<List<EvaluationResponseDto>> getAllEvaluationsByStudent(@PathVariable("studentId") int studentId) {
+        List<EvaluationResponseDto> response = evaluationService.getAllEvaluationsByStudent(studentId);
+        if (response.isEmpty()) {
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-        }
-        else {
+        } else {
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
+
     @Operation(
             summary = "Returns list of all evaluations associated with user in the group with given ids.",
             responses = {
@@ -463,13 +337,12 @@ public class EvaluationController {
                     )
             }
     )
-    @GetMapping("/evaluations/byStudentAndGroup/{student_id}/{group_id}")
-    public ResponseEntity<List<EvaluationResponseDto>> getAllEvaluationsByStudentInGroup(@PathVariable("student_id") int student_id, @PathVariable("group_id") int group_id) {
-        List<EvaluationResponseDto> response = evaluationService.getAllEvaluationsByStudentInGroup(student_id, group_id);
-        if(response.isEmpty()){
+    @GetMapping("/evaluations/byStudentAndGroup/{studentId}/{groupId}")
+    public ResponseEntity<List<EvaluationResponseDto>> getAllEvaluationsByStudentInGroup(@PathVariable("studentId") int studentId, @PathVariable("groupId") int groupId) {
+        List<EvaluationResponseDto> response = evaluationService.getAllEvaluationsByStudentInGroup(studentId, groupId);
+        if (response.isEmpty()) {
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-        }
-        else {
+        } else {
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
@@ -492,13 +365,12 @@ public class EvaluationController {
                     )
             }
     )
-    @GetMapping("/evaluations/byAssignment/{assignment_id}")
-    public ResponseEntity<List<EvaluationResponseDto>> getAllEvaluationsByAssignment(@PathVariable("assignment_id") int assignment_id) {
-        List<EvaluationResponseDto> response = evaluationService.getAllEvaluationsByAssignment(assignment_id);
-        if(response.isEmpty()){
+    @GetMapping("/evaluations/byAssignment/{assignmentId}")
+    public ResponseEntity<List<EvaluationResponseDto>> getAllEvaluationsByAssignment(@PathVariable("assignmentId") int assignmentId) {
+        List<EvaluationResponseDto> response = evaluationService.getAllEvaluationsByAssignment(assignmentId);
+        if (response.isEmpty()) {
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-        }
-        else {
+        } else {
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
@@ -522,13 +394,12 @@ public class EvaluationController {
             }
     )
 
-    @GetMapping("/evaluation/bySolution/{solution_id}")
-    public ResponseEntity<EvaluationResponseDto> getEvaluationBySolution(@PathVariable("solution_id") int solution_id) {
-        EvaluationResponseDto response = evaluationService.getEvaluationBySolution(solution_id);
-        if(response != null){
+    @GetMapping("/evaluation/bySolution/{solutionId}")
+    public ResponseEntity<EvaluationResponseDto> getEvaluationBySolution(@PathVariable("solutionId") int solutionId) {
+        EvaluationResponseDto response = evaluationService.getEvaluationBySolution(solutionId);
+        if (response != null) {
             return new ResponseEntity<>(response, HttpStatus.OK);
-        }
-        else{
+        } else {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
@@ -551,7 +422,7 @@ public class EvaluationController {
         return evaluationService.findAllByGroupId(groupId);
     }
 
-    @GetMapping("/extended/evaluations/byStudent/{student_id}")
+    @GetMapping("/extended/evaluations/byStudent/{studentId}")
     @Operation(
             summary = "Returns list of all evaluations associated with user with given id.",
             responses = {
@@ -570,15 +441,15 @@ public class EvaluationController {
                     )
             }
     )
-    public ResponseEntity<List<EvaluationResponseExtendedDto>> getAllEvaluationsByStudentExtended(@PathVariable("student_id") int student_id) {
-        List<EvaluationResponseExtendedDto> response = evaluationService.getAllEvaluationsByStudentExtended(student_id);
-        if(response.isEmpty()){
+    public ResponseEntity<List<EvaluationResponseExtendedDto>> getAllEvaluationsByStudentExtended(@PathVariable("studentId") int studentId) {
+        List<EvaluationResponseExtendedDto> response = evaluationService.getAllEvaluationsByStudentExtended(studentId);
+        if (response.isEmpty()) {
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-        }
-        else {
+        } else {
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
+
     @Operation(
             summary = "Returns list of all evaluations associated with user in the group with given ids.",
             responses = {
@@ -597,13 +468,12 @@ public class EvaluationController {
                     )
             }
     )
-    @GetMapping("/extended/evaluations/byStudentAndGroup/{student_id}/{group_id}")
-    public ResponseEntity<List<EvaluationResponseExtendedDto>> getAllEvaluationsByStudentInGroupExtended(@PathVariable("student_id") int student_id, @PathVariable("group_id") int group_id) {
-        List<EvaluationResponseExtendedDto> response = evaluationService.getAllEvaluationsByStudentInGroupExtended(student_id, group_id);
-        if(response.isEmpty()){
+    @GetMapping("/extended/evaluations/byStudentAndGroup/{studentId}/{groupId}")
+    public ResponseEntity<List<EvaluationResponseExtendedDto>> getAllEvaluationsByStudentInGroupExtended(@PathVariable("studentId") int studentId, @PathVariable("groupId") int groupId) {
+        List<EvaluationResponseExtendedDto> response = evaluationService.getAllEvaluationsByStudentInGroupExtended(studentId, groupId);
+        if (response.isEmpty()) {
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-        }
-        else {
+        } else {
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
@@ -626,13 +496,12 @@ public class EvaluationController {
                     )
             }
     )
-    @GetMapping("/extended/evaluations/byAssignment/{assignment_id}")
-    public ResponseEntity<List<EvaluationResponseExtendedDto>> getAllEvaluationsByAssignmentExtended(@PathVariable("assignment_id") int assignment_id) {
-        List<EvaluationResponseExtendedDto> response = evaluationService.getAllEvaluationsByAssignmentExtended(assignment_id);
-        if(response.isEmpty()){
+    @GetMapping("/extended/evaluations/byAssignment/{assignmentId}")
+    public ResponseEntity<List<EvaluationResponseExtendedDto>> getAllEvaluationsByAssignmentExtended(@PathVariable("assignmentId") int assignmentId) {
+        List<EvaluationResponseExtendedDto> response = evaluationService.getAllEvaluationsByAssignmentExtended(assignmentId);
+        if (response.isEmpty()) {
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-        }
-        else {
+        } else {
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
@@ -656,13 +525,12 @@ public class EvaluationController {
             }
     )
 
-    @GetMapping("/extended/evaluation/bySolution/{solution_id}")
-    public ResponseEntity<EvaluationResponseExtendedDto> getEvaluationBySolutionExtended(@PathVariable("solution_id") int solution_id) {
-        EvaluationResponseExtendedDto response = evaluationService.getEvaluationBySolutionExtended(solution_id);
-        if(response != null){
+    @GetMapping("/extended/evaluation/bySolution/{solutionId}")
+    public ResponseEntity<EvaluationResponseExtendedDto> getEvaluationBySolutionExtended(@PathVariable("solutionId") int solutionId) {
+        EvaluationResponseExtendedDto response = evaluationService.getEvaluationBySolutionExtended(solutionId);
+        if (response != null) {
             return new ResponseEntity<>(response, HttpStatus.OK);
-        }
-        else{
+        } else {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
@@ -680,9 +548,9 @@ public class EvaluationController {
                     )
             }
     )
-    @GetMapping("/evaluation/checkForEvaluationToSolution/{solution_id}")
-    public ResponseEntity<Boolean> checkForEvaluationToSolution(@PathVariable("solution_id") int solution_id) {
-        return new ResponseEntity<>(evaluationService.checkForEvaluationToSolution(solution_id), HttpStatus.OK);
+    @GetMapping("/evaluation/checkForEvaluationToSolution/{solutionId}")
+    public ResponseEntity<Boolean> checkForEvaluationToSolution(@PathVariable("solutionId") int solutionId) {
+        return new ResponseEntity<>(evaluationService.checkForEvaluationToSolution(solutionId), HttpStatus.OK);
     }
 
 }

@@ -11,6 +11,7 @@ import React from "react"
 import { selectGroup, setGroup } from "../../redux/groupSlice"
 import { GroupInterface } from "../../types/GroupInterface"
 import { useAppDispatch, useAppSelector } from "../../types/HooksRedux"
+import {toast} from "react-toastify";
 
 export default function GroupGeneralSettings() {
   const navigate = useNavigate()
@@ -65,6 +66,7 @@ export default function GroupGeneralSettings() {
   const handleCopyUrl = async () => {
     try {
       await navigator.clipboard.writeText(currentURL)
+      toast.success('Link został skopiowany!')
     } catch (error) {
       console.log(error)
     }

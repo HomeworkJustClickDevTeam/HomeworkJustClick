@@ -10,13 +10,14 @@ import pl.homeworkjustclick.assignment.AssignmentResponseDto;
 import pl.homeworkjustclick.group.GroupResponseDto;
 import pl.homeworkjustclick.user.UserResponseDto;
 
+import java.io.Serializable;
 import java.time.OffsetDateTime;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class SolutionResponseExtendedDto {
+public class SolutionResponseExtendedDto implements Serializable {
     @Schema(example = "0")
     private int id;
     private UserResponseDto user;

@@ -15,6 +15,7 @@ import pl.homeworkjustclick.notification.Notification;
 import pl.homeworkjustclick.solution.Solution;
 import pl.homeworkjustclick.user.User;
 
+import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +28,7 @@ import java.util.List;
 @Table(name = "_assignment")
 @Getter
 @Setter
-public class Assignment {
+public class Assignment implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
@@ -80,11 +81,11 @@ public class Assignment {
 
     @Column(name = "max_points")
     @Schema(example = "10")
-    private Integer max_points;
+    private Integer maxPoints;
 
     @Column(name = "auto_penalty")
     @Schema(example = "50")
-    private Integer auto_penalty;
+    private Integer autoPenalty;
 
     @OneToMany(
             mappedBy = "assignment",
@@ -108,7 +109,7 @@ public class Assignment {
     @JsonIgnore
     private List<Notification> notifications = new ArrayList<>();
 
-    public Assignment(User user, Group group, String taskDescription, OffsetDateTime creationDatetime, OffsetDateTime lastModifiedDatetime, OffsetDateTime completionDatetime, String title, Boolean visible, int max_points, int auto_penalty) {
+    public Assignment(User user, Group group, String taskDescription, OffsetDateTime creationDatetime, OffsetDateTime lastModifiedDatetime, OffsetDateTime completionDatetime, String title, Boolean visible, int maxPoints, int autoPenalty) {
         this.user = user;
         this.group = group;
         this.taskDescription = taskDescription;
@@ -117,7 +118,7 @@ public class Assignment {
         this.completionDatetime = completionDatetime;
         this.title = title;
         this.visible = visible;
-        this.max_points = max_points;
-        this.auto_penalty = auto_penalty;
+        this.maxPoints = maxPoints;
+        this.autoPenalty = autoPenalty;
     }
 }

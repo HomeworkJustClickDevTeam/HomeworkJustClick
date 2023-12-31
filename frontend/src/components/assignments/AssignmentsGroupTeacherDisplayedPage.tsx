@@ -31,17 +31,18 @@ function AssignmentsGroupTeacherDisplayedPage() {
   }
 
   return (
-    <div className='flex flex-col h-[calc(100vh-325px)] overflow-y-hidden '>
+
+    <div className='flex flex-col h-[calc(100vh-325px)] overflow-y-hidden w-[1200px]'>
       <div className='relative h-[420px]'>
         {role === "Teacher" && chosenObjectsReport === undefined && (
           <Link to={`/group/${group?.id}/assignments/add`}>
             <button
-              className='absolute mb-4 right-[7.5%] bottom-0 bg-main_blue text-white px-8 py-2 rounded-md text-lg hover:bg-hover_blue hover:shadow-md active:shadow-none'>
+              className='absolute mb-4 right-0 mt-6 bg-main_blue text-white px-8 py-2 rounded-md text-lg hover:bg-hover_blue hover:shadow-md active:shadow-none'>
               Nowe zadanie +
             </button>
           </Link>
         )}
-        <ul className="flex flex-col box-content overflow-y-scroll mb-4">
+        <ul className="flex flex-col box-content overflow-y-auto mb-4">
           {assignments.map((assignment) => (
               <li key={assignment.id} className='flex inline-block '>
                 <AssignmentListElement idGroup={group!.id.toString()}
@@ -51,8 +52,8 @@ function AssignmentsGroupTeacherDisplayedPage() {
               </li>
             ))}
         </ul>
-        <div className='absolute right-[140px] top-[20px] bg-white'>
-          {chosenObjectsReport && <ReportCreate csvVersion={false} reportedObject={chosenObjectsReport}/>}
+        <div className='absolute right-0 top-[20px] bg-white'>
+          {chosenObjectsReport && <ReportCreate closeReportCreator={()=> setChosenObjectsReport(undefined)} csvVersion={false} reportedObject={chosenObjectsReport}/>}
         </div>
       </div>
 

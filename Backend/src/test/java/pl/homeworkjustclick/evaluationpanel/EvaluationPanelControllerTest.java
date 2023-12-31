@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         "classpath:db/init_assignment.sql",
         "classpath:db/init_evaluation_panel.sql"
 })
-public class EvaluationPanelControllerTest extends BaseTestEntity {
+class EvaluationPanelControllerTest extends BaseTestEntity {
     @Autowired
     UserRepository userRepository;
 

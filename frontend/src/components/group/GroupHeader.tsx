@@ -55,13 +55,14 @@ function GroupHeader() {
     return (
       <div>
         <div className='relative flex text-white justify-center select-none'>
-          <div className={`select-none w-[85%] mt-8 h-36 rounded-xl ${colorsArray[group?.color]}`}>
+          <div className={`relative select-none w-[85%] mt-8 h-36 rounded-xl ${colorsArray[group?.color]}`}>
             {/* <div className='w-[85%] mt-8 h-36 rounded-xl bg-[#59007f] bg-[#006400] bg-[#800000] bg-[#9A6324] bg-[#469990] bg-[#000075] bg-[#f58231] bg-[#546A7B] bg-[#000000] bg-[#BB9F06] bg-[#3F2A2B] bg-[#565656] bg-[#99621E] bg-[#739E82] bg-[#550C18] bg-[#136F63] bg-[#EF7A85] bg-[#D664BE] bg-[#642CA9] bg-[#03312E]'> */}
-            <article className='absolute bottom-0 mb-6 ml-4'>
+            <article className='absolute bottom-0 mb-8 ml-4'>
               <p className='text-3xl'>{group.name}</p>
               <p className='text-xl mt-1'>{group.description}</p>
-              {role==="Teacher" && <Link to={"assignments"} state={{groupReport: true}}>Stwórz raport grupy</Link>}
+
             </article>
+            {role==="Teacher" && <Link to={"assignments"} state={{groupReport: true}} className='absolute bottom-[10px] right-[30px] underline underline-offset-4'>Stwórz raport grupy</Link>}
           </div>
         </div>
         <header className='flex inline-block mt-4 mx-[7.5%] justify-between'>

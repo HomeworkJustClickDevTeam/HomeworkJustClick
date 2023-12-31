@@ -50,7 +50,7 @@ public class GroupService {
     @Transactional
     public Boolean changeNameById(int id, String name) {
         if (groupRepository.findById(id).isPresent()) {
-            Group group = groupRepository.findById(id).get();
+            Group group = findById(id);
             group.setName(name);
             groupRepository.save(group);
             return true;
@@ -62,7 +62,7 @@ public class GroupService {
     @Transactional
     public Boolean changeDescriptionById(int id, String description) {
         if (groupRepository.findById(id).isPresent()) {
-            Group group = groupRepository.findById(id).get();
+            Group group = findById(id);
             group.setDescription(description);
             groupRepository.save(group);
             return true;
@@ -74,7 +74,7 @@ public class GroupService {
     @Transactional
     public Boolean changeColorById(int id, int color) {
         if (groupRepository.findById(id).isPresent()) {
-            Group group = groupRepository.findById(id).get();
+            Group group = findById(id);
             group.setColor(color);
             groupRepository.save(group);
             return true;
@@ -86,7 +86,7 @@ public class GroupService {
     @Transactional
     public int archiveGroup(int id) {
         if (groupRepository.findById(id).isPresent()) {
-            Group group = groupRepository.findById(id).get();
+            Group group = findById(id);
             if(group.isArchived()) {
                 return 1;
             } else {
@@ -102,7 +102,7 @@ public class GroupService {
     @Transactional
     public int unarchiveGroup(int id) {
         if (groupRepository.findById(id).isPresent()) {
-            Group group = groupRepository.findById(id).get();
+            Group group = findById(id);
             if(!group.isArchived()) {
                 return 1;
             } else {
@@ -115,12 +115,12 @@ public class GroupService {
         }
     }
 
-    public List<Group> getGroupsByTeacher(int teacher_id) {
-        return groupRepository.getGroupsByTeacherId(teacher_id);
+    public List<Group> getGroupsByTeacher(int teacherId) {
+        return groupRepository.getGroupsByTeacherId(teacherId);
     }
 
-    public List<Group> getGroupsByStudent(int student_id) {
-        return groupRepository.getGroupsByStudentId(student_id);
+    public List<Group> getGroupsByStudent(int studentId) {
+        return groupRepository.getGroupsByStudentId(studentId);
     }
 
 }

@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 @DataJpaTest
-public class GroupRepositoryTest {
+class GroupRepositoryTest {
 
     @Autowired
     private UserRepository userRepository;

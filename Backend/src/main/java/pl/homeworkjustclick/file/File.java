@@ -8,6 +8,8 @@ import lombok.*;
 import pl.homeworkjustclick.assignment.Assignment;
 import pl.homeworkjustclick.solution.Solution;
 
+import java.io.Serializable;
+
 @Builder
 @Data
 @NoArgsConstructor
@@ -16,7 +18,7 @@ import pl.homeworkjustclick.solution.Solution;
 @Table(name = "_file")
 @Getter
 @Setter
-public class File {
+public class File implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +27,7 @@ public class File {
     @Schema(example = "0")
     private int id;
 
-    @Column(name="name")
+    @Column(name = "name")
     @Schema(example = "Example file")
     @Size(max = 255)
     private String name;
@@ -35,10 +37,10 @@ public class File {
     @Size(max = 255)
     private String format;
 
-    @Column(name="mongo_id")
+    @Column(name = "mongo_id")
     @Schema(example = "0")
     @Size(max = 255)
-    private String mongo_id;
+    private String mongoId;
 
     @ManyToOne
     @JoinColumn(name = "assignmentId", foreignKey = @ForeignKey(name = "file_assignment_id_fk"))
@@ -50,10 +52,10 @@ public class File {
     @JsonIgnore
     private Solution solution;
 
-    public File(String name, String format, String mongo_id, Assignment assignment, Solution solution) {
+    public File(String name, String format, String mongoId, Assignment assignment, Solution solution) {
         this.name = name;
         this.format = format;
-        this.mongo_id = mongo_id;
+        this.mongoId = mongoId;
         this.assignment = assignment;
         this.solution = solution;
     }

@@ -6,6 +6,8 @@ import lombok.*;
 import pl.homeworkjustclick.comment.Comment;
 import pl.homeworkjustclick.file.File;
 
+import java.io.Serializable;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -14,7 +16,7 @@ import pl.homeworkjustclick.file.File;
 @Table(name = "_comment_file_img")
 @Getter
 @Setter
-public class CommentFileImg {
+public class CommentFileImg implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)

@@ -45,9 +45,7 @@ public class EvaluationService {
     public List<EvaluationResponseDto> getAll() {
         List<Evaluation> evaluationList = repository.findAll();
         List<EvaluationResponseDto> responseList = new ArrayList<>();
-        evaluationList.forEach(evaluation -> {
-            responseList.add(buildEvaluationResponse(evaluation));
-        });
+        evaluationList.forEach(evaluation -> responseList.add(buildEvaluationResponse(evaluation)));
         return responseList;
     }
 
@@ -59,6 +57,11 @@ public class EvaluationService {
     public List<EvaluationResponseDto> findAllByGroupId(Integer groupId) {
         return repository.findAllByGroupId(groupId)
                 .stream().map(mapper::map).toList();
+    }
+
+    public EvaluationResponseDto findAllEvaluationsByStudentAndAssignment(Integer studentId, Integer assignmentId) {
+        var evaluationOptional = repository.findEvaluationByStudentAndAssignment(studentId, assignmentId);
+        return evaluationOptional.map(mapper::map).orElse(null);
     }
 
     @Transactional
@@ -80,22 +83,22 @@ public class EvaluationService {
     }
 
     @Transactional
-    public EvaluationResponseDto addWithUserAndSolution(Evaluation evaluation, int user_id, int solution_id) {
-        Optional<User> user = userRepository.findById(user_id);
-        Optional<Solution> solution = solutionRepository.findById(solution_id);
-        if(user.isPresent() && solution.isPresent() ) {
+    public EvaluationResponseDto addWithUserAndSolution(Evaluation evaluation, int userId, int solutionId) {
+        Optional<User> user = userRepository.findById(userId);
+        Optional<Solution> solution = solutionRepository.findById(solutionId);
+        if (user.isPresent() && solution.isPresent()) {
             List<User> userList = userRepository.getTeachersByGroupId(solution.get().getGroup().getId());
             AtomicBoolean ok = new AtomicBoolean(false);
             userList.forEach(user1 -> {
-                if (user1.getId() == user_id) {
+                if (user1.getId() == userId) {
                     ok.set(true);
                 }
             });
-            if(ok.get() && !checkForEvaluationToSolution(solution_id)) {
+            if (ok.get() && checkForEvaluationToSolution(solutionId).equals(Boolean.FALSE)) {
                 var assignment = solution.get().getAssignment();
-                if (assignment.getAuto_penalty() > 0) {
+                if (assignment.getAutoPenalty() > 0) {
                     if (assignment.getCompletionDatetime().isBefore(solution.get().getCreationDatetime())) {
-                        double penalty = evaluation.getResult() * ((double) assignment.getAuto_penalty() / 100);
+                        double penalty = evaluation.getResult() * ((double) assignment.getAutoPenalty() / 100);
                         evaluation.setResult(evaluation.getResult() - penalty);
                     }
                 }
@@ -115,9 +118,7 @@ public class EvaluationService {
     public List<EvaluationResponseExtendedDto> getAllExtended() {
         List<Evaluation> evaluationList = repository.findAll();
         List<EvaluationResponseExtendedDto> responseList = new ArrayList<>();
-        evaluationList.forEach(evaluation -> {
-            responseList.add(buildEvaluationResponseExtended(evaluation));
-        });
+        evaluationList.forEach(evaluation -> responseList.add(buildEvaluationResponseExtended(evaluation)));
         return responseList;
     }
 
@@ -127,21 +128,17 @@ public class EvaluationService {
     }
 
 
-    public List<EvaluationResponseDto> getAllEvaluationsByStudent(int student_id) {
-        List<Evaluation> evaluationList = repository.getAllEvaluationsByStudent(student_id);
+    public List<EvaluationResponseDto> getAllEvaluationsByStudent(int studentId) {
+        List<Evaluation> evaluationList = repository.getAllEvaluationsByStudent(studentId);
         List<EvaluationResponseDto> responseList = new ArrayList<>();
-        evaluationList.forEach(evaluation -> {
-            responseList.add(buildEvaluationResponse(evaluation));
-        });
+        evaluationList.forEach(evaluation -> responseList.add(buildEvaluationResponse(evaluation)));
         return responseList;
     }
 
-    public List<EvaluationResponseDto> getAllEvaluationsByStudentInGroup(int student_id, int group_id) {
-        List<Evaluation> evaluationList = repository.getAllEvaluationsByStudentInGroup(student_id, group_id);
+    public List<EvaluationResponseDto> getAllEvaluationsByStudentInGroup(int studentId, int groupId) {
+        List<Evaluation> evaluationList = repository.getAllEvaluationsByStudentInGroup(studentId, groupId);
         List<EvaluationResponseDto> responseList = new ArrayList<>();
-        evaluationList.forEach(evaluation -> {
-            responseList.add(buildEvaluationResponse(evaluation));
-        });
+        evaluationList.forEach(evaluation -> responseList.add(buildEvaluationResponse(evaluation)));
         return responseList;
     }
 
@@ -149,49 +146,41 @@ public class EvaluationService {
         return repository.getEvaluationsByAssignment(assignmentId);
     }
 
-    public List<EvaluationResponseDto> getAllEvaluationsByAssignment(int assignment_id) {
-        List<Evaluation> evaluationList = repository.getEvaluationsByAssignment(assignment_id);
+    public List<EvaluationResponseDto> getAllEvaluationsByAssignment(int assignmentId) {
+        List<Evaluation> evaluationList = repository.getEvaluationsByAssignment(assignmentId);
         List<EvaluationResponseDto> responseList = new ArrayList<>();
-        evaluationList.forEach(evaluation -> {
-            responseList.add(buildEvaluationResponse(evaluation));
-        });
+        evaluationList.forEach(evaluation -> responseList.add(buildEvaluationResponse(evaluation)));
         return responseList;
     }
 
-    public EvaluationResponseDto getEvaluationBySolution(int solution_id) {
-        Optional<Evaluation> evaluationOptional = repository.getEvaluationBySolution(solution_id);
+    public EvaluationResponseDto getEvaluationBySolution(int solutionId) {
+        Optional<Evaluation> evaluationOptional = repository.getEvaluationBySolution(solutionId);
         return evaluationOptional.map(this::buildEvaluationResponse).orElse(null);
     }
 
-    public List<EvaluationResponseExtendedDto> getAllEvaluationsByStudentExtended(int student_id) {
-        List<Evaluation> evaluationList = repository.getAllEvaluationsByStudent(student_id);
+    public List<EvaluationResponseExtendedDto> getAllEvaluationsByStudentExtended(int studentId) {
+        List<Evaluation> evaluationList = repository.getAllEvaluationsByStudent(studentId);
         List<EvaluationResponseExtendedDto> responseList = new ArrayList<>();
-        evaluationList.forEach(evaluation -> {
-            responseList.add(buildEvaluationResponseExtended(evaluation));
-        });
+        evaluationList.forEach(evaluation -> responseList.add(buildEvaluationResponseExtended(evaluation)));
         return responseList;
     }
 
-    public List<EvaluationResponseExtendedDto> getAllEvaluationsByStudentInGroupExtended(int student_id, int group_id) {
-        List<Evaluation> evaluationList = repository.getAllEvaluationsByStudentInGroup(student_id, group_id);
+    public List<EvaluationResponseExtendedDto> getAllEvaluationsByStudentInGroupExtended(int studentId, int groupId) {
+        List<Evaluation> evaluationList = repository.getAllEvaluationsByStudentInGroup(studentId, groupId);
         List<EvaluationResponseExtendedDto> responseList = new ArrayList<>();
-        evaluationList.forEach(evaluation -> {
-            responseList.add(buildEvaluationResponseExtended(evaluation));
-        });
+        evaluationList.forEach(evaluation -> responseList.add(buildEvaluationResponseExtended(evaluation)));
         return responseList;
     }
 
-    public List<EvaluationResponseExtendedDto> getAllEvaluationsByAssignmentExtended(int assignment_id) {
-        List<Evaluation> evaluationList = repository.getEvaluationsByAssignment(assignment_id);
+    public List<EvaluationResponseExtendedDto> getAllEvaluationsByAssignmentExtended(int assignmentId) {
+        List<Evaluation> evaluationList = repository.getEvaluationsByAssignment(assignmentId);
         List<EvaluationResponseExtendedDto> responseList = new ArrayList<>();
-        evaluationList.forEach(evaluation -> {
-            responseList.add(buildEvaluationResponseExtended(evaluation));
-        });
+        evaluationList.forEach(evaluation -> responseList.add(buildEvaluationResponseExtended(evaluation)));
         return responseList;
     }
 
-    public EvaluationResponseExtendedDto getEvaluationBySolutionExtended(int solution_id) {
-        Optional<Evaluation> evaluationOptional = repository.getEvaluationBySolution(solution_id);
+    public EvaluationResponseExtendedDto getEvaluationBySolutionExtended(int solutionId) {
+        Optional<Evaluation> evaluationOptional = repository.getEvaluationBySolution(solutionId);
         return evaluationOptional.map(this::buildEvaluationResponseExtended).orElse(null);
     }
 
@@ -210,8 +199,8 @@ public class EvaluationService {
                 .stream().map(mapper::mapExtended).toList();
     }
 
-    public Boolean checkForEvaluationToSolution(int solution_id) {
-        return repository.checkForEvaluationToSolution(solution_id) != 0;
+    public Boolean checkForEvaluationToSolution(int solutionId) {
+        return repository.checkForEvaluationToSolution(solutionId) != 0;
     }
 
     @Transactional
@@ -221,22 +210,22 @@ public class EvaluationService {
     }
 
     @Transactional
-    public EvaluationResponseExtendedDto addWithUserAndSolutionExtended(Evaluation evaluation, int user_id, int solution_id) {
-        Optional<User> user = userRepository.findById(user_id);
-        Optional<Solution> solution = solutionRepository.findById(solution_id);
-        if(user.isPresent() && solution.isPresent()) {
+    public EvaluationResponseExtendedDto addWithUserAndSolutionExtended(Evaluation evaluation, int userId, int solutionId) {
+        Optional<User> user = userRepository.findById(userId);
+        Optional<Solution> solution = solutionRepository.findById(solutionId);
+        if (user.isPresent() && solution.isPresent()) {
             List<User> userList = userRepository.getTeachersByGroupId(solution.get().getGroup().getId());
             AtomicBoolean ok = new AtomicBoolean(false);
             userList.forEach(user1 -> {
-                if (user1.getId() == user_id) {
+                if (user1.getId() == userId) {
                     ok.set(true);
                 }
             });
-            if(ok.get() && !checkForEvaluationToSolution(solution_id)) {
+            if (ok.get() && checkForEvaluationToSolution(solutionId).equals(Boolean.FALSE)) {
                 var assignment = solution.get().getAssignment();
-                if (assignment.getAuto_penalty() > 0) {
+                if (assignment.getAutoPenalty() > 0) {
                     if (assignment.getCompletionDatetime().isBefore(solution.get().getCreationDatetime())) {
-                        double penalty = evaluation.getResult() * ((double) assignment.getAuto_penalty() / 100);
+                        double penalty = evaluation.getResult() * ((double) assignment.getAutoPenalty() / 100);
                         evaluation.setResult(evaluation.getResult() - penalty);
                     }
                 }
@@ -262,7 +251,7 @@ public class EvaluationService {
     @Transactional
     public Boolean changeResultById(int id, Double result) {
         if (repository.findById(id).isPresent()) {
-            Evaluation evaluation = repository.findById(id).get();
+            Evaluation evaluation = findById(id);
             evaluation.setResult(result);
             repository.save(evaluation);
             return true;
@@ -275,8 +264,8 @@ public class EvaluationService {
     @Transactional
     public Boolean changeUserById(int id, int userId) {
         if (repository.findById(id).isPresent() && userRepository.findById(userId).isPresent()) {
-            Evaluation evaluation = repository.findById(id).get();
-            User user = userRepository.findById(userId).get();
+            Evaluation evaluation = findById(id);
+            User user = userService.findById(userId);
             evaluation.setUser(user);
             repository.save(evaluation);
             return true;
@@ -289,8 +278,8 @@ public class EvaluationService {
     @Transactional
     public Boolean changeSolutionById(int id, int solutionId) {
         if (repository.findById(id).isPresent() && solutionRepository.findById(solutionId).isPresent()) {
-            Evaluation evaluation = repository.findById(id).get();
-            Solution solution = solutionRepository.findById(solutionId).get();
+            Evaluation evaluation = findById(id);
+            Solution solution = solutionService.findById(solutionId);
             evaluation.setSolution(solution);
             repository.save(evaluation);
             return true;
@@ -304,7 +293,7 @@ public class EvaluationService {
     @Transactional
     public Boolean changeGradeById(int id, Double grade) {
         if (repository.findById(id).isPresent()) {
-            Evaluation evaluation = repository.findById(id).get();
+            Evaluation evaluation = findById(id);
             evaluation.setGrade(grade);
             repository.save(evaluation);
             return true;

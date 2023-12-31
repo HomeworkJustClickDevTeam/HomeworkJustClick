@@ -1,19 +1,10 @@
 import { useGetFile } from "../customHooks/useGetFile"
 import {FileInterface} from "../../types/FileInterface";
+import {CreateFileUrlAndClick} from "../../utils/CreateFileUrlAndClick";
 
 export function SolutionFile({fileFromDb}: { fileFromDb: FileInterface }) {
-
-  const handleDownload = () => {
-    if (fileFromDb) {
-      const fileUrl = URL.createObjectURL(fileFromDb.data)
-      const link = document.createElement("a")
-      link.href = fileUrl
-      link.download = fileFromDb.name
-      link.click()
-    }
-  }
-    return (<>
+    return (<div>
       {fileFromDb !== undefined &&
-      <button key={fileFromDb.name} onClick={handleDownload}>{fileFromDb.name}</button>}
-    </>)
+      <button key={fileFromDb.name} onClick={()=>CreateFileUrlAndClick(fileFromDb!)}>{fileFromDb.name}</button>}
+    </div>)
 }

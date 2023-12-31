@@ -21,8 +21,10 @@ import * as fs from "fs";
 import * as domain from "domain";
 
 
-export const ReportCreate = ({reportedObject, csvVersion
-}:{reportedObject: GroupInterface|AssignmentInterface, csvVersion: boolean}) =>{
+export const ReportCreate = ({reportedObject, csvVersion, closeReportCreator}:
+                               {reportedObject: GroupInterface|AssignmentInterface,
+                                csvVersion: boolean,
+                                closeReportCreator: ()=>void}) =>{
   const [reportCreate, setReportCreate] = useState<AssignmentCreateReportModel|GroupCreateReportModel|undefined>(undefined)
   const navigate = useNavigate()
   const group = useAppSelector(selectGroup)
@@ -120,7 +122,7 @@ export const ReportCreate = ({reportedObject, csvVersion
   }, []);
 
   if(reportCreate !== undefined) {
-    return <div className='w-[400px]  border-2 border-black rounded-md pl-3'>
+    return <div className='w-[400px]  border-4 border-black rounded-md pl-3 shadow-lg'>
       <div className='text-center mb-6 mt-2 font-bold'>RAPORT</div>
 
       {'title' in reportedObject?
@@ -129,7 +131,7 @@ export const ReportCreate = ({reportedObject, csvVersion
           <br/>
           <div><span className='font-semibold mr-1'>Termin:</span> {format(new Date((reportedObject as AssignmentInterface).completionDatetime.toString()), "dd.MM.yyyy, HH:mm")}</div>
           <br/>
-          <div><span className='font-semibold mr-1'>Punkty do zdobycia:</span> {(reportedObject as AssignmentInterface).max_points}</div>
+          <div><span className='font-semibold mr-1'>Punkty do zdobycia:</span> {(reportedObject as AssignmentInterface).maxPoints}</div>
           <br/>
         </div>
           : <div><span className='font-semibold mr-1'>Nazwa grupy:</span> {(reportedObject as GroupInterface).name}</div>}
@@ -137,42 +139,43 @@ export const ReportCreate = ({reportedObject, csvVersion
       <form onSubmit={(event) => {csvVersion ? handleCsvCreation(event) : handleReportCreation(event)}}>
         {csvVersion &&
             <fieldset>
-                <legend>Elementy do wygenerowania:</legend>
-                Średnia punktów: <input checked={reportCreate.avgResult}
+                <legend className='mb-2 cn underline underline-offset-4'>Elementy do wygenerowania:</legend>
+                <div className='mb-1'>Średnia punktów: <input checked={reportCreate.avgResult}
                                         type={'checkbox'}
                                         onChange={() => handleChangingState({
                                           ...reportCreate,
                                           avgResult: !reportCreate.avgResult
-                                        })}/><br/>
-                Najwyższy wynik: <input checked={reportCreate.maxResult}
+                                        })}/></div>
+                <div className='mb-1'>Najwyższy wynik: <input checked={reportCreate.maxResult}
                                         type={'checkbox'}
                                         onChange={() => handleChangingState({
                                           ...reportCreate,
                                           maxResult: !reportCreate.maxResult
-                                        })}/><br/>
-                Najniższy wynik: <input checked={reportCreate.minResult}
+                                        })}/></div>
+              <div className='mb-1'>Najniższy wynik: <input checked={reportCreate.minResult}
                                         type={'checkbox'}
                                         onChange={() => handleChangingState({
                                           ...reportCreate,
                                           minResult: !reportCreate.minResult
-                                        })}/><br/>
-                Ilość zadań przesłanych po terminie: <input checked={reportCreate.late}
+                                        })}/></div>
+              <div className='mb-1'>Ilość zadań przesłanych po terminie: <input checked={reportCreate.late}
                                                             type={'checkbox'}
                                                             onChange={() => handleChangingState({
                                                               ...reportCreate,
                                                               late: !reportCreate.late
-                                                            })}/><br/>
-                <div className='mb-3 '><span className='font-semibold mr-1'>Przedziały do histogramu :</span> <input
+                                                            })}/></div>
+                <div className='mb-6 '><span className='font-semibold mr-1 '>Przedziały do histogramu :</span> <input
                     className='w-12 px-2 py-1 mr-2 ml-2 border-b solid black' type={"text"} value={histTextValue}
                     onChange={(event) => setHistTextValue(event.target.value)}/>%
                 </div>
             </fieldset>}
         <div className='flex justify-between pr-4 mb-2 '>
           <button className='bg-main_blue text-white rounded-md text-sm p-1 px-2' type={"submit"}>Utwórz</button>
-          <button type={'reset'} className='bg-berry_red text-white rounded-md text-sm p-1 w-8'>X</button>
+          <button type={'button'} onClick={() => closeReportCreator()} className='bg-berry_red text-white rounded-md text-sm p-1 w-8'>X</button>
         </div>
       </form>
     </div>
+
   }
   else {return null}
 }

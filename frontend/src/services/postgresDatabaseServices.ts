@@ -23,21 +23,21 @@ import {EvaluationReport} from "../types/EvaluationReport.model";
 
 
 const postgresqlDatabaseJSON = axios.create({
-  baseURL: process.env.REACT_APP_API_URL,
-  timeout: 8000,
-  headers: {
-    "Access-Control-Allow-Origin": process.env.REACT_APP_CORS_URL,
-    "Content-Type": "application/json",
-  },
+    baseURL: process.env.REACT_APP_API_URL,
+    timeout: 8000,
+    headers: {
+        "Access-Control-Allow-Origin": process.env.REACT_APP_CORS_URL,
+        "Content-Type": "application/json",
+    },
 })
 
 const postgresqlDatabaseTextPlain = axios.create({
-  baseURL: process.env.REACT_APP_API_URL,
-  timeout: 8000,
-  headers: {
-    "Access-Control-Allow-Origin": process.env.REACT_APP_CORS_URL,
-    "Content-Type": "text/plain",
-  },
+    baseURL: process.env.REACT_APP_API_URL,
+    timeout: 8000,
+    headers: {
+        "Access-Control-Allow-Origin": process.env.REACT_APP_CORS_URL,
+        "Content-Type": "text/plain",
+    },
 })
 
 postgresqlDatabaseJSON.interceptors.request.use(
@@ -139,7 +139,7 @@ export const createFileWithAssignmentPostgresService = async (
     return await postgresqlDatabaseJSON.post(
         `file/withAssignment/${assignmentId}`,
         {
-            mongo_id: mongoId,
+            mongoId: mongoId,
             format: format,
             name: name,
         }
@@ -170,7 +170,7 @@ export const createFileWithSolutionPostgresService = async (
     solutionId: string | number
 ) => {
     return await postgresqlDatabaseJSON.post(`/file/withSolution/${solutionId}`, {
-        mongo_id: mongoId,
+        mongoId: mongoId,
         format: format,
         name: name,
     })
@@ -307,6 +307,14 @@ export const getExtendedSolutionsLateByGroupPostgresService = async (
     )
 }
 
+export const getSolutionsLateByGroupPostgresService = async (
+  groupId: string
+) => {
+    return await postgresqlDatabaseJSON.get(
+      `/solutions/lateByGroup/${groupId}`
+    )
+}
+
 export const getExtendedSolutionsUncheckedByGroupPostgresService = async (
     groupId: string
 ) => {
@@ -315,11 +323,27 @@ export const getExtendedSolutionsUncheckedByGroupPostgresService = async (
     )
 }
 
+export const getSolutionsUncheckedByGroupPostgresService = async (
+  groupId: string
+) => {
+    return await postgresqlDatabaseJSON.get(
+      `/solutions/uncheckedByGroup/${groupId}`
+    )
+}
+
 export const getExtendedSolutionsCheckedByGroupPostgresService = async (
     groupId: string
 ) => {
     return await postgresqlDatabaseJSON.get(
         `/extended/solutions/checkedByGroup/${groupId}`
+    )
+}
+
+export const getSolutionsCheckedByGroupPostgresService = async (
+  groupId: string
+) => {
+    return await postgresqlDatabaseJSON.get(
+      `/solutions/checkedByGroup/${groupId}`
     )
 }
 

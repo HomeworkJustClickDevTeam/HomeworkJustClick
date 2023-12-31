@@ -29,7 +29,7 @@ export const useGetFile = (filterId: number|undefined|null, filter:"assignment" 
             let updatedFiles:FileInterface[] = []
             for (const file of databaseFiles) {
               if(file){
-                const mongoResponse = await getFileMongoService(file.mongo_id)
+                const mongoResponse = await getFileMongoService(file.mongoId)
                 if(mongoResponse !== undefined && mongoResponse!==null){
                   const fileData = mongoResponse.data
                   const type = fileData.file.type
@@ -43,7 +43,7 @@ export const useGetFile = (filterId: number|undefined|null, filter:"assignment" 
                     data: blob,
                     name: mongoResponse.data.name,
                     format: fileData.format,
-                    mongo_id: file.mongo_id,
+                    mongoId: file.mongoId,
                     id: file.id
                   })
                 }
