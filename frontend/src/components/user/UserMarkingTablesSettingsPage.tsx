@@ -19,12 +19,12 @@ export default function UserMarkingTablesSettingsPage() {
         tables={evaluationTable}
         setEvaluationTable={setEvaluationTable}
       />
-      <button
+        {isFormHidden && <button
         className="bg-main_blue text-white px-8 py-2 rounded-md text-lg hover:bg-hover_blue hover:shadow-md active:shadow-none"
         onClick={() => setIsFormHidden(false)}
       >
         Nowa tabela +
-      </button>
+      </button>}
 
       {!isFormHidden && (
         <PointsTableForm

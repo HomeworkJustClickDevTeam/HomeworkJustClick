@@ -10,6 +10,7 @@ import {AssignmentInterface} from "../../types/AssignmentInterface";
 import {GroupInterface} from "../../types/GroupInterface";
 import {Chart} from "react-google-charts";
 import {ReportPageUnfoldingElements} from "../../types/ReportPageUnfoldingElements";
+import { FaDownload } from "react-icons/fa";
 
 
 
@@ -70,7 +71,7 @@ export const ReportPage = () =>{
   }, [state])
 
   if(report === undefined || state === undefined) return null
-  return <div className='relative flex h-[calc(100vh-325px)] overflow-hidden mb-3 justify-center'><div className='absolute h-[99.5%] border border-border_gray rounded-md  w-[1200px] box-content overflow-y-auto shadow-xl pl-8'>
+  return <div className='relative flex h-[calc(100vh-332px)] overflow-hidden mb-3 justify-center'><div className='absolute h-[99.5%] border border-border_gray rounded-md  w-[1200px] box-content overflow-y-auto shadow-xl pl-8'>
     {(reportedObject! as AssignmentInterface).title !== undefined &&
     (reportedObject! as AssignmentInterface).completionDatetime !== undefined &&
     (reportedObject! as AssignmentInterface).maxPoints !== undefined ?
@@ -89,7 +90,7 @@ export const ReportPage = () =>{
         <div>Ilość zadań przesłanych po terminie: <span className='text-berry_red font-semibold ml-1'>{(report as AssignmentReportModel).late}</span></div>
         <br/>
       </div>
-      : <div>RAPORT GRUPY: {(reportedObject! as GroupInterface).name}</div>}
+      : <div className='text-center underline underline-offset-4 mb-6 mt-4'>RAPORT GRUPY: {(reportedObject! as GroupInterface).name}</div>}
     <button onClick={() => handleUnfolding(ReportPageUnfoldingElements.table)} className='w-36 text-left'>
       <span className='underline underline-offset-2'>{unfoldedElement === ReportPageUnfoldingElements.table ? 'Zwiń tabelę:' : 'Rozwiń tabelę: '}</span><br/>
       {(reportedObject! as AssignmentInterface).maxPoints !== undefined && unfoldedElement === ReportPageUnfoldingElements.table
@@ -99,7 +100,7 @@ export const ReportPage = () =>{
     </button>
     <br/>
     <div onClick={() => handleUnfolding(ReportPageUnfoldingElements.histogram)}>
-      HISTOGRAM:<br/>
+      <p className='mt-2 underline underline-offset-2 cursor-pointer'>{unfoldedElement === ReportPageUnfoldingElements.histogram ? 'Zwiń histogram: ' : 'Rozwiń histogram: '}</p><br/>
       {unfoldedElement === ReportPageUnfoldingElements.histogram &&
         <Chart
           chartType="Histogram"
@@ -110,7 +111,7 @@ export const ReportPage = () =>{
         />}
     </div>
       <div className='mb-3 w-full'>
-        <button onClick={() => setCsvCreateFormShown(true)}>Pobierz raport CSV</button>
+        <button className='bg-main_blue w-42 h-8 rounded-md text-white px-3 py-1 ml-[-5px] flex' onClick={() => setCsvCreateFormShown(true)}><span className='mr-2'>Pobierz raport CSV</span> <FaDownload  className='mt-1'/></button>
         <div className='flex justify-center'>{csvCreateFormShown && reportedObject !== undefined &&
             <ReportCreate closeReportCreator={()=>setCsvCreateFormShown(false)} reportedObject={reportedObject} csvVersion={true}/>}</div>
       </div>
