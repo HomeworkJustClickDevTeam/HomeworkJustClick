@@ -36,16 +36,6 @@ function AssignmentsGroupTeacherDisplayedPage() {
 
     <div className='flex flex-col h-[calc(100vh-325px)] overflow-y-hidden w-full'>
       <div className='relative h-[420px] box-content overflow-y-auto w-full'>
-        <div className='relative w-[1300px]'>
-        {role === "Teacher" && chosenObjectsReport === undefined && (
-          <Link to={`/group/${group?.id}/assignments/add`}>
-            <button
-              className='absolute mb-4 right-0 mt-6 bg-main_blue text-white px-8 py-2 rounded-md text-lg hover:bg-hover_blue hover:shadow-md active:shadow-none'>
-              Nowe zadanie +
-            </button>
-          </Link>
-        )}
-        </div>
         <ul className="flex flex-col  mb-4">
           {assignments.map((assignment) => (
               <li key={assignment.id} className='flex inline-block '>

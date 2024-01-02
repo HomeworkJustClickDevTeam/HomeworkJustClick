@@ -5,5 +5,6 @@ export enum sortButtonValues{
   expired="Zaległe",
   uncheck="Do sprawdzenia",
   check="Sprawdzone",
-  late="Spóźnione"
+  late="Spóźnione",
+  add="Stwórz nowe zadanie"
 }
