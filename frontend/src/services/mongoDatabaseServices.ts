@@ -54,3 +54,7 @@ export const getFileMongoService = (
 ) => {
   return mongoDatabaseServices.get(`file/${mongoId}`, config)
 }
+
+export const deleteFileMongoService = (mongoId: string) => {
+  return mongoDatabaseServices.delete(`file/${mongoId}`)
+}
