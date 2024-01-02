@@ -19,12 +19,14 @@ public class EvaluationReportMapper {
     }
 
     EvaluationReportResponseDto map(EvaluationReport evaluationReport, Solution solution) {
-        return EvaluationReportResponseDto.builder()
-                .id(evaluationReport.getId())
-                .comment(evaluationReport.getComment())
-                .evaluation(evaluationMapper.map(evaluationReport.getEvaluation()))
-                .solution(solutionMapper.mapExtended(solution))
-                .build();
+        if (evaluationReport != null && solution != null) {
+            return EvaluationReportResponseDto.builder()
+                    .id(evaluationReport.getId())
+                    .comment(evaluationReport.getComment())
+                    .evaluation(evaluationMapper.map(evaluationReport.getEvaluation()))
+                    .solution(solutionMapper.mapExtended(solution))
+                    .build();
+        } else return null;
     }
 
     void map(EvaluationReport target, EvaluationReportDto source) {
