@@ -17,14 +17,14 @@ export default function AssignmentsMainPage() {
   const userNonExpiredUndoneAssignments = useGetAssignmentsByStudent(userState?.id, 'nonExpiredUndone')
 
   if(userDoneAssignments.length === 0 && userExpiredUndoneAssignments.length === 0 && userNonExpiredUndoneAssignments.length === 0)
-    return (<>Tu będą informacje o zadaniach z każdej grupy, w której jesteś uczeniem. Nie jesteś uczeniem w żadnej grupie.</>)
+    return (<>Tu będą informacje o zadaniach z każdej grupy, w której jesteś uczeniem. Nie jesteś uczeniem w żadnej grupie albo nie dostałeś jeszcze żadnych zadań do zrobienia.</>)
 
-  return <>
+  return <div>
     Zaległe niezrobione zadania:<br/>
     {userExpiredUndoneAssignments.length > 0 ? <AssignmentsDisplayer assignments={userExpiredUndoneAssignments}/>: <div>Brak</div>}
     Zadania do zrobienia:<br/>
     {userNonExpiredUndoneAssignments.length > 0 ? <AssignmentsDisplayer assignments={userNonExpiredUndoneAssignments}/>: <div>Brak</div>}
     Zrobione zadania:<br/>
     {userDoneAssignments.length > 0 ? <AssignmentsDisplayer assignments={userDoneAssignments}/> : <div>Brak</div>}
-  </>
+  </div>
 }
