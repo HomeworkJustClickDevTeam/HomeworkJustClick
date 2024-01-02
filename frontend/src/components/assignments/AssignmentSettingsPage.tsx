@@ -171,7 +171,7 @@ export const AssignmentSettingsPage = ({handleSubmit,
             </label>
             <button
               type={"submit"}
-              className="absolute top-0 right-0 mr-6 mt-4 px-10 py-1 rounded-lg bg-main_blue text-white hover:bg-hover_blue hover:shadow-md active:shadow-none"
+              className="absolute bottom-5 right-0 mr-6 mt-4 px-8 py-1 rounded-lg bg-main_blue text-white hover:bg-hover_blue hover:shadow-md active:shadow-none"
             >
               Zapisz
             </button>
@@ -189,7 +189,7 @@ export const AssignmentSettingsPage = ({handleSubmit,
             />}
           {handleDelete !== undefined &&
           <button onClick={(event) => handleDelete(event)}
-                  className='absolute bottom-0 right-0 mr-6 mb-4 px-4 py-1 rounded-lg bg-berry_red text-white'>Usuń Zadanie
+                  className='absolute top-5 right-0 mr-6 mb-4 px-4 py-1 rounded-lg bg-berry_red text-white'>Usuń
           </button>}
         </div>
       </div>

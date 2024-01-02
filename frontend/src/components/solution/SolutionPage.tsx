@@ -85,7 +85,7 @@ function SolutionPage() {
                 {format(new Date(solutionExtended.creationDateTime.toString()), "dd.MM.yyyy HH:mm")}
             </div>
             {(checkIfPenaltyOn()) &&
-                <div>
+                <div className='text-berry_red'>
                     Zadanie wysłane po terminie, zostanie automatycznie naliczona
                     kara {solutionExtended.assignment.autoPenalty}%
                 </div>}
