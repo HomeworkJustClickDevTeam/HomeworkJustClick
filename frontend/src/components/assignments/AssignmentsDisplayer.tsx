@@ -17,7 +17,7 @@ export const AssignmentsDisplayer = ({assignments}:{assignments:AssignmentInterf
   const groupAssignmentsWithEvaluation = useGetAssignmentsWithEvaluationByGroupAndStudent(group?.id, user!.id)
   const assignmentsWithEvaluation = useGetAssignmentsWithEvaluationByStudent(user!.id)
   return (
-    <ul>
+    <ul className='box-content overflow-y-auto mb-2'>
       {assignments.map(assignment=> (
         <li key={assignment.id}>
           <AssignmentListElement
