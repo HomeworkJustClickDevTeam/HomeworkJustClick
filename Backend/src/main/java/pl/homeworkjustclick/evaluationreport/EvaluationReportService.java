@@ -26,7 +26,7 @@ public class EvaluationReportService {
     }
 
     public EvaluationReportResponseDto getEvaluationReportByEvaluationId(Integer evaluationId) {
-        return mapper.map(findById(evaluationId), solutionService.findByEvaluationId(evaluationId));
+        return mapper.map(repository.findByEvaluationId(evaluationId).orElseThrow(() -> new EntityNotFoundException("EvaluationReport with evaluationId = " + evaluationId + " not found")), solutionService.findByEvaluationId(evaluationId));
     }
 
     public List<EvaluationReportResponseDto> getEvaluationReportsByTeacherId(Integer userId) {
