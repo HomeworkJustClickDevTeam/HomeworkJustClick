@@ -21,6 +21,8 @@ function AssignmentsGroupTeacherDisplayedPage() {
   const assignments = useGetAssignmentsByGroup(group?.id)
   const [chosenObjectsReport, setChosenObjectsReport] = useState<AssignmentInterface| GroupInterface |undefined>(undefined)
 
+
+
   useEffect(()=>{
     if(group !== null && state?.groupReport === true && ((chosenObjectsReport !== undefined && !('name' in chosenObjectsReport))|| chosenObjectsReport === undefined)) setChosenObjectsReport(group)
     else if (state?.groupReport === true && chosenObjectsReport !== undefined && 'name' in chosenObjectsReport) setChosenObjectsReport(undefined)
@@ -48,9 +50,11 @@ function AssignmentsGroupTeacherDisplayedPage() {
           {assignments.map((assignment) => (
               <li key={assignment.id} className='flex inline-block '>
                 <AssignmentListElement idGroup={group!.id.toString()}
-                                            assignment={assignment}
-                                            createReportButton={true}
-                                            handleGenerateReportButtonClick={() => handleGenerateReportButtonClick(assignment)}/>{" "}
+                                       assignment={assignment}
+
+                                       createReportButton={true}
+                                       handleGenerateReportButtonClick={() => handleGenerateReportButtonClick(assignment)}/>{" "}
+
               </li>
             ))}
         </ul>

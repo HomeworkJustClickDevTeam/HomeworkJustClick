@@ -371,6 +371,19 @@ export const getAssignmentsExpiredUndoneByStudentPostgresService = async (
     return await postgresqlDatabaseJSON.get("/assignments/expiredUndoneByStudent/" + userId)
 }
 
+export const getAssignmentsWithEvaluationByStudentAndGroupPostgresService = async (
+  userId: string,
+  groupId: string
+) => {
+    return await postgresqlDatabaseJSON.get(`/assignments/byStudentAndGroupWithEvaluation/${userId}/${groupId}`)
+}
+
+export const getAssignmentsWithEvaluationByStudentPostgresService = async (
+  userId: string
+) => {
+    return await postgresqlDatabaseJSON.get("/assignments/byStudentWithEvaluation/" + userId)
+}
+
 export const getAssignmentsNonExpiredUndoneByStudentPostgresService = async (
   userId: string
 ) => {
