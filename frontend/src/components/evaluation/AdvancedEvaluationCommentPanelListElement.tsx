@@ -76,7 +76,7 @@ export const AdvancedEvaluationCommentPanelListElement = ({ highlightedCommentId
         margin: "4px 0px 0px 0px",
         padding: "5px 4px"}
       }>
-        <div>
+
           <div className="mb-3 flex">
           <textarea className="italic underline underline-offset-2 max-h-[75px] min-h-[36px] pr-2"
                     disabled={commentReadonly}
@@ -89,18 +89,20 @@ export const AdvancedEvaluationCommentPanelListElement = ({ highlightedCommentId
             {handleCommentRemoval !==undefined && <button className=" text-main_blue underline text-sm flex" id={"editButton"}
                     type={"button"}
                     onClick={() => setCommentReadonly(prevState => !prevState)}>
-              <FaEdit className="mt-1 mr-[2px] ml-2" />
-              {commentReadonly ? "Edytuj" : "Ok"}
+              <div className='flex inline-block pt-3'><FaEdit className="mt-1 mr-[2px] ml-2" />
+                  {commentReadonly ? "Edytuj" : "Zatwierdź"}</div>
             </button>}
           </div>
-            <p className="mb-2 h-full">Kolor:</p>
+          <div className='flex inline-block w-fit'>
+            <p className="mb-2 h-full mr-2">Kolor:</p>
             <input
               id={"colorPicker"}
               value={commentState.color}
               disabled={handleCommentRemoval ===undefined}
               onChange={(event) => handleColorPickerBehaviour(event)}
               type={"color"} />
-        </div>
+          </div>
+
         <br />
         {handleCommentRemoval !==undefined && <button className="text-berry_red ml-auto text-center flex mr-4"
                 onClick={() => {

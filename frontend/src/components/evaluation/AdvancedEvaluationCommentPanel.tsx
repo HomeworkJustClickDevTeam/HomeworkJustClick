@@ -102,13 +102,13 @@ export const AdvancedEvaluationCommentPanel = (
 
 
   return (
-    <div  style={{float:"right", height:"100vh"}}>
+    <div  style={{float:"right", height:"100vh", width: '350px'}}>
       <p className='text-center underline underline-offset-4 mb-4'>KOMENTARZE</p>
 
       <form onSubmit={(event) => handleNewCommentCreation(event)}>
-      <div className='inline-flex w-full pb-4'>
-        Dodaj nowy komentarz:<br/>
-        <input value={newCommentDescription} className='border border-black rounded-sm mr-2 w-full pl-1.5' onChange={(event) => setNewCommentDescription(event.target.value)}/>
+      <div className='inline-flex w-full pb-2'>
+        <p className='mr-2'>Dodaj nowy komentarz: </p>
+        <input value={newCommentDescription} className='border border-black rounded-sm mr-2 w-full pl-1.5 h-10 mt-2' onChange={(event) => setNewCommentDescription(event.target.value)}/>
         <button className='w-24 ml-auto mr-2 bg-main_blue text-white px-2 py-1 rounded-md' type={"submit"}>Dodaj</button><br/><hr/>
       </div>
     </form>
@@ -126,7 +126,7 @@ export const AdvancedEvaluationCommentPanel = (
         </section>
       <br/>
         <hr className='mr-8 mb-2'/>
-      <div className='overflow-y-scroll mx-4'>{rightPanelUserComments.map((comment) => {
+      <div className='overflow-y-auto mx-4'>{rightPanelUserComments.map((comment) => {
         return(
           <div key={comment.id} >
             <AdvancedEvaluationCommentPanelListElement
