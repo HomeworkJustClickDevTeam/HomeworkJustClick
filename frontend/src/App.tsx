@@ -5,7 +5,7 @@ import "./App.css"
 import RegisterPage from "./components/user/RegisterPage"
 import LoginPage from "./components/user/LoginPage"
 import HomePage from "./components/home/HomePage"
-import { Route, Routes } from "react-router-dom"
+import {Route, Routes} from "react-router-dom"
 import HomeGuestPage from "./components/home/HomeGuestPage"
 import GroupCreatePage from "./components/group/GroupCreatePage"
 import GroupPage from "./components/group/GroupPage"
@@ -22,16 +22,15 @@ import UserSettingsPage from "./components/user/UserSettingsPage"
 import GroupSettingsPage from "./components/group/GroupSettingsPage"
 import GroupUserProfilePage from "./components/group/GroupUserProfilePage"
 import AdvancedEvaluationPage from "./components/evaluation/AdvancedEvaluationPage"
-import { LoggedInUserRoute } from "./components/route/LoggedInUserRoute"
-import { LoggedOutUserRoute } from "./components/route/LoggedOutUserRoute"
-import { AssignmentsType } from "./types/AssignmentsType"
-import { ExtendedSolutionType } from "./types/ExtendedSolutionType"
+import {LoggedInUserRoute} from "./components/route/LoggedInUserRoute"
+import {LoggedOutUserRoute} from "./components/route/LoggedOutUserRoute"
+import {AssignmentsType} from "./types/AssignmentsType"
+import {ExtendedSolutionType} from "./types/ExtendedSolutionType"
 import {RoleBasedRoute} from "./components/route/RoleBasedRoute";
-import SolutionCheckedPage from "./components/solution/SolutionCheckedPage";
 import {SolutionCheckedAdvancedPage} from "./components/solution/SolutionCheckedAdvancedPage";
 import {ReportPage} from "./components/report/ReportPage";
 import {EvaluationsStudentPage} from "./components/evaluation/EvaluationsStudentPage";
-import { ToastContainer, toast } from 'react-toastify';
+import {ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {AssignmentsStudentGroupPage} from "./components/assignments/AssignmentsStudentGroupPage";
 
@@ -39,6 +38,7 @@ function App() {
   return (
       <>
     <Routes>
+      <Route path="/group/:idGroup" element={<GroupPage/>}/>
       <Route element={<LoggedOutUserRoute/>}>
         <Route
           path="/home"
@@ -110,15 +110,16 @@ function App() {
             element={<EvaluationsStudentPage/>}
           />
 
-        </Route>
-        <Route path="/group/:idGroup/advancedAssignment" element={
-          <RoleBasedRoute renderForStudent={<SolutionCheckedAdvancedPage/>} renderForTeacher={<AdvancedEvaluationPage/>}/>}/>
-      </Route>
-      <Route path="*" element={<NotFoundPage/>}/>
-    </Routes>
-        <ToastContainer limit={2} autoClose={2000}></ToastContainer>
-      </>
-  )
+                    </Route>
+                    <Route path="/group/:idGroup/advancedAssignment" element={
+                        <RoleBasedRoute renderForStudent={<SolutionCheckedAdvancedPage/>}
+                                        renderForTeacher={<AdvancedEvaluationPage/>}/>}/>
+                </Route>
+                <Route path="*" element={<NotFoundPage/>}/>
+            </Routes>
+            <ToastContainer limit={2} autoClose={2000}></ToastContainer>
+        </>
+    )
 }
 
 export default App
