@@ -111,6 +111,8 @@ function GroupHeader() {
 
               <Link to="solutions/late" className="block w-56 px-4 py-2 text-sm text-black rounded-lg hover:bg-lilly-bg hover:text-black" onClick={() => setIsOpen(false)}>Spóźnione</Link>
 
+              <Link to="evaluation/reported" className="block w-56 px-4 py-2 text-sm text-black rounded-lg hover:bg-lilly-bg hover:text-black" onClick={() => setIsOpen(false)}>Zgłoszone oceny</Link>
+
             </div>))}
             {role === "Teacher" && <Link to="settings" onClick={() => setIsOpen(false)}>Ustawienia</Link>}
 
