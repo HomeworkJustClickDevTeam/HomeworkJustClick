@@ -11,6 +11,7 @@ import pl.homeworkjustclick.assignment.Assignment;
 import pl.homeworkjustclick.groupstudent.GroupStudent;
 import pl.homeworkjustclick.groupteacher.GroupTeacher;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +23,7 @@ import java.util.List;
 @Table(name = "_group")
 @Getter
 @Setter
-public class Group {
+public class Group implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,13 +33,13 @@ public class Group {
     private int id;
 
     @Schema(example = "Example Group")
-    @Column(name="name")
+    @Column(name = "name")
     @Size(max = 255)
     private String name;
 
     @Schema(example = "Example desc")
     @Column(name="description")
-    @Size(max = 255)
+    @Size(max = 65)
     private String description;
 
     @Schema(example = "0")

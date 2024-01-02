@@ -12,6 +12,7 @@ import pl.homeworkjustclick.file.File;
 import pl.homeworkjustclick.group.Group;
 import pl.homeworkjustclick.user.User;
 
+import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,7 @@ import java.util.List;
 @Table(name = "_solution")
 @Getter
 @Setter
-public class Solution {
+public class Solution implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)

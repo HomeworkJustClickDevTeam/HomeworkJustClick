@@ -798,11 +798,11 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:src\components\assignments\AssignmentsGroupDisplayedPage.tsx
-FN:8,AssignmentsGroupDisplayedPage
+SF:src\components\assignments\AssignmentsGroupTeacherDisplayedPage.tsx
+FN:8,AssignmentsGroupTeacherDisplayedPage
 FNF:1
 FNH:0
-FNDA:0,AssignmentsGroupDisplayedPage
+FNDA:0,AssignmentsGroupTeacherDisplayedPage
 DA:1,1
 DA:2,1
 DA:3,1

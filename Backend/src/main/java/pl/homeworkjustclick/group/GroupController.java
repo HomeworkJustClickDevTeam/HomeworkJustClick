@@ -66,7 +66,7 @@ public class GroupController {
         return groupService.getAll();
     }
 
-    @GetMapping("/group/{group_id}")
+    @GetMapping("/group/{groupId}")
     @Operation(
             summary = "Returns group by it's id.",
             responses = {
@@ -85,7 +85,7 @@ public class GroupController {
                     )
             }
     )
-    public ResponseEntity<Group> getById(@PathVariable("group_id") int id) {
+    public ResponseEntity<Group> getById(@PathVariable("groupId") int id) {
         Optional<Group> group = groupService.getById(id);
         return group.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
@@ -97,7 +97,7 @@ public class GroupController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/group/{group_id}")
+    @DeleteMapping("/group/{groupId}")
     @Operation(
             summary = "Deletes group with given id.",
             responses = {
@@ -109,15 +109,15 @@ public class GroupController {
             }
     )
 
-    public ResponseEntity<Void> delete (@PathVariable("group_id") int id) {
-        if(groupService.delete(id)) {
+    public ResponseEntity<Void> delete(@PathVariable("groupId") int id) {
+        if (groupService.delete(id).equals(Boolean.TRUE)) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    @PutMapping("/group/name/{group_id}")
+    @PutMapping("/group/name/{groupId}")
     @Operation(
             summary = "Changes name of the group with given id.",
             responses = {
@@ -128,15 +128,15 @@ public class GroupController {
                     )
             }
     )
-    public ResponseEntity<Void> updateName(@PathVariable("group_id") int id, @RequestBody String name){
-        if(groupService.changeNameById(id, name)){
+    public ResponseEntity<Void> updateName(@PathVariable("groupId") int id, @RequestBody String name) {
+        if (groupService.changeNameById(id, name).equals(Boolean.TRUE)) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    @PutMapping("/group/description/{group_id}")
+    @PutMapping("/group/description/{groupId}")
     @Operation(
             summary = "Changes description of the group with given id.",
             responses = {
@@ -147,15 +147,15 @@ public class GroupController {
                     )
             }
     )
-    public ResponseEntity<Void> updateDescription(@PathVariable("group_id") int id, @RequestBody String description){
-        if(groupService.changeDescriptionById(id, description)){
+    public ResponseEntity<Void> updateDescription(@PathVariable("groupId") int id, @RequestBody String description) {
+        if (groupService.changeDescriptionById(id, description).equals(Boolean.TRUE)) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    @PutMapping("/group/color/{group_id}")
+    @PutMapping("/group/color/{groupId}")
     @Operation(
             summary = "Updates color of the group with given id.",
             responses = {
@@ -171,17 +171,17 @@ public class GroupController {
                     )
             }
     )
-    public ResponseEntity<Void> updateColor(@PathVariable("group_id") int id, @RequestBody int color){
-        if(color < 0 || color >= 20){
+    public ResponseEntity<Void> updateColor(@PathVariable("groupId") int id, @RequestBody int color) {
+        if (color < 0 || color >= 19) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }else if(groupService.changeColorById(id, color)){
+        } else if (groupService.changeColorById(id, color).equals(Boolean.TRUE)) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    @PutMapping("/group/archive/{group_id}")
+    @PutMapping("/group/archive/{groupId}")
     @Operation(
             summary = "Archives group with given id.",
             responses = {
@@ -197,9 +197,9 @@ public class GroupController {
                     )
             }
     )
-    public ResponseEntity<Void> archiveGroup(@PathVariable("group_id") int id){
+    public ResponseEntity<Void> archiveGroup(@PathVariable("groupId") int id) {
         int response = groupService.archiveGroup(id);
-        if(response == 0){
+        if (response == 0) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else if (response == 1) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -208,7 +208,7 @@ public class GroupController {
         }
     }
 
-    @PutMapping("/group/unarchive/{group_id}")
+    @PutMapping("/group/unarchive/{groupId}")
     @Operation(
             summary = "Unarchives group with given id.",
             responses = {
@@ -224,9 +224,9 @@ public class GroupController {
                     )
             }
     )
-    public ResponseEntity<Void> unarchiveGroup(@PathVariable("group_id") int id){
+    public ResponseEntity<Void> unarchiveGroup(@PathVariable("groupId") int id) {
         int response = groupService.unarchiveGroup(id);
-        if(response == 0){
+        if (response == 0) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else if (response == 1) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -235,7 +235,7 @@ public class GroupController {
         }
     }
 
-    @PostMapping("/group/withTeacher/{group_id}")
+    @PostMapping("/group/withTeacher/{teacherId}")
     @Operation(
             summary = "Creates group with user as a teacher already associated with it the group.",
             responses = {
@@ -258,12 +258,12 @@ public class GroupController {
                     )
             }
     )
-    public ResponseEntity<GroupResponseDto> addWithTeacher(@PathVariable("group_id") int id, @RequestBody Group group) {
-        GroupResponseDto response = groupService.add(group);
+    public ResponseEntity<GroupResponseDto> addWithTeacher(@PathVariable("teacherId") int id, @RequestBody Group group) {
         Optional<User> user = userService.getById(id);
-        if(user.isPresent()) {
+        if (user.isPresent()) {
+            GroupResponseDto response = groupService.add(group);
             GroupTeacher groupTeacher = new GroupTeacher(group, user.get(), "");
-            if(groupTeacherService.add(groupTeacher)) {
+            if (groupTeacherService.add(groupTeacher).equals(Boolean.TRUE)) {
                 return new ResponseEntity<>(response, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.FORBIDDEN);
@@ -289,14 +289,13 @@ public class GroupController {
                     )
             }
     )
-    @PostMapping("/group/addTeacher/{user_id}/{group_id}")
-    public ResponseEntity<Void> addTeacherToGroup(@PathVariable("user_id") int teacher_id, @PathVariable("group_id") int group_id) {
-        if (groupTeacherService.addTeacherToGroup(group_id, teacher_id)) {
+    @PostMapping("/group/addTeacher/{userId}/{groupId}")
+    public ResponseEntity<Void> addTeacherToGroup(@PathVariable("userId") int teacherId, @PathVariable("groupId") int groupId) {
+        if (groupTeacherService.addTeacherToGroup(groupId, teacherId).equals(Boolean.TRUE)) {
             return new ResponseEntity<>(HttpStatus.OK);
-        } else if (groupTeacherService.addTeacherToGroup(group_id, teacher_id) == null){
+        } else if (groupTeacherService.addTeacherToGroup(groupId, teacherId) == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        else{
+        } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
@@ -319,16 +318,15 @@ public class GroupController {
                     )
             }
     )
-    @GetMapping("/groups/byTeacher/{user_id}")
-    public ResponseEntity<List<Group>> getGroupsByUserIdWhereUserIsTeacher(@PathVariable("user_id") int id){
-        if(groupService.getGroupsByTeacher(id).isEmpty()){
+    @GetMapping("/groups/byTeacher/{userId}")
+    public ResponseEntity<List<Group>> getGroupsByUserIdWhereUserIsTeacher(@PathVariable("userId") int id) {
+        if (groupService.getGroupsByTeacher(id).isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        else
-        {
+        } else {
             return new ResponseEntity<>(groupService.getGroupsByTeacher(id), HttpStatus.OK);
         }
     }
+
     @Operation(
             summary = "Adds student with given id to the group with given id.",
             responses = {
@@ -344,14 +342,13 @@ public class GroupController {
                     )
             }
     )
-    @PostMapping("/group/addStudent/{user_id}/{group_id}")
-    public ResponseEntity<Void> addStudentToGroup(@PathVariable("user_id") int student_id, @PathVariable("group_id") int group_id) {
-        if (groupStudentService.addStudentToGroup(group_id, student_id)) {
+    @PostMapping("/group/addStudent/{userId}/{groupId}")
+    public ResponseEntity<Void> addStudentToGroup(@PathVariable("userId") int studentId, @PathVariable("groupId") int groupId) {
+        if (groupStudentService.addStudentToGroup(groupId, studentId).equals(Boolean.TRUE)) {
             return new ResponseEntity<>(HttpStatus.OK);
-        } else if (groupStudentService.addStudentToGroup(group_id, student_id) == null) {
+        } else if (groupStudentService.addStudentToGroup(groupId, studentId) == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        else{
+        } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
@@ -375,12 +372,11 @@ public class GroupController {
                     )
             }
     )
-    @GetMapping("/groups/byStudent/{user_id}")
-    public ResponseEntity<List<Group>> getGroupsByUserIdWhereUserIsStudent(@PathVariable("user_id") int id){
-        if(groupService.getGroupsByStudent(id).isEmpty()){
+    @GetMapping("/groups/byStudent/{userId}")
+    public ResponseEntity<List<Group>> getGroupsByUserIdWhereUserIsStudent(@PathVariable("userId") int id) {
+        if (groupService.getGroupsByStudent(id).isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        else {
+        } else {
             return new ResponseEntity<>(groupService.getGroupsByStudent(id), HttpStatus.OK);
         }
     }
@@ -403,16 +399,15 @@ public class GroupController {
                     )
             }
     )
-    @GetMapping("/groups/byUser/{user_id}")
-    public ResponseEntity<List<Group>> getGroupsByUserId(@PathVariable("user_id") int id) {
+    @GetMapping("/groups/byUser/{userId}")
+    public ResponseEntity<List<Group>> getGroupsByUserId(@PathVariable("userId") int id) {
         List<Group> groupListTeacher = groupService.getGroupsByTeacher(id);
         List<Group> groupListStudent = groupService.getGroupsByStudent(id);
         List<Group> groupList = new ArrayList<>(groupListTeacher);
         groupList.addAll(groupListStudent);
-        if(groupList.isEmpty()){
+        if (groupList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        else{
+        } else {
             return new ResponseEntity<>(groupList, HttpStatus.OK);
         }
     }
@@ -427,9 +422,9 @@ public class GroupController {
                     )
             }
     )
-    @DeleteMapping("/group/deleteStudent/{user_id}/{group_id}")
-    public ResponseEntity<Void> deleteStudentFromGroup(@PathVariable("user_id") int student_id, @PathVariable("group_id") int group_id) {
-        if(groupStudentService.deleteStudentFromGroup(group_id, student_id)) {
+    @DeleteMapping("/group/deleteStudent/{userId}/{groupId}")
+    public ResponseEntity<Void> deleteStudentFromGroup(@PathVariable("userId") int studentId, @PathVariable("groupId") int groupId) {
+        if (groupStudentService.deleteStudentFromGroup(groupId, studentId).equals(Boolean.TRUE)) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -451,11 +446,11 @@ public class GroupController {
                     )
             }
     )
-    @DeleteMapping("/group/deleteTeacher/{user_id}/{group_id}")
-    public ResponseEntity<Void> deleteTeacherFromGroup(@PathVariable("user_id") int teacher_id, @PathVariable("group_id") int group_id) {
-        if(groupTeacherService.deleteTeacherFromGroup(group_id, teacher_id)) {
+    @DeleteMapping("/group/deleteTeacher/{userId}/{groupId}")
+    public ResponseEntity<Void> deleteTeacherFromGroup(@PathVariable("userId") int teacherId, @PathVariable("groupId") int groupId) {
+        if (groupTeacherService.deleteTeacherFromGroup(groupId, teacherId).equals(Boolean.TRUE)) {
             return new ResponseEntity<>(HttpStatus.OK);
-        } else if(groupTeacherService.countTeachersInGroup(group_id) < 2) {
+        } else if (groupTeacherService.countTeachersInGroup(groupId) < 2) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -475,9 +470,9 @@ public class GroupController {
                     )
             }
     )
-    @GetMapping("/group/teacherCheck/{user_id}/{group_id}")
-    public ResponseEntity<Boolean> checkForTeacherInGroup(@PathVariable("user_id") int teacher_id, @PathVariable("group_id") int group_id) {
-        return new ResponseEntity<>(groupTeacherService.checkForTeacherInGroup(teacher_id, group_id), HttpStatus.OK);
+    @GetMapping("/group/teacherCheck/{userId}/{groupId}")
+    public ResponseEntity<Boolean> checkForTeacherInGroup(@PathVariable("userId") int teacherId, @PathVariable("groupId") int groupId) {
+        return new ResponseEntity<>(groupTeacherService.checkForTeacherInGroup(teacherId, groupId), HttpStatus.OK);
     }
 
     @Operation(
@@ -493,9 +488,9 @@ public class GroupController {
                     )
             }
     )
-    @GetMapping("/group/studentCheck/{user_id}/{group_id}")
-    public ResponseEntity<Boolean> checkForStudentInGroup(@PathVariable("user_id") int student_id, @PathVariable("group_id") int group_id) {
-        return new ResponseEntity<>(groupStudentService.checkForStudentInGroup(student_id, group_id), HttpStatus.OK);
+    @GetMapping("/group/studentCheck/{userId}/{groupId}")
+    public ResponseEntity<Boolean> checkForStudentInGroup(@PathVariable("userId") int studentId, @PathVariable("groupId") int groupId) {
+        return new ResponseEntity<>(groupStudentService.checkForStudentInGroup(studentId, groupId), HttpStatus.OK);
     }
 
     @Operation(
@@ -511,9 +506,9 @@ public class GroupController {
                     )
             }
     )
-    @GetMapping("/group/userCheck/{user_id}/{group_id}")
-    public ResponseEntity<Boolean> checkForUserInGroup(@PathVariable("user_id") int user_id, @PathVariable("group_id") int group_id) {
-        return new ResponseEntity<>(groupTeacherService.checkForTeacherInGroup(user_id, group_id) || groupStudentService.checkForStudentInGroup(user_id, group_id), HttpStatus.OK);
+    @GetMapping("/group/userCheck/{userId}/{groupId}")
+    public ResponseEntity<Boolean> checkForUserInGroup(@PathVariable("userId") int userId, @PathVariable("groupId") int groupId) {
+        return new ResponseEntity<>(groupTeacherService.checkForTeacherInGroup(userId, groupId) || groupStudentService.checkForStudentInGroup(userId, groupId), HttpStatus.OK);
     }
 
     @Operation(
@@ -534,11 +529,11 @@ public class GroupController {
                     )
             }
     )
-    @GetMapping("/group/userCheckWithRole/{user_id}/{group_id}")
-    public ResponseEntity<String> checkForUserInGroupWithRole(@PathVariable("user_id") int user_id, @PathVariable("group_id") int group_id) {
-        if(groupTeacherService.checkForTeacherInGroup(user_id, group_id)) {
+    @GetMapping("/group/userCheckWithRole/{userId}/{groupId}")
+    public ResponseEntity<String> checkForUserInGroupWithRole(@PathVariable("userId") int userId, @PathVariable("groupId") int groupId) {
+        if (groupTeacherService.checkForTeacherInGroup(userId, groupId).equals(Boolean.TRUE)) {
             return new ResponseEntity<>("Teacher", HttpStatus.OK);
-        } else if (groupStudentService.checkForStudentInGroup(user_id, group_id)) {
+        } else if (groupStudentService.checkForStudentInGroup(userId, groupId).equals(Boolean.TRUE)) {
             return new ResponseEntity<>("Student", HttpStatus.OK);
         } else {
             return new ResponseEntity<>("User not in group", HttpStatus.NOT_FOUND);

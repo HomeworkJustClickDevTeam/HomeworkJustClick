@@ -10,6 +10,7 @@ import pl.homeworkjustclick.commentfileimg.CommentFileImg;
 import pl.homeworkjustclick.commentfiletext.CommentFileText;
 import pl.homeworkjustclick.user.User;
 
+import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,14 +23,14 @@ import java.util.List;
 @Table(name = "_comment")
 @Getter
 @Setter
-public class Comment {
+public class Comment implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     private Integer id;
 
-    @Column(name="title")
+    @Column(name = "title")
     private String title;
 
     @Column(name = "description")

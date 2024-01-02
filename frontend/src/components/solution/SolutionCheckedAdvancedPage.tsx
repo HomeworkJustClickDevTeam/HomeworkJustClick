@@ -57,7 +57,7 @@ export const SolutionCheckedAdvancedPage = ()=>{
   useEffect(() => {
     setSolutionExtended(state.solutionExtended)
   }, [state]);
-  return(<div id={"advancedEvaluationPageDiv"}>
+  return(<div>
       <div style={{width: "100%"}} ref={onBackButtonRefChange}>
         <Link to = {`/group/${solutionExtended.assignment.groupId}/assignment/${solutionExtended.assignment.id}`}>Wróć</Link>
       </div>

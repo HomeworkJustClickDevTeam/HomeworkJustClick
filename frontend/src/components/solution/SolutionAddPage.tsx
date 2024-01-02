@@ -6,12 +6,14 @@ import {
     createSolutionWithUserAndAssignmentPostgresService,
 } from "../../services/postgresDatabaseServices"
 import {AssignmentFile} from "../assignments/AssignmentFile"
-import {format} from "date-fns"
+import {format, parseISO} from "date-fns"
 import {AssignmentPropsInterface} from "../../types/AssignmentPropsInterface"
 import {SolutionCreateInterface} from "../../types/SolutionCreateInterface"
 import {selectUserState} from "../../redux/userStateSlice"
 import {useAppDispatch, useAppSelector} from "../../types/HooksRedux"
 import {useGetFile} from "../customHooks/useGetFile"
+import { IoDocumentAttachOutline } from "react-icons/io5";
+import {toast} from "react-toastify";
 
 function SolutionAddPage({assignment}: AssignmentPropsInterface) {
     const navigate = useNavigate()
@@ -70,6 +72,9 @@ function SolutionAddPage({assignment}: AssignmentPropsInterface) {
                 }
             })
             .then(() => {
+                toast.success('Zadanie zostało przesłane! 🎉')
+            })
+            .then(() => {
                 navigate(-1)
             })
             .catch((e) => console.log(e))
@@ -82,7 +87,11 @@ function SolutionAddPage({assignment}: AssignmentPropsInterface) {
                 userState.id.toString(),
                 assignment.id.toString(),
                 solution
-            ).then(() =>
+            )
+                .then(() => {
+                    toast.success('Zadanie zostało przesłane! 🎉')
+                })
+                .then(() =>
                 navigate(-1))
         }
 
@@ -108,13 +117,13 @@ function SolutionAddPage({assignment}: AssignmentPropsInterface) {
             </div>
             <div>
                 <span className="font-semibold">Data ukończenia: </span>
-                {format(assignment.completionDatetime, "dd.MM.yyyy, HH:mm")}
+                {format(new Date(assignment.completionDatetime.toString()), "dd.MM.yyyy, HH:mm")}
             </div>
-            {fileFromDb !== undefined && <AssignmentFile assignmentId={assignment.id}/>}
+            {fileFromDb !== undefined && <>Plik do zadania:<AssignmentFile assignmentId={assignment.id}/></>}
             <label>
                 Moje rozwiązania:
-                <input name="file" type="file" onChange={(e) => handleChangeFile(e)}/>
-                <div> {file && `${file.name} - ${file.type}`}</div>
+                <input name="file" type="file" className='pl-2' onChange={(e) => handleChangeFile(e)}/>
+
             </label>
             <label>
                 Komentarz do zadania:

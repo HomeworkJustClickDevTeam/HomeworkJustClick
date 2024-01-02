@@ -1,25 +1,37 @@
 import { Link } from "react-router-dom"
-import { format } from "date-fns"
+import {format, parseISO} from "date-fns"
 import { AssignmentPropsInterface } from "../../types/AssignmentPropsInterface"
+import {AssignmentInterface} from "../../types/AssignmentInterface";
+import {AssignmentPieChart} from "../evaluation/AssignmentPieChart";
+import React, {useState} from "react";
+import {AssignmentListElementPropsInterface} from "../../types/AssignmentListElementPropsInterface";
+import { BsThreeDots } from "react-icons/bs";
 
-interface AssignmentItemPropsInterface extends AssignmentPropsInterface {
-  idGroup: string
-  optionalUserId?: string
-}
 
-function AssignmentListElement({assignment, idGroup, optionalUserId}: AssignmentItemPropsInterface) {
-  const completionDatetime = new Date(assignment.completionDatetime)
+
+function AssignmentListElement({assignment,
+                                 unfoldedPieChartAssignment,
+                                 handleAssignmentClick,
+                                 idGroup,
+                                 resultPoints,
+                                 optionalUserId,
+                                 createReportButton=false,
+                                 handleGenerateReportButtonClick}: AssignmentListElementPropsInterface) {
+
   return (
-    <>
-      <Link to={`/group/${idGroup}/assignment/${assignment.id}`} state={optionalUserId}
-            className="flex ml-[7.5%] mt-4 border-border_gray border w-[42.5%] h-16 rounded-lg font-lato text-xl items-center justify-between">
-        <div className="flex-col ml-10 ">
-          <div>{assignment.title}</div>
-          <div className="text-border_gray">{format(completionDatetime, "dd.MM.yyyy, HH:mm")}</div>
+    <div className='ml-[7.5%]'>
+      <Link to={idGroup!==undefined ? `/group/${idGroup}/assignment/${assignment.id}`: "#"} onClick={() => {handleAssignmentClick && handleAssignmentClick(assignment)}} state={optionalUserId}
+            className="flex flex-row mt-4 border-border_gray border h-16 rounded-lg font-lato text-xl items-center  w-[900px] ">
+        <div className="flex-col ml-10 basis-3/5 ">
+          <div className='text-xl w-full overflow-hidden'>{assignment.title}</div>
+          <div className="text-border_gray">{format(new Date(assignment.completionDatetime.toString()), "dd.MM.yyyy, HH:mm")}</div>
         </div>
-        <div className="mr-10 font-semibold text-[28px]">{"/" + assignment.max_points}</div>
+          <div className='basis-1/5 text-lg mr-4 h-full leading-[60px]'>
+              {createReportButton && handleGenerateReportButtonClick && <Link to={`#`} type={"button"} onClick={()=>{handleGenerateReportButtonClick()}}>Wygeneruj raport</Link>}</div>
+        <div className="mr-10 text-right font-semibold text-[28px] basis-1/5">{(resultPoints !== undefined) && resultPoints} {"/" + assignment.maxPoints}</div>
       </Link>
-    </>
+      {unfoldedPieChartAssignment?.id === assignment.id && <div><br/><AssignmentPieChart assignment={assignment}/></div>}
+    </div>
   )
 }
 

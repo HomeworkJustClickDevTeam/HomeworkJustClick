@@ -1,6 +1,5 @@
 package pl.homeworkjustclick.group;
 
-import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,7 +12,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class GroupService {
 
-    private final EntityManager entityManager;
 
     private final GroupRepository groupRepository;
 
@@ -32,11 +30,11 @@ public class GroupService {
 
     @Transactional
     public GroupResponseDto add(Group group) {
-        entityManager.persist(group);
-        int id = group.getId();
-        group.setColor(id%20);
-        entityManager.persist(group);
-        return GroupResponseDto.builder().id(group.getId()).name(group.getName()).description(group.getDescription()).color(group.getColor()).build();
+        var savedGroup = groupRepository.save(group);
+        int id = savedGroup.getId();
+        savedGroup.setColor(id % 20);
+        groupRepository.save(savedGroup);
+        return GroupResponseDto.builder().id(savedGroup.getId()).name(savedGroup.getName()).description(savedGroup.getDescription()).color(savedGroup.getColor()).build();
     }
 
     @Transactional
@@ -52,7 +50,7 @@ public class GroupService {
     @Transactional
     public Boolean changeNameById(int id, String name) {
         if (groupRepository.findById(id).isPresent()) {
-            Group group = groupRepository.findById(id).get();
+            Group group = findById(id);
             group.setName(name);
             groupRepository.save(group);
             return true;
@@ -64,7 +62,7 @@ public class GroupService {
     @Transactional
     public Boolean changeDescriptionById(int id, String description) {
         if (groupRepository.findById(id).isPresent()) {
-            Group group = groupRepository.findById(id).get();
+            Group group = findById(id);
             group.setDescription(description);
             groupRepository.save(group);
             return true;
@@ -76,7 +74,7 @@ public class GroupService {
     @Transactional
     public Boolean changeColorById(int id, int color) {
         if (groupRepository.findById(id).isPresent()) {
-            Group group = groupRepository.findById(id).get();
+            Group group = findById(id);
             group.setColor(color);
             groupRepository.save(group);
             return true;
@@ -88,7 +86,7 @@ public class GroupService {
     @Transactional
     public int archiveGroup(int id) {
         if (groupRepository.findById(id).isPresent()) {
-            Group group = groupRepository.findById(id).get();
+            Group group = findById(id);
             if(group.isArchived()) {
                 return 1;
             } else {
@@ -104,7 +102,7 @@ public class GroupService {
     @Transactional
     public int unarchiveGroup(int id) {
         if (groupRepository.findById(id).isPresent()) {
-            Group group = groupRepository.findById(id).get();
+            Group group = findById(id);
             if(!group.isArchived()) {
                 return 1;
             } else {
@@ -117,12 +115,12 @@ public class GroupService {
         }
     }
 
-    public List<Group> getGroupsByTeacher(int teacher_id) {
-        return groupRepository.getGroupsByTeacherId(teacher_id);
+    public List<Group> getGroupsByTeacher(int teacherId) {
+        return groupRepository.getGroupsByTeacherId(teacherId);
     }
 
-    public List<Group> getGroupsByStudent(int student_id) {
-        return groupRepository.getGroupsByStudentId(student_id);
+    public List<Group> getGroupsByStudent(int studentId) {
+        return groupRepository.getGroupsByStudentId(studentId);
     }
 
 }

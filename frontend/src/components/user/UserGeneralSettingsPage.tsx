@@ -3,6 +3,7 @@ import { changeUserIndexPostgresService } from "../../services/postgresDatabaseS
 import { AxiosError } from "axios"
 import { selectUserState } from "../../redux/userStateSlice"
 import { useAppSelector } from "../../types/HooksRedux"
+import {toast} from "react-toastify";
 
 export default function UserGeneralSettingsPage() {
   const userState = useAppSelector(selectUserState)
@@ -12,9 +13,14 @@ export default function UserGeneralSettingsPage() {
     if (userState !== null) {
       event.preventDefault()
       await changeUserIndexPostgresService(userState.id.toString(), index as number)
+          .then(() => {
+            toast.success('Indeks został pomyślnie zmieniony')
+          })
         .catch((error: AxiosError) => {
           console.log(error)
+          toast.error('Wystąpił błąd')
         })
+
     }
   }
 

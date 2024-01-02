@@ -7,5 +7,5 @@ import java.util.Optional;
 public interface EvaluationPanelAssignmentRepository extends JpaRepository<EvaluationPanelAssignment, Integer> {
     Optional<EvaluationPanelAssignment> findByEvaluationPanelIdAndAssignmentId(Integer evaluationPanelId, Integer assignmentId);
 
-    Boolean existsByEvaluationPanelIdAndAssignmentId(Integer evaluationPanelId, Integer assignmentId);
+    boolean existsByEvaluationPanelIdAndAssignmentId(Integer evaluationPanelId, Integer assignmentId);
 }

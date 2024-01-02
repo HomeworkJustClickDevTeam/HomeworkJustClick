@@ -20,7 +20,7 @@ export const useGetAssignment = (assignmentId: number | undefined | null) => {
           if (response !== null && response !== undefined) {
             if (mounted) {
               const responseData = response.data
-              const parsedDate = parseISO(responseData.completionDatetime)
+              const parsedDate = responseData.completionDatetime
               setAssignment({
                 ...responseData,
                 completionDatetime: parsedDate,

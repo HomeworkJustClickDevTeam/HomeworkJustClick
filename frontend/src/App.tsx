@@ -9,7 +9,7 @@ import { Route, Routes } from "react-router-dom"
 import HomeGuestPage from "./components/home/HomeGuestPage"
 import GroupCreatePage from "./components/group/GroupCreatePage"
 import GroupPage from "./components/group/GroupPage"
-import AssignmentsGroupDisplayedPage from "./components/assignments/AssignmentsGroupDisplayedPage"
+import AssignmentsGroupTeacherDisplayedPage from "./components/assignments/AssignmentsGroupTeacherDisplayedPage"
 import AssignmentAddSettingsPageWrapper from "./components/assignments/AssignmentAddSettingsPageWrapper"
 import AssignmentSpecPage from "./components/assignments/AssignmentSpecPage"
 import GroupUsersPage from "./components/group/GroupUsersPage"
@@ -29,10 +29,16 @@ import { ExtendedSolutionType } from "./types/ExtendedSolutionType"
 import {RoleBasedRoute} from "./components/route/RoleBasedRoute";
 import SolutionCheckedPage from "./components/solution/SolutionCheckedPage";
 import {SolutionCheckedAdvancedPage} from "./components/solution/SolutionCheckedAdvancedPage";
+import {ReportPage} from "./components/report/ReportPage";
+import {EvaluationsStudentPage} from "./components/evaluation/EvaluationsStudentPage";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   return (
+      <>
     <Routes>
+
       <Route element={<LoggedOutUserRoute/>}>
         <Route
           path="/home"
@@ -48,7 +54,7 @@ function App() {
         />
         <Route
           path="/:id/assignments"
-          element={<AssignmentsStudentDisplayedPage/>}
+          element={<AssignmentsStudentDisplayedPage allAssignments={true}/>}
         />
         <Route path="/settings" element={<UserSettingsPage/>}/>
         <Route path="/create/group" element={<GroupCreatePage/>}/>
@@ -61,7 +67,7 @@ function App() {
           />
           <Route
             path="assignments"
-            element={<AssignmentsGroupDisplayedPage/>}
+            element={<RoleBasedRoute renderForStudent={<AssignmentsStudentDisplayedPage allAssignments={false}/>} renderForTeacher={<AssignmentsGroupTeacherDisplayedPage/>}/>}
           />
           <Route
             path="assignments/done"
@@ -95,6 +101,14 @@ function App() {
             path="solutions/check"
             element={<SolutionsTypesPage type={"checked" as ExtendedSolutionType}/>}
           />
+          <Route
+           path="report"
+           element={<ReportPage/>}
+          />
+          <Route
+            path="evaluations"
+            element={<EvaluationsStudentPage/>}
+          />
 
         </Route>
         <Route path="/group/:idGroup/advancedAssignment" element={
@@ -102,6 +116,8 @@ function App() {
       </Route>
       <Route path="*" element={<NotFoundPage/>}/>
     </Routes>
+        <ToastContainer limit={2}></ToastContainer>
+      </>
   )
 }
 

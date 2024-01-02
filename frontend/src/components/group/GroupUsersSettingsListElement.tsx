@@ -44,7 +44,7 @@ export default function GroupUsersSettingsListElement(props: GroupUsersSettingsL
   }
   const ThreeDotsSettingsButtons = () => {
     return (
-      <ul className='ml-2 text-left'>
+      <ul className='ml-2 text-left border border-border_gray rounded-md px-3'>
         <li>
           <button onClick={handleUserDeletion} className='text-scarlet'>Usuń z grupy</button>
         </li>
@@ -56,7 +56,7 @@ export default function GroupUsersSettingsListElement(props: GroupUsersSettingsL
   }
   return (
     <li
-      className='flex inline-block text-center items-center'><>{props.userToShow.name} {props.userToShow.lastname}
+      className='flex inline-block text-center items-center'><>{props.userToShow.firstname} {props.userToShow.lastname}
       {role === "Teacher" ? (
         <button onClick={() => setOpen(!open)} className='pb-1 pl-1 font-bold'> ... </button>) : ("")}{open &&
             <ThreeDotsSettingsButtons/>}

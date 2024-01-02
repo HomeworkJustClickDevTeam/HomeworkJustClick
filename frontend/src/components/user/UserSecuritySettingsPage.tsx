@@ -2,6 +2,7 @@ import { useState } from "react"
 import { changePasswordPostgresService } from "../../services/postgresDatabaseServices"
 import { AxiosError } from "axios"
 import { CredentialsInterface } from "../../types/CredentialsInterface"
+import {toast} from "react-toastify";
 
 
 export default function UserSecuritySettingsPage(): JSX.Element {
@@ -14,12 +15,16 @@ export default function UserSecuritySettingsPage(): JSX.Element {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    console.log(newCredentials)
     if ((newCredentials.newPassword === newPasswordApproval) && ((newCredentials.password || newCredentials.newPassword || newPasswordApproval) !== undefined)) {
       await changePasswordPostgresService(newCredentials)
+          .then(() => {
+              toast.success('Hasło zostało pomyślnie zmienione')
+          })
         .catch((error: AxiosError) => {
           console.log(error)
+            toast.error('Wystąpił błąd')
         })
+
     }
   }
   return (

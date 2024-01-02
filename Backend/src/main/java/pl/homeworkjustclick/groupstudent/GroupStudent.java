@@ -8,6 +8,8 @@ import lombok.*;
 import pl.homeworkjustclick.group.Group;
 import pl.homeworkjustclick.user.User;
 
+import java.io.Serializable;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -16,7 +18,7 @@ import pl.homeworkjustclick.user.User;
 @Table(name = "_group_student")
 @Getter
 @Setter
-public class GroupStudent {
+public class GroupStudent implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)

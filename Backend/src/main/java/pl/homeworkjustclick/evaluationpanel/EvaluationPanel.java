@@ -7,6 +7,7 @@ import pl.homeworkjustclick.evaluationpanelassignment.EvaluationPanelAssignment;
 import pl.homeworkjustclick.evaluationpanelbutton.EvaluationPanelButton;
 import pl.homeworkjustclick.user.User;
 
+import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +20,7 @@ import java.util.List;
 @Table(name = "_evaluation_panel")
 @Getter
 @Setter
-public class EvaluationPanel {
+public class EvaluationPanel implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)

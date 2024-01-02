@@ -2,12 +2,12 @@ import { useEffect, useState } from "react"
 import { useAppDispatch } from "../../types/HooksRedux"
 import { setIsLoading } from "../../redux/isLoadingSlice"
 import { getEvaluationBySolutionPostgresService } from "../../services/postgresDatabaseServices"
-import { EvaluationModel } from "../../types/Evaluation.model"
+import { EvaluationExtendedModel } from "../../types/EvaluationExtendedModel"
 
 export const useGetEvaluationBySolution = (
   solutionId: number | undefined | null
 ) => {
-  const [evaluation, setEvaluation] = useState<EvaluationModel | undefined>(
+  const [evaluation, setEvaluation] = useState<EvaluationExtendedModel | undefined>(
     undefined
   )
   const dispatch = useAppDispatch()

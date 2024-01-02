@@ -2,11 +2,11 @@ import axios, { AxiosRequestConfig } from "axios"
 import { getUser } from "./otherServices"
 
 const mongoDatabaseServices = axios.create({
-  baseURL: "http://localhost:8082/api/",
+  baseURL: process.env.REACT_APP_MONGO_API_URL,
   timeout: 8082,
   headers: {
-    "Content-Type": `multipart/form-data`,
-    "Access-Control-Allow-Origin": "http://localhost:3000",
+    "Content-Type": "multipart/form-data",
+    "Access-Control-Allow-Origin": process.env.REACT_APP_CORS_URL
   },
 })
 
@@ -31,11 +31,14 @@ mongoDatabaseServices.interceptors.response.use(
   },
   async (error) => {
     const originalRequest = error.config
-    if (error.response.status === 403 && !originalRequest._retry) {
+    if ((error.response?.status === 403 || error.code === "ERR_NETWORK") && !originalRequest._retry) {
       originalRequest._retry = true
       localStorage.removeItem("user")
       window.dispatchEvent(new Event("storage"))
       window.location.reload()
+      return new Promise((resolve) =>{
+        resolve(mongoDatabaseServices(originalRequest))
+      })
     }
     return Promise.reject(error)
   }

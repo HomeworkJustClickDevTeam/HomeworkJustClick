@@ -1,7 +1,6 @@
 package pl.homeworkjustclick.evaluationreport;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -9,12 +8,10 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/evaluation_report")
@@ -34,23 +31,135 @@ public class EvaluationReportController {
     private final EvaluationReportService service;
 
     @GetMapping("byEvaluationId/{evaluationId}")
-    public EvaluationReportResponseDto getEvaluationReportByEvaluationId(@PathVariable Integer evaluationId, @Parameter(hidden = true) @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+    @Operation(
+            summary = "Returns list of evaluationReports by evaluationId.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = EvaluationReportResponseDto.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Jwt token invalid",
+                            content = @Content
+                    )
+            }
+    )
+    public EvaluationReportResponseDto getEvaluationReportByEvaluationId(@PathVariable Integer evaluationId) {
         return service.getEvaluationReportByEvaluationId(evaluationId);
     }
 
-    @GetMapping("byUserId/{userId}")
-    public Slice<EvaluationReportResponseDto> getEvaluationReportByUserId(@PathVariable Integer userId, @Parameter(hidden = true) @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
-        return service.getEvaluationReportsByUserId(userId, pageable);
+    @GetMapping("byTeacherId/{teacherId}")
+    @Operation(
+            summary = "Returns list of evaluationReports by teacherId.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = EvaluationReportResponseDto.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Jwt token invalid",
+                            content = @Content
+                    )
+            }
+    )
+    public List<EvaluationReportResponseDto> getEvaluationReportByTeacherId(@PathVariable Integer teacherId) {
+        return service.getEvaluationReportsByTeacherId(teacherId);
+    }
+
+    @GetMapping("byStudentId/{studentId}")
+    @Operation(
+            summary = "Returns list of evaluationReports by studentId.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = EvaluationReportResponseDto.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Jwt token invalid",
+                            content = @Content
+                    )
+            }
+    )
+    public List<EvaluationReportResponseDto> getEvaluationReportByStudentId(@PathVariable Integer studentId) {
+        return service.getEvaluationReportsByStudentId(studentId);
     }
 
     @GetMapping("byGroupId/{groupId}")
-    public Slice<EvaluationReportResponseDto> getEvaluationReportByGroupId(@PathVariable Integer groupId, @Parameter(hidden = true) @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
-        return service.getEvaluationReportsByGroupId(groupId, pageable);
+    @Operation(
+            summary = "Returns list of evaluationReports by groupId.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = EvaluationReportResponseDto.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Jwt token invalid",
+                            content = @Content
+                    )
+            }
+    )
+    public List<EvaluationReportResponseDto> getEvaluationReportByGroupId(@PathVariable Integer groupId) {
+        return service.getEvaluationReportsByGroupId(groupId);
     }
 
-    @GetMapping("byUserIdAndGroupId/{userId}/{groupId}")
-    public Slice<EvaluationReportResponseDto> getEvaluationReportByUserIdAndGroupId(@PathVariable Integer userId, @PathVariable Integer groupId, @Parameter(hidden = true) @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
-        return service.getEvaluationReportsByUserIdAndGroupId(userId, groupId, pageable);
+    @GetMapping("byTeacherIdAndGroupId/{teacherId}/{groupId}")
+    @Operation(
+            summary = "Returns list of evaluationReports by teacherId and groupId.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = EvaluationReportResponseDto.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Jwt token invalid",
+                            content = @Content
+                    )
+            }
+    )
+    public List<EvaluationReportResponseDto> getEvaluationReportByTeacherIdAndGroupId(@PathVariable Integer teacherId, @PathVariable Integer groupId) {
+        return service.getEvaluationReportsByTeacherIdAndGroupId(teacherId, groupId);
+    }
+
+    @GetMapping("byStudentIdAndGroupId/{studentId}/{groupId}")
+    @Operation(
+            summary = "Returns list of evaluationReports by studentId and groupId.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = EvaluationReportResponseDto.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Jwt token invalid",
+                            content = @Content
+                    )
+            }
+    )
+    public List<EvaluationReportResponseDto> getEvaluationReportByStudentIdAndGroupId(@PathVariable Integer studentId, @PathVariable Integer groupId) {
+        return service.getEvaluationReportsByStudentIdAndGroupId(studentId, groupId);
     }
 
     @PostMapping

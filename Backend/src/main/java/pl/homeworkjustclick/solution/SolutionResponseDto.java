@@ -7,13 +7,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.time.OffsetDateTime;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class SolutionResponseDto {
+public class SolutionResponseDto implements Serializable {
     @Schema(example = "0")
     private int id;
     @Schema(example = "0")

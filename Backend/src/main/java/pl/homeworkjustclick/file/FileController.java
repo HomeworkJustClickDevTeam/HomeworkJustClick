@@ -52,7 +52,7 @@ public class FileController {
         return fileService.getAll();
     }
 
-    @GetMapping("/file/{file_id}")
+    @GetMapping("/file/{fileId}")
     @Operation(
             summary = "Returns file by it's id.",
             responses = {
@@ -71,12 +71,12 @@ public class FileController {
                     )
             }
     )
-    public ResponseEntity<File> getById(@PathVariable("file_id") int id) {
+    public ResponseEntity<File> getById(@PathVariable("fileId") int id) {
         Optional<File> file = fileService.getById(id);
         return file.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @PostMapping("/file/withAssignment/{assignment_id}")
+    @PostMapping("/file/withAssignment/{assignmentId}")
     @Operation(
             summary = "Creates file with assignment attached to it.",
             responses = {
@@ -95,36 +95,16 @@ public class FileController {
                     )
             }
     )
-    public ResponseEntity<FileResponseDto> addWithAssignment(@RequestBody File file, @PathVariable("assignment_id") int id) {
+    public ResponseEntity<FileResponseDto> addWithAssignment(@RequestBody File file, @PathVariable("assignmentId") int id) {
         FileResponseDto response = fileService.addWithAssignment(file, id);
-        if(response==null){
+        if (response == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
             return ResponseEntity.ok(response);
         }
     }
 
-    @PostMapping("/file/listWithAssignment/{assignment_id}")
-    @Operation(
-            summary = "Creates list of files with assignment attached to them.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "404",
-                            description = "No assignment with this id in the DB.",
-                            content = @Content
-                    )
-            }
-    )
-    public ResponseEntity<Void> addListWithAssignment(@RequestBody List<File> fileList, @PathVariable("assignment_id") int id) {
-        boolean response = fileService.addListWithAssignment(fileList, id);
-        if(response){
-            return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @PostMapping("/file/withSolution/{solution_id}")
+    @PostMapping("/file/withSolution/{solutionId}")
     @Operation(
             summary = "Creates file with solution attached to it.",
             responses = {
@@ -143,36 +123,16 @@ public class FileController {
                     )
             }
     )
-    public ResponseEntity<FileResponseDto> addWithSolution(@RequestBody File file, @PathVariable("solution_id") int id) {
+    public ResponseEntity<FileResponseDto> addWithSolution(@RequestBody File file, @PathVariable("solutionId") int id) {
         FileResponseDto response = fileService.addWithSolution(file, id);
-        if(response==null){
+        if (response == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
             return ResponseEntity.ok(response);
         }
     }
 
-    @PostMapping("/file/listWithSolution/{solution_id}")
-    @Operation(
-            summary = "Creates list of files with solution attached to them.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "404",
-                            description = "No solution with this id in the DB.",
-                            content = @Content
-                    )
-            }
-    )
-    public ResponseEntity<Void> addListWithSolution(@RequestBody List<File> fileList, @PathVariable("solution_id") int id) {
-        boolean response = fileService.addListWithSolution(fileList, id);
-        if(response){
-            return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @DeleteMapping("/file/{file_id}")
+    @DeleteMapping("/file/{fileId}")
     @Operation(
             summary = "Deletes file with given id.",
             responses = {
@@ -183,15 +143,15 @@ public class FileController {
                     )
             }
     )
-    public ResponseEntity<Void> delete (@PathVariable("file_id") int id) {
-        if(fileService.delete(id)) {
+    public ResponseEntity<Void> delete(@PathVariable("fileId") int id) {
+        if (fileService.delete(id).equals(Boolean.TRUE)) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    @GetMapping("/files/byAssignment/{assignment_id}")
+    @GetMapping("/files/byAssignment/{assignmentId}")
     @Operation(
             summary = "Returns list of files with given assignment.",
             responses = {
@@ -209,17 +169,16 @@ public class FileController {
                     )
             }
     )
-    public ResponseEntity<List<File>> getFilesByAssignment(@PathVariable("assignment_id") int id) {
+    public ResponseEntity<List<File>> getFilesByAssignment(@PathVariable("assignmentId") int id) {
         List<File> response = fileService.getFilesByAssignment(id);
-        if(response.isEmpty()){
+        if (response.isEmpty()) {
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-        }
-        else {
+        } else {
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
 
-    @GetMapping("/files/bySolution/{solution_id}")
+    @GetMapping("/files/bySolution/{solutionId}")
     @Operation(
             summary = "Returns list of files with given solution.",
             responses = {
@@ -237,12 +196,11 @@ public class FileController {
                     )
             }
     )
-    public ResponseEntity<List<File>> getFilesBySolution(@PathVariable("solution_id") int id) {
+    public ResponseEntity<List<File>> getFilesBySolution(@PathVariable("solutionId") int id) {
         List<File> response = fileService.getFilesBySolution(id);
-        if(response.isEmpty()){
+        if (response.isEmpty()) {
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-        }
-        else {
+        } else {
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }

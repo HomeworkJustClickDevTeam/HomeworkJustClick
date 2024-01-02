@@ -1,5 +1,5 @@
 export interface FileFromPostgresInterface {
-  mongo_id: string
+  mongoId: string
   id: number
   format: string
   name: string

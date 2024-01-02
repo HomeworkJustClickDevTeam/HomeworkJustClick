@@ -6,14 +6,14 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface GroupTeacherRepository extends JpaRepository<GroupTeacher,Integer> {
+public interface GroupTeacherRepository extends JpaRepository<GroupTeacher, Integer> {
 
-    @Query(value="select COUNT(1) from _group_teacher where user_id = :teacher_id and group_id = :group_id", nativeQuery = true)
-    int checkForTeacherInGroup(@Param("teacher_id") int teacher_id, @Param("group_id") int group_id);
+    @Query(value = "select COUNT(1) from _group_teacher where user_id = :teacherId and group_id = :groupId", nativeQuery = true)
+    int checkForTeacherInGroup(@Param("teacherId") int teacherId, @Param("groupId") int groupId);
 
-    @Query(value="select * from _group_teacher where user_id = :teacher_id and group_id = :group_id", nativeQuery = true)
-    GroupTeacher getGroupTeacherObjectByTeacherAndGroup(@Param("teacher_id") int teacher_id, @Param("group_id") int group_id);
+    @Query(value = "select * from _group_teacher where user_id = :teacherId and group_id = :groupId", nativeQuery = true)
+    GroupTeacher getGroupTeacherObjectByTeacherAndGroup(@Param("teacherId") int teacherId, @Param("groupId") int groupId);
 
-    @Query(value = "select COUNT(1) from _group_teacher where group_id = :group_id", nativeQuery = true)
-    int countTeachersInGroup(@Param("group_id") int group_id);
+    @Query(value = "select COUNT(1) from _group_teacher where group_id = :groupId", nativeQuery = true)
+    int countTeachersInGroup(@Param("groupId") int groupId);
 }

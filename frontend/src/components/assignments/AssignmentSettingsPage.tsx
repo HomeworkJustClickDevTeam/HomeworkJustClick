@@ -8,6 +8,7 @@ import {GroupInterface} from "../../types/GroupInterface";
 import {useNavigate} from "react-router-dom";
 import {AssignmentAddFile} from "./AssignmentAddFile";
 import {CommentInterface} from "../../types/CommentInterface";
+import {setHours, setMinutes} from "date-fns";
 
 interface AssignmentSettingsPagePropsInterface{
   handleSubmit: (event: React.FormEvent) => void,
@@ -19,14 +20,10 @@ interface AssignmentSettingsPagePropsInterface{
   evaluationTable:Table[],
   setAssignment: (assignment: (prevState: any) => any) => void,
   group: GroupInterface|null,
-  newAssignmentId?: number,
-  setComments: React.Dispatch<SetStateAction<CommentInterface[]>>
-  comments: CommentInterface[]
+  newAssignmentId?: number
 }
 
 export const AssignmentSettingsPage = ({handleSubmit,
-                                         comments,
-                                         setComments,
                                          assignment,
                                          chosenEvaluationTable,
                                          handleDelete,
@@ -84,7 +81,7 @@ export const AssignmentSettingsPage = ({handleSubmit,
       const chosenTable = evaluationTable.filter(table => table.id === +event.target.value)[0]
       setAssignment(prevState => (
         {...assignment,
-          max_points: Math.max(...chosenTable.buttons.map(button => button.points))})
+          maxPoints: Math.max(...chosenTable.buttons.map(button => button.points))})
       )
     }
 
@@ -128,11 +125,11 @@ export const AssignmentSettingsPage = ({handleSubmit,
               Maksymalne punkty
               <input
                 disabled={chosenEvaluationTable !== -1}
-                name="max_points"
+                name="maxPoints"
                 type="number"
                 onChange={(event)=>handleNumberChange(event)}
                 min="0"
-                value={assignment.max_points}
+                value={assignment.maxPoints}
                 className="pl-1 ml-2 border-b-2 border-b-light_gray cursor-pointer w-12"
               />
             </label>
@@ -145,13 +142,13 @@ export const AssignmentSettingsPage = ({handleSubmit,
               {" "}
               Kara za wysłanie po terminie (%)
               <input
-                name="auto_penalty"
+                name="autoPenalty"
                 type="number"
                 onChange={handleNumberChange}
                 min="0"
                 max="100"
                 step="25"
-                value={assignment.auto_penalty}
+                value={assignment.autoPenalty}
                 className="pl-1 ml-2 border-b-2 border-b-light_gray cursor-pointer w-12"
               />
             </label>
@@ -159,10 +156,13 @@ export const AssignmentSettingsPage = ({handleSubmit,
               <p className="w-36">Data wykonania: </p>
               <ReactDatePicker
                 name="completionDatetime"
-                selected={assignment.completionDatetime}
+                selected={new Date(assignment.completionDatetime)}
                 onChange={handleDateChange}
                 showTimeSelect
                 timeFormat="HH:mm"
+                minDate={new Date()}
+                minTime={new Date()}
+                maxTime={setHours(setMinutes(new Date(), 59), 23)}
                 timeIntervals={15}
                 dateFormat="yyyy-MM-dd HH:mm"
                 className="pl-1 ml-2 border-b-2 border-b-light_gray w-36 cursor-pointer"
@@ -184,11 +184,11 @@ export const AssignmentSettingsPage = ({handleSubmit,
               Zapisz
             </button>
           </form>
-          <p className="mt-4 mb-2">Dodaj pliki: </p>
-          {'id' in assignment && newAssignmentId === undefined ?
+          <p className="mt-4 mb-2">Nowy plik: </p>
+          {(assignment as AssignmentInterface).id !== undefined && newAssignmentId === undefined ?
           <AssignmentModifyFile
             toSend={toSend}
-            assignmentId={assignment.id}
+            assignmentId={(assignment as AssignmentInterface).id}
             setToNavigate={setToNavigate}
           />:
             <AssignmentAddFile

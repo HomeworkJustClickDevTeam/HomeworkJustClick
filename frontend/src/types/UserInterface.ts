@@ -1,7 +1,7 @@
 export interface UserInterface {
   id: number
   index: number
-  name: string
+  firstname: string
   lastname: string
   color: number
   token: string

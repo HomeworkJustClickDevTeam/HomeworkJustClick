@@ -3,6 +3,6 @@ export interface AssignmentToSendInterface {
   visible: boolean
   taskDescription: string
   completionDatetime: Date
-  max_points: number
-  auto_penalty: number
+  maxPoints: number
+  autoPenalty: number
 }

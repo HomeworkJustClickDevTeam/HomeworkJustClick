@@ -1,37 +1,42 @@
 import { FaChevronLeft } from "react-icons/fa"
-import { Link, useNavigate } from "react-router-dom"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import LogOut from "../user/LogOut"
 import { selectHomePageIn } from "../../redux/homePageInSlice"
 import { selectUserState } from "../../redux/userStateSlice"
 import { useAppSelector } from "../../types/HooksRedux"
+import Logo from "./Logo.svg"
 
 function HeaderLoggedInState() {
+
   const navigate = useNavigate()
   const homePageIn = useAppSelector(selectHomePageIn)
   const userState = useAppSelector(selectUserState)
+  const location = useLocation()
+  const isSettingsPage = location.pathname === '/settings';
+  const isAssignmentsPage = location.pathname === '/' + userState?.id.toString() + '/assignments';
+  const isGroupsPage = location.pathname === '/';
+
   return (
-    <section id={"headerLoggedInSection"} className='relative flex h-16 text-white font-lato font-normal bg-main_blue items-center select-none'>
-      {!homePageIn && (
-        <Link className='absolute flex pl-[3vw] w-[9vw] hover:bg-hover_blue h-full items-center' to="#"
-              onClick={() => navigate(-1)}>
-          <FaChevronLeft className='pr-[calc(0.5vw)]'/>
+    <section id="headerLoggedInSection" className="relative flex h-10 xl:h-16 text-white text-[12px] xl:text-lg font-lato font-normal bg-main_blue items-center select-none min-w-[800px]">
+      <Link to="/" className="scale-50 xl:scale-100 absolute left-1/2 transform -translate-x-1/2 ">
+        <img src={Logo} alt="Logo" />
+      </Link>
+      <div className="flex items-center h-full">
+        <Link to="#" className={`flex mr-2 xl:mr-3 hover:bg-hover_blue h-full items-center px-2 xl:px-4 ${homePageIn ? 'invisible' : 'visible'}`} onClick={() => navigate(-1)}>
+          <FaChevronLeft className="pr-2" />
           Powrót
         </Link>
-      )}
-
-      <Link className='flex items-center ml-[9vw] px-[3vw] hover:bg-hover_blue h-full' to="/">Moje Grupy</Link>
-      <Link className='flex items-center px-[2.5vw] hover:bg-hover_blue h-full' to={`/${userState?.id}/assignments`}>
-        Moje zadanie domowe
-      </Link>
-      <Link className='flex items-center px-[2.5vw] hover:bg-hover_blue h-full' to={`/settings`}>
-        Ustawienia
-      </Link>
-      <div className='absolute flex right-0 hover:bg-hover_blue h-full items-center pr-5 pl-4'>
-        <LogOut/>
+        <Link to="/" className={`flex items-center h-full rounded px-2 xl:px-4 ${isGroupsPage ? 'bg-main_lily hover:bg-hover_lily' : 'hover:bg-hover_blue'}`}>Moje Grupy</Link>
+        <Link to={`/${userState?.id}/assignments`} className={`flex items-center h-full rounded px-2 xl:px-4  ${isAssignmentsPage ? 'bg-main_lily hover:bg-hover_lily' : 'hover:bg-hover_blue'}`}>Moje zadanie domowe</Link>
+        <Link to="/settings" className={`flex items-center h-full rounded px-2 xl:px-4 ${isSettingsPage ? 'bg-main_lily' : 'hover:bg-hover_blue'}`}>Ustawienia</Link>
       </div>
-
-    </section>
-
+      <div className="absolute flex right-0 items-center h-full">
+        <span className="pr-3 xl:pr-5">{userState?.firstname} {userState?.lastname}</span>
+        <div className="flex items-center h-full hover:bg-hover_blue px-2 xl:px-4">
+          <LogOut />
+        </div>
+      </div>
+    </section >
   )
 }
 

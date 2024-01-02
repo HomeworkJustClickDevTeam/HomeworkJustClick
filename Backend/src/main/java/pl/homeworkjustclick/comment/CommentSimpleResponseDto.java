@@ -3,6 +3,7 @@ package pl.homeworkjustclick.comment;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
+import java.io.Serializable;
 import java.time.OffsetDateTime;
 
 @Data
@@ -11,7 +12,7 @@ import java.time.OffsetDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CommentSimpleResponseDto {
+public class CommentSimpleResponseDto implements Serializable {
     @Schema(example = "0")
     private Integer id;
     @Schema(example = "Example title")

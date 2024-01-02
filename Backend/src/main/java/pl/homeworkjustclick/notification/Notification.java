@@ -6,6 +6,7 @@ import lombok.*;
 import pl.homeworkjustclick.assignment.Assignment;
 import pl.homeworkjustclick.user.User;
 
+import java.io.Serializable;
 import java.time.OffsetDateTime;
 
 @Builder
@@ -15,7 +16,7 @@ import java.time.OffsetDateTime;
 @Table(name = "_notification")
 @Getter
 @Setter
-public class Notification {
+public class Notification implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)

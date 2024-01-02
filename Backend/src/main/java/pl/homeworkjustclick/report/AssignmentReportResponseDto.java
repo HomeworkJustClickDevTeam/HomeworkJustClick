@@ -3,6 +3,7 @@ package pl.homeworkjustclick.report;
 import lombok.*;
 import pl.homeworkjustclick.assignment.AssignmentResponseDto;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Getter
@@ -10,7 +11,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AssignmentReportResponseDto {
+public class AssignmentReportResponseDto implements Serializable {
     private AssignmentResponseDto assignment;
     private Double maxResult;
     private Double maxResultPercent;

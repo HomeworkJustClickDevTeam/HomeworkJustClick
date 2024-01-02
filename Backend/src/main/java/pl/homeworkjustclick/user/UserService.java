@@ -2,6 +2,7 @@ package pl.homeworkjustclick.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.homeworkjustclick.infrastructure.exception.EntityNotFoundException;
 
 import java.util.List;
@@ -26,6 +27,12 @@ public class UserService {
                 .orElseThrow(() -> new EntityNotFoundException("User with id = " + id + " not found"));
     }
 
+    @Transactional(readOnly = true)
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("User with email = " + email + " not found"));
+    }
+
     public Boolean add(User user) {
         userRepository.save(user);
         return true;
@@ -33,7 +40,7 @@ public class UserService {
 
     public Boolean update(int id, User updatedUser) {
         if (userRepository.findById(id).isPresent()) {
-            User user = userRepository.getReferenceById(id);
+            User user = findById(id);
             if (!updatedUser.getFirstname().isEmpty() && !updatedUser.getFirstname().equals(user.getFirstname())) {
                 user.setFirstname(updatedUser.getFirstname());
             }
@@ -67,8 +74,8 @@ public class UserService {
     }
 
     public Boolean changeIndexById(int id, int index) {
-        if (userRepository.findById(id).isPresent()) {
-            User user = userRepository.findById(id).get();
+        if (userRepository.findById(id).isPresent() && index >= 100000 && index <= 999999) {
+            User user = findById(id);
             user.setIndex(index);
             userRepository.save(user);
             return true;
@@ -79,7 +86,7 @@ public class UserService {
 
     public Boolean changeColorById(int id, int color) {
         if (userRepository.findById(id).isPresent()) {
-            User user = userRepository.findById(id).get();
+            User user = findById(id);
             user.setColor(color);
             userRepository.save(user);
             return true;
@@ -88,11 +95,11 @@ public class UserService {
         }
     }
 
-    public List<User> getTeachersByGroup(int group_id) {
-        return userRepository.getTeachersByGroupId(group_id);
+    public List<User> getTeachersByGroup(int groupId) {
+        return userRepository.getTeachersByGroupId(groupId);
     }
 
-    public List<User> getStudentsByGroup(int group_id) {
-        return userRepository.getStudentsByGroupId(group_id);
+    public List<User> getStudentsByGroup(int groupId) {
+        return userRepository.getStudentsByGroupId(groupId);
     }
 }

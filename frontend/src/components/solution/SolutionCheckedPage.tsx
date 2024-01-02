@@ -8,6 +8,9 @@ import {useAppSelector} from "../../types/HooksRedux";
 import {selectUserState} from "../../redux/userStateSlice";
 import {roleSlice, selectRole} from "../../redux/roleSlice";
 import {ReportGrade} from "./ReportGrade";
+import {useGetFile} from "../customHooks/useGetFile";
+import {useGetCommentsImageByFile} from "../customHooks/useGetCommentsImageByFile";
+import {useGetCommentsTextByFile} from "../customHooks/useGetCommentsTextByFile";
 
 export default function SolutionCheckedPage(props: {
     solution: SolutionInterface
@@ -16,7 +19,9 @@ export default function SolutionCheckedPage(props: {
     const evaluation = useGetEvaluationBySolution(props.solution.id)
     const userState = useAppSelector(selectUserState)
     const userRole = useAppSelector(selectRole)
-
+    const fileFromDb = useGetFile(props.solution.id, "solution")
+    const {commentsImage} = useGetCommentsImageByFile(fileFromDb?.id, "size=1")
+    const {comments: txtComments} = useGetCommentsTextByFile(fileFromDb?.id, "size=1")
 
     return (
         <div
@@ -36,8 +41,8 @@ export default function SolutionCheckedPage(props: {
                 </p>
             )}
             <p className="font-semibold">Przesłane pliki: </p>
-            {props.solution ? (
-                <SolutionFile solutionId={props.solution.id}/>
+            {fileFromDb !== undefined ? (
+                <SolutionFile fileFromDb={fileFromDb}/>
             ) : (
                 <p>Brak</p>
             )}
@@ -45,11 +50,11 @@ export default function SolutionCheckedPage(props: {
             <div className="absolute bottom-0 left-0 mb-6 ml-4">
                 <p>Wynik: </p>
                 <p className="font-bold text-xl mt-4">
-                    {evaluation?.result}/{props.assignment.max_points}
+                    {evaluation?.result}/{props.assignment.maxPoints}
                 </p>
             </div>
             {(userRole === 'Student' && evaluation) && <ReportGrade evaluationId={evaluation.id}/>}
-            <Link
+            {(commentsImage !== undefined) || (txtComments !== undefined) && <Link
                 to={`/group/${props.solution.groupId}/advancedAssignment`}
                 state={{
                     solutionExtended: {
@@ -61,7 +66,7 @@ export default function SolutionCheckedPage(props: {
                 }}
                 className="absolute underline font-semibold bottom-0 left-0 mb-2 ml-4">
                 Komentarze prowadzącego do pliku
-            </Link>
+            </Link>}
         </div>
     )
 }

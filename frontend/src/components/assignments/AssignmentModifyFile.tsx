@@ -6,6 +6,8 @@ import {
 } from "../../services/postgresDatabaseServices"
 import { getFileMongoService, postFileMongoService } from "../../services/mongoDatabaseServices"
 import { FileFromPostgresInterface } from "../../types/FileFromPostgresInterface"
+import {useGetFile} from "../customHooks/useGetFile";
+import {CreateFileUrlAndClick} from "../../utils/CreateFileUrlAndClick";
 
 export function AssignmentModifyFile(props: {
   assignmentId: number
@@ -13,49 +15,49 @@ export function AssignmentModifyFile(props: {
   toSend: boolean
 }) {
   const [file, setFile] = useState<File | null>(null)
-  const [databaseFile, setDatabaseFile] = useState<FileFromPostgresInterface[]>([])
+  const databaseFile = useGetFile(props.assignmentId, 'assignment')
   const [isChange, setIsChange] = useState<boolean>(false)
 
   useEffect(() => {
-    if (props.assignmentId) {
-      getFilesByAssignmentPostgresService(props.assignmentId)
-        .then((response) => {
-          setDatabaseFile(response.data)
-        })
-        .catch((error) => {
-          console.error("Error retrieving file data:", error)
-        })
-    }
-  }, [props.assignmentId])
-  useEffect(() => {
-    if (props.toSend && props.assignmentId) {
-      if (isChange && file) {
-        const formData = new FormData()
-        formData.append("file", file)
-        deleteFilePostgresService('databaseFile[0].id')
-          .then(() => {
-            postFileMongoService(formData)
-              .then((response) => {
+    const updateFileInDb = async () => {
+      if (props.toSend && props.assignmentId) {
+        if (isChange && file) {
+          const formData = new FormData()
+          formData.append("file", file)
+          if(databaseFile !== undefined){
+            try {
+              const response = await deleteFilePostgresService(databaseFile.id.toString())
+              if(response?.status !== 200 && response?.status !== 404) {
+                return
+              }
+            }
+            catch (error) {
+              console.log(error)
+              return
+            }
+          }
+          postFileMongoService(formData)
+            .then((response) => {
+              if(response?.status === 200){
                 createFileWithAssignmentPostgresService(`${response.data.id}`, response.data.format, response.data.name, `${props.assignmentId}`)
                   .then(() => props.setToNavigate(true))
-              })
-              .catch(error => console.log(error))
-          })
-          .catch((e) => console.log(e))
-      } else {
-        props.setToNavigate(true)
+              }
+            })
+            .catch(error => console.error(error))
+        }
       }
     }
+    updateFileInDb()
   }, [props.toSend])
 
   useEffect(() => {
     const fetchFileData = async () => {
-      if (databaseFile.length > 0) {
+      if (databaseFile !== undefined) {
         try {
-          const response = await getFileMongoService(databaseFile[0]?.mongo_id, {responseType: "arraybuffer"})
+          const response = await getFileMongoService(databaseFile.mongoId, {responseType: "arraybuffer"})
           const fileData = response.data
-          const type = databaseFile[0].format
-          const file = new File([fileData], databaseFile[0].name, {type})
+          const type = databaseFile.format
+          const file = new File([fileData], databaseFile.name, {type})
           setFile(file)
         } catch (error) {
           console.error("Error retrieving file:", error)
@@ -73,12 +75,11 @@ export function AssignmentModifyFile(props: {
     }
   }
   return (
-    <>
-      <>
-        <input type="file" onChange={handleChangeFile}/>
-        <div> {file && `${file.name} - ${file.type}`}</div>
-        {" "}
-      </>
-    </>
+    <div>
+      <input type="file" onChange={handleChangeFile}/><br/>
+      {databaseFile && <>Plik w bazie danych: <br/>
+          <button onClick={()=>CreateFileUrlAndClick(databaseFile!)}> {`${databaseFile!.name}`}</button></>}
+      {" "}
+    </div>
   )
 }
