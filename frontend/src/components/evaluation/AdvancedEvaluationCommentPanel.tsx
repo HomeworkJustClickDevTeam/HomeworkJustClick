@@ -109,7 +109,7 @@ export const AdvancedEvaluationCommentPanel = (
       <div className='inline-flex w-full pb-2'>
         <p className='mr-2'>Dodaj nowy komentarz: </p>
         <input value={newCommentDescription} className='border border-black rounded-sm mr-2 w-full pl-1.5 h-10 mt-2' onChange={(event) => setNewCommentDescription(event.target.value)}/>
-        <button className='w-24 ml-auto mr-2 bg-main_blue text-white px-2 py-1 rounded-md' type={"submit"}>Dodaj</button><br/><hr/>
+        <button className='w-24 ml-auto mr-2 bg-main_blue text-white px-2 h-10 mt-2 rounded-md' type={"submit"}>Dodaj</button><br/><hr/>
       </div>
     </form>
     <section >
