@@ -1,13 +1,11 @@
 import {Link, useLocation, useNavigate} from "react-router-dom"
 import React, {useEffect, useState} from "react"
-import { colorsArray } from "../../assets/colors"
+import {colorsArray} from "../../assets/colors"
 import Loading from "../animations/Loading"
-import { selectGroup } from "../../redux/groupSlice"
-import { selectRole } from "../../redux/roleSlice"
-import { useAppSelector } from "../../types/HooksRedux"
+import {selectGroup} from "../../redux/groupSlice"
+import {selectRole} from "../../redux/roleSlice"
+import {useAppSelector} from "../../types/HooksRedux"
 import {FaCaretDown} from "react-icons/fa";
-import {GroupHomePageDisplayer} from "./GroupHomePageDisplayer";
-import {ca, ro} from "date-fns/locale";
 import {sortButtonValues} from "../../types/GroupHeaderStortButtonValues";
 
 //import {theme.colors.colorsArray: string[]} = require("../../../tailwind.config")
@@ -69,17 +67,21 @@ function GroupHeader() {
           <div className="text-[22px] font-lato font-medium text-center text-font_gray">
             <ul className="flex flex-wrap -mb-px">
               <li
-                className={locationSplit[3] === "assignments" || locationSplit[3] === "solutions" ? "border-main_blue border-b-[3px] rounded bg-main_blue bg-opacity-5 text-black" : "hover:bg-hover_gray"}>
+                className={(locationSplit[3] === "assignments" && locationSplit[4]===undefined) || locationSplit[3] === "solutions" ? "border-main_blue border-b-[3px] rounded bg-main_blue bg-opacity-5 text-black" : "hover:bg-hover_gray"}>
                 <Link to="assignments" className="inline-block w-[170px] p-4  rounded-t-lg "> Zadania</Link>
               </li>
               <li
                 className={locationSplit[3] === "users" ? "border-main_blue border-b-[3px] rounded bg-main_blue bg-opacity-5 text-black" : "hover:bg-hover_gray"}>
                 <Link to="users" className="inline-block w-[170px] p-4  rounded-t-lg "> Osoby </Link>
               </li>
-              {role==="Student" &&
+              {role==="Student" ?
                 <li
                 className={locationSplit[3] === "evaluations" ? "border-main_blue border-b-[3px] rounded bg-main_blue bg-opacity-5 text-black" : "hover:bg-hover_gray"}>
                 <Link to="evaluations" className="inline-block w-[170px] p-4  rounded-t-lg "> Oceny</Link>
+              </li>
+                : <li
+                className={locationSplit[4] === "add" ? "border-main_blue border-b-[3px] rounded bg-main_blue bg-opacity-5 text-black" : "hover:bg-hover_gray"}>
+                <Link to="assignments/add" className="inline-block w-[205px] p-4  rounded-t-lg "> Nowe Zadanie +</Link>
               </li>}
             </ul>
           </div>

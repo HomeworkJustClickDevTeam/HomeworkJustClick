@@ -163,7 +163,7 @@ export default function PointsTableForm(props: {
           type="submit"
           className="flex w-24 justify-center mr-6 mt-4 px-10 py-1 rounded-lg bg-main_blue text-white hover:bg-hover_blue hover:shadow-md active:shadow-none"
         >
-          {isEditForm ? "Zatwierdź" : "Zapisz"}
+          {isEditForm ? "Zatwierdź" : "Prześlij"}
         </button>
       </form>
       {!isEditForm ? (
