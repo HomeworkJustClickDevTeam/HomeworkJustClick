@@ -54,7 +54,7 @@ export const ReportGroupTable = ({groupReport}:{groupReport: GroupReportModel}) 
         .map((assignmentReport, index) => {
           return(
             <tr key={index}>
-              <td className='pr-4 text-sm py-2 border-r-2 border-b-2 border-light_gray font-semibold text-center'>{assignmentReport.assignment.title}</td>
+              <td className='pr-4 text-sm py-2 border-r-2 border-b-2 border-light_gray font-semibold text-center underline underline-offset-2'>{assignmentReport.assignment.title}</td>
               <td className=' px-6  text-center border border-border_gray border-r-2'>{assignmentReport.assignment.maxPoints}</td>
               <td className=' px-6  text-center border border-border_gray border-r-2'>{assignmentReport.maxResult}</td>
               <td className=' px-6  text-center border border-border_gray border-r-2'>{assignmentReport.minResult}</td>
