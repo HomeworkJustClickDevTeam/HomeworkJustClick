@@ -86,9 +86,9 @@ export const AssignmentSettingsPage = ({handleSubmit,
     return options
   }
   return (
-    <>
-      <div>
-        <div className="relative flex flex-col mx-[7.5%] mt-4 border border-border_gray border-1 rounded-md pt-4 px-4 fit pb-4">
+
+      <div className='overflow-y-hidden'>
+        <div className="relative flex flex-col mx-[7.5%] mt-4 border border-border_gray border-1 rounded-md pt-4 px-4 fit pb-4 box-content overflow-y-auto">
           <form onSubmit={(event) => handleSubmit(event)} className="flex flex-col gap-3">
             <label className="pr-3">
               Tytuł
@@ -193,6 +193,6 @@ export const AssignmentSettingsPage = ({handleSubmit,
           </button>}
         </div>
       </div>
-    </>
+
   )
 }
