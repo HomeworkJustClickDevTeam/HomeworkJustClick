@@ -3,6 +3,7 @@ import { AssignmentInterface } from "../../types/AssignmentInterface"
 import {
   getAssignmentsDoneByGroupAndStudentPostgresService,
   getAssignmentsExpiredUndoneByGroupAndStudentPostgresService,
+  getAssignmentsNonExpiredUndoneByGroupAndStudentPostgresService,
   getAssignmentsUndoneByGroupAndStudentPostgresService
 } from "../../services/postgresDatabaseServices"
 import { useAppDispatch } from "../../types/HooksRedux"
@@ -18,14 +19,19 @@ export const useGetAssignmentsByGroupAndStudent = (groupId: number|undefined|nul
       let response = null
       if(groupId !==undefined && userId !== undefined && groupId !==null && userId !== null){
         try{
-          if(filter==='done'){
-            response = await getAssignmentsDoneByGroupAndStudentPostgresService(groupId.toString(), userId.toString())
-          }
-          else if(filter==="expiredUndone"){
-            response = await getAssignmentsExpiredUndoneByGroupAndStudentPostgresService(groupId.toString(), userId.toString())
-          }
-          else if(filter==="undone"){
-            response = await getAssignmentsUndoneByGroupAndStudentPostgresService(groupId.toString(), userId.toString())
+          switch (filter){
+            case "done":
+              response = await getAssignmentsDoneByGroupAndStudentPostgresService(groupId.toString(), userId.toString())
+              break
+            case "expiredUndone":
+              response = await getAssignmentsExpiredUndoneByGroupAndStudentPostgresService(groupId.toString(), userId.toString())
+              break
+            case "undone":
+              response = await getAssignmentsUndoneByGroupAndStudentPostgresService(groupId.toString(), userId.toString())
+              break
+            case "nonExpiredUndone":
+              response = await getAssignmentsNonExpiredUndoneByGroupAndStudentPostgresService(groupId.toString(), userId.toString())
+              break
           }
           if(response !== undefined && response!==null){
             if(mounted){

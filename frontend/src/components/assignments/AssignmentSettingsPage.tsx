@@ -1,41 +1,38 @@
 import ReactDatePicker from "react-datepicker";
-import {AssignmentModifyFile} from "./AssignmentModifyFile";
+import {AssignmentFile} from "./AssignmentAddOrModifyFile";
 import React, {ChangeEvent, SetStateAction, useEffect, useState} from "react";
 import {AssignmentInterface} from "../../types/AssignmentInterface";
 import {Table} from "../../types/Table.model";
 import {AssignmentToSendInterface} from "../../types/AssignmentToSendInterface";
 import {GroupInterface} from "../../types/GroupInterface";
 import {useNavigate} from "react-router-dom";
-import {AssignmentAddFile} from "./AssignmentAddFile";
-import {CommentInterface} from "../../types/CommentInterface";
 import {setHours, setMinutes} from "date-fns";
+import {FileInterface} from "../../types/FileInterface";
 
 interface AssignmentSettingsPagePropsInterface{
   handleSubmit: (event: React.FormEvent) => void,
   assignment: AssignmentInterface|AssignmentToSendInterface,
   chosenEvaluationTable:number,
-  toSend: boolean,
   handleDelete?:(event: React.FormEvent) => void,
   setChosenEvaluationTable:(tableId: number)=>void,
   evaluationTable:Table[],
   setAssignment: (assignment: (prevState: any) => any) => void,
-  group: GroupInterface|null,
-  newAssignmentId?: number
+  newAssignmentId?: number,
+  setNewFile: React.Dispatch<React.SetStateAction<File|undefined>>
+  databaseFile?: FileInterface
 }
 
 export const AssignmentSettingsPage = ({handleSubmit,
                                          assignment,
                                          chosenEvaluationTable,
                                          handleDelete,
-                                         toSend,
                                          setChosenEvaluationTable,
                                          evaluationTable,
                                          setAssignment,
-                                         group,
+                                         setNewFile,
+                                         databaseFile,
                                          newAssignmentId}:AssignmentSettingsPagePropsInterface) =>{
 
-  const [toNavigate, setToNavigate] = useState<boolean>(false)
-  const navigate = useNavigate()
   const handleTextChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target
     setAssignment((prevState) => ({
@@ -66,11 +63,6 @@ export const AssignmentSettingsPage = ({handleSubmit,
     }))
   }
 
-  useEffect(() => {
-    if (toNavigate) {
-      navigate(`/group/${group?.id}/assignments/`)
-    }
-  }, [toNavigate])
 
   const handleTableChange = (event:React.ChangeEvent<HTMLSelectElement>) => {
     if(+event.target.value === -1)
@@ -186,15 +178,14 @@ export const AssignmentSettingsPage = ({handleSubmit,
           </form>
           <p className="mt-4 mb-2">Nowy plik: </p>
           {(assignment as AssignmentInterface).id !== undefined && newAssignmentId === undefined ?
-          <AssignmentModifyFile
-            toSend={toSend}
+          <AssignmentFile
+            setNewFile={setNewFile}
             assignmentId={(assignment as AssignmentInterface).id}
-            setToNavigate={setToNavigate}
+            databaseFile={databaseFile}
           />:
-            <AssignmentAddFile
-              toSend={toSend}
-              idAssignment={newAssignmentId}
-              setToNavigate={setToNavigate}
+            <AssignmentFile
+              setNewFile={setNewFile}
+              assignmentId={newAssignmentId!}
             />}
           {handleDelete !== undefined &&
           <button onClick={(event) => handleDelete(event)}

@@ -2,19 +2,42 @@ import { useEffect, useState } from "react"
 import { AssignmentInterface } from "../../types/AssignmentInterface"
 import { useAppDispatch } from "../../types/HooksRedux"
 import { setIsLoading } from "../../redux/isLoadingSlice"
-import { getAssignmentsByStudentPostgresService } from "../../services/postgresDatabaseServices"
+import {
+  getAssignmentsByStudentPostgresService,
+  getAssignmentsDoneByStudentPostgresService,
+  getAssignmentsExpiredUndoneByStudentPostgresService, getAssignmentsNonExpiredUndoneByStudentPostgresService,
+  getAssignmentsUndoneByStudentPostgresService
+} from "../../services/postgresDatabaseServices"
+import {AssignmentsType} from "../../types/AssignmentsType";
 
-export const useGetAssignmentsByStudent = (studentId:number|undefined|null) => {
+export const useGetAssignmentsByStudent = (studentId:number|undefined|null, filter?: AssignmentsType) => {
   const [assignments, setAssignments] = useState<AssignmentInterface[]>([])
   const dispatch = useAppDispatch()
 
   useEffect(() => {
     const fetchData = async () => {
+      let response = null
       if(studentId !== undefined && studentId !== null){
         try {
-          const response = await getAssignmentsByStudentPostgresService(studentId.toString())
-          if(response !== null && response !== undefined){
-            if(mounted){setAssignments(response.data)}
+          switch (filter){
+            case undefined:
+              response = await getAssignmentsByStudentPostgresService(studentId.toString())
+              break
+            case "done":
+              response = await getAssignmentsDoneByStudentPostgresService(studentId.toString())
+              break
+            case "undone":
+              response = await getAssignmentsUndoneByStudentPostgresService(studentId.toString())
+              break
+            case "expiredUndone":
+              response = await getAssignmentsExpiredUndoneByStudentPostgresService(studentId.toString())
+              break
+            case  "nonExpiredUndone":
+              response = await getAssignmentsNonExpiredUndoneByStudentPostgresService(studentId.toString())
+              break
+          }
+          if(response?.status === 200){
+            if(mounted){setAssignments(response!.data)}
           }
         }catch (error:any) {
           if(error !== null && error!== undefined && error.response.status === 404){
@@ -32,7 +55,7 @@ export const useGetAssignmentsByStudent = (studentId:number|undefined|null) => {
     fetchData()
     dispatch(setIsLoading(false))
     return () => {mounted = false}
-  }, [studentId])
+  }, [studentId, filter])
 
   return assignments
 }
