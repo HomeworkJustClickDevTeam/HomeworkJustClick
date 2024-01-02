@@ -74,7 +74,7 @@ function AssignmentAddSettingsPageWrapper() {
         responseMongo.data.format,
         responseMongo.data.name,
         newAssignmentResponse.data.id.toString())
-      if(response?.status == 200)
+      if(response?.status === 200)
         toast.success("Pomyślnie zaktualizowano zadanie.")
       else toast.error("Błąd podczas zmiany pliku.")
       navigate(`/group/${group!.id}/assignments`)
