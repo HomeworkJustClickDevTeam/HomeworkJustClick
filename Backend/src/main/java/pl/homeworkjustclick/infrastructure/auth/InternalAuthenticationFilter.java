@@ -49,6 +49,9 @@ public class InternalAuthenticationFilter {
         var path = request.getServletPath();
         var pathSplit = path.split("/");
         var user = userService.findByEmail(userMail);
+        if (pathSplit.length < 2) {
+            return;
+        }
         if (pathSplit[2].equals("assignment")) {
             filterAssignment(request, user.getId(), path);
         }

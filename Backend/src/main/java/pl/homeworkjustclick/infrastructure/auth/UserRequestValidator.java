@@ -22,6 +22,9 @@ public class UserRequestValidator {
             return;
         }
         var pathSplit = request.getServletPath().split("/");
+        if (pathSplit.length < 2) {
+            return;
+        }
         if (pathSplit.length > 4 && pathSplit[2].equals("assignment") && pathSplit[3].equals("withUserAndGroup")) {
             if (Integer.parseInt(pathSplit[4]) != user.getId()) {
                 throwException();

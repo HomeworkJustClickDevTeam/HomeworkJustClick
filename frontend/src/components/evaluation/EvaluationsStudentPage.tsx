@@ -16,9 +16,11 @@ export const EvaluationsStudentPage = () =>{
   }
 
   return (
-    <div>
+      <div className='flex flex-col h-[calc(100vh-325px)] overflow-y-hidden'>
+    <div className='flex flex-col box-content overflow-y-auto'>
       {assignments.map((assignment)=>{
         return <AssignmentListElement assignment={assignment} key={assignment.id} unfoldedPieChartAssignment={unfoldedPieChartAssignment} handleAssignmentClick={handleAssignmentClick}/>
       })}
-   </div>)
+   </div>
+      </div>)
 }

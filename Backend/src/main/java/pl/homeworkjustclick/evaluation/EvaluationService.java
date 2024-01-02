@@ -59,6 +59,11 @@ public class EvaluationService {
                 .stream().map(mapper::map).toList();
     }
 
+    public EvaluationResponseDto findAllEvaluationsByStudentAndAssignment(Integer studentId, Integer assignmentId) {
+        var evaluationOptional = repository.findEvaluationByStudentAndAssignment(studentId, assignmentId);
+        return evaluationOptional.map(mapper::map).orElse(null);
+    }
+
     @Transactional
     public EvaluationResponseDto add(Evaluation evaluation) {
         entityManager.persist(evaluation);
