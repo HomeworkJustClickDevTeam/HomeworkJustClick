@@ -20,11 +20,13 @@ import SolutionPage from "./components/solution/SolutionPage"
 import UserSettingsPage from "./components/user/UserSettingsPage"
 import GroupSettingsPage from "./components/group/GroupSettingsPage"
 import GroupUserProfilePage from "./components/group/GroupUserProfilePage"
+import AdvancedEvaluationPage from "./components/evaluation/AdvancedEvaluationPage"
 import {LoggedInUserRoute} from "./components/route/LoggedInUserRoute"
 import {LoggedOutUserRoute} from "./components/route/LoggedOutUserRoute"
 import {AssignmentsType} from "./types/AssignmentsType"
 import {ExtendedSolutionType} from "./types/ExtendedSolutionType"
 import {RoleBasedRoute} from "./components/route/RoleBasedRoute";
+import SolutionCheckedPage from "./components/solution/SolutionCheckedPage";
 import {SolutionCheckedAdvancedPage} from "./components/solution/SolutionCheckedAdvancedPage";
 import AdvancedEvaluationPage from "./components/evaluation/AdvancedEvaluationPage";
 import NotFoundPage from "./components/errors/NotFoundPage";
@@ -39,6 +41,7 @@ function App() {
   return (
       <>
     <Routes>
+      <Route path="/group/:idGroup" element={<GroupPage/>}/>
       <Route element={<LoggedOutUserRoute/>}>
         <Route
           path="/home"
@@ -112,15 +115,16 @@ function App() {
               element={<EvaluationsStudentPage/>}
           />
 
-        </Route>
-        <Route path="/group/:idGroup/advancedAssignment" element={
-          <RoleBasedRoute renderForStudent={<SolutionCheckedAdvancedPage/>} renderForTeacher={<AdvancedEvaluationPage/>}/>}/>
-      </Route>
-      <Route path="*" element={<NotFoundPage/>}/>
-    </Routes>
-        <ToastContainer limit={2}></ToastContainer>
-      </>
-  )
+                    </Route>
+                    <Route path="/group/:idGroup/advancedAssignment" element={
+                        <RoleBasedRoute renderForStudent={<SolutionCheckedAdvancedPage/>}
+                                        renderForTeacher={<AdvancedEvaluationPage/>}/>}/>
+                </Route>
+                <Route path="*" element={<NotFoundPage/>}/>
+            </Routes>
+            <ToastContainer limit={2}></ToastContainer>
+        </>
+    )
 }
 
 export default App
