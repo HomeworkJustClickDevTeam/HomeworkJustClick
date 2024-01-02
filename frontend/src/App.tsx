@@ -117,7 +117,7 @@ function App() {
                 </Route>
                 <Route path="*" element={<NotFoundPage/>}/>
             </Routes>
-            <ToastContainer limit={2}></ToastContainer>
+            <ToastContainer limit={2} autoClose={2000}></ToastContainer>
         </>
     )
 }

@@ -5,6 +5,7 @@ import {selectUserState} from "../../redux/userStateSlice"
 import {useAppSelector} from "../../types/HooksRedux"
 import {Button} from "../../types/Table.model";
 import {EvaluationCreateModel} from "../../types/EvaluationCreate.model";
+import {toast} from "react-toastify";
 
 interface RatingPropsInterface {
     maxPoints: number | undefined
@@ -46,8 +47,14 @@ export function Rating({
         if (pointsToSend !== undefined) {
             const body: EvaluationCreateModel = new EvaluationCreateModel(pointsToSend, userState!.id, solutionId, groupId, 0, false)
             createEvaluationWithUserAndSolution(userState!.id.toString(), solutionId.toString(), body)
-                .then(() => navigate(`/group/${groupId}`))
-                .catch((e) => console.log(e))
+                .then(() => {
+                    toast.success("Zadanie zostało ocenione.", {autoClose: 2000})
+                    navigate(`/group/${groupId}`)})
+
+                .catch((e) => {
+                    toast.error("Nie udało się ocenić zadania.", {autoClose: 2000})
+                    console.log(e)
+                })
         }
     }
 
@@ -158,7 +165,7 @@ export function Rating({
     return (
         <div className="mt-4">
             <div className="relative flex w-72 gap-2 flex-wrap">{renderButtons()}</div>
-            <button onClick={() => handleMark()} className="mt-4 px-6 py-1 bg-main_blue text-white rounded">Prześlij
+            <button onClick={() => handleMark()} className="mt-4 px-6 py-1 bg-main_blue text-white rounded mb-4">Prześlij
                 Ocenę
             </button>
         </div>
