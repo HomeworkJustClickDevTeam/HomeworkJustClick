@@ -7,6 +7,10 @@ import { selectUserState } from "../../redux/userStateSlice"
 import { useAppSelector } from "../../types/HooksRedux"
 import { useGetAssignmentsByGroupAndStudent } from "../customHooks/useGetAssignmentsByGroupAndStudent"
 import { AssignmentsType } from "../../types/AssignmentsType"
+import {
+  useGetAssignmentsWithEvaluationByGroupAndStudent
+} from "../customHooks/useGetAssignmentsWithEvaluationByStudentAndGroup";
+import {GetResultFromAssignmentsWithEvaluation} from "../../utils/GetResultFromAssignmentsWithEvaluation";
 
 function AssignmentsTypesPage({type}: { type: AssignmentsType }) {
   const navigate = useNavigate()
@@ -14,6 +18,7 @@ function AssignmentsTypesPage({type}: { type: AssignmentsType }) {
   const role = useAppSelector(selectRole)
   const userState = useAppSelector(selectUserState)
   const assignments = useGetAssignmentsByGroupAndStudent(group?.id, userState?.id, type)
+  const assignmentsWithEvaluation = useGetAssignmentsWithEvaluationByGroupAndStudent(group!.id, userState!.id)
 
   useEffect(() => {
     if (role !== "Student") {
@@ -25,7 +30,10 @@ function AssignmentsTypesPage({type}: { type: AssignmentsType }) {
       <ul className='flex flex-col box-content overflow-y-auto mb-4'>
         {assignments.map((assignment) => (
           <li key={assignment.id}>
-            <AssignmentListElement assignment={assignment} idGroup={group?.id as unknown as string}/>{" "}
+            <AssignmentListElement
+              assignment={assignment}
+              resultPoints={GetResultFromAssignmentsWithEvaluation(assignmentsWithEvaluation, assignment.id)}
+              idGroup={group?.id as unknown as string}/>{" "}
           </li>
         ))}
       </ul>
