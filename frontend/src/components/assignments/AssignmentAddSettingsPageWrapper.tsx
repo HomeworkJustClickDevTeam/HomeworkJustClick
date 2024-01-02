@@ -53,11 +53,12 @@ function AssignmentAddSettingsPageWrapper() {
         return
       }
       setIdAssignment(newAssignmentResponse.data.id)
-      if(chosenEvaluationTable !== -1)
+      if(chosenEvaluationTable !== -1){
         response = await addEvaluationPanelToAssignmentPostgresService({assignmentId: newAssignmentResponse.data.id, evaluationPanelId: chosenEvaluationTable})
-      if(response?.status !== 201 && chosenEvaluationTable !== -1){
-        toast.error("Nie przypisano tabelę oceniania do zadania.")
-        return
+        if(response?.status !== 201){
+          toast.error("Nie przypisano tabelę oceniania do zadania.")
+          return
+        }
       }
       if(newFile === undefined) {
         toast.success("Pomyślnie dodano zadanie.")
@@ -79,7 +80,7 @@ function AssignmentAddSettingsPageWrapper() {
       navigate(`/group/${group!.id}/assignments`)
     }
     catch (e){
-      toast.error("Błąd, podczas tworzenia zadania.")
+      toast.error("Błąd podczas tworzenia zadania.")
       console.error(e)}
   }
 

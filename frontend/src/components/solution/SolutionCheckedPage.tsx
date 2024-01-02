@@ -22,6 +22,7 @@ export default function SolutionCheckedPage(props: {
     const fileFromDb = useGetFile(props.solution.id, "solution")
     const {commentsImage} = useGetCommentsImageByFile(fileFromDb?.id, "size=1")
     const {comments: txtComments} = useGetCommentsTextByFile(fileFromDb?.id, "size=1")
+    console.debug(commentsImage, txtComments)
 
     return (
         <div
@@ -54,7 +55,7 @@ export default function SolutionCheckedPage(props: {
                 </p>
             </div>
             {(userRole === 'Student' && evaluation) && <ReportGrade evaluationId={evaluation.id}/>}
-            {(commentsImage !== undefined) || (txtComments !== undefined) && <Link
+            {((commentsImage.length !== 0) || (txtComments.length !== 0)) && <Link
                 to={`/group/${props.solution.groupId}/advancedAssignment`}
                 state={{
                     solutionExtended: {
