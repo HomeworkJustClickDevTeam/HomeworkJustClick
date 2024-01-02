@@ -28,7 +28,7 @@ function AssignmentListElement({assignment,
         </div>
           <div className='basis-1/5 text-lg mr-4 h-full leading-[60px]'>
               {createReportButton && handleGenerateReportButtonClick && <Link to={`#`} type={"button"} onClick={()=>{handleGenerateReportButtonClick()}}>Wygeneruj raport</Link>}</div>
-        <div className="mr-10 text-right font-semibold text-[28px] basis-1/5">{(resultPoints !== undefined) && resultPoints} {"/" + assignment.maxPoints}</div>
+        <div className="mr-10 text-right font-semibold text-[28px] basis-1/5">{(resultPoints !== undefined) ? resultPoints : null} {"/" + assignment.maxPoints}</div>
       </Link>
       {unfoldedPieChartAssignment?.id === assignment.id && <div><br/><AssignmentPieChart assignment={assignment}/></div>}
     </div>

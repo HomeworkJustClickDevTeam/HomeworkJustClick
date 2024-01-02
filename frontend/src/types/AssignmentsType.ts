@@ -1,1 +1,5 @@
-export type AssignmentsType = "done"|"expiredUndone"|"undone"
+export type AssignmentsType =
+   "done"
+  |"expiredUndone"
+  |"undone"
+  |"nonExpiredUndone"

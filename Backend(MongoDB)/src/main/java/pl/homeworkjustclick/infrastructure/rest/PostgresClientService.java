@@ -23,7 +23,7 @@ public class PostgresClientService {
                 .bodyToMono(Boolean.class)
                 .onErrorComplete()
                 .block();
-        return Boolean.TRUE.equals(valid);
+        return !Boolean.FALSE.equals(valid);
     }
 
     private HttpHeaders createHttpHeaders(String jwtToken) {

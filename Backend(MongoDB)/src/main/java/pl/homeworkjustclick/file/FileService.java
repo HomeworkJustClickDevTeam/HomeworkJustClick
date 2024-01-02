@@ -6,6 +6,7 @@ import org.bson.types.Binary;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pl.homeworkjustclick.infrastructure.exception.FileNotFoundException;
+import pl.homeworkjustclick.infrastructure.exception.JwtNotValidException;
 import pl.homeworkjustclick.infrastructure.rest.PostgresClientService;
 
 import java.io.IOException;
@@ -20,7 +21,7 @@ public class FileService {
     private final PostgresClientService postgresClientService;
 
     public FileResponseDto addFile(String title, String format, MultipartFile file, String jwtToken) throws IOException {
-//        checkToken(jwtToken);
+        checkToken(jwtToken);
         File _file = new File(title, format);
         _file.setFile(new Binary(BsonBinarySubType.BINARY, file.getBytes()));
         _file = fileRepository.insert(_file);
@@ -28,7 +29,7 @@ public class FileService {
     }
 
     public List<FileResponseDto> addFileList(List<MultipartFile> fileList, String jwtToken) throws IOException {
-//        checkToken(jwtToken);
+        checkToken(jwtToken);
         List<FileResponseDto> responseList = new ArrayList<>();
         fileList.forEach(file -> {
             String title = file.getOriginalFilename();
@@ -46,21 +47,20 @@ public class FileService {
     }
 
     public Optional<File> getFile(String id, String token) {
-//        checkToken(token);
+        checkToken(token);
         return fileRepository.findById(id);
     }
 
     public void deleteFile(String id, String token) {
-//        checkToken(token);
+        checkToken(token);
         var file = fileRepository.findById(id)
                 .orElseThrow(() -> new FileNotFoundException("File not found"));
         fileRepository.delete(file);
     }
 
-//    private void checkToken(String token) {
-//        var valid = postgresClientService.checkToken(token);
-//        if (!valid) {
-//            throw new JwtNotValidException("Jwt token not valid!");
-//        }
-//    }
+    private void checkToken(String token) {
+        if (!postgresClientService.checkToken(token)) {
+            throw new JwtNotValidException("Jwt token not valid!");
+        }
+    }
 }

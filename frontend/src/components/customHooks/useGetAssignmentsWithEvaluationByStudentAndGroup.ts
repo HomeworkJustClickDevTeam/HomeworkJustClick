@@ -4,35 +4,23 @@ import {
   getAssignmentsDoneByGroupAndStudentPostgresService,
   getAssignmentsExpiredUndoneByGroupAndStudentPostgresService,
   getAssignmentsNonExpiredUndoneByGroupAndStudentPostgresService,
-  getAssignmentsUndoneByGroupAndStudentPostgresService
+  getAssignmentsUndoneByGroupAndStudentPostgresService, getAssignmentsWithEvaluationByStudentAndGroupPostgresService
 } from "../../services/postgresDatabaseServices"
 import { useAppDispatch } from "../../types/HooksRedux"
 import { setIsLoading } from "../../redux/isLoadingSlice"
 import { AssignmentsType } from "../../types/AssignmentsType"
+import {AssignmentWithEvaluationModel} from "../../types/AssignmentWithEvaluation.model";
 
-export const useGetAssignmentsByGroupAndStudent = (groupId: number|undefined|null, userId: number|undefined|null, filter:AssignmentsType) => {
+export const useGetAssignmentsWithEvaluationByGroupAndStudent = (groupId: number|undefined|null, userId: number|undefined|null) => {
   const dispatch = useAppDispatch()
-  const [assignments, setAssignments] = useState<AssignmentInterface[]>([])
+  const [assignments, setAssignments] = useState<AssignmentWithEvaluationModel[]>([])
 
   useEffect(() => {
     const fetchData = async () => {
       let response = null
       if(groupId !==undefined && userId !== undefined && groupId !==null && userId !== null){
         try{
-          switch (filter){
-            case "done":
-              response = await getAssignmentsDoneByGroupAndStudentPostgresService(groupId.toString(), userId.toString())
-              break
-            case "expiredUndone":
-              response = await getAssignmentsExpiredUndoneByGroupAndStudentPostgresService(groupId.toString(), userId.toString())
-              break
-            case "undone":
-              response = await getAssignmentsUndoneByGroupAndStudentPostgresService(groupId.toString(), userId.toString())
-              break
-            case "nonExpiredUndone":
-              response = await getAssignmentsNonExpiredUndoneByGroupAndStudentPostgresService(groupId.toString(), userId.toString())
-              break
-          }
+          response = await getAssignmentsWithEvaluationByStudentAndGroupPostgresService(userId.toString(),groupId.toString())
           if(response !== undefined && response!==null){
             if(mounted){
               setAssignments(response.data)
@@ -56,7 +44,7 @@ export const useGetAssignmentsByGroupAndStudent = (groupId: number|undefined|nul
     dispatch(setIsLoading(false))
     return () => {mounted = false}
 
-  }, [userId,groupId,filter])
+  }, [userId,groupId])
 
   return assignments
 }

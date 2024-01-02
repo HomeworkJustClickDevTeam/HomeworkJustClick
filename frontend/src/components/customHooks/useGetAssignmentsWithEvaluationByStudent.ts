@@ -6,12 +6,13 @@ import {
   getAssignmentsByStudentPostgresService,
   getAssignmentsDoneByStudentPostgresService,
   getAssignmentsExpiredUndoneByStudentPostgresService, getAssignmentsNonExpiredUndoneByStudentPostgresService,
-  getAssignmentsUndoneByStudentPostgresService
+  getAssignmentsUndoneByStudentPostgresService, getAssignmentsWithEvaluationByStudentPostgresService
 } from "../../services/postgresDatabaseServices"
 import {AssignmentsType} from "../../types/AssignmentsType";
+import {AssignmentWithEvaluationModel} from "../../types/AssignmentWithEvaluation.model";
 
-export const useGetAssignmentsByStudent = (studentId:number|undefined|null, filter?: AssignmentsType) => {
-  const [assignments, setAssignments] = useState<AssignmentInterface[]>([])
+export const useGetAssignmentsWithEvaluationByStudent = (studentId:number|undefined|null) => {
+  const [assignments, setAssignments] = useState<AssignmentWithEvaluationModel[]>([])
   const dispatch = useAppDispatch()
 
   useEffect(() => {
@@ -19,23 +20,7 @@ export const useGetAssignmentsByStudent = (studentId:number|undefined|null, filt
       let response = null
       if(studentId !== undefined && studentId !== null){
         try {
-          switch (filter){
-            case undefined:
-              response = await getAssignmentsByStudentPostgresService(studentId.toString())
-              break
-            case "done":
-              response = await getAssignmentsDoneByStudentPostgresService(studentId.toString())
-              break
-            case "undone":
-              response = await getAssignmentsUndoneByStudentPostgresService(studentId.toString())
-              break
-            case "expiredUndone":
-              response = await getAssignmentsExpiredUndoneByStudentPostgresService(studentId.toString())
-              break
-            case  "nonExpiredUndone":
-              response = await getAssignmentsNonExpiredUndoneByStudentPostgresService(studentId.toString())
-              break
-          }
+          response = await getAssignmentsWithEvaluationByStudentPostgresService(studentId.toString())
           if(response?.status === 200){
             if(mounted){setAssignments(response!.data)}
           }
@@ -55,7 +40,7 @@ export const useGetAssignmentsByStudent = (studentId:number|undefined|null, filt
     fetchData()
     dispatch(setIsLoading(false))
     return () => {mounted = false}
-  }, [studentId, filter])
+  }, [studentId])
 
   return assignments
 }
