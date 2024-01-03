@@ -23,7 +23,7 @@ public class EvaluationReport implements Serializable {
     @Schema(example = "0")
     private Integer id;
     private String comment;
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne()
     @JoinColumn(name = "evaluation_id", referencedColumnName = "id")
     Evaluation evaluation;
 }

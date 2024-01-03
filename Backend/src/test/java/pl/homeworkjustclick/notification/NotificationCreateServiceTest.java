@@ -2,7 +2,6 @@ package pl.homeworkjustclick.notification;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.jdbc.Sql;
@@ -69,7 +68,7 @@ class NotificationCreateServiceTest extends BaseTestEntity {
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isCreated())
                 .andReturn();
-        assertEquals(1, notificationRepository.findAllByUserId(solution.getUser().getId(), Pageable.ofSize(20)).getTotalElements());
+        assertEquals(1, notificationRepository.findAllByUserId(solution.getUser().getId()).size());
     }
 
     @Test

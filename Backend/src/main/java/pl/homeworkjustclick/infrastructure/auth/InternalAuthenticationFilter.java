@@ -107,7 +107,7 @@ public class InternalAuthenticationFilter {
         if (request.getMethod().equals(HTTP_METHOD_POST)) {
             filterStudentInEvaluationReportPost(userId, body);
         }
-        if (request.getMethod().equals(HTTP_METHOD_DELETE) || request.getMethod().equals(HTTP_METHOD_PUT)) {
+        if (request.getMethod().equals(HTTP_METHOD_PUT)) {
             filterFilterStudentInEvaluationReportDeleteOrPut(path, userId);
         }
     }

@@ -49,7 +49,7 @@ class NotificationControllerTest extends BaseTestEntity {
         var userId = userRepository.findByEmail(userMail).get().getId();
         mockMvc.perform(get("/api/notification/byUser/" + userId))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.totalElements").value(expected))
+                .andExpect(jsonPath("$.length()").value(expected))
                 .andReturn();
     }
 
