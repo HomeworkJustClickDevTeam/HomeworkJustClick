@@ -16,6 +16,7 @@ export default function UserGeneralSettingsPage() {
           .then(() => {
             toast.success('Indeks został pomyślnie zmieniony')
             dispatch(setUser({...userState, index: index!}))
+            localStorage.setItem('user', JSON.stringify({...userState, index: index!}))
           })
         .catch((error: AxiosError) => {
           console.log(error)
