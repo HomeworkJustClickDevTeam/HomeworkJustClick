@@ -74,7 +74,7 @@ public class UserService {
     }
 
     public Boolean changeIndexById(int id, int index) {
-        if (userRepository.findById(id).isPresent() && index >= 100000 && index <= 999999) {
+        if (userRepository.findById(id).isPresent()) {
             User user = findById(id);
             user.setIndex(index);
             userRepository.save(user);
