@@ -2,8 +2,10 @@ import { registerPostgresService } from "../../services/postgresDatabaseServices
 import { useNavigate } from "react-router-dom"
 import left_circle from "./left_circle.svg"
 import Smile from "./Smile.svg"
+import { FaEye, FaEyeSlash } from "react-icons/fa"
 import { UserRegisterInterface } from "../../types/UserRegisterInterface"
 import { FieldValues, useForm } from "react-hook-form"
+import { useState } from "react"
 
 const RegisterPage = () => {
   const {
@@ -13,7 +15,8 @@ const RegisterPage = () => {
     getValues,
     setError
   } = useForm({ shouldFocusError: false });
-
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate()
 
   const onSubmit = async (data: FieldValues) => {
@@ -37,12 +40,12 @@ const RegisterPage = () => {
 
 
   return (
-    <div className='flex w-screen flex-col font-lato font-normal text-sm select-none'>
+    <div className='flex w-screen flex-col font-lato font-normal select-none'>
       <img className="fixed left-[4%]  bottom-[6%] scale-50 xl:scale-100 -z-50" src={left_circle}
         alt="Kółko po lewej stronie"></img>
       <div className='flex justify-center items-center text-center flex-col'>
-        <h1 className='mt-16 mb-16 text-4xl xl:text-[64px] ml-[5%]'>Dołącz do nas!
-          <img className="relative right-0  scale-50 translate-x-[25%] xl:transform-none -z-50 inline-block pl-10"
+        <h1 className='xl:mt-16 mt-8 mb-4 xl:mb-16 text-4xl xl:text-6xl ml-12'>Dołącz do nas!
+          <img className="relative right-8 xl:right-0  scale-50 translate-x-[25%] xl:transform-none -z-50 inline-block xl:pl-10"
             src={Smile} alt="Kółko smile"></img>
         </h1>
         {/*<img className="absolute right-0 top-0 mr-[24%] mt-[8%]" src= {Smile} alt="Kółko smile"></img>*/}
@@ -58,7 +61,7 @@ const RegisterPage = () => {
               })}
               type="text"
               placeholder="Imię"
-              className={`border-b-2 ${errors.firstname ? 'border-berry_red' : 'border-b-light_gray'} focus:outline-none focus:border-b-main_lily text-center placeholder:text-light_gray placeholder:text-[12px] w-60 xl:text-[20px] xl:placeholder:text-[20px] xl:w-[320px]`}
+              className={`border-b-2 ${errors.firstname ? 'border-berry_red' : 'border-b-light_gray'} focus:outline-none focus:border-b-main_lily text-center w-[180px] xl:w-[320px] text-[12px] xl:text-[20px]`}
             />
             <div className="h-3">
               {errors.firstname && (
@@ -77,7 +80,7 @@ const RegisterPage = () => {
               })}
               type="text"
               placeholder="Nazwisko"
-              className={`border-b-2 ${errors.lastname ? 'border-berry_red' : 'border-b-light_gray'} focus:outline-none focus:border-b-main_lily text-center placeholder:text-light_gray placeholder:text-[12px] w-60 xl:text-[20px] xl:placeholder:text-[20px] xl:w-[320px]`}
+              className={`border-b-2 ${errors.lastname ? 'border-berry_red' : 'border-b-light_gray'} focus:outline-none focus:border-b-main_lily text-center w-[180px] xl:w-[320px] text-[12px] xl:text-[20px]`}
             />
             <div className="h-3">
               {errors.lastname && (
@@ -95,7 +98,7 @@ const RegisterPage = () => {
                 }
               })}
               placeholder="Adres e-mail"
-              className={`border-b-2 ${errors.email ? 'border-berry_red' : 'border-b-light_gray'} focus:outline-none focus:border-b-main_lily text-center placeholder:text-light_gray placeholder:text-[12px] w-60 xl:text-[20px] xl:placeholder:text-[20px] xl:w-[320px]`}
+              className={`border-b-2 ${errors.email ? 'border-berry_red' : 'border-b-light_gray'} focus:outline-none focus:border-b-main_lily text-center w-[180px] xl:w-[320px] text-[12px] xl:text-[20px]`}
             />
             <div className="h-3">
               {errors.email && (
@@ -103,7 +106,7 @@ const RegisterPage = () => {
               )}
             </div>
           </div>
-          <div>
+          <div className="relative">
             <input
               {...register("password", {
                 required: "Podaj hasło",
@@ -112,35 +115,48 @@ const RegisterPage = () => {
                   message: "Hasło musi mieć conajmnej 8 znaków"
                 }
               })}
-              type="password"
+              type={showPassword ? "text" : "password"}
               name="password"
               placeholder="Hasło"
-              className={`border-b-2 ${errors.password ? 'border-berry_red' : 'border-b-light_gray'} focus:outline-none focus:border-b-main_lily text-center placeholder:text-light_gray placeholder:text-[12px] w-60 xl:text-[20px] xl:placeholder:text-[20px] xl:w-[320px]`}
+              className={`border-b-2 ${errors.password ? 'border-berry_red' : 'border-b-light_gray'} focus:outline-none focus:border-b-main_lily text-center w-[180px] xl:w-[320px] text-[12px] xl:text-[20px]`}
             />
+            <div
+              className="absolute top-[4px] xl:top-[2px] right-0 p-1 cursor-pointer"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? (<FaEyeSlash className="fill-light_gray text-[12px] xl:text-[20px]" />) : (<FaEye className="fill-light_gray text-[12px] xl:text-[20px]" />)}
+            </div>
             <div className="h-3">
               {errors.password && (
-                <p className="w-60 xl:w-[320px] text-berry_red text-[9px] xl:text-[14px]">{`${errors.password.message}`}</p>
+                <p className="w-[180px] xl:w-[320px] text-berry_red text-[9px] xl:text-[14px]">{`${errors.password.message}`}</p>
               )}
             </div>
           </div>
-          <div>
+          <div className="relative">
             <input
               {...register("confirmPassword", {
                 required: "Potwierdź hasło",
                 validate: (value) =>
                   value === getValues("password") || "Hasła nie zgadzają się"
               })}
-              type="password"
+              type={showConfirmPassword ? "text" : "password"}
               name="confirmPassword"
               placeholder="Powtórz hasło"
-              className={`border-b-2 ${errors.confirmPassword ? 'border-berry_red' : 'border-b-light_gray'} focus:outline-none focus:border-b-main_lily text-center placeholder:text-light_gray placeholder:text-[12px] w-60 xl:text-[20px] xl:placeholder:text-[20px] xl:w-[320px]`}
+              className={`border-b-2 ${errors.confirmPassword ? 'border-berry_red' : 'border-b-light_gray'} focus:outline-none focus:border-b-main_lily text-center w-[180px] xl:w-[320px] text-[12px] xl:text-[20px]`}
             />
+            <div
+              className="absolute top-[4px] xl:top-[2px] right-0 p-1 cursor-pointer"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            >
+              {showConfirmPassword ? (<FaEyeSlash className="fill-light_gray text-[12px] xl:text-[20px]" />) : (<FaEye className="fill-light_gray text-[12px] xl:text-[20px]" />)}
+            </div>
             <div className="h-3">
               {errors.confirmPassword && (
                 <p className=" text-berry_red text-[9px] xl:text-[14px]">{`${errors.confirmPassword.message}`}</p>
               )}
             </div>
           </div>
+
           <button type="submit"
             className=' bg-main_blue w-40 h-8 rounded-[5px] xl:rounded-[10px] xl:w-[288px] xl:h-[56px] text-white xl:text-[28px] hover:bg-hover_blue hover:shadow-md active:shadow-none'>Zajerestruj się
           </button>
