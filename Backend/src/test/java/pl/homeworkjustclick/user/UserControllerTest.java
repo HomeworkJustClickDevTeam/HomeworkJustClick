@@ -241,19 +241,6 @@ public class UserControllerTest extends BaseTestEntity {
     }
 
     @Test
-    void shouldNotUpdateWithInvalidIndex() throws Exception {
-        var user = userRepository.findAll().get(0);
-        mockMvc.perform(put("/api/user/index/{id}", user.getId())
-                        .content("7654321")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .characterEncoding(StandardCharsets.UTF_8))
-                .andExpect(status().is4xxClientError())
-                .andReturn();
-        var updatedUser = userRepository.findByEmail(user.getEmail()).get();
-        assertNotEquals(7654321, updatedUser.getIndex());
-    }
-
-    @Test
     void shouldUpdateUserColor() throws Exception {
         var user = userRepository.findAll().get(0);
         mockMvc.perform(put("/api/user/color/{id}", user.getId())

@@ -254,6 +254,7 @@ class EvaluationControllerTest extends BaseTestEntity {
     @Test
     void shouldNotGetEvaluationsByStudent() throws Exception {
         var student = userRepository.findByEmail("jan_kowalski@gmail.com").get();
+        evaluationReportRepository.deleteAll();
         evaluationRepository.deleteAll();
         mockMvc.perform(get("/api/evaluations/byStudent/{id}", student.getId()))
                 .andExpect(status().isNotFound())
@@ -272,6 +273,7 @@ class EvaluationControllerTest extends BaseTestEntity {
     @Test
     void shouldNotGetExtendedEvaluationsByStudent() throws Exception {
         var student = userRepository.findByEmail("jan_kowalski@gmail.com").get();
+        evaluationReportRepository.deleteAll();
         evaluationRepository.deleteAll();
         mockMvc.perform(get("/api/extended/evaluations/byStudent/{id}", student.getId()))
                 .andExpect(status().isNotFound())
