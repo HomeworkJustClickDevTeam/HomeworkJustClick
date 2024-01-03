@@ -13,15 +13,15 @@ import { ca } from "date-fns/locale"
 import { type } from "os"
 import { parseISO } from "date-fns"
 import { FaSort } from "react-icons/fa";
-import {SortButtonStateType} from "../../types/SortButtonStateType";
+import {SortCommentsButtonStateType} from "../../types/SortCommentsButtonStateType";
 
 interface AdvancedEvaluationCommentPanelPropsInterface{
   setChosenComment: React.Dispatch<React.SetStateAction<CommentInterface|undefined>>,
   setUpdatedComment: React.Dispatch<React.SetStateAction<CommentInterface|undefined>>,
   chosenCommentId:number|undefined,
-  setSortButtonState:(buttonState:SortButtonStateType) => void,
+  setSortButtonState:(buttonState:SortCommentsButtonStateType) => void,
   highlightedCommentId:number|undefined,
-  sortButtonState: SortButtonStateType,
+  sortButtonState: SortCommentsButtonStateType,
   rightPanelUserComments: CommentInterface[],
   setRightPanelUserComments: (comments:CommentInterface[]) => void,
   assignmentId: number,
@@ -116,7 +116,7 @@ export const AdvancedEvaluationCommentPanel = (
       <p className='pt-1 pb-1 font-semibold' ref={onCommentPanelListRefChange}>Wybierz komentarz: </p>
         <section className='border border-border_gray rounded-md w-fit px-2 flex'>
           <label htmlFor={"sortDropdown"} className='flex'> <FaSort className='mt-1'/>Sortuj:</label>
-          <select defaultValue={sortButtonState} onChange={(event) => setSortButtonState(event.target.value as SortButtonStateType)} name={"sortDropdown"} id={"sortDropdown"}>
+          <select defaultValue={sortButtonState} onChange={(event) => setSortButtonState(event.target.value as SortCommentsButtonStateType)} name={"sortDropdown"} id={"sortDropdown"}>
             <option value={"description,asc"}>Alfabetycznie</option>
             <option value={"counter,desc"}>Najczęściej używane</option>
             <option value={"counter,asc"}> Najrzadziej używane</option>

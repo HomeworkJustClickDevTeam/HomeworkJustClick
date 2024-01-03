@@ -8,7 +8,7 @@ import React, {SetStateAction} from "react";
 import {CanvasActionsType} from "../types/CanvasActionsType";
 import {CommentActionsType} from "../types/CommentActionsType";
 import {CommentInterface} from "../types/CommentInterface";
-import {SortButtonStateType} from "../types/SortButtonStateType";
+import {SortCommentsButtonStateType} from "../types/SortCommentsButtonStateType";
 import {he} from "date-fns/locale";
 import {FileInterface} from "../types/FileInterface";
 
@@ -101,7 +101,7 @@ export const saveCommentImageToDb = async (draw:boolean,
                                            drawnComments:React.MutableRefObject<AdvancedEvaluationImageCommentModel[]>,
                                            commentIndex:number|null,
                                            setRefreshRightPanelUserComments: React.Dispatch<SetStateAction<boolean>>,
-                                           setSortButtonState:React.Dispatch<SetStateAction<SortButtonStateType>>) => {
+                                           setSortButtonState:React.Dispatch<SetStateAction<SortCommentsButtonStateType>>) => {
   if (commentIndex !== undefined && commentIndex !== null) {
     try {
       const response = await createCommentImageWithFilePostgresService(
@@ -585,7 +585,7 @@ export const handleMouseUp = async (event: React.MouseEvent,
                                     commentAction:CommentActionsType,
                                     width:number|undefined,
                                     height:number|undefined,
-                                    setSortButtonState?:React.Dispatch<SetStateAction<SortButtonStateType>>,
+                                    setSortButtonState?:React.Dispatch<SetStateAction<SortCommentsButtonStateType>>,
                                     setCommentsImage?: React.Dispatch<React.SetStateAction<AdvancedEvaluationImageCommentModel[]>>,
                                     setRefreshRightPanelUserComments?: React.Dispatch<SetStateAction<boolean>>,
                                     ) => {

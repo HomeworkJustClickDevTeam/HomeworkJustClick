@@ -92,11 +92,11 @@ function App() {
                             element={<SolutionPage/>}/>
                         <Route
                             path="solutions/uncheck"
-                            element={<SolutionsTypesPage type={ExtendedSolutionType.checked}/>}
+                            element={<SolutionsTypesPage type={ExtendedSolutionType.unchecked}/>}
                         />
                         <Route
                             path="solutions/late"
-                            element={<SolutionsTypesPage type={ExtendedSolutionType.checked}/>}
+                            element={<SolutionsTypesPage type={ExtendedSolutionType.late}/>}
                         />
                         <Route
                             path="solutions/check"
