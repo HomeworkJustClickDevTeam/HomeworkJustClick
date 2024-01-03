@@ -1,20 +1,21 @@
 import React, { useState } from "react"
 import { changeUserIndexPostgresService } from "../../services/postgresDatabaseServices"
 import { AxiosError } from "axios"
-import { selectUserState } from "../../redux/userStateSlice"
-import { useAppSelector } from "../../types/HooksRedux"
+import {selectUserState, setUser} from "../../redux/userStateSlice"
+import {useAppDispatch, useAppSelector} from "../../types/HooksRedux"
 import {toast} from "react-toastify";
 
 export default function UserGeneralSettingsPage() {
   const userState = useAppSelector(selectUserState)
   const [index, setIndex] = useState<number | undefined>(userState?.index)
-
+  const dispatch = useAppDispatch()
   const handleIndexSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     if (userState !== null) {
       event.preventDefault()
       await changeUserIndexPostgresService(userState.id.toString(), index as number)
           .then(() => {
             toast.success('Indeks został pomyślnie zmieniony')
+            dispatch(setUser({...userState, index: index!}))
           })
         .catch((error: AxiosError) => {
           console.log(error)
