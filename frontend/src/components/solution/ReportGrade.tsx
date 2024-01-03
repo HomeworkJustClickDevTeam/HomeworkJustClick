@@ -1,6 +1,10 @@
 import {ChangeEvent, useState} from "react";
 import {EvaluationReport} from "../../types/EvaluationReport.model";
 import {addEvaluationReport} from "../../services/postgresDatabaseServices";
+import {useNavigate} from "react-router-dom";
+import {useAppSelector} from "../../types/HooksRedux";
+import {selectGroup} from "../../redux/groupSlice";
+import {toast} from "react-toastify";
 
 export const ReportGrade = (props:
                                 {
@@ -9,12 +13,19 @@ export const ReportGrade = (props:
 ) => {
     const [isButtonClicked, setIsButtonClicked] = useState<boolean>(false)
     const [comment, setComment] = useState<string>("")
+    const navigate  = useNavigate()
+    const group = useAppSelector(selectGroup)
     const reportGrade = () => {
         const evaluationReport = new EvaluationReport(comment, props.evaluationId)
-        addEvaluationReport(evaluationReport).then(() => {
-            setComment("")
-            setIsButtonClicked(false)
-        }).catch((error) => console.log(error))
+        addEvaluationReport(evaluationReport)
+          .then(() => {
+              toast.success("Pomyślnie zgłoszono zadanie, jako niepoprawnie sprawdzone.")
+            navigate(`/group/${group!.id}/assignments/done`)
+        })
+          .catch((error) => {
+              toast.error("Coś poszło nie tak.")
+              console.log(error)
+          })
     }
 
     const changeComment = (event: ChangeEvent<HTMLInputElement>) => {
