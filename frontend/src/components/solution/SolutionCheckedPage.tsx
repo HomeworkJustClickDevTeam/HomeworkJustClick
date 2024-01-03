@@ -55,12 +55,13 @@ export default function SolutionCheckedPage(props: {
                     {evaluation?.result} / {props.assignment.maxPoints}
                 </p>
             </div>
-            {(userRole === 'Student' && evaluation) && (
+            <div className="absolute bottom-1 left-48 mb-5 mr-4">{(userRole === 'Student' && evaluation) && (
               (evaluationReport === undefined) ?
                 <ReportGrade evaluationId={evaluation.id}/>
                 : <div>Zadanie zostało zaznaczone, jako niepoprawnie ocenione, z komentarzem:<br/>
                   {evaluationReport!.comment}</div>
             )}
+            </div>
             {((commentsImage.length !== 0) || (txtComments.length !== 0)) && <Link
                 to={`/group/${props.solution.groupId}/advancedAssignment`}
                 state={{
@@ -72,7 +73,7 @@ export default function SolutionCheckedPage(props: {
                     }
                 }}
                 className="absolute underline font-semibold bottom-0 left-0 mb-2 ml-4">
-                Komentarze prowadzącego do pliku
+                Komentarze prowadzącego do pliku:
             </Link>}
         </div>
     )
