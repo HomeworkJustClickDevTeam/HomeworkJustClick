@@ -61,13 +61,14 @@ export function Rating({maxPoints,
     const updateEvaluation = (body: EvaluationCreateModel) => {
       updateEvaluationByIdPostgresService(reportedEvaluation!.evaluation.id.toString(), body)
         .then(() => {
-          deleteEvaluationReportPostgresService(reportedEvaluation!.id)
-            .then(()=>{
-              toast.success("Ocena została poprawiona.", {autoClose: 2000})
-              navigate(`/group/${groupId}`)})
-            })
-        .catch((e)=>{
-          console.log(e)
+          // deleteEvaluationReportPostgresService(reportedEvaluation!.id)
+          //   .then(()=>{
+          //     toast.success("Ocena została poprawiona.", {autoClose: 2000})
+          //     navigate(`/group/${groupId}`)})
+          //   })
+        // .catch((e)=>{
+          toast.success("Ocena została poprawiona.", {autoClose: 2000})
+          navigate(`/group/${groupId}`)
         })
         .catch((e) => {
           toast.error("Nie udało się poprawić oceny.", {autoClose: 2000})
