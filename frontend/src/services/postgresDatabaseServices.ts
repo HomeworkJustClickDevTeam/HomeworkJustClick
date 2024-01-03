@@ -176,7 +176,7 @@ export const createFileWithSolutionPostgresService = async (
     })
 }
 
-export const createEvaluationWithUserAndSolution = async (
+export const createEvaluationWithUserAndSolutionPostgresService = async (
     userId: string,
     solutionId: string,
     evaluation: EvaluationCreateModel
@@ -184,6 +184,16 @@ export const createEvaluationWithUserAndSolution = async (
     return await postgresqlDatabaseJSON.post(
         `/evaluation/withUserAndSolution/${userId}/${solutionId}`,
         evaluation
+    )
+}
+
+export const updateEvaluationByIdPostgresService = async (
+  evaluationId: string,
+  evaluation: EvaluationCreateModel
+) => {
+    return await postgresqlDatabaseJSON.put(
+      `/evaluation/${evaluationId}`,
+      evaluation
     )
 }
 
@@ -716,6 +726,14 @@ export const deleteEvaluationPanelService = async (
 ) => {
     return await postgresqlDatabaseJSON.delete(
         `/evaluation_panel/${evaluationPanelId}`
+    )
+}
+
+export const deleteEvaluationReportPostgresService = async (
+  evaluationReportId: number | string
+) => {
+    return await postgresqlDatabaseJSON.delete(
+      `/evaluation_report/${evaluationReportId}`
     )
 }
 export const addEvaluationReport = async (evaluationReport: EvaluationReport) => {

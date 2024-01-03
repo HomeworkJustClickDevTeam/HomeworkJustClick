@@ -1,11 +1,16 @@
 import React, {SetStateAction, useState} from "react"
-import {createEvaluationWithUserAndSolution} from "../../services/postgresDatabaseServices"
+import {
+  createEvaluationWithUserAndSolutionPostgresService, deleteEvaluationReportPostgresService,
+  updateEvaluationByIdPostgresService
+} from "../../services/postgresDatabaseServices"
 import {useNavigate} from "react-router-dom"
 import {selectUserState} from "../../redux/userStateSlice"
 import {useAppSelector} from "../../types/HooksRedux"
 import {Button} from "../../types/Table.model";
 import {EvaluationCreateModel} from "../../types/EvaluationCreate.model";
 import {toast} from "react-toastify";
+import {EvaluationReport} from "../../types/EvaluationReport.model";
+import {EvaluationReportResponse} from "../../types/EvaluationReportResponseModel";
 
 interface RatingPropsInterface {
     maxPoints: number | undefined
@@ -16,21 +21,20 @@ interface RatingPropsInterface {
     evaluationPanelButtons: Button[] | undefined
     assigmentCompletionDate: Date,
     solutionCreationDate: Date | string,
-    penalty: number
+    penalty: number,
+    reportedEvaluation:EvaluationReportResponse|undefined
 }
 
-export function Rating({
-                           maxPoints,
-                           points,
-                           setPoints,
-                           solutionId,
-                           groupId,
-                           assigmentCompletionDate,
-                           solutionCreationDate,
-                           evaluationPanelButtons,
-                           penalty
-                       }: RatingPropsInterface) {
-    const [active, setActive] = useState<number>()
+export function Rating({maxPoints,
+                       points,
+                       setPoints,
+                       solutionId,
+                       groupId,
+                       assigmentCompletionDate,
+                       solutionCreationDate,
+                       evaluationPanelButtons,
+                       penalty,
+                       reportedEvaluation}: RatingPropsInterface) {
     const navigate = useNavigate()
     const userState = useAppSelector(selectUserState)
     const [pointsToSend,setPointsToSend] = useState<number|undefined>(undefined)
@@ -43,19 +47,44 @@ export function Rating({
 
     }
 
-    const handleMark = () => {
-        if (pointsToSend !== undefined) {
-            const body: EvaluationCreateModel = new EvaluationCreateModel(pointsToSend, userState!.id, solutionId, groupId, 0, false)
-            createEvaluationWithUserAndSolution(userState!.id.toString(), solutionId.toString(), body)
-                .then(() => {
-                    toast.success("Zadanie zostało ocenione.", {autoClose: 2000})
-                    navigate(`/group/${groupId}`)})
+    const createEvaluation = (body: EvaluationCreateModel) => {
+      createEvaluationWithUserAndSolutionPostgresService(userState!.id.toString(), solutionId.toString(), body)
+        .then(() => {
+          toast.success("Zadanie zostało ocenione.", {autoClose: 2000})
+          navigate(`/group/${groupId}`)})
+        .catch((e) => {
+          toast.error("Nie udało się ocenić zadania.", {autoClose: 2000})
+          console.log(e)
+        })
+    }
 
-                .catch((e) => {
-                    toast.error("Nie udało się ocenić zadania.", {autoClose: 2000})
-                    console.log(e)
-                })
+    const updateEvaluation = (body: EvaluationCreateModel) => {
+      updateEvaluationByIdPostgresService(reportedEvaluation!.evaluation.id.toString(), body)
+        .then(() => {
+          deleteEvaluationReportPostgresService(reportedEvaluation!.id)
+            .then(()=>{
+              toast.success("Ocena została poprawiona.", {autoClose: 2000})
+              navigate(`/group/${groupId}`)})
+            })
+        .catch((e)=>{
+          console.log(e)
+        })
+        .catch((e) => {
+          toast.error("Nie udało się poprawić oceny.", {autoClose: 2000})
+          console.log(e)
+        })
+    }
+
+    const handleMark = () => {
+      if (pointsToSend !== undefined) {
+        const body: EvaluationCreateModel = new EvaluationCreateModel(pointsToSend, userState!.id, solutionId, groupId, 0, false)
+        if(reportedEvaluation){
+          updateEvaluation(body)
         }
+        else{
+          createEvaluation(body)
+        }
+      }
     }
 
     function createButtonFromMaxPoints(buttons: any[]) {
@@ -67,7 +96,6 @@ export function Rating({
                   const points = autoPenaltyCalculate(i)
                   setPointsToSend(i)
                   setPoints(points.toString());
-                  setActive(i)
                 }}
                         className={`border border-black w-20 h-6 text-center rounded-md hover:bg-lilly-bg focus:bg-hover_blue`}>
                   {i}
@@ -87,7 +115,6 @@ export function Rating({
             buttons.push(<button key={evaluationButton.points} onClick={() => {
                 const points = autoPenaltyCalculate(evaluationButton.points)
                 setPoints(points.toString());
-                setActive(evaluationButton.points)
                 setPointsToSend(evaluationButton.points)
             }}
                                  className={`border border-black w-20 h-6 text-center rounded-md hover:bg-lilly-bg focus:bg-hover_blue`}>

@@ -27,16 +27,13 @@ function SolutionPage() {
     const fileFromDb = useGetFile(solutionExtended.id, "solution")
 
     const checkIfPenaltyOn = () => {
-        if (!evaluation) {
-            if (solutionExtended.assignment.completionDatetime < solutionExtended.creationDateTime) {
-                if (solutionExtended.assignment.autoPenalty > 0) {
-                    return true
-                }
+        if (solutionExtended.assignment.completionDatetime < solutionExtended.creationDateTime) {
+            if (solutionExtended.assignment.autoPenalty > 0) {
+                return true
             }
         }
         return false
     }
-
     useEffect(() => {
         if (evaluation) {
             setPoints(evaluation.result.toString())
@@ -67,7 +64,7 @@ function SolutionPage() {
                 <div className="absolute right-0 top-0 mr-8 mt-2 flex flex-col">
                     <div className="mb-4 font-semibold">Punkty:</div>
                     <div className="ml-20 font-bold text-xl ">
-                        {points} /{solutionExtended.assignment.maxPoints}
+                        {points} / {solutionExtended.assignment.maxPoints}
                     </div>
                 </div>
                 <div className="flex ">
@@ -82,39 +79,40 @@ function SolutionPage() {
                     <span>Data przesłania zadania: </span>
                     {format(new Date(solutionExtended.creationDateTime.toString()), "dd.MM.yyyy HH:mm")}
                 </div>
-                {(checkIfPenaltyOn()) &&
+                {(checkIfPenaltyOn() &&
                     <div className='text-berry_red'>
                         Zadanie wysłane po terminie, zostanie automatycznie naliczona
                         kara {solutionExtended.assignment.autoPenalty}%
-                    </div>}
-                {evaluation === undefined ? (
-                    <div>
-                        {solutionExtended.id && group && fileFromDb !== undefined && (
+                    </div>)}
+                {(evaluation === undefined || reportedEvaluation !== undefined) ? (
+                  <div>
+                      {reportedEvaluation !== undefined && <div>Uwaga ucznia do zadania: {reportedEvaluation!.comment} </div>}
+                      {solutionExtended.id && group && fileFromDb !== undefined && (
                             <Link
-                                to={`/group/${group.id}/advancedAssignment`}
-                                state={{solutionExtended: solutionExtended}}
-                                className="absolute underline font-semibold bottom-0 left-0 mb-2 ml-4">
-                                Zaawansowane Sprawdzanie
+                              to={`/group/${group.id}/advancedAssignment`}
+                              state={{solutionExtended: solutionExtended}}
+                              className=" underline font-semibold bottom-0 left-0 mb-2">
+                              Zaawansowane Sprawdzanie
                             </Link>
-                        )}
-                        <div>
-                            <Rating
-                                maxPoints={!evaluationPanel ? solutionExtended.assignment.maxPoints : undefined}
-                                points={points}
-                                setPoints={setPoints}
-                                solutionId={solutionExtended.id}
-                                groupId={solutionExtended.assignment.groupId}
-                                assigmentCompletionDate={solutionExtended.assignment.completionDatetime}
-                                solutionCreationDate={solutionExtended.creationDateTime}
-                                penalty={solutionExtended.assignment.autoPenalty}
-                                evaluationPanelButtons={evaluationPanel ? evaluationPanel.evaluationPanel.buttons : undefined}
-                            />
-                        </div>
-                    </div>
+                      )}
+                      <div>
+                          <Rating
+                            maxPoints={!evaluationPanel ? solutionExtended.assignment.maxPoints : undefined}
+                            points={points}
+                            setPoints={setPoints}
+                            reportedEvaluation={reportedEvaluation}
+                            solutionId={solutionExtended.id}
+                            groupId={solutionExtended.assignment.groupId}
+                            assigmentCompletionDate={solutionExtended.assignment.completionDatetime}
+                            solutionCreationDate={solutionExtended.creationDateTime}
+                            penalty={solutionExtended.assignment.autoPenalty}
+                            evaluationPanelButtons={evaluationPanel ? evaluationPanel.evaluationPanel.buttons : undefined}
+                          />
+                      </div>
+                  </div>
+
                 ) : null}
-                {
-                    reportedEvaluation && <div>Uwaga ucznia do zadania: {reportedEvaluation.comment} </div>
-                }
+
             </div>
         </div>
     )

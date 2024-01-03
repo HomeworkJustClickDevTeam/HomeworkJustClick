@@ -3,6 +3,10 @@ import {EvaluationModel} from "./EvaluationExtendedModel";
 
 export class EvaluationReportResponse {
 
-    constructor(public id:number,public comment:String,public evaluation:EvaluationModel,public solution:SolutionExtendedInterface) {
+    constructor(
+      public id:number,
+      public comment:String,
+      public evaluation:EvaluationModel,
+      public solution:SolutionExtendedInterface) {
     }
 }
