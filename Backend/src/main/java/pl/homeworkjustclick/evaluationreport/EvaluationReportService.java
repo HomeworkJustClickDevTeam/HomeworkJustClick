@@ -22,11 +22,11 @@ public class EvaluationReportService {
 
     public EvaluationReport findById(Integer id) {
         return repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("EvaluationReport with id = " + id + " not fount"));
+                .orElseThrow(() -> new EntityNotFoundException("EvaluationReport with id = " + id + " not found"));
     }
 
     public EvaluationReportResponseDto getEvaluationReportByEvaluationId(Integer evaluationId) {
-        return mapper.map(repository.findByEvaluationId(evaluationId), solutionService.findByEvaluationId(evaluationId));
+        return mapper.map(repository.findByEvaluationId(evaluationId).orElseThrow(() -> new EntityNotFoundException("EvaluationReport with evaluationId = " + evaluationId + " not found")), solutionService.findByEvaluationId(evaluationId));
     }
 
     public List<EvaluationReportResponseDto> getEvaluationReportsByTeacherId(Integer userId) {

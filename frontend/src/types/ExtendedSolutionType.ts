@@ -1,1 +1,6 @@
-export type ExtendedSolutionType = "checked"|"unchecked"|"late"
+export enum ExtendedSolutionType {
+    unchecked = "unchecked",
+    late = "late",
+    checked ="checked",
+    reported = "reported",
+}

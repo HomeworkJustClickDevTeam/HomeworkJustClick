@@ -1,14 +1,12 @@
 import {Link, useLocation, useNavigate} from "react-router-dom"
 import React, {useEffect, useState} from "react"
-import { colorsArray } from "../../assets/colors"
+import {colorsArray} from "../../assets/colors"
 import Loading from "../animations/Loading"
-import { selectGroup } from "../../redux/groupSlice"
-import { selectRole } from "../../redux/roleSlice"
-import { useAppSelector } from "../../types/HooksRedux"
+import {selectGroup} from "../../redux/groupSlice"
+import {selectRole} from "../../redux/roleSlice"
+import {useAppSelector} from "../../types/HooksRedux"
 import {FaCaretDown} from "react-icons/fa";
-import {GroupHomePageDisplayer} from "./GroupHomePageDisplayer";
-import {ca, ro} from "date-fns/locale";
-import {sortButtonValues} from "../../types/GroupHeaderStortButtonValues";
+import {GroupHeaderSortButtonValues} from "../../types/GroupHeaderStortButtonValues";
 
 //import {theme.colors.colorsArray: string[]} = require("../../../tailwind.config")
 
@@ -18,32 +16,35 @@ function GroupHeader() {
   const [locationSplit, setLocationSplit] = useState<string[]>(location.pathname.split("/"))
   const group= useAppSelector(selectGroup)
   const role = useAppSelector(selectRole)
-  const [sortButtonState, setSortButtonState] = useState<sortButtonValues>(role === "Teacher" ? sortButtonValues.uncheck:sortButtonValues.toDo)
+  const [sortButtonState, setSortButtonState] = useState<GroupHeaderSortButtonValues>(role === "Teacher" ? GroupHeaderSortButtonValues.uncheck:GroupHeaderSortButtonValues.toDo)
   const [isOpen, setIsOpen] = useState(false)
 
   useEffect(()=>{
     setLocationSplit(location.pathname.split("/"))
     switch (location.pathname.split("/")[4]){
       case "todo":
-        setSortButtonState(sortButtonValues.toDo)
+        setSortButtonState(GroupHeaderSortButtonValues.toDo)
         break
       case "done":
-        setSortButtonState(sortButtonValues.done)
+        setSortButtonState(GroupHeaderSortButtonValues.done)
         break
       case "expired":
-        setSortButtonState(sortButtonValues.expired)
+        setSortButtonState(GroupHeaderSortButtonValues.expired)
         break
       case "uncheck":
-        setSortButtonState(sortButtonValues.uncheck)
+        setSortButtonState(GroupHeaderSortButtonValues.uncheck)
         break
       case "check":
-        setSortButtonState(sortButtonValues.check)
+        setSortButtonState(GroupHeaderSortButtonValues.check)
         break
       case "late":
-        setSortButtonState(sortButtonValues.late)
+        setSortButtonState(GroupHeaderSortButtonValues.late)
+        break
+      case "reported":
+        setSortButtonState(GroupHeaderSortButtonValues.reported)
         break
       default:
-        if(location.pathname.split("/")[3] === "assignments") setSortButtonState(sortButtonValues.assignments)
+        if(location.pathname.split("/")[3] === "assignments") setSortButtonState(GroupHeaderSortButtonValues.assignments)
         else if(location.pathname.split("/")[3] === undefined){
           if(role === "Teacher") navigate("solutions/uncheck")
           else if(role==="Student") navigate("assignments/todo")
@@ -69,17 +70,21 @@ function GroupHeader() {
           <div className="text-[22px] font-lato font-medium text-center text-font_gray">
             <ul className="flex flex-wrap -mb-px">
               <li
-                className={locationSplit[3] === "assignments" || locationSplit[3] === "solutions" ? "border-main_blue border-b-[3px] rounded bg-main_blue bg-opacity-5 text-black" : "hover:bg-hover_gray"}>
+                className={(locationSplit[3] === "assignments" && locationSplit[4]===undefined) || locationSplit[3] === "solutions" ? "border-main_blue border-b-[3px] rounded bg-main_blue bg-opacity-5 text-black" : "hover:bg-hover_gray"}>
                 <Link to="assignments" className="inline-block w-[170px] p-4  rounded-t-lg "> Zadania</Link>
               </li>
               <li
                 className={locationSplit[3] === "users" ? "border-main_blue border-b-[3px] rounded bg-main_blue bg-opacity-5 text-black" : "hover:bg-hover_gray"}>
                 <Link to="users" className="inline-block w-[170px] p-4  rounded-t-lg "> Osoby </Link>
               </li>
-              {role==="Student" &&
+              {role==="Student" ?
                 <li
                 className={locationSplit[3] === "evaluations" ? "border-main_blue border-b-[3px] rounded bg-main_blue bg-opacity-5 text-black" : "hover:bg-hover_gray"}>
                 <Link to="evaluations" className="inline-block w-[170px] p-4  rounded-t-lg "> Oceny</Link>
+              </li>
+                : <li
+                className={locationSplit[4] === "add" ? "border-main_blue border-b-[3px] rounded bg-main_blue bg-opacity-5 text-black" : "hover:bg-hover_gray"}>
+                <Link to="assignments/add" className="inline-block w-[205px] p-4  rounded-t-lg "> Nowe Zadanie +</Link>
               </li>}
             </ul>
           </div>
@@ -92,7 +97,7 @@ function GroupHeader() {
                 <div
                     className=' absolute left-4 w-40 z-10  mt-36 origin-top-right bg-white border border-hover_gray rounded-md shadow-lg '>
 
-                  <Link to="assignments" className="block w-56 px-4 py-2 text-sm text-black rounded-lg hover:bg-lilly-bg hover:text-black" onClick={() => setIsOpen(false)}>Wszystkie</Link>
+                  <Link to="assignments" className="block w-40 px-4 py-2 text-sm text-black rounded-lg hover:bg-lilly-bg hover:text-black" onClick={() => setIsOpen(false)}>Wszystkie</Link>
                   <Link to="assignments/todo" className="block w-40 px-4 py-2 text-sm text-black rounded-lg hover:bg-lilly-bg hover:text-black" onClick={() =>setIsOpen(false)}>Do wykonania</Link>
 
                   <Link to="assignments/done " className="block w-40 px-4 py-2 text-sm text-black rounded-lg hover:bg-lilly-bg hover:text-black" onClick={() => setIsOpen(false)}>Zrobione</Link>
@@ -108,6 +113,8 @@ function GroupHeader() {
               <Link to="solutions/check" className="block w-56 px-4 py-2 text-sm text-black rounded-lg hover:bg-lilly-bg hover:text-black" onClick={() => setIsOpen(false)}>Sprawdzone</Link>
 
               <Link to="solutions/late" className="block w-56 px-4 py-2 text-sm text-black rounded-lg hover:bg-lilly-bg hover:text-black" onClick={() => setIsOpen(false)}>Spóźnione</Link>
+
+              <Link to="evaluation/reported" className="block w-56 px-4 py-2 text-sm text-black rounded-lg hover:bg-lilly-bg hover:text-black" onClick={() => setIsOpen(false)}>Zgłoszone oceny</Link>
 
             </div>))}
             {role === "Teacher" && <Link to="settings" onClick={() => setIsOpen(false)}>Ustawienia</Link>}

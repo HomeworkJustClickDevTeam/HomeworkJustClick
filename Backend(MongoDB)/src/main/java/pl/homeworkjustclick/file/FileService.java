@@ -59,8 +59,7 @@ public class FileService {
     }
 
     private void checkToken(String token) {
-        var valid = postgresClientService.checkToken(token);
-        if (!valid) {
+        if (!postgresClientService.checkToken(token)) {
             throw new JwtNotValidException("Jwt token not valid!");
         }
     }

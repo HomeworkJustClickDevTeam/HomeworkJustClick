@@ -59,34 +59,6 @@ public class FileService {
     }
 
     @Transactional
-    public boolean addListWithSolution(List<File> fileList, int solutionId) {
-        if (solutionRepository.findById(solutionId).isPresent()) {
-            fileList.forEach(file -> {
-                file.setSolution(solutionService.findById(solutionId));
-                file.setAssignment(null);
-                fileRepository.save(file);
-            });
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    @Transactional
-    public boolean addListWithAssignment(List<File> fileList, int assignmentId) {
-        if (assignmentRepository.findById(assignmentId).isPresent()) {
-            fileList.forEach(file -> {
-                file.setAssignment(assignmentService.findById(assignmentId));
-                file.setSolution(null);
-                fileRepository.save(file);
-            });
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    @Transactional
     public Boolean delete(int id){
         if(fileRepository.existsById(id)) {
             fileRepository.deleteById(id);

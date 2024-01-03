@@ -21,6 +21,8 @@ function AssignmentsGroupTeacherDisplayedPage() {
   const assignments = useGetAssignmentsByGroup(group?.id)
   const [chosenObjectsReport, setChosenObjectsReport] = useState<AssignmentInterface| GroupInterface |undefined>(undefined)
 
+
+
   useEffect(()=>{
     if(group !== null && state?.groupReport === true && ((chosenObjectsReport !== undefined && !('name' in chosenObjectsReport))|| chosenObjectsReport === undefined)) setChosenObjectsReport(group)
     else if (state?.groupReport === true && chosenObjectsReport !== undefined && 'name' in chosenObjectsReport) setChosenObjectsReport(undefined)
@@ -31,28 +33,20 @@ function AssignmentsGroupTeacherDisplayedPage() {
   }
 
   return (
-
-    <div className='flex flex-col h-[calc(100vh-325px)] overflow-y-hidden w-[1200px]'>
-      <div className='relative h-[420px]'>
-        {role === "Teacher" && chosenObjectsReport === undefined && (
-          <Link to={`/group/${group?.id}/assignments/add`}>
-            <button
-              className='absolute mb-4 right-0 mt-6 bg-main_blue text-white px-8 py-2 rounded-md text-lg hover:bg-hover_blue hover:shadow-md active:shadow-none'>
-              Nowe zadanie +
-            </button>
-          </Link>
-        )}
-        <ul className="flex flex-col box-content overflow-y-auto mb-4">
+    <div className='flex flex-col h-[calc(100vh-325px)] overflow-y-hidden w-full'>
+      <div className='relative h-[420px] box-content overflow-y-auto w-full'>
+        <ul className="flex flex-col  mb-4">
           {assignments.map((assignment) => (
               <li key={assignment.id} className='flex inline-block '>
                 <AssignmentListElement idGroup={group!.id.toString()}
-                                            assignment={assignment}
-                                            createReportButton={true}
-                                            handleGenerateReportButtonClick={() => handleGenerateReportButtonClick(assignment)}/>{" "}
+                                       assignment={assignment}
+                                       createReportButton={true}
+                                       handleGenerateReportButtonClick={() => handleGenerateReportButtonClick(assignment)}/>{" "}
+
               </li>
             ))}
         </ul>
-        <div className='absolute right-0 top-[20px] bg-white'>
+        <div className='fixed left-[calc(7.5%+700px)] top-[350px] bg-white'>
           {chosenObjectsReport && <ReportCreate closeReportCreator={()=> setChosenObjectsReport(undefined)} csvVersion={false} reportedObject={chosenObjectsReport}/>}
         </div>
       </div>

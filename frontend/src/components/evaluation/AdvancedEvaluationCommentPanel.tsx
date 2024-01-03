@@ -13,15 +13,15 @@ import { ca } from "date-fns/locale"
 import { type } from "os"
 import { parseISO } from "date-fns"
 import { FaSort } from "react-icons/fa";
-import {SortButtonStateType} from "../../types/SortButtonStateType";
+import {SortCommentsButtonStateType} from "../../types/SortCommentsButtonStateType";
 
 interface AdvancedEvaluationCommentPanelPropsInterface{
   setChosenComment: React.Dispatch<React.SetStateAction<CommentInterface|undefined>>,
   setUpdatedComment: React.Dispatch<React.SetStateAction<CommentInterface|undefined>>,
   chosenCommentId:number|undefined,
-  setSortButtonState:(buttonState:SortButtonStateType) => void,
+  setSortButtonState:(buttonState:SortCommentsButtonStateType) => void,
   highlightedCommentId:number|undefined,
-  sortButtonState: SortButtonStateType,
+  sortButtonState: SortCommentsButtonStateType,
   rightPanelUserComments: CommentInterface[],
   setRightPanelUserComments: (comments:CommentInterface[]) => void,
   assignmentId: number,
@@ -102,21 +102,21 @@ export const AdvancedEvaluationCommentPanel = (
 
 
   return (
-    <div  style={{float:"right", height:"100vh"}}>
+    <div  style={{float:"right", height:"100vh", width: '350px'}}>
       <p className='text-center underline underline-offset-4 mb-4'>KOMENTARZE</p>
 
       <form onSubmit={(event) => handleNewCommentCreation(event)}>
-      <div className='inline-flex w-full pb-4'>
-        Dodaj nowy komentarz:<br/>
-        <input value={newCommentDescription} className='border border-black rounded-sm mr-2 w-full pl-1.5' onChange={(event) => setNewCommentDescription(event.target.value)}/>
-        <button className='w-24 ml-auto mr-2 bg-main_blue text-white px-2 py-1 rounded-md' type={"submit"}>Dodaj</button><br/><hr/>
+      <div className='inline-flex w-full pb-2'>
+        <p className='mr-2'>Dodaj nowy komentarz: </p>
+        <input value={newCommentDescription} className='border border-black rounded-sm mr-2 w-full pl-1.5 h-10 mt-2' onChange={(event) => setNewCommentDescription(event.target.value)}/>
+        <button className='w-24 ml-auto mr-2 bg-main_blue text-white px-2 h-10 mt-2 rounded-md' type={"submit"}>Dodaj</button><br/><hr/>
       </div>
     </form>
     <section >
       <p className='pt-1 pb-1 font-semibold' ref={onCommentPanelListRefChange}>Wybierz komentarz: </p>
         <section className='border border-border_gray rounded-md w-fit px-2 flex'>
           <label htmlFor={"sortDropdown"} className='flex'> <FaSort className='mt-1'/>Sortuj:</label>
-          <select defaultValue={sortButtonState} onChange={(event) => setSortButtonState(event.target.value as SortButtonStateType)} name={"sortDropdown"} id={"sortDropdown"}>
+          <select defaultValue={sortButtonState} onChange={(event) => setSortButtonState(event.target.value as SortCommentsButtonStateType)} name={"sortDropdown"} id={"sortDropdown"}>
             <option value={"description,asc"}>Alfabetycznie</option>
             <option value={"counter,desc"}>Najczęściej używane</option>
             <option value={"counter,asc"}> Najrzadziej używane</option>
@@ -126,7 +126,7 @@ export const AdvancedEvaluationCommentPanel = (
         </section>
       <br/>
         <hr className='mr-8 mb-2'/>
-      <div className='overflow-y-scroll mx-4'>{rightPanelUserComments.map((comment) => {
+      <div className='overflow-y-auto mx-4'>{rightPanelUserComments.map((comment) => {
         return(
           <div key={comment.id} >
             <AdvancedEvaluationCommentPanelListElement

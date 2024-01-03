@@ -11,12 +11,14 @@ import {ReportGrade} from "./ReportGrade";
 import {useGetFile} from "../customHooks/useGetFile";
 import {useGetCommentsImageByFile} from "../customHooks/useGetCommentsImageByFile";
 import {useGetCommentsTextByFile} from "../customHooks/useGetCommentsTextByFile";
+import {useGetReportedEvaluation} from "../customHooks/useGetReportedEvaluation";
 
 export default function SolutionCheckedPage(props: {
     solution: SolutionInterface
     assignment: AssignmentInterface
 }) {
     const evaluation = useGetEvaluationBySolution(props.solution.id)
+    const evaluationReport = useGetReportedEvaluation(evaluation?.id)
     const userState = useAppSelector(selectUserState)
     const userRole = useAppSelector(selectRole)
     const fileFromDb = useGetFile(props.solution.id, "solution")
@@ -50,11 +52,16 @@ export default function SolutionCheckedPage(props: {
             <div className="absolute bottom-0 left-0 mb-6 ml-4">
                 <p>Wynik: </p>
                 <p className="font-bold text-xl mt-4">
-                    {evaluation?.result}/{props.assignment.maxPoints}
+                    {evaluation?.result} / {props.assignment.maxPoints}
                 </p>
             </div>
-            {(userRole === 'Student' && evaluation) && <ReportGrade evaluationId={evaluation.id}/>}
-            {(commentsImage !== undefined) || (txtComments !== undefined) && <Link
+            {(userRole === 'Student' && evaluation) && (
+              (evaluationReport === undefined) ?
+                <ReportGrade evaluationId={evaluation.id}/>
+                : <div>Zadanie zostało zaznaczone, jako niepoprawnie ocenione, z komentarzem:<br/>
+                  {evaluationReport!.comment}</div>
+            )}
+            {((commentsImage.length !== 0) || (txtComments.length !== 0)) && <Link
                 to={`/group/${props.solution.groupId}/advancedAssignment`}
                 state={{
                     solutionExtended: {

@@ -4,9 +4,9 @@ import { useGetUsersByGroup } from "../customHooks/useGetUsersByGroup"
 function GroupStudentsDisplayer({groupId}: { groupId: string }) {
   const {users:students} = useGetUsersByGroup(groupId as unknown as number, "students")
   return (
-    <div className='flex flex-col'>
+    <div className='flex flex-col h-[calc(100vh-410px)] overflow-y-hidden'>
       <h1 className='text-lg font-semibold mb-2'>Studenci:</h1>
-      <ul className='flex flex-col gap-1'>
+      <ul className='flex flex-col gap-1 box-content overflow-y-auto mb-2'>
         {students?.map((student) => (
           <GroupUserListElement isTeacher={false} userToShow={{
             firstname: student.firstname as string,

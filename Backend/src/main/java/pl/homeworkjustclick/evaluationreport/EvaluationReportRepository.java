@@ -5,12 +5,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface EvaluationReportRepository extends JpaRepository<EvaluationReport, Integer> {
     boolean existsByEvaluationId(Integer evaluationId);
     boolean existsByEvaluationIdAndId(Integer evaluationId, Integer id);
 
-    EvaluationReport findByEvaluationId(Integer evaluationId);
+    Optional<EvaluationReport> findByEvaluationId(Integer evaluationId);
 
     @Query(value = "select er.* from _evaluation_report er join _evaluation e on e.id = er.evaluation_id where e.user_id = :userId", nativeQuery = true)
     List<EvaluationReport> findAllByTeacherId(@Param("userId") Integer userId);

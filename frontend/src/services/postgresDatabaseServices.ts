@@ -176,7 +176,7 @@ export const createFileWithSolutionPostgresService = async (
     })
 }
 
-export const createEvaluationWithUserAndSolution = async (
+export const createEvaluationWithUserAndSolutionPostgresService = async (
     userId: string,
     solutionId: string,
     evaluation: EvaluationCreateModel
@@ -184,6 +184,16 @@ export const createEvaluationWithUserAndSolution = async (
     return await postgresqlDatabaseJSON.post(
         `/evaluation/withUserAndSolution/${userId}/${solutionId}`,
         evaluation
+    )
+}
+
+export const updateEvaluationByIdPostgresService = async (
+  evaluationId: string,
+  evaluation: EvaluationCreateModel
+) => {
+    return await postgresqlDatabaseJSON.put(
+      `/evaluation/${evaluationId}`,
+      evaluation
     )
 }
 
@@ -353,6 +363,43 @@ export const getAssignmentsByStudentPostgresService = async (
     return await postgresqlDatabaseJSON.get("/assignments/byStudent/" + userId)
 }
 
+export const getAssignmentsDoneByStudentPostgresService = async (
+  userId: string
+) => {
+    return await postgresqlDatabaseJSON.get("/assignments/doneByStudent/" + userId)
+}
+
+export const getAssignmentsUndoneByStudentPostgresService = async (
+  userId: string
+) => {
+    return await postgresqlDatabaseJSON.get("/assignments/undoneByStudent/" + userId)
+}
+
+export const getAssignmentsExpiredUndoneByStudentPostgresService = async (
+  userId: string
+) => {
+    return await postgresqlDatabaseJSON.get("/assignments/expiredUndoneByStudent/" + userId)
+}
+
+export const getAssignmentsWithEvaluationByStudentAndGroupPostgresService = async (
+  userId: string,
+  groupId: string
+) => {
+    return await postgresqlDatabaseJSON.get(`/assignments/byStudentAndGroupWithEvaluation/${userId}/${groupId}`)
+}
+
+export const getAssignmentsWithEvaluationByStudentPostgresService = async (
+  userId: string
+) => {
+    return await postgresqlDatabaseJSON.get("/assignments/byStudentWithEvaluation/" + userId)
+}
+
+export const getAssignmentsNonExpiredUndoneByStudentPostgresService = async (
+  userId: string
+) => {
+    return await postgresqlDatabaseJSON.get("/assignments/nonExpiredUndoneByStudent/" + userId)
+}
+
 export const getAssignmentsDoneByGroupAndStudentPostgresService = async (
     groupId: string,
     userId: string
@@ -362,12 +409,17 @@ export const getAssignmentsDoneByGroupAndStudentPostgresService = async (
     )
 }
 
-export const getAssignmentsExpiredUndoneByGroupAndStudentPostgresService =
-    async (groupId: string, userId: string) => {
+export const getAssignmentsExpiredUndoneByGroupAndStudentPostgresService = async (groupId: string, userId: string) => {
         return await postgresqlDatabaseJSON.get(
             `/assignments/expiredUndoneByGroupAndStudent/${groupId}/${userId}`
         )
-    }
+}
+
+export const getAssignmentsNonExpiredUndoneByGroupAndStudentPostgresService = async (groupId: string, userId: string) => {
+    return await postgresqlDatabaseJSON.get(
+      `/assignments/nonExpiredUndoneByGroupAndStudent/${groupId}/${userId}`
+    )
+}
 
 export const getAssignmentsUndoneByGroupAndStudentPostgresService = async (
     groupId: string,
@@ -377,6 +429,8 @@ export const getAssignmentsUndoneByGroupAndStudentPostgresService = async (
         `/assignments/undoneByGroupAndStudent/${groupId}/${userId}`
     )
 }
+
+
 
 export const getStudentsByGroupPostgresService = async (groupId: string) => {
     return await postgresqlDatabaseJSON.get("/user/getStudentsByGroup/" + groupId)
@@ -674,7 +728,21 @@ export const deleteEvaluationPanelService = async (
         `/evaluation_panel/${evaluationPanelId}`
     )
 }
+
+export const deleteEvaluationReportPostgresService = async (
+  evaluationReportId: number | string
+) => {
+    return await postgresqlDatabaseJSON.delete(
+      `/evaluation_report/${evaluationReportId}`
+    )
+}
 export const addEvaluationReport = async (evaluationReport: EvaluationReport) => {
     return await postgresqlDatabaseJSON.post(`/evaluation_report`, evaluationReport);
 
+}
+export const getEvaluationReportByGroup = async (groupId : number) =>{
+    return await postgresqlDatabaseJSON.get(`evaluation_report/byGroupId/${groupId}`);
+}
+export const getEvaluationReportByEvaluationId = async (evaluationId:number) =>{
+    return await postgresqlDatabaseJSON.get(`evaluation_report/byEvaluationId/${evaluationId}`)
 }

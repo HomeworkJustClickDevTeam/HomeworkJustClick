@@ -19,7 +19,7 @@ import {
   createCommentImageWithFilePostgresService, deleteCommentImageByCommentFilePostgresService,
   deleteCommentImagePostgresService
 } from "../../services/postgresDatabaseServices"
-import { SortButtonStateType } from "../../types/SortButtonStateType"
+import { SortCommentsButtonStateType } from "../../types/SortCommentsButtonStateType"
 import {useUpdateEffect} from "usehooks-ts";
 import {
   drawOnCanvas,
@@ -38,7 +38,7 @@ interface AdvancedEvaluationImageAreaInterface{
   setDeletedCommentId?:React.Dispatch<React.SetStateAction<number|undefined>>,
   updatedComment?:CommentInterface|undefined,
   setUpdatedComment?:React.Dispatch<React.SetStateAction<CommentInterface|undefined>>,
-  setSortButtonState?:React.Dispatch<React.SetStateAction<SortButtonStateType>>,
+  setSortButtonState?:React.Dispatch<React.SetStateAction<SortCommentsButtonStateType>>,
   image: HTMLImageElement,
   chosenComment?: CommentInterface|undefined,
   file?: FileInterface

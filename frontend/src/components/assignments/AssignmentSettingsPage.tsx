@@ -1,41 +1,38 @@
 import ReactDatePicker from "react-datepicker";
-import {AssignmentModifyFile} from "./AssignmentModifyFile";
+import {AssignmentFile} from "./AssignmentAddOrModifyFile";
 import React, {ChangeEvent, SetStateAction, useEffect, useState} from "react";
 import {AssignmentInterface} from "../../types/AssignmentInterface";
 import {Table} from "../../types/Table.model";
 import {AssignmentToSendInterface} from "../../types/AssignmentToSendInterface";
 import {GroupInterface} from "../../types/GroupInterface";
 import {useNavigate} from "react-router-dom";
-import {AssignmentAddFile} from "./AssignmentAddFile";
-import {CommentInterface} from "../../types/CommentInterface";
 import {setHours, setMinutes} from "date-fns";
+import {FileInterface} from "../../types/FileInterface";
 
 interface AssignmentSettingsPagePropsInterface{
   handleSubmit: (event: React.FormEvent) => void,
   assignment: AssignmentInterface|AssignmentToSendInterface,
   chosenEvaluationTable:number,
-  toSend: boolean,
   handleDelete?:(event: React.FormEvent) => void,
   setChosenEvaluationTable:(tableId: number)=>void,
   evaluationTable:Table[],
   setAssignment: (assignment: (prevState: any) => any) => void,
-  group: GroupInterface|null,
-  newAssignmentId?: number
+  newAssignmentId?: number,
+  setNewFile: React.Dispatch<React.SetStateAction<File|undefined>>
+  databaseFile?: FileInterface
 }
 
 export const AssignmentSettingsPage = ({handleSubmit,
                                          assignment,
                                          chosenEvaluationTable,
                                          handleDelete,
-                                         toSend,
                                          setChosenEvaluationTable,
                                          evaluationTable,
                                          setAssignment,
-                                         group,
+                                         setNewFile,
+                                         databaseFile,
                                          newAssignmentId}:AssignmentSettingsPagePropsInterface) =>{
 
-  const [toNavigate, setToNavigate] = useState<boolean>(false)
-  const navigate = useNavigate()
   const handleTextChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target
     setAssignment((prevState) => ({
@@ -66,11 +63,6 @@ export const AssignmentSettingsPage = ({handleSubmit,
     }))
   }
 
-  useEffect(() => {
-    if (toNavigate) {
-      navigate(`/group/${group?.id}/assignments/`)
-    }
-  }, [toNavigate])
 
   const handleTableChange = (event:React.ChangeEvent<HTMLSelectElement>) => {
     if(+event.target.value === -1)
@@ -94,9 +86,9 @@ export const AssignmentSettingsPage = ({handleSubmit,
     return options
   }
   return (
-    <>
-      <div>
-        <div className="relative flex flex-col mx-[7.5%] mt-4 border border-border_gray border-1 rounded-md pt-4 px-4 fit pb-4">
+
+      <div className='overflow-y-hidden'>
+        <div className="relative flex flex-col mx-[7.5%] mt-4 border border-border_gray border-1 rounded-md pt-4 px-4 fit pb-4 box-content overflow-y-auto">
           <form onSubmit={(event) => handleSubmit(event)} className="flex flex-col gap-3">
             <label className="pr-3">
               Tytuł
@@ -179,29 +171,28 @@ export const AssignmentSettingsPage = ({handleSubmit,
             </label>
             <button
               type={"submit"}
-              className="absolute top-0 right-0 mr-6 mt-4 px-10 py-1 rounded-lg bg-main_blue text-white hover:bg-hover_blue hover:shadow-md active:shadow-none"
+              className="absolute bottom-5 right-0 mr-6 mt-4 px-8 py-1 rounded-lg bg-main_blue text-white hover:bg-hover_blue hover:shadow-md active:shadow-none"
             >
               Zapisz
             </button>
           </form>
           <p className="mt-4 mb-2">Nowy plik: </p>
           {(assignment as AssignmentInterface).id !== undefined && newAssignmentId === undefined ?
-          <AssignmentModifyFile
-            toSend={toSend}
+          <AssignmentFile
+            setNewFile={setNewFile}
             assignmentId={(assignment as AssignmentInterface).id}
-            setToNavigate={setToNavigate}
+            databaseFile={databaseFile}
           />:
-            <AssignmentAddFile
-              toSend={toSend}
-              idAssignment={newAssignmentId}
-              setToNavigate={setToNavigate}
+            <AssignmentFile
+              setNewFile={setNewFile}
+              assignmentId={newAssignmentId!}
             />}
           {handleDelete !== undefined &&
           <button onClick={(event) => handleDelete(event)}
-                  className='absolute bottom-0 right-0 mr-6 mb-4 px-4 py-1 rounded-lg bg-berry_red text-white'>Usuń Zadanie
+                  className='absolute top-5 right-0 mr-6 mb-4 px-4 py-1 rounded-lg bg-berry_red text-white'>Usuń
           </button>}
         </div>
       </div>
-    </>
+
   )
 }

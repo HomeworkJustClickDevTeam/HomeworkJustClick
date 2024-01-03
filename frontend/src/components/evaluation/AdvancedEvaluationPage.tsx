@@ -29,7 +29,7 @@ import { AdvancedEvaluationTextCommentCreateInterface } from "../../types/Advanc
 import { AdvancedEvaluationTextCommentModel } from "../../types/AdvancedEvaluationTextComment.model"
 import { useGetCommentsTextByFile } from "../customHooks/useGetCommentsTextByFile"
 import { selectGroup } from "../../redux/groupSlice"
-import { SortButtonStateType } from "../../types/SortButtonStateType"
+import { SortCommentsButtonStateType } from "../../types/SortCommentsButtonStateType"
 import { useUpdateEffect } from "usehooks-ts"
 import {useGetCommentsByUserAndAssignment} from "../customHooks/useGetCommentsByUserAndAssignment";
 import {SolutionExtendedInterface} from "../../types/SolutionExtendedInterface";
@@ -42,7 +42,7 @@ export default function AdvancedEvaluationPage() {
   const [solutionExtended, setSolutionExtended] = useState<SolutionExtendedInterface>(state.solutionExtended)
   const userState = useAppSelector(selectUserState)
   const [refreshRightPanelUserComments, setRefreshRightPanelUserComments] = useState(false)
-  const [sortButton, setSortButton] = useState<SortButtonStateType>("lastUsedDate,desc")
+  const [sortButton, setSortButton] = useState<SortCommentsButtonStateType>("lastUsedDate,desc")
   const file = useGetFile(solutionExtended.id, 'solution')
   const [chosenComment, setChosenComment] = useState<CommentInterface|undefined>(undefined)
   const {comments: rightPanelUserComments,setComments: setRightPanelUserComments} = useGetCommentsByUserAndAssignment(userState!.id, solutionExtended.assignment.id, `size=10&sort=${sortButton}`, refreshRightPanelUserComments)

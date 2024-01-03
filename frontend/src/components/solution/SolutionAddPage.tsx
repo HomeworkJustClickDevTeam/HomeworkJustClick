@@ -13,6 +13,7 @@ import {selectUserState} from "../../redux/userStateSlice"
 import {useAppDispatch, useAppSelector} from "../../types/HooksRedux"
 import {useGetFile} from "../customHooks/useGetFile"
 import { IoDocumentAttachOutline } from "react-icons/io5";
+import {toast} from "react-toastify";
 
 function SolutionAddPage({assignment}: AssignmentPropsInterface) {
     const navigate = useNavigate()
@@ -71,6 +72,9 @@ function SolutionAddPage({assignment}: AssignmentPropsInterface) {
                 }
             })
             .then(() => {
+                toast.success('Zadanie zostało przesłane! 🎉')
+            })
+            .then(() => {
                 navigate(-1)
             })
             .catch((e) => console.log(e))
@@ -83,7 +87,11 @@ function SolutionAddPage({assignment}: AssignmentPropsInterface) {
                 userState.id.toString(),
                 assignment.id.toString(),
                 solution
-            ).then(() =>
+            )
+                .then(() => {
+                    toast.success('Zadanie zostało przesłane! 🎉')
+                })
+                .then(() =>
                 navigate(-1))
         }
 
