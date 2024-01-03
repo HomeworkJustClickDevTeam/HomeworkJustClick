@@ -2,13 +2,12 @@ package pl.homeworkjustclick.notification;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import pl.homeworkjustclick.infrastructure.exception.EntityNotFoundException;
 import pl.homeworkjustclick.user.UserService;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -23,10 +22,14 @@ public class NotificationService {
                 .orElseThrow(() -> new EntityNotFoundException("Notification with id = " + id + " not found"));
     }
 
-    public Slice<NotificationResponseDto> getNotificationsByUserId(Integer userId, Pageable pageable) {
+    public List<NotificationResponseDto> getNotificationsByUserId(Integer userId) {
         var user = userService.findById(userId);
-        return repository.findAllByUserId(user.getId(), pageable)
-                .map(mapper::map);
+        return repository.findAllByUserId(user.getId())
+                .stream()
+                .map(mapper::map)
+                .sorted(Comparator.nullsLast(
+                        (n1, n2) -> n2.getDate().compareTo(n1.getDate())))
+                .toList();
     }
 
     public Integer countNotificationsByUserId(Integer userId) {

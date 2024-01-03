@@ -1,15 +1,12 @@
 package pl.homeworkjustclick.notification;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,6 +14,17 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/notification")
+@SecurityRequirement(name = "Bearer Authentication")
+@Tag(name = "Notification", description = "Notifications related calls.")
+@ApiResponse(
+        responseCode = "403",
+        description = "Something is wrong with the token.",
+        content = @Content()
+)
+@ApiResponse(
+        responseCode = "200",
+        description = "OK."
+)
 public class NotificationController {
     private final NotificationService service;
 
@@ -36,15 +44,10 @@ public class NotificationController {
                             description = "Jwt token invalid",
                             content = @Content
                     )
-            },
-            parameters = {
-                    @Parameter(name = "page", example = "0", description = "default = 0"),
-                    @Parameter(name = "size", example = "20", description = "default = 10"),
-                    @Parameter(name = "sort", example = "id,asc", description = "default = date,desc")
             }
     )
-    public Slice<NotificationResponseDto> getNotificationsByUserId(@PathVariable Integer userId, @Parameter(hidden = true) @PageableDefault(sort = "date", direction = Sort.Direction.DESC) Pageable pageable) {
-        return service.getNotificationsByUserId(userId, pageable);
+    public List<NotificationResponseDto> getNotificationsByUserId(@PathVariable Integer userId) {
+        return service.getNotificationsByUserId(userId);
     }
 
     @GetMapping("countByUser/{userId}")
