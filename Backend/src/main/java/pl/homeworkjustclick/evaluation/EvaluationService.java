@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import pl.homeworkjustclick.evaluationreport.EvaluationReportService;
 import pl.homeworkjustclick.group.Group;
 import pl.homeworkjustclick.group.GroupResponseDto;
 import pl.homeworkjustclick.group.GroupService;
@@ -36,6 +37,7 @@ public class EvaluationService {
     private final GroupService groupService;
     private final EvaluationMapper mapper;
     private final NotificationCreateService notificationCreateService;
+    private final EvaluationReportService evaluationReportService;
 
     public Evaluation findById(Integer id) {
         return repository.findById(id)
@@ -204,103 +206,9 @@ public class EvaluationService {
     }
 
     @Transactional
-    public EvaluationResponseExtendedDto addExtended(Evaluation evaluation) {
-        entityManager.persist(evaluation);
-        return buildEvaluationResponseExtended(evaluation);
-    }
-
-    @Transactional
-    public EvaluationResponseExtendedDto addWithUserAndSolutionExtended(Evaluation evaluation, int userId, int solutionId) {
-        Optional<User> user = userRepository.findById(userId);
-        Optional<Solution> solution = solutionRepository.findById(solutionId);
-        if (user.isPresent() && solution.isPresent()) {
-            List<User> userList = userRepository.getTeachersByGroupId(solution.get().getGroup().getId());
-            AtomicBoolean ok = new AtomicBoolean(false);
-            userList.forEach(user1 -> {
-                if (user1.getId() == userId) {
-                    ok.set(true);
-                }
-            });
-            if (ok.get() && checkForEvaluationToSolution(solutionId).equals(Boolean.FALSE)) {
-                var assignment = solution.get().getAssignment();
-                if (assignment.getAutoPenalty() > 0) {
-                    if (assignment.getCompletionDatetime().isBefore(solution.get().getCreationDatetime())) {
-                        double penalty = evaluation.getResult() * ((double) assignment.getAutoPenalty() / 100);
-                        evaluation.setResult(evaluation.getResult() - penalty);
-                    }
-                }
-                evaluation.setSolution(solution.get());
-                evaluation.setUser(user.get());
-                evaluation.setGroup(solution.get().getGroup());
-                entityManager.persist(evaluation);
-                return buildEvaluationResponseExtended(evaluation);
-            } else {
-                return EvaluationResponseExtendedDto.builder().forbidden(true).build();
-            }
-        } else {
-            return EvaluationResponseExtendedDto.builder().build();
-        }
-    }
-
-    @Transactional
     public void delete(int id) {
         var evaluation = findById(id);
         repository.delete(evaluation);
-    }
-
-    @Transactional
-    public Boolean changeResultById(int id, Double result) {
-        if (repository.findById(id).isPresent()) {
-            Evaluation evaluation = findById(id);
-            evaluation.setResult(result);
-            repository.save(evaluation);
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
-
-    @Transactional
-    public Boolean changeUserById(int id, int userId) {
-        if (repository.findById(id).isPresent() && userRepository.findById(userId).isPresent()) {
-            Evaluation evaluation = findById(id);
-            User user = userService.findById(userId);
-            evaluation.setUser(user);
-            repository.save(evaluation);
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
-
-    @Transactional
-    public Boolean changeSolutionById(int id, int solutionId) {
-        if (repository.findById(id).isPresent() && solutionRepository.findById(solutionId).isPresent()) {
-            Evaluation evaluation = findById(id);
-            Solution solution = solutionService.findById(solutionId);
-            evaluation.setSolution(solution);
-            repository.save(evaluation);
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
-
-
-    @Transactional
-    public Boolean changeGradeById(int id, Double grade) {
-        if (repository.findById(id).isPresent()) {
-            Evaluation evaluation = findById(id);
-            evaluation.setGrade(grade);
-            repository.save(evaluation);
-            return true;
-        }
-        else{
-            return false;
-        }
     }
 
     @Transactional
