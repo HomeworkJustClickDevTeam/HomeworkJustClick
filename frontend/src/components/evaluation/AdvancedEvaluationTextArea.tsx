@@ -8,7 +8,7 @@ import {
   deleteCommentTextPostgresService
 } from "../../services/postgresDatabaseServices"
 import { useGetCommentsTextByFile } from "../customHooks/useGetCommentsTextByFile"
-import {SortButtonStateType} from "../../types/SortButtonStateType";
+import {SortCommentsButtonStateType} from "../../types/SortCommentsButtonStateType";
 import {useUpdateEffect} from "usehooks-ts";
 
 
@@ -24,7 +24,7 @@ interface AdvancedEvaluationTextAreaPropsInterface{
   fileId?: number,
   commentsText: AdvancedEvaluationTextCommentModel[],
   setCommentsText?: React.Dispatch<React.SetStateAction<AdvancedEvaluationTextCommentModel[]>>,
-  setSortButton?: React.Dispatch<React.SetStateAction<SortButtonStateType>>,
+  setSortButton?: React.Dispatch<React.SetStateAction<SortCommentsButtonStateType>>,
   setRefreshRightPanelUserComments?: React.Dispatch<React.SetStateAction<boolean>>,
   deletedCommentId?: number|undefined,
   setDeletedCommentId?:React.Dispatch<React.SetStateAction<number|undefined>>,

@@ -1,0 +1,1 @@
+export type SortCommentsButtonStateType = "counter,asc"|"description,asc"|"counter,desc"|"lastUsedDate,desc"
