@@ -74,21 +74,23 @@ export const AdvancedEvaluationCommentPanelListElement = ({ highlightedCommentId
         backgroundColor: highlightedCommentId === comment.id ? comment.color + "80" : "white",
         border: chosenCommentId === comment.id ? "4px solid #6D8DFF" : "none",
         margin: "4px 0px 0px 0px",
-        padding: "5px 4px"}
+        padding: "5px 4px",
+            height: '135px'
+        }
       }>
 
           <div className="mb-3 flex">
-          <textarea className="italic underline underline-offset-2 max-h-[75px] min-h-[36px] pr-2"
-                    disabled={commentReadonly}
-                    onChange={(event) => {
-                      handleCommentRemoval !==undefined && setCommentState((prevState) => ({ ...prevState, description: event.target.value }))}}
-                    id={"commentDescription"}
-                    key={commentState.id}
-                    readOnly={commentReadonly}
-                    defaultValue={commentState.description}></textarea>
-            {handleCommentRemoval !==undefined && <button className=" text-main_blue underline text-sm flex" id={"editButton"}
-                    type={"button"}
-                    onClick={() => setCommentReadonly(prevState => !prevState)}>
+              <textarea className="italic underline underline-offset-2 max-h-[75px] min-h-[36px] pr-2 pl-1"
+                        disabled={commentReadonly}
+                        onChange={(event) => {
+                          handleCommentRemoval !==undefined && setCommentState((prevState) => ({ ...prevState, description: event.target.value }))}}
+                        id={"commentDescription"}
+                        key={commentState.id}
+                        readOnly={commentReadonly}
+                        defaultValue={commentState.description}></textarea>
+                {handleCommentRemoval !==undefined && <button className=" text-main_blue underline text-sm flex" id={"editButton"}
+                        type={"button"}
+                        onClick={() => setCommentReadonly(prevState => !prevState)}>
               <div className='flex inline-block pt-3'><FaEdit className="mt-1 mr-[2px] ml-2" />
                   {commentReadonly ? "Edytuj" : "Zatwierdź"}</div>
             </button>}
@@ -103,8 +105,7 @@ export const AdvancedEvaluationCommentPanelListElement = ({ highlightedCommentId
               type={"color"} />
           </div>
 
-        <br />
-        {handleCommentRemoval !==undefined && <button className="text-berry_red ml-auto text-center flex mr-4"
+        {handleCommentRemoval !==undefined && <button className="text-berry_red ml-auto text-center flex mr-4 mt-2"
                 onClick={() => {
                   handleCommentRemoval!==undefined && handleCommentRemoval(commentId)}}
                 type={"button"}>

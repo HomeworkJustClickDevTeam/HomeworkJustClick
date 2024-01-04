@@ -23,7 +23,7 @@ export const useGetSolutionAreaSizeAvailable = () => {
     const headerLoggedInSection = document.getElementById("headerLoggedInSection")
     if(commentPanelWidth=== undefined || backButtonHeight=== undefined || headerLoggedInSection === null) return
     const resizeObserver = new ResizeObserver(()=> {
-      setAvailableWidth(windowWidth-commentPanelWidth-30)
+      setAvailableWidth(windowWidth-commentPanelWidth-45)
       headerLoggedInSection !== null && backButtonHeight !== null && setAvailableHeight(windowHeight-headerLoggedInSection.offsetHeight-backButtonHeight)
     })
     resizeObserver.observe(headerLoggedInSection!)

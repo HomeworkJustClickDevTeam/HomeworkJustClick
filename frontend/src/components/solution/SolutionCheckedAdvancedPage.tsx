@@ -14,6 +14,7 @@ import {AdvancedEvaluationCommentPanelListElement} from "../evaluation/AdvancedE
 import {AdvancedEvaluationImageArea} from "../evaluation/AdvancedEvaluationImageArea";
 import {useUpdateEffect} from "usehooks-ts";
 import {AdvancedEvaluationTextArea} from "../evaluation/AdvancedEvaluationTextArea";
+import { IoIosArrowBack } from "react-icons/io";
 
 
 
@@ -59,16 +60,16 @@ export const SolutionCheckedAdvancedPage = ()=>{
   }, [state]);
   return(<div>
       <div style={{width: "100%"}} ref={onBackButtonRefChange}>
-        <Link to = {`/group/${solutionExtended.assignment.groupId}/assignment/${solutionExtended.assignment.id}`}>Wróć</Link>
+        <Link to = {`/group/${solutionExtended.assignment.groupId}/assignment/${solutionExtended.assignment.id}`} className='flex underline underline-offset-2'><IoIosArrowBack className='ml-2 mr-1 mt-1'/>Wróć</Link>
       </div>
-      <div style={{float:"right", height:"100vh"}}>
+      <div style={{float:"right", height:"100vh"}} className=''>
         Komentarze:<br/>
         {image !== undefined ?  showRightPanelComments(commentsImage)
         :
         fileText !== undefined && showRightPanelComments(commentsText)}
       </div>
     <div>
-      {image !== undefined ?  <AdvancedEvaluationImageArea width={availableWidth} height={availableHeight} image={image} commentsImage={commentsImage} handleCommentHighlighting={handleCommentHighlighting}></AdvancedEvaluationImageArea>
+      {image !== undefined ?  <AdvancedEvaluationImageArea width={availableWidth} height={availableHeight} image={image} commentsImage={commentsImage} handleCommentHighlighting={handleCommentHighlighting} ></AdvancedEvaluationImageArea>
         :
         fileText !== undefined && <AdvancedEvaluationTextArea handleCommentHighlighting={handleCommentHighlighting} width={availableWidth} height={availableHeight} comments={commentsText} fileText={fileText} commentsText={commentsText}/>}
     </div>
