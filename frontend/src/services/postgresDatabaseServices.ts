@@ -746,3 +746,18 @@ export const getEvaluationReportByGroup = async (groupId : number) =>{
 export const getEvaluationReportByEvaluationId = async (evaluationId:number) =>{
     return await postgresqlDatabaseJSON.get(`evaluation_report/byEvaluationId/${evaluationId}`)
 }
+
+export const getUserNumberOfNotifications = async (userId:number) =>{
+    return await  postgresqlDatabaseJSON.get(`notification/countByUser/${userId}`)
+}
+
+export const getUserNotifications = async (userId:number) =>{
+    return await postgresqlDatabaseJSON.get(`notification/byUser/${userId}`)
+}
+
+export const deleteUserNotification = async (notificationId:number) =>{
+    return await postgresqlDatabaseJSON.delete(`notification/${notificationId}`)
+}
+export const readNotification = async (notificationId:number) => {
+    return await postgresqlDatabaseJSON.post(`notification?notificationsIds=${notificationId}`)
+}

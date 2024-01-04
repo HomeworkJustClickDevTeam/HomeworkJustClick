@@ -5,6 +5,7 @@ import { selectHomePageIn } from "../../redux/homePageInSlice"
 import { selectUserState } from "../../redux/userStateSlice"
 import { useAppSelector } from "../../types/HooksRedux"
 import Logo from "./Logo.svg"
+import {UserNotificationNavBar} from "../user/UserNotificationNavBar";
 
 function HeaderLoggedInState() {
 
@@ -32,6 +33,7 @@ function HeaderLoggedInState() {
       </div>
       <div className="absolute flex right-0 items-center h-full">
         <span className="pr-3 xl:pr-5">{userState?.firstname} {userState?.lastname}</span>
+        <UserNotificationNavBar/>
         <div className="flex items-center h-full hover:bg-hover_blue px-2 xl:px-4">
           <LogOut />
         </div>
