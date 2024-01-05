@@ -119,7 +119,7 @@ export const AdvancedEvaluationTextArea = ({fileText,
           {letter}</span>)
         index++
       })
-      formattedText.push(<br/>)
+      formattedText.push(<br key={index}/>)
       index++
     })
     return formattedText
