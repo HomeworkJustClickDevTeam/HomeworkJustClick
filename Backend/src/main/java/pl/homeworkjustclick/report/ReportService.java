@@ -256,9 +256,7 @@ public class ReportService {
         dataLines.add(endLine);
         var fileName = "raport.csv";
         File csvOutputFile = new File(fileName);
-        if (!csvOutputFile.createNewFile()) {
-            throw new InternalException("Error creating file");
-        }
+        csvOutputFile.createNewFile();
         try (PrintWriter pw = new PrintWriter(csvOutputFile)) {
             dataLines.stream()
                     .map(this::convertToCSV)

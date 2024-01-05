@@ -75,6 +75,9 @@ public class Evaluation implements Serializable {
     @OneToOne(mappedBy = "evaluation")
     private EvaluationReport evaluationReport;
 
+    @Column(name = "comment")
+    private String comment;
+
     public Evaluation(Double result, User user, Solution solution, Group group, OffsetDateTime creationDatetime, OffsetDateTime lastModifiedDatetime, Double grade, Boolean reported) {
         this.result = result;
         this.user = user;

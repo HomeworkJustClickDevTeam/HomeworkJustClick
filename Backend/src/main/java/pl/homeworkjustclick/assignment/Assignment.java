@@ -109,6 +109,8 @@ public class Assignment implements Serializable {
     @JsonIgnore
     private List<Notification> notifications = new ArrayList<>();
 
+    private Boolean advancedEvaluation;
+
     public Assignment(User user, Group group, String taskDescription, OffsetDateTime creationDatetime, OffsetDateTime lastModifiedDatetime, OffsetDateTime completionDatetime, String title, Boolean visible, int maxPoints, int autoPenalty) {
         this.user = user;
         this.group = group;
