@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import pl.homeworkjustclick.assignment.AssignmentRepository;
 import pl.homeworkjustclick.assignment.AssignmentService;
 import pl.homeworkjustclick.infrastructure.exception.EntityNotFoundException;
+import pl.homeworkjustclick.infrastructure.exception.InvalidArgumentException;
 import pl.homeworkjustclick.solution.SolutionRepository;
 import pl.homeworkjustclick.solution.SolutionService;
 
@@ -20,6 +21,8 @@ public class FileService {
     private final SolutionRepository solutionRepository;
     private final AssignmentService assignmentService;
     private final SolutionService solutionService;
+
+    private final List<String> formats = List.of("txt", "json", "xml", "jpg", "png");
 
     public List<File> getAll() {
         return fileRepository.findAll();
@@ -48,6 +51,10 @@ public class FileService {
 
     @Transactional
     public FileResponseDto addWithSolution(File file, int solutionId) {
+        var solution = solutionService.findById(solutionId);
+        if (Boolean.TRUE.equals(solution.getAssignment().getAdvancedEvaluation()) && !formats.contains(file.getFormat())) {
+            throw new InvalidArgumentException("Invalid format for extended evaluation");
+        }
         if (solutionRepository.findById(solutionId).isPresent()) {
             file.setSolution(solutionService.findById(solutionId));
             file.setAssignment(null);
