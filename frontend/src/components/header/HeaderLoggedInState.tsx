@@ -12,7 +12,6 @@ function HeaderLoggedInState() {
   const homePageIn = useAppSelector(selectHomePageIn)
   const userState = useAppSelector(selectUserState)
   const location = useLocation()
-  const isSettingsPage = location.pathname === '/settings';
   const isAssignmentsPage = location.pathname === '/' + userState?.id.toString() + '/assignments';
   const isGroupsPage = location.pathname === '/';
 
@@ -26,7 +25,7 @@ function HeaderLoggedInState() {
           <FaChevronLeft className="pr-2" />
           Powrót
         </Link>
-        <Link to="/" className={`flex items-center h-full rounded px-2 xl:px-4 ${isGroupsPage ? 'bg-main_lily hover:bg-hover_lily' : 'hover:bg-hover_blue'}`}>Moje Grupy</Link>
+        <Link to="/" className={`flex items-center h-full rounded px-2 xl:px-4 ${isGroupsPage ? 'bg-main_lily hover:bg-hover_lily' : 'hover:bg-hover_blue'}`}>Moje grupy</Link>
         <Link to={`/${userState?.id}/assignments`} className={`flex items-center h-full rounded px-2 xl:px-4  ${isAssignmentsPage ? 'bg-main_lily hover:bg-hover_lily' : 'hover:bg-hover_blue'}`}>Moje zadanie domowe</Link>
       </div>
       <div className="absolute flex right-0 items-center h-full">
