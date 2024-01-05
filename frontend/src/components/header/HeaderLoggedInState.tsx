@@ -28,14 +28,12 @@ function HeaderLoggedInState() {
         <Link to="/" className={`flex items-center h-full rounded px-2 xl:px-4 ${isGroupsPage ? 'bg-main_lily hover:bg-hover_lily' : 'hover:bg-hover_blue'}`}>Moje grupy</Link>
         <Link to={`/${userState?.id}/assignments`} className={`flex items-center h-full rounded px-2 xl:px-4  ${isAssignmentsPage ? 'bg-main_lily hover:bg-hover_lily' : 'hover:bg-hover_blue'}`}>Moje zadanie domowe</Link>
       </div>
-      <div className="absolute flex right-0 items-center h-full">
-        <span className="pr-3 xl:pr-5">{userState?.firstname} {userState?.lastname}</span>
+      <div className="absolute flex right-0 items-center h-full gap-x-3 xl:gap-x-5">
+        <span>{userState?.firstname} {userState?.lastname}</span>
         <Link to="/settings">
           <FaCog className="m-2" />
         </Link>
-        <div className="flex items-center h-full hover:bg-hover_blue px-2 xl:px-4">
-          <LogOut />
-        </div>
+        <LogOut />
       </div>
     </section >
   )
