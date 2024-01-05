@@ -82,9 +82,10 @@ export const AdvancedEvaluationTextArea = ({fileText,
       console.log(error)
     }
   }
-  const handleMouseUp = async (event:React.MouseEvent, index:number) => {
+  const handleMouseUp = async (event:React.MouseEvent) => {
     event.preventDefault()
     event.stopPropagation()
+    const index = +(event.target as HTMLSpanElement).id
     if(setComments !== undefined && event.button === 2) await handleDrawnCommentDeletion(index)
     else if(event.button === 0) {
       if(mouseDownTimestamp !== undefined && (event.timeStamp - mouseDownTimestamp) < 150){
@@ -100,7 +101,29 @@ export const AdvancedEvaluationTextArea = ({fileText,
     }
   }
 
-
+  const printFormattedText = () =>{
+    const formattedText:JSX.Element[] = []
+    let index = 0
+    fileText.split(/\r?\n/).forEach(line=>{
+      line.split("").forEach((letter:string)=>{
+        formattedText.push(<span
+          onMouseDown={(event) => {
+            event.button===0 && setMouseDownTimestamp(event.timeStamp)}}
+          id={index.toString()}
+          style={{backgroundColor: letterColor[index] ? letterColor[index]+"80" : 'white', userSelect:chosenComment === undefined ? "none" : "auto"}}
+          key={index}
+          onContextMenu={(event) => {
+            event.preventDefault();
+            event.stopPropagation()}}
+          onMouseUp={(event) =>handleMouseUp(event)}>
+          {letter}</span>)
+        index++
+      })
+      formattedText.push(<br/>)
+      index++
+    })
+    return formattedText
+  }
   const handleNewCommentTextCreation =  async () =>{
     if(chosenComment === undefined || fileId === undefined || setCommentsText === undefined || setSortButton === undefined || setRefreshRightPanelUserComments === undefined) return
     const checkNewRanges = async (updatedComment:AdvancedEvaluationTextCommentModel) => {
@@ -267,17 +290,7 @@ export const AdvancedEvaluationTextArea = ({fileText,
         .then(() => setUpdatedComment(undefined))
   },[updatedComment])
 
-  return <div style={{width: width !== undefined ? width : "100%", height: height !== undefined ? height:"100%"}}>{fileText.split('').map((letter:string, index)=>{
-    return <span
-      onMouseDown={(event) => {
-        event.button===0 && setMouseDownTimestamp(event.timeStamp)}}
-      id={index.toString()}
-      style={{backgroundColor: letterColor[index] ? letterColor[index]+"80" : 'white', userSelect:chosenComment === undefined ? "none" : "auto"}}
-      key={index}
-      onContextMenu={(event) => {
-        event.preventDefault();
-        event.stopPropagation()}}
-      onMouseUp={(event) =>handleMouseUp(event, index)}>
-      {letter}</span>
-  })}</div>
+  return <div style={{width: width !== undefined ? width : "100%", height: height !== undefined ? height:"100%"}}>
+    {printFormattedText()}
+  </div>
 }
