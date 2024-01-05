@@ -20,4 +20,6 @@ public class EvaluationDto implements Serializable {
     @NotNull
     private Integer groupId;
     private Double grade;
+    private String comment;
+
 }

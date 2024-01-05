@@ -4,7 +4,6 @@ import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pl.homeworkjustclick.evaluationreport.EvaluationReportService;
 import pl.homeworkjustclick.group.Group;
 import pl.homeworkjustclick.group.GroupResponseDto;
 import pl.homeworkjustclick.group.GroupService;
@@ -37,7 +36,6 @@ public class EvaluationService {
     private final GroupService groupService;
     private final EvaluationMapper mapper;
     private final NotificationCreateService notificationCreateService;
-    private final EvaluationReportService evaluationReportService;
 
     public Evaluation findById(Integer id) {
         return repository.findById(id)
@@ -251,6 +249,7 @@ public class EvaluationService {
                 .creationDatetime(evaluation.getCreationDatetime())
                 .lastModifiedDatetime(evaluation.getLastModifiedDatetime())
                 .grade(evaluation.getGrade())
+                .comment(evaluation.getComment())
                 .build();
     }
 
@@ -294,6 +293,7 @@ public class EvaluationService {
                 .creationDatetime(evaluation.getCreationDatetime())
                 .lastModifiedDatetime(evaluation.getLastModifiedDatetime())
                 .grade(evaluation.getGrade())
+                .comment(evaluation.getComment())
                 .build();
     }
 }
