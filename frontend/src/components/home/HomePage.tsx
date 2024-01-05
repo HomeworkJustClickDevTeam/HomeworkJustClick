@@ -1,6 +1,5 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
-import { FaCaretDown } from "react-icons/fa"
 import { selectUserState } from "../../redux/userStateSlice"
 import { setGroup } from "../../redux/groupSlice"
 import { setHomePageIn } from "../../redux/homePageInSlice"
