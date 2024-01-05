@@ -7,7 +7,6 @@ import pl.homeworkjustclick.assignment.AssignmentRepository;
 import pl.homeworkjustclick.assignment.AssignmentService;
 import pl.homeworkjustclick.infrastructure.exception.EntityNotFoundException;
 import pl.homeworkjustclick.infrastructure.exception.InvalidArgumentException;
-import pl.homeworkjustclick.solution.SolutionRepository;
 import pl.homeworkjustclick.solution.SolutionService;
 
 import java.util.List;
@@ -18,7 +17,6 @@ import java.util.Optional;
 public class FileService {
     private final FileRepository fileRepository;
     private final AssignmentRepository assignmentRepository;
-    private final SolutionRepository solutionRepository;
     private final AssignmentService assignmentService;
     private final SolutionService solutionService;
 
@@ -39,14 +37,11 @@ public class FileService {
 
     @Transactional
     public FileResponseDto addWithAssignment(File file, int assignmentId) {
-        if (assignmentRepository.findById(assignmentId).isPresent()) {
-            file.setAssignment(assignmentService.findById(assignmentId));
-            file.setSolution(null);
-            var savedFile = fileRepository.save(file);
-            return FileResponseDto.builder().id(savedFile.getId()).name(savedFile.getName()).format(savedFile.getFormat()).mongoId(savedFile.getMongoId()).build();
-        } else {
-            return null;
-        }
+        var assignment = assignmentService.findById(assignmentId);
+        file.setAssignment(assignment);
+        file.setSolution(null);
+        var savedFile = fileRepository.save(file);
+        return FileResponseDto.builder().id(savedFile.getId()).name(savedFile.getName()).format(savedFile.getFormat()).mongoId(savedFile.getMongoId()).build();
     }
 
     @Transactional
@@ -55,14 +50,10 @@ public class FileService {
         if (Boolean.TRUE.equals(solution.getAssignment().getAdvancedEvaluation()) && !formats.contains(file.getFormat())) {
             throw new InvalidArgumentException("Invalid format for extended evaluation");
         }
-        if (solutionRepository.findById(solutionId).isPresent()) {
-            file.setSolution(solutionService.findById(solutionId));
-            file.setAssignment(null);
-            var savedFile = fileRepository.save(file);
-            return FileResponseDto.builder().id(savedFile.getId()).name(savedFile.getName()).format(savedFile.getFormat()).mongoId(savedFile.getMongoId()).build();
-        } else {
-            return null;
-        }
+        file.setSolution(solution);
+        file.setAssignment(null);
+        var savedFile = fileRepository.save(file);
+        return FileResponseDto.builder().id(savedFile.getId()).name(savedFile.getName()).format(savedFile.getFormat()).mongoId(savedFile.getMongoId()).build();
     }
 
     @Transactional
