@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { Link } from "react-router-dom"
 import { FaCaretDown } from "react-icons/fa"
 import { selectUserState } from "../../redux/userStateSlice"
@@ -9,63 +9,60 @@ import { useAppDispatch, useAppSelector } from "../../types/HooksRedux"
 import { GroupHomePageDisplayer } from "../group/GroupHomePageDisplayer"
 import { useGetUserGroups } from "../customHooks/useGetUserGroups"
 
+const options = [
+  { value: "Wszystkie grupy", label: "Wszystkie grupy" },
+  { value: "Grupy uczniowskie", label: "Grupy uczniowskie" },
+  { value: "Grupy nauczycielskie", label: "Grupy nauczycielskie" }
+];
+
 function HomePage() {
-  const [isOpen, setIsOpen] = useState(false)
-  const [btnName, setBtnName] = useState('Wszystkie grupy')
+  const [selectedOption, setSelectedOption] = useState(options[0]);
   const userState = useAppSelector(selectUserState)
   const dispatch = useAppDispatch()
   const teacherUserGroups = useGetUserGroups(userState?.id, "teacher")
   const studentsUserGroups = useGetUserGroups(userState?.id, "student")
   const allUserGroups = useGetUserGroups(userState?.id, "all")
+  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = event.target.value;
+    const option = options.find((opt) => opt.value === value);
+    setSelectedOption(option!);
+  };
 
   useEffect(() => {
     dispatch(setGroup(null))
     dispatch(setHomePageIn(true))
     dispatch(setRole(null))
   }, [])
+
+
   return (
-    <div className='pl-6 pr-8'>
-      <div className='flex inline-block mb-4 mt-4 pl-5'>
-        <p className='pr-8 text-2xl'>Moje grupy</p>
+    <div className='mx-[7.5%]'>
+      <div className='flex inline-block my-5 xl:my-8'>
         <Link to="/create/group" className=''>
-          <button type="button" className='text-black text-base underline items-center pt-2'>Stwórz grupę +</button>
+          <button type="button"
+            className=' border-main_blue h-8 rounded-md border-2 px-3 xl:px-4 xl:h-10 xl:rounded-lg text-main_blue text-sm xl:text-lg hover:bg-hover_gray hover:shadow-md active:bg-opacity-60'
+          >Stwórz grupę +</button>
         </Link>
-        <div className='absolute inline-block text-left right-0 mr-16'>
-          <div className='flex inline'>
-            <span className='mr-2'>Wyświetlane grupy: </span>
-            <button className='flex inline underline' onClick={() => setIsOpen(el => !el)}>{btnName}<FaCaretDown
-              className=' ml-1 h-full w-[9px] items-center'/>
-            </button>
-          </div>
-
-          {isOpen && (
-            <div
-              className=' absolute left-20 z-10 w-56 mt-4 origin-top-right bg-white border border-hover_gray rounded-md shadow-lg'>
-              <div onClick={() => {
-                setBtnName('Grupy uczniowskie')
-              }} className="block px-4 py-2 text-sm text-black rounded-lg hover:bg-lilly-bg hover:text-black">
-                Grupy uczniowskie użytkownika
-              </div>
-              <div onClick={() => {
-                setBtnName('Grupy nauczycielskie')
-              }} className="block px-4 py-2 text-sm text-black rounded-lg hover:bg-lilly-bg hover:text-black">
-                {" "}
-                Grupy nauczycielskie użytkownika
-              </div>
-              <div onClick={() => {
-                setBtnName('Wszystkie grupy')
-              }} className="block px-4 py-2 text-sm text-black rounded-lg hover:bg-lilly-bg hover:text-black">
-                Wszystkie grupy użytkownika
-              </div>
-            </div>
-          )}
-
+        <div className="absolute right-0 mr-[7.5%] text-sm xl:text-lg">
+          <select
+            className="flex border-2 pl-2 rounded-md xl:rounded-lg w-44 xl:w-56 h-8 xl:h-10 items-center"
+            value={selectedOption.value}
+            onChange={handleChange}
+          >
+            {options.map((option) => (
+              <option key={option.value}
+                value={option.value}
+                className="hover:bg-lilly-bg">
+                {option.label}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
-      {btnName === "Wszystkie grupy"
-        ? <GroupHomePageDisplayer groups={allUserGroups}/> : btnName === "Grupy nauczycielskie"
-          ? <GroupHomePageDisplayer groups={teacherUserGroups}/> : btnName === "Grupy uczniowskie"
-          && <GroupHomePageDisplayer groups={studentsUserGroups}/>
+      {selectedOption.value === "Wszystkie grupy"
+        ? <GroupHomePageDisplayer groups={allUserGroups} /> : selectedOption.value === "Grupy nauczycielskie"
+          ? <GroupHomePageDisplayer groups={teacherUserGroups} /> : selectedOption.value === "Grupy uczniowskie"
+          && <GroupHomePageDisplayer groups={studentsUserGroups} />
       }
     </div>
   )
