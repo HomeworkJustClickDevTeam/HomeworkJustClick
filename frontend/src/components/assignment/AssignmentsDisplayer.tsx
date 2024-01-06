@@ -22,8 +22,9 @@ export const AssignmentsDisplayer = ({assignments}:{assignments:AssignmentModel[
         <li key={assignment.id}>
           <AssignmentListElement
             assignment={assignment}
-            resultPoints={GetResultFromAssignmentsWithEvaluation(group === null ?
-              assignmentsWithEvaluation : groupAssignmentsWithEvaluation,
+            resultPoints={GetResultFromAssignmentsWithEvaluation(group === null
+                ? assignmentsWithEvaluation
+                : groupAssignmentsWithEvaluation,
               assignment.id)}
             idGroup={`${assignment.groupId}`}
           />

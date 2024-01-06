@@ -12,7 +12,8 @@ export class EvaluationExtendedModel {
     public creationDateTime: Date,
     public lastModifiedDateTime: Date,
     public grade:number,
-    public reported: boolean
+    public reported: boolean,
+    public comment: string
   ) {}
 }
 export class EvaluationModel {
@@ -24,6 +25,7 @@ export class EvaluationModel {
     public groupId:number,
     public creationDateTime: Date,
     public lastModifiedDateTime: Date,
-    public grade:number
+    public grade:number,
+    public comment: string
   ) {}
 }

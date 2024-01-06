@@ -22,7 +22,7 @@ function AssignmentsTypesPage({type}: { type: AssignmentsType }) {
 
   useEffect(() => {
     if (role !== "Student") {
-      navigate(`-/group/${group?.id}`)
+      navigate(`/group/${group?.id}`)
     }
   }, [type, role])
   return (

@@ -18,6 +18,7 @@ export default function GroupGeneralSettings() {
   const group= useAppSelector(selectGroup)
   const currentURL = `${window.location.origin}/group/${group?.id}`
   const dispatch = useAppDispatch()
+  const [updatedGroup, setUpdatedGroup] = React.useState<GroupInterface>(group!)
 
   const groupDeletionHandler = async () => {
     await deleteGroupPostgresService(group?.id as unknown as string)
@@ -50,8 +51,15 @@ export default function GroupGeneralSettings() {
   const setGroupName = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     if(group !== null) {
-      await changeGroupNamePostgresService(group?.id as unknown as string, group?.name)
-        .catch((error: AxiosError) => console.log(error))
+      await changeGroupNamePostgresService(group?.id as unknown as string, updatedGroup.name)
+        .then(()=>{
+          toast.success("Udało się zmienić nazwę grupy.")
+          dispatch(setGroup(updatedGroup))
+        })
+        .catch((error: AxiosError) => {
+          toast.error("Coś poszło nie tak.")
+          console.log(error)
+        })
     }
   }
   const setGroupDescription = async (
@@ -59,8 +67,15 @@ export default function GroupGeneralSettings() {
   ) => {
     event.preventDefault()
     if(group !== null) {
-      await changeGroupDescriptionPostgresService(group.id as unknown as string, group.description)
-        .catch((error: AxiosError) => console.log(error))
+      await changeGroupDescriptionPostgresService(group.id as unknown as string, updatedGroup.description)
+        .then(()=>{
+          toast.success("Udało się zmienić opis grupy.")
+          dispatch(setGroup(updatedGroup))
+        })
+        .catch((error: AxiosError) => {
+          toast.error("Coś poszło nie tak.")
+          console.log(error)
+        })
     }
   }
   const handleCopyUrl = async () => {
@@ -86,7 +101,7 @@ export default function GroupGeneralSettings() {
                   let _group = {...group}
                   if(_group !== null){
                     _group.name = event.target.value
-                    dispatch(setGroup(_group as GroupInterface))
+                    setUpdatedGroup(_group as GroupInterface)
                   }}
                 }
                 className='border-b-2 border-b-light_gray mx-2 mr-8'
@@ -107,7 +122,7 @@ export default function GroupGeneralSettings() {
                     let _group = {...group}
                     if(_group !== null){
                       _group.description = event.target.value
-                      dispatch(setGroup(_group as GroupInterface))
+                      setUpdatedGroup(_group as GroupInterface)
                     }
                 }
                }
