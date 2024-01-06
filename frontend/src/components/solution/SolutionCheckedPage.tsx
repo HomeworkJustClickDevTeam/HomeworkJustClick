@@ -62,7 +62,7 @@ export default function SolutionCheckedPage(props: {
                   {evaluationReport!.comment}</div>
             )}
             </div>
-            {((commentsImage.length !== 0) || (txtComments.length !== 0)) && <Link
+            {((commentsImage.length !== 0) || (txtComments.length !== 0)) && props.assignment.advancedEvaluation && <Link
                 to={`/group/${props.solution.groupId}/advancedAssignment`}
                 state={{
                     solutionExtended: {

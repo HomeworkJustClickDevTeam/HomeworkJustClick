@@ -39,6 +39,7 @@ function SolutionPage() {
             setPoints(evaluation.result.toString())
         }
     }, [evaluation?.result])
+    console.table(solutionExtended.assignment)
     return (
         <div className='flex flex-col h-[calc(100vh-340px)] overflow-y-hidden mb-4'>
             <div
@@ -87,7 +88,7 @@ function SolutionPage() {
                 {(evaluation === undefined || reportedEvaluation !== undefined) ? (
                   <div>
                       {reportedEvaluation !== undefined && <div>Uwaga ucznia do zadania: {reportedEvaluation!.comment} </div>}
-                      {solutionExtended.id && group && fileFromDb !== undefined && (
+                      {solutionExtended.id && group && fileFromDb !== undefined && solutionExtended.assignment.advancedEvaluation && (
                             <Link
                               to={`/group/${group.id}/advancedAssignment`}
                               state={{solutionExtended: solutionExtended}}

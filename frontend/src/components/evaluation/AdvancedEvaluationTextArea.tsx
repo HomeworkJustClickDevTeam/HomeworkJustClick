@@ -290,7 +290,7 @@ export const AdvancedEvaluationTextArea = ({fileText,
         .then(() => setUpdatedComment(undefined))
   },[updatedComment])
 
-  return <div style={{width: width !== undefined ? width : "100%", height: height !== undefined ? height:"100%"}}>
+  return <div style={{width: width !== undefined ? width : "100%", border: '3px solid black', padding: '3px', margin:'3px'}}>
     {printFormattedText()}
   </div>
 }

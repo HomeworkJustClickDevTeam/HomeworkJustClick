@@ -14,6 +14,7 @@ import {useAppDispatch, useAppSelector} from "../../types/HooksRedux"
 import {useGetFile} from "../customHooks/useGetFile"
 import { IoDocumentAttachOutline } from "react-icons/io5";
 import {toast} from "react-toastify";
+import {AdvancedEvaluationExtensionType} from "../../types/AdvancedEvaluationExtensionType";
 
 function SolutionAddPage({assignment}: AssignmentPropsInterface) {
     const navigate = useNavigate()
@@ -29,9 +30,17 @@ function SolutionAddPage({assignment}: AssignmentPropsInterface) {
 
     function handleChangeFile(e: ChangeEvent<HTMLInputElement>) {
         e.preventDefault()
-        if (e.target.files) {
-            setFile(e.target.files[0])
+        if (!e.target.files) {
+            return
         }
+        if(assignment.advancedEvaluation){
+            if(!AdvancedEvaluationExtensionType.includes('.' + e.target.files[0].name.split('.').pop()!)){
+                toast.error("Wykładowca włączył funkcję zaawansowanego sprawdzania, ograniczającą dostępne rozszerzenia do: .xml, .txt, .json, .png, .jpg")
+                e.target.value = ''
+                return;
+            }
+        }
+        setFile(e.target.files[0])
     }
 
     function handleChangeComment(event: ChangeEvent<HTMLInputElement>) {
@@ -122,8 +131,13 @@ function SolutionAddPage({assignment}: AssignmentPropsInterface) {
             {fileFromDb !== undefined && <>Plik do zadania:<AssignmentFile assignmentId={assignment.id}/></>}
             <label>
                 Moje rozwiązania:
-                <input name="file" type="file" className='pl-2' onChange={(e) => handleChangeFile(e)}/>
-
+                <br/>
+                <input
+                  name="file"
+                  type="file"
+                  className='pl-2'
+                  accept={assignment.advancedEvaluation ? AdvancedEvaluationExtensionType.join(",") : undefined}
+                  onChange={(e) => handleChangeFile(e)}/>
             </label>
             <label>
                 Komentarz do zadania:
