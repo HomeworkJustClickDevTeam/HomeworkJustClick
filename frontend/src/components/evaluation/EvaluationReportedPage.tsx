@@ -14,7 +14,7 @@ export const EvaluationReportedPage = () => {
 
     useEffect(() => {
         if (role !== "Teacher") {
-            navigate(`-/group/${group?.id}`)
+            navigate(`/group/${group?.id}`)
         }
     }, [role])
 
