@@ -1,4 +1,4 @@
-import {AssignmentInterface} from "../../types/AssignmentInterface";
+import {AssignmentModel} from "../../types/Assignment.model";
 import AssignmentListElement from "./AssignmentListElement";
 import React from "react";
 import {useAppSelector} from "../../types/HooksRedux";
@@ -11,7 +11,7 @@ import {useGetAssignmentsByStudent} from "../customHooks/useGetAssignmentsByStud
 import {GetResultFromAssignmentsWithEvaluation} from "../../utils/GetResultFromAssignmentsWithEvaluation";
 import {useGetAssignmentsWithEvaluationByStudent} from "../customHooks/useGetAssignmentsWithEvaluationByStudent";
 
-export const AssignmentsDisplayer = ({assignments}:{assignments:AssignmentInterface[]}) =>{
+export const AssignmentsDisplayer = ({assignments}:{assignments:AssignmentModel[]}) =>{
   const group = useAppSelector(selectGroup)
   const user = useAppSelector(selectUserState)
   const groupAssignmentsWithEvaluation = useGetAssignmentsWithEvaluationByGroupAndStudent(group?.id, user!.id)

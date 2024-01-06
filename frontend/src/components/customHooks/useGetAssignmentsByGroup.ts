@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react"
-import { AssignmentInterface } from "../../types/AssignmentInterface"
+import { AssignmentModel } from "../../types/Assignment.model"
 import { useAppDispatch, useAppSelector } from "../../types/HooksRedux"
 import { selectRole } from "../../redux/roleSlice"
 import { setIsLoading } from "../../redux/isLoadingSlice"
 import { getAssignmentsByGroupPostgresService } from "../../services/postgresDatabaseServices"
 
 export const useGetAssignmentsByGroup = (groupId: number|undefined|null) => {
-  const [assignments, setAssignments] = useState<AssignmentInterface[]>([])
+  const [assignments, setAssignments] = useState<AssignmentModel[]>([])
   const dispatch = useAppDispatch()
   const role = useAppSelector(selectRole)
 
@@ -16,7 +16,7 @@ export const useGetAssignmentsByGroup = (groupId: number|undefined|null) => {
       dispatch(setIsLoading(true))
       getAssignmentsByGroupPostgresService(groupId.toString())
         .then((response)=> {
-          const assignmentsFromServer = response.data as AssignmentInterface[]
+          const assignmentsFromServer = response.data as AssignmentModel[]
           if(response !== null && response !== undefined){
             if(role === "Teacher"){
               if(mounted){setAssignments(assignmentsFromServer)}

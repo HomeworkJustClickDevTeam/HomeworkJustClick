@@ -1,5 +1,5 @@
 import {SolutionFile} from "./SolutionFile"
-import {AssignmentInterface} from "../../types/AssignmentInterface"
+import {AssignmentModel} from "../../types/Assignment.model"
 import {SolutionInterface} from "../../types/SolutionInterface"
 import {useGetEvaluationBySolution} from "../customHooks/useGetEvaluationBySolution"
 import {Link} from "react-router-dom";
@@ -15,7 +15,7 @@ import {useGetReportedEvaluation} from "../customHooks/useGetReportedEvaluation"
 
 export default function SolutionCheckedPage(props: {
     solution: SolutionInterface
-    assignment: AssignmentInterface
+    assignment: AssignmentModel
 }) {
     const evaluation = useGetEvaluationBySolution(props.solution.id)
     const evaluationReport = useGetReportedEvaluation(evaluation?.id)

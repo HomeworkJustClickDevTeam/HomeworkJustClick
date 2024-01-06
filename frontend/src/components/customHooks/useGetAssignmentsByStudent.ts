@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { AssignmentInterface } from "../../types/AssignmentInterface"
+import { AssignmentModel } from "../../types/Assignment.model"
 import { useAppDispatch } from "../../types/HooksRedux"
 import { setIsLoading } from "../../redux/isLoadingSlice"
 import {
@@ -11,7 +11,7 @@ import {
 import {AssignmentsType} from "../../types/AssignmentsType";
 
 export const useGetAssignmentsByStudent = (studentId:number|undefined|null, filter?: AssignmentsType) => {
-  const [assignments, setAssignments] = useState<AssignmentInterface[]>([])
+  const [assignments, setAssignments] = useState<AssignmentModel[]>([])
   const dispatch = useAppDispatch()
 
   useEffect(() => {

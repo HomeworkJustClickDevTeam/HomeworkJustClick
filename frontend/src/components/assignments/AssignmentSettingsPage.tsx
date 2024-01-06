@@ -1,9 +1,9 @@
 import ReactDatePicker from "react-datepicker";
 import {AssignmentFile} from "./AssignmentAddOrModifyFile";
 import React, {ChangeEvent, SetStateAction, useEffect, useState} from "react";
-import {AssignmentInterface} from "../../types/AssignmentInterface";
+import {AssignmentModel} from "../../types/Assignment.model";
 import {Table} from "../../types/Table.model";
-import {AssignmentToSendInterface} from "../../types/AssignmentToSendInterface";
+import {AssignmentCreateModel} from "../../types/AssignmentCreate.model";
 import {GroupInterface} from "../../types/GroupInterface";
 import {useNavigate} from "react-router-dom";
 import {setHours, setMinutes} from "date-fns";
@@ -11,7 +11,7 @@ import {FileInterface} from "../../types/FileInterface";
 
 interface AssignmentSettingsPagePropsInterface{
   handleSubmit: (event: React.FormEvent) => void,
-  assignment: AssignmentInterface|AssignmentToSendInterface,
+  assignment: AssignmentModel|AssignmentCreateModel,
   chosenEvaluationTable:number,
   handleDelete?:(event: React.FormEvent) => void,
   setChosenEvaluationTable:(tableId: number)=>void,
@@ -177,10 +177,10 @@ export const AssignmentSettingsPage = ({handleSubmit,
             </button>
           </form>
           <p className="mt-4 mb-2">Nowy plik: </p>
-          {(assignment as AssignmentInterface).id !== undefined && newAssignmentId === undefined ?
+          {(assignment as AssignmentModel).id !== undefined && newAssignmentId === undefined ?
           <AssignmentFile
             setNewFile={setNewFile}
-            assignmentId={(assignment as AssignmentInterface).id}
+            assignmentId={(assignment as AssignmentModel).id}
             databaseFile={databaseFile}
           />:
             <AssignmentFile

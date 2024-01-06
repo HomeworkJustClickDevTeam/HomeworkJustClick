@@ -8,7 +8,7 @@ import {
 } from "../../services/postgresDatabaseServices"
 import ReactDatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
-import { AssignmentToSendInterface } from "../../types/AssignmentToSendInterface"
+import { AssignmentCreateModel } from "../../types/AssignmentCreate.model"
 import { selectGroup } from "../../redux/groupSlice"
 import { useSelector } from "react-redux"
 import { selectUserState } from "../../redux/userStateSlice"
@@ -26,14 +26,14 @@ function AssignmentAddSettingsPageWrapper() {
   const navigate = useNavigate()
   const userState = useAppSelector(selectUserState)
 
-  const [assignment, setAssignment] = useState<AssignmentToSendInterface>({
-    title: "",
-    completionDatetime: new Date(),
-    taskDescription: "",
-    visible: true,
-    maxPoints: 1,
-    autoPenalty: 50,
-  })
+  const [assignment, setAssignment] = useState<AssignmentCreateModel>(new AssignmentCreateModel(
+    "",
+    true,
+    "",
+    new Date(),
+    1,
+    50
+  ))
   const [idAssignment, setIdAssignment] = useState<number>()
   const group = useSelector(selectGroup)
   const {evaluationTable} = useGetEvaluationTable(userState!.id)

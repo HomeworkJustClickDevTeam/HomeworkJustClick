@@ -1,10 +1,10 @@
 import {Chart} from "react-google-charts";
-import {AssignmentInterface} from "../../types/AssignmentInterface";
+import {AssignmentModel} from "../../types/Assignment.model";
 import {useEffect, useState} from "react";
 import {AssignmentReportModel} from "../../types/AssignmentReport.model";
 import {createReportAssignment} from "../../services/postgresDatabaseServices";
 
-export const AssignmentPieChart = ({assignment}:{assignment:AssignmentInterface}) =>{
+export const AssignmentPieChart = ({assignment}:{assignment:AssignmentModel}) =>{
   const [studentsResults, setStudentsResults] = useState<any>(undefined)
   useEffect(() => {
     createReportAssignment({
