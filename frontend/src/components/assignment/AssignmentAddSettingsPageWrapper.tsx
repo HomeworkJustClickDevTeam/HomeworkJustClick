@@ -32,7 +32,8 @@ function AssignmentAddSettingsPageWrapper() {
     "",
     new Date(),
     1,
-    50
+    50,
+    false
   ))
   const [idAssignment, setIdAssignment] = useState<number>()
   const group = useSelector(selectGroup)

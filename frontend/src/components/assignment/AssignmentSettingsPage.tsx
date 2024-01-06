@@ -8,6 +8,7 @@ import {GroupInterface} from "../../types/GroupInterface";
 import {useNavigate} from "react-router-dom";
 import {setHours, setMinutes} from "date-fns";
 import {FileInterface} from "../../types/FileInterface";
+import { FaQuestion } from "react-icons/fa";
 
 interface AssignmentSettingsPagePropsInterface{
   handleSubmit: (event: React.FormEvent) => void,
@@ -91,7 +92,7 @@ export const AssignmentSettingsPage = ({handleSubmit,
         <div className="relative flex flex-col mx-[7.5%] mt-4 border border-border_gray border-1 rounded-md pt-4 px-4 fit pb-4 box-content overflow-y-auto">
           <form onSubmit={(event) => handleSubmit(event)} className="flex flex-col gap-3">
             <label className="pr-3">
-              Tytuł
+              Tytuł:
               <input
                 name="title"
                 type="text"
@@ -103,7 +104,7 @@ export const AssignmentSettingsPage = ({handleSubmit,
             </label>
 
             <label>
-              Opis zadania
+              Opis zadania:
               <input
                 name="taskDescription"
                 type="text"
@@ -114,7 +115,7 @@ export const AssignmentSettingsPage = ({handleSubmit,
               />
             </label>
             <label>
-              Maksymalne punkty
+              Maksymalne punkty:
               <input
                 disabled={chosenEvaluationTable !== -1}
                 name="maxPoints"
@@ -132,7 +133,7 @@ export const AssignmentSettingsPage = ({handleSubmit,
             </label>
             <label>
               {" "}
-              Kara za wysłanie po terminie (%)
+              Kara za wysłanie po terminie (%):
               <input
                 name="autoPenalty"
                 type="number"
@@ -169,6 +170,19 @@ export const AssignmentSettingsPage = ({handleSubmit,
                 onChange={(event)=>handleCheckboxChange(event)}
               />
             </label>
+            <label htmlFor={'advancedEvaluation'}>
+               {<div
+                className="cursor-help transititext-primary text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
+                data-te-toggle='tooltip'
+                title='Włączenie tej opcji spowoduje ograniczenie rozszerzeń plików przesyłanych odpowiedzi do: .xml, .json, .txt, .png, .jpg'>
+                Zaawansowane sprawdzanie:</div>}
+              <input
+                type="checkbox"
+                name='advancedEvaluation'
+                checked={assignment.advancedEvaluation}
+                onChange={(event)=>handleCheckboxChange(event)}/>
+            </label>
+
             <button
               type={"submit"}
               className="absolute bottom-5 right-0 mr-6 mt-4 px-8 py-1 rounded-lg bg-main_blue text-white hover:bg-hover_blue hover:shadow-md active:shadow-none"

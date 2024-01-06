@@ -5,7 +5,8 @@ export class AssignmentCreateModel {
     public taskDescription: string,
     public completionDatetime: Date,
     public maxPoints: number,
-    public autoPenalty: number
+    public autoPenalty: number,
+    public advancedEvaluation: boolean
   ) {
   }
 }
