@@ -23,9 +23,9 @@ function HomePage() {
   const allUserGroups = useGetUserGroups(userState?.id, "all")
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value;
-    const option = options.find((opt) => opt.value === value);
+    const option = options.find((opt) => opt.value === value)
     setSelectedOption(option!)
-    event.target.blur()
+    event.target.blur();
   };
 
   useEffect(() => {
@@ -38,7 +38,7 @@ function HomePage() {
   return (
     <div className='mx-[7.5%]'>
       <div className='flex inline-block my-5 xl:my-8'>
-        <Link to="/create/group" className=''>
+        <Link to="/create/group" >
           <button type="button"
             className=' border-main_blue h-8 rounded-md border-2 px-3 xl:px-4 xl:h-10 xl:rounded-lg text-main_blue text-sm xl:text-lg hover:bg-hover_gray hover:shadow-md active:bg-opacity-60'
           >Stwórz grupę +</button>
