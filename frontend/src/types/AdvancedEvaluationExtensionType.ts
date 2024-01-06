@@ -1,6 +1,7 @@
-export const AdvancedEvaluationExtensionType: string[] =[
-  '.png',
-  '.jpg',
-  '.txt',
+export const AdvancedEvaluationExtensionTypeImg: string[] = ['.png',
+  '.jpg']
+
+export const AdvancedEvaluationExtensionTypeTxt = ['.txt',
   '.xml',
   '.json']
+export const AdvancedEvaluationExtensionType: string[] = AdvancedEvaluationExtensionTypeImg.concat(AdvancedEvaluationExtensionTypeTxt)
