@@ -82,6 +82,7 @@ public class AssignmentService {
                 .title(assignment.getTitle())
                 .visible(assignment.getVisible())
                 .maxPoints(assignment.getMaxPoints())
+                .advancedEvaluation(assignment.getAdvancedEvaluation())
                 .build();
     }
 
@@ -116,6 +117,7 @@ public class AssignmentService {
                         .title(assignment.getTitle())
                         .visible(assignment.getVisible())
                         .maxPoints(assignment.getMaxPoints())
+                        .advancedEvaluation(assignment.getAdvancedEvaluation())
                         .build();
             } else {
                 return AssignmentResponseDto.builder().forbidden(true).build();
@@ -288,6 +290,7 @@ public class AssignmentService {
                     .title(assignment.getTitle())
                     .visible(assignment.getVisible())
                     .maxPoints(assignment.getMaxPoints())
+                    .advancedEvaluation(assignment.getAdvancedEvaluation())
                     .build());
         }
         return assignmentResponsDtos;
@@ -313,6 +316,7 @@ public class AssignmentService {
                                 .title(assignment.getTitle())
                                 .visible(assignment.getVisible())
                                 .maxPoints(assignment.getMaxPoints())
+                                .advancedEvaluation(assignment.getAdvancedEvaluation())
                                 .build()
                 );
             }
@@ -572,6 +576,7 @@ public class AssignmentService {
                 .visible(assignment.getVisible())
                 .maxPoints(assignment.getMaxPoints())
                 .autoPenalty(assignment.getAutoPenalty())
+                .advancedEvaluation(assignment.getAdvancedEvaluation())
                 .build();
     }
 
@@ -608,6 +613,7 @@ public class AssignmentService {
                 .visible(assignment.getVisible())
                 .maxPoints(assignment.getMaxPoints())
                 .autoPenalty(assignment.getAutoPenalty())
+                .advancedEvaluation(assignment.getAdvancedEvaluation())
                 .build();
     }
 

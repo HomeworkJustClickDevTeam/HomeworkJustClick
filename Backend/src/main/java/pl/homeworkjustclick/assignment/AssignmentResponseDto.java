@@ -36,4 +36,5 @@ public class AssignmentResponseDto implements Serializable {
     private int maxPoints;
     @Schema(example = "50")
     private int autoPenalty;
+    private Boolean advancedEvaluation;
 }

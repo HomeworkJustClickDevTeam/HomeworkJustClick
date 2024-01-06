@@ -25,6 +25,7 @@ public class AssignmentMapper {
                 .visible(assignment.getVisible())
                 .maxPoints(assignment.getMaxPoints())
                 .autoPenalty(assignment.getAutoPenalty())
+                .advancedEvaluation(assignment.getAdvancedEvaluation())
                 .build();
     }
 
@@ -42,6 +43,7 @@ public class AssignmentMapper {
                 .maxPoints(assignment.getMaxPoints())
                 .autoPenalty(assignment.getAutoPenalty())
                 .evaluation(evaluation)
+                .advancedEvaluation(assignment.getAdvancedEvaluation())
                 .build();
     }
 }
