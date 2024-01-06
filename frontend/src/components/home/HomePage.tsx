@@ -15,7 +15,7 @@ const options = [
 ];
 
 function HomePage() {
-  const [selectedOption, setSelectedOption] = useState(options[0]);
+  const [selectedOption, setSelectedOption] = useState(options[0])
   const userState = useAppSelector(selectUserState)
   const dispatch = useAppDispatch()
   const teacherUserGroups = useGetUserGroups(userState?.id, "teacher")
@@ -24,7 +24,8 @@ function HomePage() {
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value;
     const option = options.find((opt) => opt.value === value);
-    setSelectedOption(option!);
+    setSelectedOption(option!)
+    event.target.blur()
   };
 
   useEffect(() => {
@@ -44,7 +45,7 @@ function HomePage() {
         </Link>
         <div className="absolute right-0 mr-[7.5%] text-sm xl:text-lg">
           <select
-            className="flex border-2 pl-2 rounded-md xl:rounded-lg w-44 xl:w-56 h-8 xl:h-10 items-center"
+            className="flex border-2 border-main_blue text-main_blue pl-2 rounded-md xl:rounded-lg w-44 xl:w-56 h-8 xl:h-10 items-center"
             value={selectedOption.value}
             onChange={handleChange}
           >
