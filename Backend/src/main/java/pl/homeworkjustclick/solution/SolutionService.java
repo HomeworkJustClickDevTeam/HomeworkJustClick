@@ -503,6 +503,7 @@ public class SolutionService {
                 .visible(assignment.getVisible())
                 .maxPoints(assignment.getMaxPoints())
                 .autoPenalty(assignment.getAutoPenalty())
+                .advancedEvaluation(assignment.getAdvancedEvaluation())
                 .build();
 
         return SolutionResponseExtendedDto.builder()
