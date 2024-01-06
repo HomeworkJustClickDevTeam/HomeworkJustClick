@@ -58,7 +58,7 @@ export default function SolutionCheckedPage(props: {
             <div className="absolute bottom-1 left-48 mb-5 mr-4">{(userRole === 'Student' && evaluation) && (
               (evaluationReport === undefined) ?
                 <ReportGrade evaluationId={evaluation.id}/>
-                : <div>Zadanie zostało zaznaczone, jako niepoprawnie ocenione, z komentarzem:<br/>
+                : <div>Zadanie zostało zaznaczone jako niepoprawnie ocenione, z komentarzem:<br/>
                   {evaluationReport!.comment}</div>
             )}
             </div>
