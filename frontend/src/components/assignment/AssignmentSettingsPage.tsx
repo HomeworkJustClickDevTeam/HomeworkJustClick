@@ -9,6 +9,7 @@ import {useNavigate} from "react-router-dom";
 import {setHours, setMinutes} from "date-fns";
 import {FileInterface} from "../../types/FileInterface";
 import { FaQuestion } from "react-icons/fa";
+import { FaRegCheckCircle } from "react-icons/fa";
 
 interface AssignmentSettingsPagePropsInterface{
   handleSubmit: (event: React.FormEvent) => void,
@@ -96,7 +97,7 @@ export const AssignmentSettingsPage = ({handleSubmit,
   }
   return (
 
-      <div className='flex flex-col overflow-y-hidden h-[calc(100vh-340px)] '>
+      <div className='flex flex-col overflow-y-hidden h-[calc(100vh-360px)] '>
         <div className="relative flex flex-col mx-[7.5%] mt-4 border border-border_gray border-1 rounded-md pt-4 px-4 fit pb-4 box-content overflow-y-auto">
          <div className='pl-3 border-l-2 border-main_blue lg:border-none pb-12 lg:pb-3'>
           <form onSubmit={(event) => handleSubmit(event)} className="flex flex-col gap-3 lg:flex-row">
@@ -105,6 +106,7 @@ export const AssignmentSettingsPage = ({handleSubmit,
             <label className="pr-3 w-28">
               Tytuł:
             </label>
+
               <input
                 name="title"
                 type="text"
@@ -112,7 +114,9 @@ export const AssignmentSettingsPage = ({handleSubmit,
                 value={assignment.title}
                 placeholder="Nazwa zadania"
                 className="pl-1 ml-2 border-b-2 border-b-light_gray w-72"
+
               />
+
 
               </div>
             <div>
@@ -165,7 +169,7 @@ export const AssignmentSettingsPage = ({handleSubmit,
               />
             </div>
             <label className="flex flex-row">
-              <p className="w-[335px]">Data wykonania: </p>
+              <p className="lg:w-[335px]">Data wykonania: </p>
               <ReactDatePicker
                 name="completionDatetime"
                 selected={new Date(assignment.completionDatetime)}
@@ -180,35 +184,39 @@ export const AssignmentSettingsPage = ({handleSubmit,
                 className="pl-1 ml-2 border-b-2 border-b-light_gray w-36 cursor-pointer"
               />
             </label>
-            <label className='mt-2'>
+              <div className='flex flex-row mt-2'>
+            <label className=' mr-3'>
               Widoczne:
+            </label>
               <input
                 name="visible"
                 type="checkbox"
                 checked={assignment.visible}
                 onChange={(event)=>handleCheckboxChange(event)}
+                className="mt-1 before:content[''] peer relative h-4 w-4 cursor-pointer  rounded-md border border-main_blue transition-all before:absolute before:top-2/4 before:left-2/4 before:block before:h-8 before:w-8 before:-translate-y-2/4 before:-translate-x-2/4 before:rounded-full before:bg-main_blue before:opacity-0 before:transition-opacity checked:border-main_lily checked:bg-main_blue checked:before:bg-main_lily hover:before:opacity-20"
               />
-            </label>
+
+            </div>
               <div className='flex flex-row '>
 
                   <label
-                      className="cursor-help transititext-primary text-primary transition duration-75 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
+                      className="mr-3 cursor-help transititext-primary text-primary transition duration-75 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
                       data-te-toggle='tooltip'
                       title='Włączenie tej opcji spowoduje ograniczenie rozszerzeń plików przesyłanych odpowiedzi do: .xml, .json, .txt, .png, .jpg'>
-                    Ogranicz format plików:
+                    Ogranicz format plików:</label>
                   <input
-                      className='ml-2 mt-1'
+                      className="mt-1 before:content[''] peer relative h-4 w-4 cursor-pointer  rounded-md border border-main_blue transition-all before:absolute before:top-2/4 before:left-2/4 before:block before:h-8 before:w-8 before:-translate-y-2/4 before:-translate-x-2/4 before:rounded-full before:bg-main_blue before:opacity-0 before:transition-opacity checked:border-main_lily checked:bg-main_blue checked:before:bg-main_lily hover:before:opacity-20"
                       type="checkbox"
                       name='advancedEvaluation'
                       checked={assignment.advancedEvaluation}
                       onChange={(event)=>handleCheckboxChange(event)}/>
-                </label>
+
             </div>
             </div>
 
             <button
               type={"submit"}
-              className="absolute lg:top-3 bottom-[-155px] lg:right-0 lg:mr-6 lg:mt-4 h-fit px-8 py-1 rounded-lg bg-main_blue text-white hover:bg-hover_blue hover:shadow-md active:shadow-none"
+              className="absolute lg:top-3 bottom-[-220px] lg:right-0 lg:mr-6 lg:mt-4 h-fit px-8 py-1 rounded-lg bg-main_blue text-white hover:bg-hover_blue hover:shadow-md active:shadow-none"
             >
               Zapisz
             </button>
