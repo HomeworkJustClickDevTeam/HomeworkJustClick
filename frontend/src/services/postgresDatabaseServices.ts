@@ -177,12 +177,10 @@ export const createFileWithSolutionPostgresService = async (
 }
 
 export const createEvaluationWithUserAndSolutionPostgresService = async (
-    userId: string,
-    solutionId: string,
     evaluation: EvaluationCreateModel
 ) => {
     return await postgresqlDatabaseJSON.post(
-        `/evaluation/withUserAndSolution/${userId}/${solutionId}`,
+        `/evaluation`,
         evaluation
     )
 }
