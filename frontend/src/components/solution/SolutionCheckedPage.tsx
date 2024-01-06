@@ -72,8 +72,8 @@ export default function SolutionCheckedPage(props: {
                         comment: props.solution.comment
                     }
                 }}
-                className="absolute underline font-semibold bottom-0 left-0 mb-2 ml-4">
-                Komentarze prowadzącego do pliku:
+                className="underline font-semibold bottom-0 left-0 mb-2">
+                Komentarze prowadzącego do pliku
             </Link>}
         </div>
     )

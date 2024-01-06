@@ -97,7 +97,7 @@ function SolutionPage() {
                       )}
                       <div>
                           <Rating
-                            maxPoints={!evaluationPanel ? solutionExtended.assignment.maxPoints : undefined}
+                            maxPoints={solutionExtended.assignment.maxPoints}
                             points={points}
                             setPoints={setPoints}
                             reportedEvaluation={reportedEvaluation}

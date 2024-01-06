@@ -44,9 +44,7 @@ export function Rating({maxPoints,
         }
         const pointsPenalty = (penalty / 100) * points
         return points - pointsPenalty
-
     }
-
     const createEvaluation = (body: EvaluationCreateModel) => {
       createEvaluationWithUserAndSolutionPostgresService(userState!.id.toString(), solutionId.toString(), body)
         .then(() => {
@@ -114,9 +112,8 @@ export function Rating({maxPoints,
     function createButtonFromEvaluationPanel(buttons: any[], evaluationPanelButtons: Button[]) {
         evaluationPanelButtons.forEach((evaluationButton) => {
             buttons.push(<button key={evaluationButton.points} onClick={() => {
-                const points = autoPenaltyCalculate(evaluationButton.points)
-                setPoints(points.toString());
-                setPointsToSend(evaluationButton.points)
+                setPoints(evaluationButton.points.toString());
+                setPointsToSend(autoPenaltyCalculate(evaluationButton.points))
             }}
                                  className={`border border-black w-20 h-6 text-center rounded-md hover:bg-lilly-bg focus:bg-hover_blue`}>
                 {evaluationButton.points}
@@ -132,13 +129,13 @@ export function Rating({maxPoints,
       }
       else if(pointsAsString === '0' && characterToJoin!=="."){
         setPoints(characterToJoin)
-        setPointsToSend(+characterToJoin)
+        setPointsToSend(autoPenaltyCalculate(+characterToJoin))
         return
       }
       else pointsAsString += characterToJoin
       if(+pointsAsString <= maxPoints!){
         setPoints(pointsAsString!)
-        setPointsToSend(+pointsAsString!)
+        setPointsToSend(autoPenaltyCalculate(+pointsAsString!))
       }
     }
 
@@ -182,10 +179,10 @@ export function Rating({maxPoints,
 
     const renderButtons = () => {
         const buttons: any[] = []
-        if (evaluationPanelButtons && !maxPoints) {
+        if (evaluationPanelButtons) {
             createButtonFromEvaluationPanel(buttons, evaluationPanelButtons)
         } else {
-            createButtonFromMaxPoints(buttons)
+            createCalculator(buttons)
         }
         return buttons
     }
