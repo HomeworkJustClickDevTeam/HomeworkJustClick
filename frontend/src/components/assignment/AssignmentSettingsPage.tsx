@@ -34,7 +34,15 @@ export const AssignmentSettingsPage = ({handleSubmit,
                                          databaseFile,
                                          newAssignmentId}:AssignmentSettingsPagePropsInterface) =>{
 
-  const handleTextChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleTextTitleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target
+    setAssignment((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }))
+  }
+
+  const handleTextDescChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     const { name, value } = event.target
     setAssignment((prevState) => ({
       ...prevState,
@@ -88,34 +96,42 @@ export const AssignmentSettingsPage = ({handleSubmit,
   }
   return (
 
-      <div className='overflow-y-hidden'>
+      <div className='flex flex-col overflow-y-hidden h-[calc(100vh-340px)] '>
         <div className="relative flex flex-col mx-[7.5%] mt-4 border border-border_gray border-1 rounded-md pt-4 px-4 fit pb-4 box-content overflow-y-auto">
-          <form onSubmit={(event) => handleSubmit(event)} className="flex flex-col gap-3">
-            <label className="pr-3">
+         <div className='pl-3 border-l-2 border-main_blue lg:border-none pb-12 lg:pb-3'>
+          <form onSubmit={(event) => handleSubmit(event)} className="flex flex-col gap-3 lg:flex-row">
+            <div className='flex flex-col'>
+              <div className='flex flex-row'>
+            <label className="pr-3 w-28">
               Tytuł:
+            </label>
               <input
                 name="title"
                 type="text"
-                onChange={(event)=>handleTextChange(event)}
+                onChange={(event)=>handleTextTitleChange(event)}
                 value={assignment.title}
                 placeholder="Nazwa zadania"
-                className="pl-1 ml-2 border-b-2 border-b-light_gray w-64"
+                className="pl-1 ml-2 border-b-2 border-b-light_gray w-72"
               />
-            </label>
 
-            <label>
+              </div>
+            <div>
+            <label className='flex align-top mt-2 w-24'>
               Opis zadania:
-              <input
+            </label>
+              <textarea
                 name="taskDescription"
-                type="text"
-                onChange={(event)=>handleTextChange(event)}
+                onChange={(event)=>handleTextDescChange(event)}
                 value={assignment.taskDescription}
                 placeholder="Opis zadania"
-                className="pl-1 ml-2 border-b-2 border-b-light_gray w-80"
+                className="pl-1 ml-28 border border-light_gray rounded-md shadow-md w-80 min-h-[125px] mt-2 px-2 py-1"
               />
-            </label>
-            <label>
-              Maksymalne punkty:
+            </div>
+            </div>
+            <div className='flex flex-col gap-3 w-full lg:pl-5 lg:border-l-2 lg:border-main_blue'>
+              <div className='flex flex-row'>
+            <label className='w-60'>
+              Maksymalne punkty:  </label>
               <input
                 disabled={chosenEvaluationTable !== -1}
                 name="maxPoints"
@@ -125,15 +141,18 @@ export const AssignmentSettingsPage = ({handleSubmit,
                 value={assignment.maxPoints}
                 className="pl-1 ml-2 border-b-2 border-b-light_gray cursor-pointer w-12"
               />
-            </label>
-            <label>Wybierz tabelę:
+
+              </div>
+              <div className='flex flex-row'>
+              <label className='w-60'>Wybierz tabelę: </label>
               <select className="ml-2 pr-1 border-2 border-border_gray border-solid rounded-md" onChange={(event) => handleTableChange(event)} value={chosenEvaluationTable}>
                 {evaluationTables()}
               </select>
-            </label>
-            <label>
+              </div>
+              <div className='flex flex-row'>
+            <label className='w-60'>
               {" "}
-              Kara za wysłanie po terminie (%):
+              Kara za wysłanie po terminie (%):</label>
               <input
                 name="autoPenalty"
                 type="number"
@@ -144,9 +163,9 @@ export const AssignmentSettingsPage = ({handleSubmit,
                 value={assignment.autoPenalty}
                 className="pl-1 ml-2 border-b-2 border-b-light_gray cursor-pointer w-12"
               />
-            </label>
-            <label className="flex">
-              <p className="w-36">Data wykonania: </p>
+            </div>
+            <label className="flex flex-row">
+              <p className="w-[335px]">Data wykonania: </p>
               <ReactDatePicker
                 name="completionDatetime"
                 selected={new Date(assignment.completionDatetime)}
@@ -161,7 +180,7 @@ export const AssignmentSettingsPage = ({handleSubmit,
                 className="pl-1 ml-2 border-b-2 border-b-light_gray w-36 cursor-pointer"
               />
             </label>
-            <label>
+            <label className='mt-2'>
               Widoczne:
               <input
                 name="visible"
@@ -170,27 +189,31 @@ export const AssignmentSettingsPage = ({handleSubmit,
                 onChange={(event)=>handleCheckboxChange(event)}
               />
             </label>
-            <label htmlFor={'advancedEvaluation'}>
-               {<div
-                className="cursor-help transititext-primary text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
-                data-te-toggle='tooltip'
-                title='Włączenie tej opcji spowoduje ograniczenie rozszerzeń plików przesyłanych odpowiedzi do: .xml, .json, .txt, .png, .jpg'>
-                Zaawansowane sprawdzanie:</div>}
-              <input
-                type="checkbox"
-                name='advancedEvaluation'
-                checked={assignment.advancedEvaluation}
-                onChange={(event)=>handleCheckboxChange(event)}/>
-            </label>
+              <div className='flex flex-row '>
+
+                  <label
+                      className="cursor-help transititext-primary text-primary transition duration-75 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
+                      data-te-toggle='tooltip'
+                      title='Włączenie tej opcji spowoduje ograniczenie rozszerzeń plików przesyłanych odpowiedzi do: .xml, .json, .txt, .png, .jpg'>
+                    Ogranicz format plików:
+                  <input
+                      className='ml-2 mt-1'
+                      type="checkbox"
+                      name='advancedEvaluation'
+                      checked={assignment.advancedEvaluation}
+                      onChange={(event)=>handleCheckboxChange(event)}/>
+                </label>
+            </div>
+            </div>
 
             <button
               type={"submit"}
-              className="absolute bottom-5 right-0 mr-6 mt-4 px-8 py-1 rounded-lg bg-main_blue text-white hover:bg-hover_blue hover:shadow-md active:shadow-none"
+              className="absolute lg:top-3 bottom-[-155px] lg:right-0 lg:mr-6 lg:mt-4 h-fit px-8 py-1 rounded-lg bg-main_blue text-white hover:bg-hover_blue hover:shadow-md active:shadow-none"
             >
               Zapisz
             </button>
           </form>
-          <p className="mt-4 mb-2">Nowy plik: </p>
+          <p className="mt-4 mb-2">Plik do zadania: </p>
           {(assignment as AssignmentModel).id !== undefined && newAssignmentId === undefined ?
           <AssignmentFile
             setNewFile={setNewFile}
@@ -206,6 +229,7 @@ export const AssignmentSettingsPage = ({handleSubmit,
                   className='absolute top-5 right-0 mr-6 mb-4 px-4 py-1 rounded-lg bg-berry_red text-white'>Usuń
           </button>}
         </div>
+      </div>
       </div>
 
   )
