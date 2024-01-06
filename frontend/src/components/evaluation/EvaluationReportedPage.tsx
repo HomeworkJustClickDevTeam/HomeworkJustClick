@@ -37,7 +37,7 @@ export const EvaluationReportedPage = () => {
                                 {evaluationReportResponse.solution.assignment.title}
                             </div>
                             <p className="absolute right-0 mr-10 font-semibold text-[28px]">
-                                {evaluationReportResponse.evaluation.grade} / {evaluationReportResponse.solution.assignment.maxPoints}
+                                {evaluationReportResponse.evaluation.result} / {evaluationReportResponse.solution.assignment.maxPoints}
                             </p>
                         </Link>
                     </li>
