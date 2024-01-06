@@ -5,7 +5,7 @@ import {
     createFileWithSolutionPostgresService,
     createSolutionWithUserAndAssignmentPostgresService,
 } from "../../services/postgresDatabaseServices"
-import {AssignmentFile} from "../assignments/AssignmentFile"
+import {AssignmentFile} from "../assignment/AssignmentFile"
 import {format, parseISO} from "date-fns"
 import {AssignmentPropsInterface} from "../../types/AssignmentPropsInterface"
 import {SolutionCreateInterface} from "../../types/SolutionCreateInterface"
@@ -14,6 +14,7 @@ import {useAppDispatch, useAppSelector} from "../../types/HooksRedux"
 import {useGetFile} from "../customHooks/useGetFile"
 import { IoDocumentAttachOutline } from "react-icons/io5";
 import {toast} from "react-toastify";
+import {AdvancedEvaluationExtensionType} from "../../types/AdvancedEvaluationExtensionType";
 
 function SolutionAddPage({assignment}: AssignmentPropsInterface) {
     const navigate = useNavigate()
@@ -29,9 +30,17 @@ function SolutionAddPage({assignment}: AssignmentPropsInterface) {
 
     function handleChangeFile(e: ChangeEvent<HTMLInputElement>) {
         e.preventDefault()
-        if (e.target.files) {
-            setFile(e.target.files[0])
+        if (!e.target.files) {
+            return
         }
+        if(assignment.advancedEvaluation){
+            if(!AdvancedEvaluationExtensionType.includes('.' + e.target.files[0].name.split('.').pop()!)){
+                toast.error("Wykładowca włączył funkcję zaawansowanego sprawdzania, ograniczającą dostępne rozszerzenia do: .xml, .txt, .json, .png, .jpg")
+                e.target.value = ''
+                return;
+            }
+        }
+        setFile(e.target.files[0])
     }
 
     function handleChangeComment(event: ChangeEvent<HTMLInputElement>) {
@@ -109,39 +118,48 @@ function SolutionAddPage({assignment}: AssignmentPropsInterface) {
     }
 
     return (
-        <div
-            className="relative flex flex-col mx-[7.5%] mt-4 border border-border_gray border-1 rounded-md pt-4 px-4 h-80 gap-2">
-            <div>
-                <span className="font-semibold">Tytuł zadania: </span>
-                {assignment.title}
-            </div>
-            <div>
-                <span className="font-semibold">Data ukończenia: </span>
-                {format(new Date(assignment.completionDatetime.toString()), "dd.MM.yyyy, HH:mm")}
-            </div>
-            {fileFromDb !== undefined && <>Plik do zadania:<AssignmentFile assignmentId={assignment.id}/></>}
-            <label>
-                Moje rozwiązania:
-                <input name="file" type="file" className='pl-2' onChange={(e) => handleChangeFile(e)}/>
-
-            </label>
-            <label>
-                Komentarz do zadania:
-                <input
-                    className="pl-1 ml-2 border-b-2 border-b-light_gray w-80"
-                    type="text"
-                    name="comment"
-                    onChange={(e) => handleChangeComment(e)}
-                />
-            </label>
-            <button
-                type={"submit"}
-                onClick={(e) => handleUploadClick(e)}
-                className="absolute bg-main_blue text-white px-6 py-1 rounded w-40 bottom-0 left-0 ml-4 mb-6 hover:bg-hover_blue hover:shadow-md active:shadow-none"
-            >
-                Wyślij zadanie
-            </button>
-        </div>
+      <div
+        className="relative flex flex-col mx-[7.5%] mt-4 border border-border_gray border-1 rounded-md pt-4 px-4 h-80 gap-2">
+          <div>
+              <span className="font-semibold">Tytuł zadania: </span>
+              {assignment.title}
+          </div>
+          <p>
+              <span className="font-semibold">Opis zadania: </span>
+              {assignment.taskDescription}
+          </p>
+          <div>
+              <span className="font-semibold">Data ukończenia: </span>
+              {format(new Date(assignment.completionDatetime.toString()), "dd.MM.yyyy, HH:mm")}
+          </div>
+          {fileFromDb !== undefined && <>Plik do zadania:<AssignmentFile assignmentId={assignment.id}/></>}
+          <label>
+              Moje rozwiązania:
+              <br/>
+              <input
+                name="file"
+                type="file"
+                className='pl-2'
+                accept={assignment.advancedEvaluation ? AdvancedEvaluationExtensionType.join(",") : undefined}
+                onChange={(e) => handleChangeFile(e)}/>
+          </label>
+          <label>
+              Komentarz do zadania:
+              <input
+                className="pl-1 ml-2 border-b-2 border-b-light_gray w-80"
+                type="text"
+                name="comment"
+                onChange={(e) => handleChangeComment(e)}
+              />
+          </label>
+          <button
+            type={"submit"}
+            onClick={(e) => handleUploadClick(e)}
+            className="absolute bg-main_blue text-white px-6 py-1 rounded w-40 bottom-0 left-0 ml-4 mb-6 hover:bg-hover_blue hover:shadow-md active:shadow-none"
+          >
+              Wyślij zadanie
+          </button>
+      </div>
     )
 }
 

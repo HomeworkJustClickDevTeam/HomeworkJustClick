@@ -22,7 +22,8 @@ interface RatingPropsInterface {
     assigmentCompletionDate: Date,
     solutionCreationDate: Date | string,
     penalty: number,
-    reportedEvaluation:EvaluationReportResponse|undefined
+    reportedEvaluation:EvaluationReportResponse|undefined,
+    comment: string
 }
 
 export function Rating({maxPoints,
@@ -34,7 +35,8 @@ export function Rating({maxPoints,
                        solutionCreationDate,
                        evaluationPanelButtons,
                        penalty,
-                       reportedEvaluation}: RatingPropsInterface) {
+                       reportedEvaluation,
+                       comment}: RatingPropsInterface) {
     const navigate = useNavigate()
     const userState = useAppSelector(selectUserState)
     const [pointsToSend,setPointsToSend] = useState<number|undefined>(undefined)
@@ -44,11 +46,9 @@ export function Rating({maxPoints,
         }
         const pointsPenalty = (penalty / 100) * points
         return points - pointsPenalty
-
     }
-
     const createEvaluation = (body: EvaluationCreateModel) => {
-      createEvaluationWithUserAndSolutionPostgresService(userState!.id.toString(), solutionId.toString(), body)
+      createEvaluationWithUserAndSolutionPostgresService(body)
         .then(() => {
           toast.success("Zadanie zostało ocenione.", {autoClose: 2000})
           navigate(`/group/${groupId}`)})
@@ -78,7 +78,7 @@ export function Rating({maxPoints,
 
     const handleMark = () => {
       if (pointsToSend !== undefined) {
-        const body: EvaluationCreateModel = new EvaluationCreateModel(pointsToSend, userState!.id, solutionId, groupId, 0, false)
+        const body: EvaluationCreateModel = new EvaluationCreateModel(pointsToSend, userState!.id, solutionId, groupId, 0, comment)
         if(reportedEvaluation){
           updateEvaluation(body)
         }
@@ -114,9 +114,8 @@ export function Rating({maxPoints,
     function createButtonFromEvaluationPanel(buttons: any[], evaluationPanelButtons: Button[]) {
         evaluationPanelButtons.forEach((evaluationButton) => {
             buttons.push(<button key={evaluationButton.points} onClick={() => {
-                const points = autoPenaltyCalculate(evaluationButton.points)
-                setPoints(points.toString());
-                setPointsToSend(evaluationButton.points)
+                setPoints(evaluationButton.points.toString());
+                setPointsToSend(autoPenaltyCalculate(evaluationButton.points))
             }}
                                  className={`border border-black w-20 h-6 text-center rounded-md hover:bg-lilly-bg focus:bg-hover_blue`}>
                 {evaluationButton.points}
@@ -131,14 +130,14 @@ export function Rating({maxPoints,
         if (pointsAsString.length === 0) pointsAsString = '0'
       }
       else if(pointsAsString === '0' && characterToJoin!=="."){
-        setPoints(characterToJoin)
-        setPointsToSend(+characterToJoin)
-        return
+        pointsAsString = characterToJoin
       }
-      else pointsAsString += characterToJoin
+      else if(+pointsAsString !== maxPoints! || characterToJoin!=="."){
+        pointsAsString += characterToJoin
+      }
       if(+pointsAsString <= maxPoints!){
         setPoints(pointsAsString!)
-        setPointsToSend(+pointsAsString!)
+        setPointsToSend(autoPenaltyCalculate(+pointsAsString!))
       }
     }
 
@@ -182,10 +181,10 @@ export function Rating({maxPoints,
 
     const renderButtons = () => {
         const buttons: any[] = []
-        if (evaluationPanelButtons && !maxPoints) {
+        if (evaluationPanelButtons) {
             createButtonFromEvaluationPanel(buttons, evaluationPanelButtons)
         } else {
-            createButtonFromMaxPoints(buttons)
+            createCalculator(buttons)
         }
         return buttons
     }

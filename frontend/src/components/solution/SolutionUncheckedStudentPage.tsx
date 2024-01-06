@@ -1,11 +1,11 @@
 import { SolutionFile } from "./SolutionFile"
-import { AssignmentInterface } from "../../types/AssignmentInterface"
+import { AssignmentModel } from "../../types/Assignment.model"
 import { SolutionInterface } from "../../types/SolutionInterface"
 import {useGetFile} from "../customHooks/useGetFile";
 
 export default function SolutionUncheckedStudentPage(props: {
   solution: SolutionInterface
-  assignment: AssignmentInterface
+  assignment: AssignmentModel
 }) {
   const fileFromDb = useGetFile(props.solution.id, "solution")
   return (

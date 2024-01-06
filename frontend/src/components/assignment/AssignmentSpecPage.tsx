@@ -7,7 +7,7 @@ import SolutionAddPage from "../solution/SolutionAddPage"
 
 import SolutionCheckedPage from "../solution/SolutionCheckedPage"
 import SolutionUncheckedStudentPage from "../solution/SolutionUncheckedStudentPage"
-import { AssignmentInterface } from "../../types/AssignmentInterface"
+import { AssignmentModel } from "../../types/Assignment.model"
 import { SolutionInterface } from "../../types/SolutionInterface"
 import { selectUserState } from "../../redux/userStateSlice"
 import { selectGroup } from "../../redux/groupSlice"
@@ -15,7 +15,7 @@ import { selectRole } from "../../redux/roleSlice"
 import { useAppSelector } from "../../types/HooksRedux"
 import { useGetSolutionByUserAssignmentGroup } from "../customHooks/useGetSolutionByUserAssignmentGroup"
 import { useGetAssignment } from "../customHooks/useGetAssignment"
-import Loading from "../animations/Loading"
+import Loading from "../animation/Loading"
 
 function AssignmentSpecPage() {
   const {idAssignment} = useParams()
@@ -34,13 +34,13 @@ function AssignmentSpecPage() {
   return (
     <div>
       {((role === "Teacher") ? (
-        <AssignmentModifySettingsPageWrapper assignment={assignment as AssignmentInterface} setAssignment={setAssignment}/>
+        <AssignmentModifySettingsPageWrapper assignment={assignment as AssignmentModel} setAssignment={setAssignment}/>
       ) : (checkedSolution === undefined && uncheckedSolution === undefined && role === "Student") ? (
-        <SolutionAddPage assignment={assignment as AssignmentInterface}/>
+        <SolutionAddPage assignment={assignment as AssignmentModel}/>
       ) : (uncheckedSolution === undefined) ? (
-        <SolutionCheckedPage assignment={assignment as AssignmentInterface} solution={checkedSolution as SolutionInterface}/>
+        <SolutionCheckedPage assignment={assignment as AssignmentModel} solution={checkedSolution as SolutionInterface}/>
       ) : (
-        <SolutionUncheckedStudentPage assignment={assignment as AssignmentInterface} solution={uncheckedSolution as SolutionInterface}/>
+        <SolutionUncheckedStudentPage assignment={assignment as AssignmentModel} solution={uncheckedSolution as SolutionInterface}/>
       ))}
     </div>
   )

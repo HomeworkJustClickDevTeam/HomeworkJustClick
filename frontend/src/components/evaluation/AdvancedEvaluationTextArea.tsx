@@ -105,12 +105,21 @@ export const AdvancedEvaluationTextArea = ({fileText,
     const formattedText:JSX.Element[] = []
     let index = 0
     fileText.split(/\r?\n/).forEach(line=>{
+
       line.split("").forEach((letter:string)=>{
+        console.debug(letter)
         formattedText.push(<span
           onMouseDown={(event) => {
             event.button===0 && setMouseDownTimestamp(event.timeStamp)}}
           id={index.toString()}
-          style={{backgroundColor: letterColor[index] ? letterColor[index]+"80" : 'white', userSelect:chosenComment === undefined ? "none" : "auto"}}
+          style={{
+            backgroundColor: letterColor[index]
+              ? letterColor[index]+"80"
+              : 'white',
+            userSelect:chosenComment === undefined
+              ? "none"
+              : "auto",
+            whiteSpace: 'pre-wrap'}}
           key={index}
           onContextMenu={(event) => {
             event.preventDefault();
@@ -290,7 +299,7 @@ export const AdvancedEvaluationTextArea = ({fileText,
         .then(() => setUpdatedComment(undefined))
   },[updatedComment])
 
-  return <div style={{width: width !== undefined ? width : "100%", height: height !== undefined ? height:"100%"}}>
+  return <div style={{width: width !== undefined ? width : "100%", border: '3px solid black', padding: '3px', margin:'3px'}}>
     {printFormattedText()}
   </div>
 }

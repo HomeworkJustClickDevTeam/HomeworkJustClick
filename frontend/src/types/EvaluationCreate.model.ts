@@ -9,6 +9,6 @@ export class EvaluationCreateModel {
     public solutionId: number,
     public groupId:number,
     public grade:number,
-    public reported: boolean
+    public comment: string
   ) {}
 }

@@ -1,7 +1,7 @@
 import {Table} from "./Table.model";
-import {AssignmentInterface} from "./AssignmentInterface";
+import {AssignmentModel} from "./Assignment.model";
 
 export class EvaluationPanelAssigment{
-    constructor(public id:number,public evaluationPanel: Table, public assignment: AssignmentInterface ) {
+    constructor(public id:number,public evaluationPanel: Table, public assignment: AssignmentModel ) {
     }
 }

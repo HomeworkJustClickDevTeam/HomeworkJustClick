@@ -103,11 +103,11 @@ function AssignmentModifySettingsPageWrapper({
           response.data.format,
           response.data.name,
           assignment.id.toString())
-        if(response?.status == 200)
-          toast.success("Pomyślnie zaktualizowano zadanie.")
-        else toast.error("Błąd podczas zmiany pliku.")
+        if(response?.status !== 200)
+          toast.error("Błąd podczas zmiany pliku.")
       }
       navigate(`/group/${group?.id}/assignments/`)
+      toast.success("Pomyślnie zaktualizowano zadanie.")
     }
     catch (e){
       toast.error("Błąd podczas zmiany zadania.")

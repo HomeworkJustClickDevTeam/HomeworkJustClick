@@ -164,7 +164,7 @@ export const AdvancedEvaluationImageArea = ({setSortButtonState,
       setCommentsImage)
   }, [mouseStartY, mouseStartX])
   return (
-    <canvas onContextMenu={(event) => {
+    <canvas style={{margin:'3px'}} onContextMenu={(event) => {
               event.preventDefault();
               event.stopPropagation()
               setUpdatedComment !== undefined && setCanvasAction("commentDeleting")}}

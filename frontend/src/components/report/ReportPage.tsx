@@ -6,7 +6,7 @@ import {GroupReportModel} from "../../types/GroupReport.model";
 import {ReportAssignmentTable} from "./ReportAssignmentTable";
 import {ReportGroupTable} from "./ReportGroupTable";
 import {ReportCreate} from "./ReportCreate";
-import {AssignmentInterface} from "../../types/AssignmentInterface";
+import {AssignmentModel} from "../../types/Assignment.model";
 import {GroupInterface} from "../../types/GroupInterface";
 import {Chart} from "react-google-charts";
 import {ReportPageUnfoldingElements} from "../../types/ReportPageUnfoldingElements";
@@ -19,7 +19,7 @@ export const ReportPage = () =>{
   const {state} = useLocation()
   const [report, setReport] = useState<AssignmentReportModel|GroupReportModel|undefined>(undefined)
   const [csvCreateFormShown, setCsvCreateFormShown] = useState(false)
-  const [reportedObject, setReportedObject] = useState<AssignmentInterface|GroupInterface|undefined>(undefined)
+  const [reportedObject, setReportedObject] = useState<AssignmentModel|GroupInterface|undefined>(undefined)
   const [unfoldedElement, setUnfoldedElement] = useState<ReportPageUnfoldingElements|undefined>(undefined)
   const [histogramData, setHistogramData] = useState<any>([])
   const [histogramTitle, setHistogramTitle] = useState("")
@@ -72,12 +72,12 @@ export const ReportPage = () =>{
 
   if(report === undefined || state === undefined) return null
   return <div className='relative flex h-[calc(100vh-332px)] overflow-hidden mb-3 justify-center'><div className='absolute h-[99.5%] border border-border_gray rounded-md  w-[1200px] box-content overflow-y-auto shadow-xl pl-8'>
-    {(reportedObject! as AssignmentInterface).title !== undefined &&
-    (reportedObject! as AssignmentInterface).completionDatetime !== undefined &&
-    (reportedObject! as AssignmentInterface).maxPoints !== undefined ?
+    {(reportedObject! as AssignmentModel).title !== undefined &&
+    (reportedObject! as AssignmentModel).completionDatetime !== undefined &&
+    (reportedObject! as AssignmentModel).maxPoints !== undefined ?
       <div className='flex flex-col   pt-4'>
-        <div className='text-center underline underline-offset-4 mb-6'><span className='font-bold'>RAPORT ZADANIA:</span> <span className='font-semibold'>{(reportedObject! as AssignmentInterface).title}</span> ( {format(new Date((reportedObject! as AssignmentInterface).completionDatetime.toString()), "dd.MM.yyyy, HH:mm")} )</div>
-        <div className=''>Maksymalna możliwa liczba punktów: <span className='font-semibold ml-1'>{(reportedObject! as AssignmentInterface).maxPoints}</span></div>
+        <div className='text-center underline underline-offset-4 mb-6'><span className='font-bold'>RAPORT ZADANIA:</span> <span className='font-semibold'>{(reportedObject! as AssignmentModel).title}</span> ( {format(new Date((reportedObject! as AssignmentModel).completionDatetime.toString()), "dd.MM.yyyy, HH:mm")} )</div>
+        <div className=''>Maksymalna możliwa liczba punktów: <span className='font-semibold ml-1'>{(reportedObject! as AssignmentModel).maxPoints}</span></div>
         <br/>
         <div>Najwyższa liczba punktów: <span className='font-semibold ml-1'>{(report as AssignmentReportModel).maxResult}</span></div>
         <br/>
@@ -93,8 +93,8 @@ export const ReportPage = () =>{
       : <div className='text-center underline underline-offset-4 mb-6 mt-4'>RAPORT GRUPY: {(reportedObject! as GroupInterface).name}</div>}
     <button onClick={() => handleUnfolding(ReportPageUnfoldingElements.table)} className='w-36 text-left'>
       <span className='underline underline-offset-2'>{unfoldedElement === ReportPageUnfoldingElements.table ? 'Zwiń tabelę:' : 'Rozwiń tabelę: '}</span><br/>
-      {(reportedObject! as AssignmentInterface).maxPoints !== undefined && unfoldedElement === ReportPageUnfoldingElements.table
-        ? <ReportAssignmentTable maxPoints={(reportedObject! as AssignmentInterface).maxPoints}
+      {(reportedObject! as AssignmentModel).maxPoints !== undefined && unfoldedElement === ReportPageUnfoldingElements.table
+        ? <ReportAssignmentTable maxPoints={(reportedObject! as AssignmentModel).maxPoints}
                                  assignmentReport={report as AssignmentReportModel}/>
         : unfoldedElement === ReportPageUnfoldingElements.table && (report as GroupReportModel).assignments !== undefined && <ReportGroupTable groupReport={report as GroupReportModel}/>}
     </button>
