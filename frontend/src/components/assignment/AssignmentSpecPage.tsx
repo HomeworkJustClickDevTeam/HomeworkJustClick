@@ -15,7 +15,7 @@ import { selectRole } from "../../redux/roleSlice"
 import { useAppSelector } from "../../types/HooksRedux"
 import { useGetSolutionByUserAssignmentGroup } from "../customHooks/useGetSolutionByUserAssignmentGroup"
 import { useGetAssignment } from "../customHooks/useGetAssignment"
-import Loading from "../animations/Loading"
+import Loading from "../animation/Loading"
 
 function AssignmentSpecPage() {
   const {idAssignment} = useParams()

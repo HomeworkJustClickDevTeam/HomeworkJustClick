@@ -5,7 +5,7 @@ import { AdvancedEvaluationCommentPanel } from "./AdvancedEvaluationCommentPanel
 import { AdvancedEvaluationTextArea } from "./AdvancedEvaluationTextArea"
 import { CommentInterface } from "../../types/CommentInterface"
 import { AdvancedEvaluationImageArea } from "./AdvancedEvaluationImageArea"
-import Loading from "../animations/Loading"
+import Loading from "../animation/Loading"
 import { AdvancedEvaluationImageCommentModel } from "../../types/AdvancedEvaluationImageComment.model"
 import { useGetSolutionAreaSizeAvailable } from "../customHooks/useGetSolutionAreaSizeAvailable"
 import { useAppSelector } from "../../types/HooksRedux"

@@ -5,7 +5,7 @@ import {
     createFileWithSolutionPostgresService,
     createSolutionWithUserAndAssignmentPostgresService,
 } from "../../services/postgresDatabaseServices"
-import {AssignmentFile} from "../assignments/AssignmentFile"
+import {AssignmentFile} from "../assignment/AssignmentFile"
 import {format, parseISO} from "date-fns"
 import {AssignmentPropsInterface} from "../../types/AssignmentPropsInterface"
 import {SolutionCreateInterface} from "../../types/SolutionCreateInterface"

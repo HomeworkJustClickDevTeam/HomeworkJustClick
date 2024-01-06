@@ -1,7 +1,7 @@
 import {Link, useLocation, useNavigate} from "react-router-dom"
 import React, {useEffect, useState} from "react"
 import {colorsArray} from "../../assets/colors"
-import Loading from "../animations/Loading"
+import Loading from "../animation/Loading"
 import {selectGroup} from "../../redux/groupSlice"
 import {selectRole} from "../../redux/roleSlice"
 import {useAppSelector} from "../../types/HooksRedux"

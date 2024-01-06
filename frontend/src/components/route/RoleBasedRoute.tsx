@@ -4,7 +4,7 @@ import {Navigate, Outlet, useLocation, useNavigate, useParams} from "react-route
 import React, {useEffect, useState} from "react";
 import {selectRole} from "../../redux/roleSlice";
 import {useGetGroupAndRole} from "../customHooks/useGetGroupAndRole";
-import Loading from "../animations/Loading";
+import Loading from "../animation/Loading";
 import {useUpdateEffect} from "usehooks-ts";
 
 interface RoleBasedRoutePropsInterface{
