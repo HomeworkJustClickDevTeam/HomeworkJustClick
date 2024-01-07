@@ -51,7 +51,7 @@ public class AssignmentController {
     )
     public List<AssignmentResponseDto> getAll() {
         List<AssignmentResponseDto> responseList = assignmentService.getAll();
-        responseList.sort(Comparator.comparing(AssignmentResponseDto::getCompletionDatetime));
+        responseList.sort(Comparator.comparing(AssignmentResponseDto::getCompletionDatetime).reversed());
         return responseList;
     }
 
@@ -71,7 +71,7 @@ public class AssignmentController {
     )
     public List<AssignmentResponseExtendedDto> getAllExtended() {
         List<AssignmentResponseExtendedDto> responseList = assignmentService.getAllExtended();
-        responseList.sort(Comparator.comparing(AssignmentResponseExtendedDto::getCompletionDatetime));
+        responseList.sort(Comparator.comparing(AssignmentResponseExtendedDto::getCompletionDatetime).reversed());
         return responseList;
     }
 
@@ -155,7 +155,7 @@ public class AssignmentController {
         if (responseList.isEmpty()) {
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
         } else {
-            responseList.sort(Comparator.comparing(AssignmentResponseDto::getCompletionDatetime));
+            responseList.sort(Comparator.comparing(AssignmentResponseDto::getCompletionDatetime).reversed());
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
@@ -184,7 +184,7 @@ public class AssignmentController {
         if (responseList.isEmpty()) {
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
         } else {
-            responseList.sort(Comparator.comparing(AssignmentResponseExtendedDto::getCompletionDatetime));
+            responseList.sort(Comparator.comparing(AssignmentResponseExtendedDto::getCompletionDatetime).reversed());
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
@@ -439,7 +439,7 @@ public class AssignmentController {
         if (responseList.isEmpty()) {
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
         } else {
-            responseList.sort(Comparator.comparing(AssignmentResponseDto::getCompletionDatetime));
+            responseList.sort(Comparator.comparing(AssignmentResponseDto::getCompletionDatetime).reversed());
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
@@ -467,7 +467,7 @@ public class AssignmentController {
         if (responseList.isEmpty()) {
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
         } else {
-            responseList.sort(Comparator.comparing(AssignmentResponseDto::getCompletionDatetime));
+            responseList.sort(Comparator.comparing(AssignmentResponseDto::getCompletionDatetime).reversed());
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
@@ -495,7 +495,7 @@ public class AssignmentController {
         if (responseList.isEmpty()) {
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
         } else {
-            responseList.sort(Comparator.comparing(AssignmentResponseDto::getCompletionDatetime));
+            responseList.sort(Comparator.comparing(AssignmentResponseDto::getCompletionDatetime).reversed());
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
@@ -523,7 +523,7 @@ public class AssignmentController {
         if (responseList.isEmpty()) {
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
         } else {
-            responseList.sort(Comparator.comparing(AssignmentResponseDto::getCompletionDatetime));
+            responseList.sort(Comparator.comparing(AssignmentResponseDto::getCompletionDatetime).reversed());
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
@@ -551,7 +551,7 @@ public class AssignmentController {
         if (responseList.isEmpty()) {
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
         } else {
-            responseList.sort(Comparator.comparing(AssignmentResponseDto::getCompletionDatetime));
+            responseList.sort(Comparator.comparing(AssignmentResponseDto::getCompletionDatetime).reversed());
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
@@ -579,7 +579,7 @@ public class AssignmentController {
         if (responseList.isEmpty()) {
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
         } else {
-            responseList.sort(Comparator.comparing(AssignmentResponseDto::getCompletionDatetime));
+            responseList.sort(Comparator.comparing(AssignmentResponseDto::getCompletionDatetime).reversed());
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
@@ -607,7 +607,7 @@ public class AssignmentController {
         if (responseList.isEmpty()) {
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
         } else {
-            responseList.sort(Comparator.comparing(AssignmentResponseDto::getCompletionDatetime));
+            responseList.sort(Comparator.comparing(AssignmentResponseDto::getCompletionDatetime).reversed());
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
@@ -635,7 +635,7 @@ public class AssignmentController {
         if (responseList.isEmpty()) {
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
         } else {
-            responseList.sort(Comparator.comparing(AssignmentResponseDto::getCompletionDatetime));
+            responseList.sort(Comparator.comparing(AssignmentResponseDto::getCompletionDatetime).reversed());
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
@@ -663,7 +663,7 @@ public class AssignmentController {
         if (responseList.isEmpty()) {
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
         } else {
-            responseList.sort(Comparator.comparing(AssignmentResponseDto::getCompletionDatetime));
+            responseList.sort(Comparator.comparing(AssignmentResponseDto::getCompletionDatetime).reversed());
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
@@ -691,7 +691,7 @@ public class AssignmentController {
         if (responseList.isEmpty()) {
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
         } else {
-            responseList.sort(Comparator.comparing(AssignmentResponseDto::getCompletionDatetime));
+            responseList.sort(Comparator.comparing(AssignmentResponseDto::getCompletionDatetime).reversed());
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
@@ -719,7 +719,7 @@ public class AssignmentController {
         if (responseList.isEmpty()) {
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
         } else {
-            responseList.sort(Comparator.comparing(AssignmentResponseDto::getCompletionDatetime));
+            responseList.sort(Comparator.comparing(AssignmentResponseDto::getCompletionDatetime).reversed());
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
@@ -747,7 +747,7 @@ public class AssignmentController {
         if (responseList.isEmpty()) {
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
         } else {
-            responseList.sort(Comparator.comparing(AssignmentResponseExtendedDto::getCompletionDatetime));
+            responseList.sort(Comparator.comparing(AssignmentResponseExtendedDto::getCompletionDatetime).reversed());
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
@@ -775,7 +775,7 @@ public class AssignmentController {
         if (responseList.isEmpty()) {
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
         } else {
-            responseList.sort(Comparator.comparing(AssignmentResponseExtendedDto::getCompletionDatetime));
+            responseList.sort(Comparator.comparing(AssignmentResponseExtendedDto::getCompletionDatetime).reversed());
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
@@ -803,7 +803,7 @@ public class AssignmentController {
         if (responseList.isEmpty()) {
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
         } else {
-            responseList.sort(Comparator.comparing(AssignmentResponseExtendedDto::getCompletionDatetime));
+            responseList.sort(Comparator.comparing(AssignmentResponseExtendedDto::getCompletionDatetime).reversed());
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
@@ -831,7 +831,7 @@ public class AssignmentController {
         if (responseList.isEmpty()) {
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
         } else {
-            responseList.sort(Comparator.comparing(AssignmentResponseExtendedDto::getCompletionDatetime));
+            responseList.sort(Comparator.comparing(AssignmentResponseExtendedDto::getCompletionDatetime).reversed());
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
@@ -859,7 +859,7 @@ public class AssignmentController {
         if (responseList.isEmpty()) {
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
         } else {
-            responseList.sort(Comparator.comparing(AssignmentResponseExtendedDto::getCompletionDatetime));
+            responseList.sort(Comparator.comparing(AssignmentResponseExtendedDto::getCompletionDatetime).reversed());
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
@@ -887,7 +887,7 @@ public class AssignmentController {
         if (responseList.isEmpty()) {
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
         } else {
-            responseList.sort(Comparator.comparing(AssignmentResponseExtendedDto::getCompletionDatetime));
+            responseList.sort(Comparator.comparing(AssignmentResponseExtendedDto::getCompletionDatetime).reversed());
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
@@ -915,7 +915,7 @@ public class AssignmentController {
         if (responseList.isEmpty()) {
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
         } else {
-            responseList.sort(Comparator.comparing(AssignmentResponseExtendedDto::getCompletionDatetime));
+            responseList.sort(Comparator.comparing(AssignmentResponseExtendedDto::getCompletionDatetime).reversed());
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
@@ -943,7 +943,7 @@ public class AssignmentController {
         if (responseList.isEmpty()) {
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
         } else {
-            responseList.sort(Comparator.comparing(AssignmentResponseExtendedDto::getCompletionDatetime));
+            responseList.sort(Comparator.comparing(AssignmentResponseExtendedDto::getCompletionDatetime).reversed());
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
@@ -971,7 +971,7 @@ public class AssignmentController {
         if (responseList.isEmpty()) {
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
         } else {
-            responseList.sort(Comparator.comparing(AssignmentResponseExtendedDto::getCompletionDatetime));
+            responseList.sort(Comparator.comparing(AssignmentResponseExtendedDto::getCompletionDatetime).reversed());
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
@@ -999,7 +999,7 @@ public class AssignmentController {
         if (responseList.isEmpty()) {
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
         } else {
-            responseList.sort(Comparator.comparing(AssignmentResponseExtendedDto::getCompletionDatetime));
+            responseList.sort(Comparator.comparing(AssignmentResponseExtendedDto::getCompletionDatetime).reversed());
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
@@ -1027,7 +1027,7 @@ public class AssignmentController {
         if (responseList.isEmpty()) {
             return new ResponseEntity<>(responseList, HttpStatus.NOT_FOUND);
         } else {
-            responseList.sort(Comparator.comparing(AssignmentResponseExtendedDto::getCompletionDatetime));
+            responseList.sort(Comparator.comparing(AssignmentResponseExtendedDto::getCompletionDatetime).reversed());
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
     }
