@@ -85,7 +85,7 @@ function GroupHeader() {
               <p className='text-2xl xl:text-3xl'>{group.name}</p>
               <p className='text-base xl:text-xl mb-1 xl:mt-1'>{group.description}</p>
             </article>
-            {role === "Teacher" && <Link to="/settings " className="absolute right-4 xl:right-6 top-2 xl:top-4">
+            {role === "Teacher" && <Link to="settings " className="absolute right-4 xl:right-6 top-2 xl:top-4">
               <FaCog className="m-2 text-sm xl:text-base" />
             </Link>}
             {role === "Teacher" && <Link to={"assignments"} state={{ groupReport: true }} className='absolute bottom-2 right-6 xl:right-8 text-sm xl:text-base underline underline-offset-4'>Stwórz raport grupy</Link>}
@@ -118,7 +118,7 @@ function GroupHeader() {
           </div>}
           <div className='relative mr-0 ml-auto flex items-center'>
             <select
-              className="flex border-2 border-main_blue text-main_blue text-sm xl:text-lg pl-2 rounded-md xl:rounded-lg w-44 xl:w-56 h-8 xl:h-10 items-center"
+              className="flex border-2 bg-white border-main_blue text-main_blue text-sm xl:text-lg pl-2 rounded-md xl:rounded-lg w-44 xl:w-56 h-8 xl:h-10 items-center"
               value={selectedOption.label}
               onChange={handleChange}
             >
