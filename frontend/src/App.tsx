@@ -14,7 +14,7 @@ import AssignmentSpecPage from "./components/assignment/AssignmentSpecPage"
 import GroupUsersPage from "./components/group/GroupUsersPage"
 import NotFoundPage from "./components/errors/NotFoundPage"
 import AssignmentsTypesPage from "./components/assignment/AssignmentsTypesPage"
-import AssignmentsMainPage from "./components/assignment/AssignmentsMainPage"
+import AssignmentsMainPageWrapper from "./components/assignment/AssignmentsMainPageWrapper"
 import SolutionsTypesPage from "./components/solution/SolutionsTypesPage"
 import SolutionPage from "./components/solution/SolutionPage"
 import UserSettingsPage from "./components/user/UserSettingsPage"
@@ -32,7 +32,7 @@ import {ReportPage} from "./components/report/ReportPage";
 import {EvaluationsStudentPage} from "./components/evaluation/EvaluationsStudentPage";
 import {ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import {AssignmentsStudentGroupPage} from "./components/assignment/AssignmentsStudentGroupPage";
+import {AssignmentsStudentGroupPageWrapper} from "./components/assignment/AssignmentsStudentGroupPageWrapper";
 
 function App() {
     return (
@@ -54,7 +54,7 @@ function App() {
                     />
                     <Route
                         path="/:id/assignments"
-                        element={<AssignmentsMainPage/>}
+                        element={<AssignmentsMainPageWrapper/>}
                     />
                     <Route path="/settings" element={<UserSettingsPage/>}/>
                     <Route path="/create/group" element={<GroupCreatePage/>}/>
@@ -67,7 +67,7 @@ function App() {
                         />
                         <Route
                             path="assignments"
-                            element={<RoleBasedRoute renderForStudent={<AssignmentsStudentGroupPage/>}
+                            element={<RoleBasedRoute renderForStudent={<AssignmentsStudentGroupPageWrapper/>}
                                                      renderForTeacher={<AssignmentsGroupTeacherDisplayedPage/>}/>}
                         />
                         <Route
@@ -80,7 +80,7 @@ function App() {
                         />
                         <Route
                             path="assignments/todo"
-                            element={<AssignmentsTypesPage type={"nonExpiredUndone" as AssignmentsType}/>}
+                            element={<AssignmentsTypesPage type={"undone" as AssignmentsType}/>}
                         />
                         <Route path="assignments/add" element={<AssignmentAddSettingsPageWrapper/>}/>
                         <Route
