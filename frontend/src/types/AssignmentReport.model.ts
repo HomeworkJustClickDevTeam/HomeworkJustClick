@@ -14,7 +14,7 @@ export class AssignmentReportModel {
     public late: number,
     public hist: number[],
     public studentsHist: number[],
-    public students: StudentResultModel[],
+    public students: StudentResultModel[]|null,
     public description: string
   ) {
   }

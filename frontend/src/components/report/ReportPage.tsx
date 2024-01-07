@@ -48,7 +48,7 @@ export const ReportPage = () =>{
       setReportedObject(state.reportedObject)
       setReport(state.report)
       if(state.report.assignment !== undefined){
-        const preparedData:any = (state.report as AssignmentReportModel).students
+        const preparedData:any = (state.report as AssignmentReportModel).students!
           .filter(studentResult=>studentResult!==null)
           .map(studentResult=>{
             return [studentResult.student.firstname + ' ' + studentResult.student.lastname, studentResult.resultPercent/100]
@@ -58,7 +58,7 @@ export const ReportPage = () =>{
         setHistogramData(preparedData)
       }
       else{
-        let preparedData:any = (state.report as GroupReportModel).assignments
+        let preparedData:any = (state.report as GroupReportModel).assignments!
           .filter(assignmentResult=>assignmentResult.assignment !== null)
           .map((assignmentResult)=>{
           return [assignmentResult.assignment.title, assignmentResult.avgResultPercent/100]
