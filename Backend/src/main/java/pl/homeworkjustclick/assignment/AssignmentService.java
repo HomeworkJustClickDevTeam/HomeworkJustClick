@@ -549,6 +549,7 @@ public class AssignmentService {
         assignmentList.forEach(assignment -> {
             var evaluation = evaluationService.findAllEvaluationsByStudentAndAssignment(userId, assignment.getId());
             responseList.add(assignmentMapper.map(assignment, evaluation));
+            responseList.sort(Comparator.comparing(AssignmentWithEvaluationResponseDto::getCompletionDatetime));
         });
         return responseList;
     }
@@ -559,6 +560,7 @@ public class AssignmentService {
         assignmentList.forEach(assignment -> {
             var evaluation = evaluationService.findAllEvaluationsByStudentAndAssignment(userId, assignment.getId());
             responseList.add(assignmentMapper.map(assignment, evaluation));
+            responseList.sort(Comparator.comparing(AssignmentWithEvaluationResponseDto::getCompletionDatetime));
         });
         return responseList;
     }

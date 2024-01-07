@@ -60,41 +60,43 @@ public class ReportService {
         }
         var maxPoints = assignment.getMaxPoints();
         var studentsResults = createStudentsList(evaluations, maxPoints, groupId, assignmentId);
-        var maxResult = calculateMaxResult(studentsResults);
-        var maxResultPercent = roundDouble(maxResult * 100 / maxPoints);
-        var minResult = calculateMinResult(studentsResults);
-        var minResultPercent = roundDouble(minResult * 100 / maxPoints);
-        var avgResult = roundDouble(calculateAvgResult(studentsResults));
-        var avgResultPercent = roundDouble(avgResult * 100 / maxPoints);
-        var late = solutionService.getLateSolutionsByAssignment(assignment.getId()).size();
-        var hist = assignmentReportDto.getHist();
-        if (hist != null && !hist.isEmpty()) {
-            var studentsHist = calculateHistogram(studentsResults, hist);
-            return AssignmentReportResponseDto.builder()
-                    .assignment(assignmentMapper.map(assignment))
-                    .maxResult(maxResult)
-                    .maxResultPercent(maxResultPercent)
-                    .minResult(minResult)
-                    .minResultPercent(minResultPercent)
-                    .avgResult(avgResult)
-                    .avgResultPercent(avgResultPercent)
-                    .late(late)
-                    .hist(hist)
-                    .studentsHist(studentsHist)
-                    .students(studentsResults)
-                    .description(description)
-                    .build();
+        if (!evaluations.isEmpty()) {
+            var maxResult = calculateMaxResult(studentsResults);
+            var maxResultPercent = roundDouble(maxResult * 100 / maxPoints);
+            var minResult = calculateMinResult(studentsResults);
+            var minResultPercent = roundDouble(minResult * 100 / maxPoints);
+            var avgResult = roundDouble(calculateAvgResult(studentsResults));
+            var avgResultPercent = roundDouble(avgResult * 100 / maxPoints);
+            var late = solutionService.getLateSolutionsByAssignment(assignment.getId()).size();
+            var hist = assignmentReportDto.getHist();
+            if (hist != null && !hist.isEmpty()) {
+                var studentsHist = calculateHistogram(studentsResults, hist);
+                return AssignmentReportResponseDto.builder()
+                        .assignment(assignmentMapper.map(assignment))
+                        .maxResult(maxResult)
+                        .maxResultPercent(maxResultPercent)
+                        .minResult(minResult)
+                        .minResultPercent(minResultPercent)
+                        .avgResult(avgResult)
+                        .avgResultPercent(avgResultPercent)
+                        .late(late)
+                        .hist(hist)
+                        .studentsHist(studentsHist)
+                        .students(studentsResults)
+                        .description(description)
+                        .build();
+            }
         }
         return AssignmentReportResponseDto.builder()
                 .assignment(assignmentMapper.map(assignment))
-                .maxResult(maxResult)
-                .maxResultPercent(maxResultPercent)
-                .minResult(minResult)
-                .minResultPercent(minResultPercent)
-                .avgResult(avgResult)
-                .avgResultPercent(avgResultPercent)
-                .late(late)
-                .students(studentsResults)
+                .maxResult(0.0)
+                .maxResultPercent(0.0)
+                .minResult(0.0)
+                .minResultPercent(0.0)
+                .avgResult(0.0)
+                .avgResultPercent(0.0)
+                .late(0)
+                .students(List.of())
                 .description(description)
                 .build();
     }
