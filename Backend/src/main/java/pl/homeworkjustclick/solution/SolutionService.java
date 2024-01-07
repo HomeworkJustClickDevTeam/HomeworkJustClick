@@ -3,6 +3,7 @@ package pl.homeworkjustclick.solution;
 import jakarta.persistence.EntityManager;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.homeworkjustclick.assignment.Assignment;
@@ -94,7 +95,7 @@ public class SolutionService {
     }
 
     @Transactional
-    public SolutionResponseDto addWithUserAndAssignment(Solution solution, int userId, int assignmentId) {
+    public SolutionResponseDto addWithUserAndAssignment(@Valid Solution solution, int userId, int assignmentId) {
         Optional<User> user = userRepository.findById(userId);
         Optional<Assignment> assignment = assignmentRepository.findById(assignmentId);
         if (user.isPresent() && assignment.isPresent()) {
