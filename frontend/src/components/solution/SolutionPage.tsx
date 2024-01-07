@@ -11,6 +11,7 @@ import {useGetEvaluationPanelByUserIdAndAssigmentId} from "../customHooks/useGet
 import {format} from "date-fns";
 import {useGetFile} from "../customHooks/useGetFile";
 import {useGetReportedEvaluation} from "../customHooks/useGetReportedEvaluation";
+import {AdvancedEvaluationExtensionType} from "../../types/AdvancedEvaluationExtensionType";
 
 function SolutionPage() {
     let {state} = useLocation()
@@ -92,7 +93,7 @@ function SolutionPage() {
                       <div>
                           {reportedEvaluation !== undefined &&
                             <div>Uwaga ucznia do zadania: {reportedEvaluation!.comment} </div>}
-                          {solutionExtended.id && group && fileFromDb !== undefined && (
+                          {solutionExtended.id && group && fileFromDb !== undefined && solutionExtended.assignment.advancedEvaluation && AdvancedEvaluationExtensionType.includes("." + fileFromDb.format) && (
                             <Link
                               to={`/group/${group.id}/advancedAssignment`}
                               state={{solutionExtended: solutionExtended}}
