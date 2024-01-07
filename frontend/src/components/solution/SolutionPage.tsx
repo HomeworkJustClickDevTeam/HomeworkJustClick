@@ -50,8 +50,8 @@ function SolutionPage() {
               className="relative flex-col mx-[7.5%] mt-4 border border-border_gray border-1 rounded-md pt-4 px-4 gap-2 box-content overflow-y-auto grid grid-cols-2">
                 <div className='flex flex-col gap-3'>
                     <div className='flex flex-col gap-3 border-b-2 border-main_blue pb-2 w-fit'>
-                        <div className='flex flex-row mt-2'>
-                            <p className="font-semibold w-48">Nazwa zadania: </p>
+                        <div className='flex flex-row'>
+                            <p className="font-semibold  w-48">Nazwa zadania: </p>
                             {solutionExtended.assignment.title}
                         </div>
                         <div className="text-border_gray flex flex-row">
@@ -126,30 +126,14 @@ function SolutionPage() {
                                 )}
                       </div>
 
-                    ) : null}</div>
-                    <div>
-                        <p className='mb-2 '>Wpisz ocenę: </p>
-                        <div className='border border-light_gray rounded-md w-fit pl-7 pb-3 shadow-md focus:border-main_blue'>
-                            <Rating
-                                comment={comment}
-                                maxPoints={solutionExtended.assignment.maxPoints}
-                                points={points}
-                                setPoints={setPoints}
-                                reportedEvaluation={reportedEvaluation}
-                                solutionId={solutionExtended.id}
-                                groupId={solutionExtended.assignment.groupId}
-                                assigmentCompletionDate={solutionExtended.assignment.completionDatetime}
-                                solutionCreationDate={solutionExtended.creationDateTime}
-                                penalty={solutionExtended.assignment.autoPenalty}
-                                evaluationPanelButtons={evaluationPanel ? evaluationPanel.evaluationPanel.buttons : undefined}
-                            />
-                        </div>
-                    </div>
-                    <label className='flex align-top text-opacity-100 mt-4'> Komentarz: </label>
+                    ) : null}
+                </div>
+                <div className='px-4 py-2 h-36 w-96 flex rounded-md text-bottom'>
+                    <label className='flex align-top text-opacity-100'> Komentarz:
                         <textarea className='border rounder-sm border-border_gray ml-3 pl-2 pr-1 w-64 min-h-[120px]'
                                   onChange={(event) => setComment(event.target.value)} value={comment}
                                   defaultValue={comment}/>
-
+                    </label>
                 </div>
             </div>
 
