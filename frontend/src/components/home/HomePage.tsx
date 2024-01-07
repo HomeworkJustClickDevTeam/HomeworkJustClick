@@ -45,14 +45,13 @@ function HomePage() {
         </Link>
         <div className="absolute right-0 mr-[7.5%] text-sm xl:text-lg">
           <select
-            className="flex border-2 border-main_blue text-main_blue pl-2 rounded-md xl:rounded-lg w-44 xl:w-56 h-8 xl:h-10 items-center"
+            className="flex border-2 bg-white border-main_blue text-main_blue pl-2 rounded-md xl:rounded-lg w-44 xl:w-56 h-8 xl:h-10 items-center"
             value={selectedOption.value}
             onChange={handleChange}
           >
             {options.map((option) => (
               <option key={option.value}
-                value={option.value}
-                className="hover:bg-lilly-bg">
+                value={option.value}>
                 {option.label}
               </option>
             ))}
