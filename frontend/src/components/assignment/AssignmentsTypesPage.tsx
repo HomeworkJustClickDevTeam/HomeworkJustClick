@@ -27,7 +27,7 @@ function AssignmentsTypesPage({type}: { type: AssignmentsType }) {
   }, [type, role])
   return (
     <div className='flex flex-col h-[calc(100vh-325px)] overflow-y-hidden'>
-      <ul className='flex flex-col box-content overflow-y-auto mb-4'>
+      <ul className='ml-[7.5%] flex flex-col box-content overflow-y-auto mb-4'>
         {assignments.map((assignment) => (
           <li key={assignment.id}>
             <AssignmentListElement
