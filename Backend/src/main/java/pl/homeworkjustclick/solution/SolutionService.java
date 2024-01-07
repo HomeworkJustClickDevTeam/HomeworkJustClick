@@ -1,19 +1,23 @@
 package pl.homeworkjustclick.solution;
 
 import jakarta.persistence.EntityManager;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.homeworkjustclick.assignment.Assignment;
 import pl.homeworkjustclick.assignment.AssignmentRepository;
 import pl.homeworkjustclick.assignment.AssignmentResponseDto;
 import pl.homeworkjustclick.evaluation.EvaluationUtilsService;
+import pl.homeworkjustclick.file.FileFindService;
 import pl.homeworkjustclick.group.Group;
 import pl.homeworkjustclick.group.GroupRepository;
 import pl.homeworkjustclick.group.GroupResponseDto;
 import pl.homeworkjustclick.infrastructure.enums.CalendarStatus;
 import pl.homeworkjustclick.infrastructure.exception.EntityNotFoundException;
 import pl.homeworkjustclick.infrastructure.exception.InvalidArgumentException;
+import pl.homeworkjustclick.infrastructure.rest.MongoClientService;
 import pl.homeworkjustclick.user.User;
 import pl.homeworkjustclick.user.UserRepository;
 import pl.homeworkjustclick.user.UserResponseDto;
@@ -34,6 +38,8 @@ public class SolutionService {
     private final AssignmentRepository assignmentRepository;
     private final GroupRepository groupRepository;
     private final EvaluationUtilsService evaluationUtilsService;
+    private final FileFindService fileFindService;
+    private final MongoClientService mongoClientService;
 
     public Solution findById(Integer id) {
         return solutionRepository.findById(id)
@@ -53,6 +59,7 @@ public class SolutionService {
         List<Solution> solutionList = solutionRepository.findAll();
         List<SolutionResponseDto> responseList = new ArrayList<>();
         solutionList.forEach(solution -> responseList.add(buildSolutionResponse(solution)));
+        responseList.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
         return responseList;
     }
 
@@ -65,6 +72,7 @@ public class SolutionService {
         List<Solution> solutionList = solutionRepository.findAll();
         List<SolutionResponseExtendedDto> responseList = new ArrayList<>();
         solutionList.forEach(solution -> responseList.add(buildSolutionResponseExtended(solution)));
+        responseList.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
         return responseList;
     }
 
@@ -87,7 +95,7 @@ public class SolutionService {
     }
 
     @Transactional
-    public SolutionResponseDto addWithUserAndAssignment(Solution solution, int userId, int assignmentId) {
+    public SolutionResponseDto addWithUserAndAssignment(@Valid Solution solution, int userId, int assignmentId) {
         Optional<User> user = userRepository.findById(userId);
         Optional<Assignment> assignment = assignmentRepository.findById(assignmentId);
         if (user.isPresent() && assignment.isPresent()) {
@@ -124,11 +132,14 @@ public class SolutionService {
     }
 
     @Transactional
-    public void delete(int id) {
+    public void delete(int id, HttpServletRequest request) {
+        var token = request.getHeader("Authorization").substring(7);
         var solution = findById(id);
         if (evaluationUtilsService.existsBySolutionId(id)) {
             throw new InvalidArgumentException("Evaluation to solution with id = " + id + " already exists");
         }
+        var file = fileFindService.findFileBySolutionId(id);
+        file.ifPresent(value -> mongoClientService.deleteFile(token, value.getMongoId()));
         solutionRepository.delete(solution);
     }
 
@@ -162,9 +173,9 @@ public class SolutionService {
 
     public List<SolutionResponseDto> getSolutionsByGroupId(int id) {
         List<Solution> solutions = solutionRepository.getSolutionsByGroupId(id);
-        List<SolutionResponseDto> solutionResponsDtos = new ArrayList<>();
+        List<SolutionResponseDto> solutionResponseDtos = new ArrayList<>();
         for(Solution solution : solutions) {
-            solutionResponsDtos.add(SolutionResponseDto.builder()
+            solutionResponseDtos.add(SolutionResponseDto.builder()
                     .id(solution.getId())
                     .userId(solution.getUser().getId())
                     .assignmentId(solution.getAssignment().getId())
@@ -174,14 +185,15 @@ public class SolutionService {
                     .comment(solution.getComment())
                     .build());
         }
-        return solutionResponsDtos;
+        solutionResponseDtos.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
+        return solutionResponseDtos;
     }
 
     public List<SolutionResponseDto> getSolutionsByAssignmentId(int id) {
         List<Solution> solutions = solutionRepository.findAllByAssignmentId(id);
-        List<SolutionResponseDto> solutionResponsDtos = new ArrayList<>();
+        List<SolutionResponseDto> solutionResponseDtos = new ArrayList<>();
         for(Solution solution : solutions) {
-            solutionResponsDtos.add(SolutionResponseDto.builder()
+            solutionResponseDtos.add(SolutionResponseDto.builder()
                     .id(solution.getId())
                     .userId(solution.getUser().getId())
                     .assignmentId(solution.getAssignment().getId())
@@ -191,7 +203,8 @@ public class SolutionService {
                     .comment(solution.getComment())
                     .build());
         }
-        return solutionResponsDtos;
+        solutionResponseDtos.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
+        return solutionResponseDtos;
     }
 
     public List<SolutionResponseDto> getLateSolutionsByGroup(int groupId) {
@@ -204,6 +217,7 @@ public class SolutionService {
         });
         List<SolutionResponseDto> responseList = new ArrayList<>();
         lateSolutions.forEach(solution -> responseList.add(buildSolutionResponse(solution)));
+        responseList.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
         return responseList;
     }
 
@@ -217,6 +231,7 @@ public class SolutionService {
         });
         List<SolutionResponseDto> responseList = new ArrayList<>();
         lateSolutions.forEach(solution -> responseList.add(buildSolutionResponse(solution)));
+        responseList.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
         return responseList;
     }
 
@@ -230,6 +245,7 @@ public class SolutionService {
         });
         List<SolutionResponseDto> responseList = new ArrayList<>();
         lateSolutions.forEach(solution -> responseList.add(buildSolutionResponse(solution)));
+        responseList.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
         return responseList;
     }
 
@@ -243,6 +259,7 @@ public class SolutionService {
         });
         List<SolutionResponseDto> responseList = new ArrayList<>();
         lateSolutions.forEach(solution -> responseList.add(buildSolutionResponse(solution)));
+        responseList.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
         return responseList;
     }
 
@@ -250,14 +267,15 @@ public class SolutionService {
         List<Solution> solutions = solutionRepository.getUncheckedSolutionsByGroup(groupId);
         List<SolutionResponseDto> responseList = new ArrayList<>();
         solutions.forEach(solution -> responseList.add(buildSolutionResponse(solution)));
+        responseList.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
         return responseList;
     }
 
     public List<SolutionResponseDto> getCheckedSolutionsByGroup(int groupId) {
         List<Solution> solutions = solutionRepository.getCheckedSolutionsByGroup(groupId);
-
         List<SolutionResponseDto> responseList = new ArrayList<>();
         solutions.forEach(solution -> responseList.add(buildSolutionResponse(solution)));
+        responseList.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
         return responseList;
     }
 
@@ -265,6 +283,7 @@ public class SolutionService {
         List<Solution> solutions = solutionRepository.getUncheckedSolutionsByStudent(studentId);
         List<SolutionResponseDto> responseList = new ArrayList<>();
         solutions.forEach(solution -> responseList.add(buildSolutionResponse(solution)));
+        responseList.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
         return responseList;
     }
 
@@ -272,6 +291,7 @@ public class SolutionService {
         List<Solution> solutions = solutionRepository.getCheckedSolutionsByStudent(studentId);
         List<SolutionResponseDto> responseList = new ArrayList<>();
         solutions.forEach(solution -> responseList.add(buildSolutionResponse(solution)));
+        responseList.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
         return responseList;
     }
 
@@ -279,6 +299,7 @@ public class SolutionService {
         List<Solution> solutions = solutionRepository.getUncheckedSolutionsByStudentAndGroup(studentId, groupId);
         List<SolutionResponseDto> responseList = new ArrayList<>();
         solutions.forEach(solution -> responseList.add(buildSolutionResponse(solution)));
+        responseList.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
         return responseList;
     }
 
@@ -286,6 +307,7 @@ public class SolutionService {
         List<Solution> solutions = solutionRepository.getCheckedSolutionsByStudentAndGroup(studentId, groupId);
         List<SolutionResponseDto> responseList = new ArrayList<>();
         solutions.forEach(solution -> responseList.add(buildSolutionResponse(solution)));
+        responseList.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
         return responseList;
     }
 
@@ -293,6 +315,7 @@ public class SolutionService {
         List<Solution> solutions = solutionRepository.getUncheckedSolutionsByAssignment(assignmentId);
         List<SolutionResponseDto> responseList = new ArrayList<>();
         solutions.forEach(solution -> responseList.add(buildSolutionResponse(solution)));
+        responseList.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
         return responseList;
     }
 
@@ -300,6 +323,7 @@ public class SolutionService {
         List<Solution> solutions = solutionRepository.getCheckedSolutionsByAssignment(assignmentId);
         List<SolutionResponseDto> responseList = new ArrayList<>();
         solutions.forEach(solution -> responseList.add(buildSolutionResponse(solution)));
+        responseList.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
         return responseList;
     }
 
@@ -307,6 +331,7 @@ public class SolutionService {
         List<Solution> solutions = solutionRepository.getUncheckedSolutionsByTeacher(teacherId);
         List<SolutionResponseDto> responseList = new ArrayList<>();
         solutions.forEach(solution -> responseList.add(buildSolutionResponse(solution)));
+        responseList.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
         return responseList;
     }
 
@@ -314,6 +339,7 @@ public class SolutionService {
         List<Solution> solutions = solutionRepository.getCheckedSolutionsByTeacher(teacherId);
         List<SolutionResponseDto> responseList = new ArrayList<>();
         solutions.forEach(solution -> responseList.add(buildSolutionResponse(solution)));
+        responseList.sort(Comparator.comparing(SolutionResponseDto::getCreationDateTime));
         return responseList;
     }
 
@@ -323,6 +349,7 @@ public class SolutionService {
         for (Solution solution : solutions) {
             solutionResponses.add(buildSolutionResponseExtended(solution));
         }
+        solutionResponses.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
         return solutionResponses;
     }
 
@@ -332,6 +359,7 @@ public class SolutionService {
         for (Solution solution : solutions) {
             solutionResponses.add(buildSolutionResponseExtended(solution));
         }
+        solutionResponses.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
         return solutionResponses;
     }
 
@@ -345,6 +373,7 @@ public class SolutionService {
         });
         List<SolutionResponseExtendedDto> responseList = new ArrayList<>();
         lateSolutions.forEach(solution -> responseList.add(buildSolutionResponseExtended(solution)));
+        responseList.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
         return responseList;
     }
 
@@ -358,6 +387,7 @@ public class SolutionService {
         });
         List<SolutionResponseExtendedDto> responseList = new ArrayList<>();
         lateSolutions.forEach(solution -> responseList.add(buildSolutionResponseExtended(solution)));
+        responseList.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
         return responseList;
     }
 
@@ -371,6 +401,7 @@ public class SolutionService {
         });
         List<SolutionResponseExtendedDto> responseList = new ArrayList<>();
         lateSolutions.forEach(solution -> responseList.add(buildSolutionResponseExtended(solution)));
+        responseList.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
         return responseList;
     }
 
@@ -384,6 +415,7 @@ public class SolutionService {
         });
         List<SolutionResponseExtendedDto> responseList = new ArrayList<>();
         lateSolutions.forEach(solution -> responseList.add(buildSolutionResponseExtended(solution)));
+        responseList.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
         return responseList;
     }
 
@@ -391,6 +423,7 @@ public class SolutionService {
         List<Solution> solutions = solutionRepository.getUncheckedSolutionsByGroup(groupId);
         List<SolutionResponseExtendedDto> responseList = new ArrayList<>();
         solutions.forEach(solution -> responseList.add(buildSolutionResponseExtended(solution)));
+        responseList.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
         return responseList;
     }
 
@@ -398,6 +431,7 @@ public class SolutionService {
         List<Solution> solutions = solutionRepository.getCheckedSolutionsByGroup(groupId);
         List<SolutionResponseExtendedDto> responseList = new ArrayList<>();
         solutions.forEach(solution -> responseList.add(buildSolutionResponseExtended(solution)));
+        responseList.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
         return responseList;
     }
 
@@ -405,6 +439,7 @@ public class SolutionService {
         List<Solution> solutions = solutionRepository.getUncheckedSolutionsByStudent(studentId);
         List<SolutionResponseExtendedDto> responseList = new ArrayList<>();
         solutions.forEach(solution -> responseList.add(buildSolutionResponseExtended(solution)));
+        responseList.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
         return responseList;
     }
 
@@ -412,6 +447,7 @@ public class SolutionService {
         List<Solution> solutions = solutionRepository.getCheckedSolutionsByStudent(studentId);
         List<SolutionResponseExtendedDto> responseList = new ArrayList<>();
         solutions.forEach(solution -> responseList.add(buildSolutionResponseExtended(solution)));
+        responseList.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
         return responseList;
     }
 
@@ -419,6 +455,7 @@ public class SolutionService {
         List<Solution> solutions = solutionRepository.getUncheckedSolutionsByStudentAndGroup(studentId, groupId);
         List<SolutionResponseExtendedDto> responseList = new ArrayList<>();
         solutions.forEach(solution -> responseList.add(buildSolutionResponseExtended(solution)));
+        responseList.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
         return responseList;
     }
 
@@ -426,6 +463,7 @@ public class SolutionService {
         List<Solution> solutions = solutionRepository.getCheckedSolutionsByStudentAndGroup(studentId, groupId);
         List<SolutionResponseExtendedDto> responseList = new ArrayList<>();
         solutions.forEach(solution -> responseList.add(buildSolutionResponseExtended(solution)));
+        responseList.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
         return responseList;
     }
 
@@ -433,6 +471,7 @@ public class SolutionService {
         List<Solution> solutions = solutionRepository.getUncheckedSolutionsByAssignment(assignmentId);
         List<SolutionResponseExtendedDto> responseList = new ArrayList<>();
         solutions.forEach(solution -> responseList.add(buildSolutionResponseExtended(solution)));
+        responseList.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
         return responseList;
     }
 
@@ -440,6 +479,7 @@ public class SolutionService {
         List<Solution> solutions = solutionRepository.getCheckedSolutionsByAssignment(assignmentId);
         List<SolutionResponseExtendedDto> responseList = new ArrayList<>();
         solutions.forEach(solution -> responseList.add(buildSolutionResponseExtended(solution)));
+        responseList.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
         return responseList;
     }
 
@@ -447,6 +487,7 @@ public class SolutionService {
         List<Solution> solutions = solutionRepository.getUncheckedSolutionsByTeacher(teacherId);
         List<SolutionResponseExtendedDto> responseList = new ArrayList<>();
         solutions.forEach(solution -> responseList.add(buildSolutionResponseExtended(solution)));
+        responseList.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
         return responseList;
     }
 
@@ -454,6 +495,7 @@ public class SolutionService {
         List<Solution> solutions = solutionRepository.getCheckedSolutionsByTeacher(teacherId);
         List<SolutionResponseExtendedDto> responseList = new ArrayList<>();
         solutions.forEach(solution -> responseList.add(buildSolutionResponseExtended(solution)));
+        responseList.sort(Comparator.comparing(SolutionResponseExtendedDto::getCreationDateTime));
         return responseList;
     }
 

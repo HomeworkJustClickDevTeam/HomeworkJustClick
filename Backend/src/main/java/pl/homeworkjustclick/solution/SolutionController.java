@@ -7,9 +7,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 import pl.homeworkjustclick.assignment.AssignmentResponseDto;
 
@@ -148,8 +150,8 @@ public class SolutionController {
             }
     )
 
-    public void delete(@PathVariable("solutionId") int id) {
-        solutionService.delete(id);
+    public void delete(@NonNull HttpServletRequest request, @PathVariable("solutionId") int id) {
+        solutionService.delete(id, request);
     }
 
     @PostMapping("/solution/withUserAndAssignment/{userId}/{assignmentId}")
