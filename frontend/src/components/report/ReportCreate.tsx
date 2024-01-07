@@ -45,7 +45,7 @@ export const ReportCreate = ({reportedObject, csvVersion, closeReportCreator}:
   const checkHistFormat = () =>{
     const histTextWithoutWhitespaces = histTextValue.replace(/\s+/g, '')
     if(!(/^(0|[1-9][0-9]?|100)(,(0|[1-9][0-9]?|100))*$/.test(histTextWithoutWhitespaces))){//returns undefined if histTextValue is not in correct format
-      toast.error("Liczby histogramu muszą być 0-100 oddzielone spacjami")
+      toast.error("Liczby histogramu muszą być 0-100 oddzielone przecinkami")
       return undefined
     }
     const histTextAsArray = histTextWithoutWhitespaces.split(",").map(number=>parseInt(number))
