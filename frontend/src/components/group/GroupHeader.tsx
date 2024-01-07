@@ -6,7 +6,6 @@ import { selectGroup } from "../../redux/groupSlice"
 import { selectRole } from "../../redux/roleSlice"
 import { useAppSelector } from "../../types/HooksRedux"
 import { FaCog } from "react-icons/fa";
-import { GroupHeaderSortButtonValues } from "../../types/GroupHeaderStortButtonValues";
 
 //import {theme.colors.colorsArray: string[]} = require("../../../tailwind.config")
 
@@ -31,7 +30,6 @@ function GroupHeader() {
   const [locationSplit, setLocationSplit] = useState<string[]>(location.pathname.split("/"))
   const group = useAppSelector(selectGroup)
   const role = useAppSelector(selectRole)
-  const [sortButtonState, setSortButtonState] = useState<GroupHeaderSortButtonValues>(role === "Teacher" ? GroupHeaderSortButtonValues.uncheck : GroupHeaderSortButtonValues.toDo)
   const options = role === "Student" ? studentOptions : teacherOptions
   const [selectedOption, setSelectedOption] = useState(options[0])
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -44,35 +42,10 @@ function GroupHeader() {
 
   useEffect(() => {
     setLocationSplit(location.pathname.split("/"))
-    switch (location.pathname.split("/")[4]) {
-      case "todo":
-        setSortButtonState(GroupHeaderSortButtonValues.toDo)
-        break
-      case "done":
-        setSortButtonState(GroupHeaderSortButtonValues.done)
-        break
-      case "expired":
-        setSortButtonState(GroupHeaderSortButtonValues.expired)
-        break
-      case "uncheck":
-        setSortButtonState(GroupHeaderSortButtonValues.uncheck)
-        break
-      case "check":
-        setSortButtonState(GroupHeaderSortButtonValues.check)
-        break
-      case "late":
-        setSortButtonState(GroupHeaderSortButtonValues.late)
-        break
-      case "reported":
-        setSortButtonState(GroupHeaderSortButtonValues.reported)
-        break
-      default:
-        if (location.pathname.split("/")[3] === "assignments") setSortButtonState(GroupHeaderSortButtonValues.assignments)
-        else if (location.pathname.split("/")[3] === undefined) {
-          if (role === "Teacher") navigate("solutions/uncheck")
-          else if (role === "Student") navigate("assignments/todo")
-        }
-    }
+    if (location.pathname.split("/")[3] === undefined) {
+        if (role === "Teacher") navigate("solutions/uncheck")
+        else if (role === "Student") navigate("assignments/todo")
+      }
   }, [location, role])
 
   if (group !== null) {
@@ -85,7 +58,7 @@ function GroupHeader() {
               <p className='text-2xl xl:text-3xl'>{group.name}</p>
               <p className='text-base xl:text-xl mb-1 xl:mt-1'>{group.description}</p>
             </article>
-            {role === "Teacher" && <Link to="settings " className="absolute right-4 xl:right-6 top-2 xl:top-4">
+            {role === "Teacher" && <Link to={`settings`} className="absolute right-4 xl:right-6 top-2 xl:top-4">
               <FaCog className="m-2 text-sm xl:text-base" />
             </Link>}
             {role === "Teacher" && <Link to={"assignments"} state={{ groupReport: true }} className='absolute bottom-2 right-6 xl:right-8 text-sm xl:text-base underline underline-offset-4'>Stwórz raport grupy</Link>}
@@ -95,7 +68,7 @@ function GroupHeader() {
           <div className="text-base xl:text-xl font-lato font-medium text-center text-font_gray">
             <ul className="flex flex-wrap -mb-px">
               <li
-                className={(locationSplit[3] === "assignments" && locationSplit[4] === undefined) || locationSplit[3] === "solutions" ? "border-main_blue border-b-[3px] rounded bg-main_blue bg-opacity-5 text-black" : "hover:bg-hover_gray"}>
+                className={(locationSplit[3] === "assignments" || locationSplit[3] === "solutions" || locationSplit[3] === "evaluation") ? "border-main_blue border-b-[3px] rounded bg-main_blue bg-opacity-5 text-black" : "hover:bg-hover_gray"}>
                 <Link to="assignments" className="inline-block w-28 xl:w-36 p-4  rounded-t-lg " onClick={() => setSelectedOption({ link: "assignments", label: "Wszystkie" })}> Zadania</Link>
               </li>
               <li
@@ -118,7 +91,7 @@ function GroupHeader() {
           </div>}
           <div className='relative mr-0 ml-auto flex items-center'>
             <select
-              className="flex border-2 bg-white border-main_blue text-main_blue text-sm xl:text-lg pl-2 rounded-md xl:rounded-lg w-44 xl:w-56 h-8 xl:h-10 items-center"
+              className="flex border-2 border-main_blue text-main_blue text-sm xl:text-lg pl-2 rounded-md xl:rounded-lg w-44 xl:w-56 h-8 xl:h-10 items-center"
               value={selectedOption.label}
               onChange={handleChange}
             >
