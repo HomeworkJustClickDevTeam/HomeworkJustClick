@@ -83,7 +83,8 @@ export default function GroupGeneralSettings() {
       await navigator.clipboard.writeText(currentURL)
       toast.success('Link został skopiowany!')
     } catch (error) {
-      console.log(error)
+      console.error(error)
+      toast.error('Wystąpił błąd przy kopiowaniu linku')
     }
   }
   return (

@@ -1,5 +1,6 @@
 import React, { useState } from "react"
 import {
+  addStudentToGroupPostgresService,
   addTeacherToGroupPostgresService,
   deleteStudentInGroupPostgresService,
   deleteTeacherInGroupPostgresService
@@ -8,6 +9,7 @@ import { AxiosError } from "axios"
 import { UserInterface } from "../../types/UserInterface"
 import { selectRole } from "../../redux/roleSlice"
 import { useAppSelector } from "../../types/HooksRedux"
+import {toast} from "react-toastify";
 
 interface GroupUsersSettingsListElementProps {
   makeTeacher(arg: UserInterface): void,
@@ -25,20 +27,43 @@ export default function GroupUsersSettingsListElement(props: GroupUsersSettingsL
   const handleUserDeletion = async () => {
     props.isStudent ?
       (await deleteStudentInGroupPostgresService(props.userToShow.id.toString(), props.groupId)
-        .catch((error: AxiosError) => console.log(error))
-        .then(() => props.deleteUser(props.userToShow)))
+        .catch((error: AxiosError) => {
+          toast.error("Coś poszło nie tak przy usuwaniu studenta z grupy")
+          console.log(error)
+        })
+        .then(() => {
+          toast.success("Udało się usunąć studenta z grupy")
+          props.deleteUser(props.userToShow)
+        }))
       : (await deleteTeacherInGroupPostgresService(props.userToShow.id.toString(), props.groupId)
-        .catch((error: AxiosError) => console.log(error))
-        .then(() => props.deleteUser(props.userToShow)))
+        .catch((error: AxiosError) => {
+          toast.error("Coś poszło nie tak przy usuwaniu prowadzącego z grupy")
+          console.log(error)
+        })
+        .then(() => {
+          toast.success("Udało się usunąć prowadzącego z grupy")
+          props.deleteUser(props.userToShow)
+        }))
   }
 
   const handlePermissionsChange = async () => {
     await deleteStudentInGroupPostgresService(props.userToShow.id.toString(), props.groupId)
-      .catch((error: AxiosError) => console.log(error))
+      .catch((error: AxiosError) => {
+        toast.error("Coś poszło nie tak przy zmianie użytkownika na nauczyciela")
+        console.log(error)
+      })
       .then(() => {
         addTeacherToGroupPostgresService(props.userToShow.id.toString(), props.groupId)
-          .catch((error: AxiosError) => console.log(error))
-          .then(() => props.makeTeacher(props.userToShow))
+          .catch((error: AxiosError) => {
+            toast.error("Coś poszło nie tak przy zmianie użytkownika na nauczyciela")
+            addStudentToGroupPostgresService(props.userToShow.id.toString(), props.groupId)
+              .catch(e=>console.error(e))
+            console.log(error)
+          })
+          .then(() => {
+            toast.success("Udało się zmienić studenta na prowadzącego")
+            props.makeTeacher(props.userToShow)
+          })
       })
 
   }

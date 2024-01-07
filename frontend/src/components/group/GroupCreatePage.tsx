@@ -5,6 +5,7 @@ import { GroupCreateInterface } from "../../types/GroupCreateInterface"
 import { selectUserState } from "../../redux/userStateSlice"
 import { setHomePageIn } from "../../redux/homePageInSlice"
 import { useAppDispatch, useAppSelector } from "../../types/HooksRedux"
+import {toast} from "react-toastify";
 
 
 function GroupCreatePage() {
@@ -23,8 +24,10 @@ function GroupCreatePage() {
     try {
       await createGroupWithTeacherPostgresService(userState?.id as unknown as string, group)
       navigate("/")
+      toast.success("Pomyślnie stworzono grupę")
     } catch (e) {
       console.log(e)
+      toast.error("Coś poszło nie tak przy tworzeniu grupy")
     }
   }
 
