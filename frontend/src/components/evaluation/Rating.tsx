@@ -98,7 +98,7 @@ export function Rating({maxPoints,
                   setPointsToSend(i)
                   setPoints(points.toString());
                 }}
-                        className={`border border-black w-20 h-6 text-center rounded-md hover:bg-lilly-bg focus:bg-hover_blue`}>
+                        className={`border border-black w-20 h-6 text-center rounded-md hover:bg-lilly-bg focus:bg-hover_blue focus:border-hover_blue`}>
                   {i}
                 </button>
               )
@@ -117,7 +117,7 @@ export function Rating({maxPoints,
                 setPoints(evaluationButton.points.toString());
                 setPointsToSend(autoPenaltyCalculate(evaluationButton.points))
             }}
-                                 className={`border border-black w-20 h-6 text-center rounded-md hover:bg-lilly-bg focus:bg-hover_blue`}>
+                                 className={`border border-black w-20 h-6 text-center rounded-md hover:bg-lilly-bg focus:border-hover_blue`}>
                 {evaluationButton.points}
             </button>)
         })
@@ -147,7 +147,7 @@ export function Rating({maxPoints,
           <button key={i} onClick={() => {
             setPointsResult(i.toString());
           }}
-                  className={`border border-black w-20 h-6 text-center rounded-md hover:bg-lilly-bg`}>
+                  className={`border border-black w-20 h-6 text-center rounded-sm hover:bg-lilly-bg focus:border-hover_blue`}>
             {i}
           </button>
         )
@@ -156,7 +156,7 @@ export function Rating({maxPoints,
         <button key={'.'} onClick={() => {
           setPointsResult('.');
         }}
-                className={`border border-black w-20 h-6 text-center rounded-md hover:bg-lilly-bg`}>
+                className={`border border-black w-20 h-6 text-center rounded-md hover:bg-lilly-bg focus:border-hover_blue`}>
           {'.'}
         </button>
       )
@@ -164,7 +164,7 @@ export function Rating({maxPoints,
         <button key={0} onClick={() => {
           setPointsResult('0');
         }}
-                className={`border border-black w-20 h-6 text-center rounded-md hover:bg-lilly-bg `}>
+                className={`border border-black w-20 h-6 text-center rounded-sm hover:bg-lilly-bg focus:border-hover_blue`}>
           {0}
         </button>
       )
@@ -172,7 +172,7 @@ export function Rating({maxPoints,
         <button key={'<-'} onClick={() => {
           setPointsResult('<-')
         }}
-                className={`border border-black w-20 h-6 text-center rounded-md hover:bg-lilly-bg`}>
+                className={`border border-black w-20 h-6 text-center rounded-md hover:bg-lilly-bg focus:border-hover_blue`}>
           {'<-'}
         </button>
       )
@@ -191,8 +191,8 @@ export function Rating({maxPoints,
 
     return (
         <div className="mt-4">
-            <div className="relative flex w-72 gap-2 flex-wrap">{renderButtons()}</div>
-            <button onClick={() => handleMark()} className="mt-4 px-6 py-1 bg-main_blue text-white rounded mb-4">Prześlij
+            <div className="relative flex w-72 gap-2 flex-wrap ">{renderButtons()}</div>
+            <button onClick={() => handleMark()} className="fixed bottom-8 right-[calc(7.5%+28px)] px-3 py-1 bg-main_blue text-white rounded mb-4">Prześlij
                 Ocenę
             </button>
         </div>
