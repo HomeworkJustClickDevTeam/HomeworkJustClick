@@ -98,7 +98,7 @@ export const AssignmentSettingsPage = ({ handleSubmit,
   }
   return (
 
-    <div className='flex flex-col overflow-y-hidden h-[calc(100vh-360px)] '>
+    <div className='flex flex-col overflow-y-hidden h-[calc(100vh-270px)] xl:h-[calc(100vh-360px)] '>
       <div className="relative flex flex-col mx-[7.5%] mt-4 border border-border_gray border-1 rounded-md pt-4 px-4 fit pb-4 box-content overflow-y-auto">
         <div className='pl-3 border-l-2 border-main_blue lg:border-none pb-12 lg:pb-3'>
           <form onSubmit={(event) => handleSubmit(event)} className="flex flex-col gap-3 lg:flex-row">
@@ -213,10 +213,10 @@ export const AssignmentSettingsPage = ({ handleSubmit,
               </button>}
             <button
               type={"submit"}
-              className="absolute bottom-5 lg:bottom-3 xl:bottom-5 right-6 lg:right-2 xl:right-6 px-8 py-1 rounded-lg bg-main_blue text-white hover:bg-hover_blue hover:shadow-md active:shadow-none"
+              className="fixed mb-2 md:bottom-16 bottom-12 right-[calc(7.5%+28px)] px-8 py-1 rounded-lg bg-main_blue text-white hover:bg-hover_blue hover:shadow-md active:shadow-none"
             >Zapisz </button>
           </form>
-          <p className="mt-4 mb-2">Plik do zadania: </p>
+          <p className="mt-4 mb-2">Plik do zadania (max. 1): </p>
           {(assignment as AssignmentModel).id !== undefined && newAssignmentId === undefined ?
             <AssignmentFile
               setNewFile={setNewFile}
