@@ -22,7 +22,7 @@ function SolutionsTypesPage({ type }: { type: ExtendedSolutionType }) {
 
   return (
     <div className='flex flex-col h-[calc(100vh-325px)] overflow-y-hidden'>
-      <ul className="flex flex-col gap-3 mt-4 ml-[7.5%] box-content  mb-4">
+      <ul className="flex flex-col gap-3 mt-4 ml-[7.5%] box-content overflow-y-auto mb-4">
         {solutionsExtended.map((solutionExtended) => (
           <li
             key={
@@ -43,7 +43,7 @@ function SolutionsTypesPage({ type }: { type: ExtendedSolutionType }) {
                 {solutionExtended.assignment.title}
               </div>
               <p className="absolute right-0 mr-10 font-semibold text-[28px]">
-                {type!=="unchecked" && evaluations.find(evaluation => evaluation.solutionId === solutionExtended.id)?.result} /{solutionExtended.assignment.maxPoints}
+                {type!=="unchecked" && evaluations.find(evaluation => evaluation.solutionId === solutionExtended.id)?.result} / {solutionExtended.assignment.maxPoints}
               </p>
             </Link>
           </li>

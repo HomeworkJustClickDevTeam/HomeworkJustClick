@@ -5,7 +5,7 @@ import { selectGroup } from "../../redux/groupSlice"
 import { useAppSelector } from "../../types/HooksRedux"
 import { useGetAssignmentsByGroup } from "../customHooks/useGetAssignmentsByGroup"
 import React, {useEffect, useState} from "react";
-import {AssignmentInterface} from "../../types/AssignmentInterface";
+import {AssignmentModel} from "../../types/Assignment.model";
 import {AssignmentReportModel} from "../../types/AssignmentReport.model";
 import {GroupReportModel} from "../../types/GroupReport.model";
 import {AssignmentCreateReportModel} from "../../types/AssignmentCreateReport.model";
@@ -19,7 +19,7 @@ function AssignmentsGroupTeacherDisplayedPage() {
   const {state} = useLocation()
   const group= useAppSelector(selectGroup)
   const assignments = useGetAssignmentsByGroup(group?.id)
-  const [chosenObjectsReport, setChosenObjectsReport] = useState<AssignmentInterface| GroupInterface |undefined>(undefined)
+  const [chosenObjectsReport, setChosenObjectsReport] = useState<AssignmentModel| GroupInterface |undefined>(undefined)
 
 
 
@@ -27,7 +27,7 @@ function AssignmentsGroupTeacherDisplayedPage() {
     if(group !== null && state?.groupReport === true && ((chosenObjectsReport !== undefined && !('name' in chosenObjectsReport))|| chosenObjectsReport === undefined)) setChosenObjectsReport(group)
     else if (state?.groupReport === true && chosenObjectsReport !== undefined && 'name' in chosenObjectsReport) setChosenObjectsReport(undefined)
   }, [state])
-  const handleGenerateReportButtonClick = (assignment: AssignmentInterface) =>{
+  const handleGenerateReportButtonClick = (assignment: AssignmentModel) =>{
     if(assignment === chosenObjectsReport) setChosenObjectsReport(undefined)
     else setChosenObjectsReport(assignment)
   }

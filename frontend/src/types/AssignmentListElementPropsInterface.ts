@@ -1,12 +1,12 @@
 import {AssignmentPropsInterface} from "./AssignmentPropsInterface";
-import {AssignmentInterface} from "./AssignmentInterface";
+import {AssignmentModel} from "./Assignment.model";
 
 export interface AssignmentListElementPropsInterface extends AssignmentPropsInterface {
   idGroup?: string
   optionalUserId?: string
   createReportButton?: boolean
   handleGenerateReportButtonClick?: () => void
-  unfoldedPieChartAssignment?: AssignmentInterface
-  handleAssignmentClick?: (clickedAssignment: AssignmentInterface) => void
+  unfoldedPieChartAssignment?: AssignmentModel
+  handleAssignmentClick?: (clickedAssignment: AssignmentModel) => void
   resultPoints?: number
 }

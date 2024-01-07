@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react"
-import { AssignmentInterface } from "../../types/AssignmentInterface"
+import { AssignmentModel } from "../../types/Assignment.model"
 import { useAppDispatch } from "../../types/HooksRedux"
 import { getAssignmentPostgresService } from "../../services/postgresDatabaseServices"
 import { setIsLoading } from "../../redux/isLoadingSlice"
 import { parseISO } from "date-fns"
 
 export const useGetAssignment = (assignmentId: number | undefined | null) => {
-  const [assignment, setAssignment] = useState<AssignmentInterface | undefined>(
+  const [assignment, setAssignment] = useState<AssignmentModel | undefined>(
     undefined
   )
   const dispatch = useAppDispatch()

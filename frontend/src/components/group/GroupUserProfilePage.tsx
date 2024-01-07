@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom"
-import AssignmentListElement from "../assignments/AssignmentListElement"
+import AssignmentListElement from "../assignment/AssignmentListElement"
 import { selectGroup } from "../../redux/groupSlice"
 import { useAppSelector } from "../../types/HooksRedux"
 import { useGetUser } from "../customHooks/useGetUser"

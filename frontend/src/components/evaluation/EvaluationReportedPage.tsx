@@ -14,13 +14,13 @@ export const EvaluationReportedPage = () => {
 
     useEffect(() => {
         if (role !== "Teacher") {
-            navigate(`-/group/${group?.id}`)
+            navigate(`/group/${group?.id}`)
         }
     }, [role])
 
     return (
-        <div className='flex flex-col h-[calc(100vh-325px)] overflow-y-hidden'>
-            <ul className='flex flex-col box-content overflow-y-scroll mb-4'>
+        <div className='flex flex-col h-[calc(100vh-335x)] overflow-y-hidden ml-[7.5%] mt-3'>
+            <ul className='flex flex-col box-content overflow-y-auto mb-4'>
                 {reportedEvaluations?.map((evaluationReportResponse) => (
                     <li key={evaluationReportResponse.id
                         + evaluationReportResponse.solution.id
@@ -37,7 +37,7 @@ export const EvaluationReportedPage = () => {
                                 {evaluationReportResponse.solution.assignment.title}
                             </div>
                             <p className="absolute right-0 mr-10 font-semibold text-[28px]">
-                                {evaluationReportResponse.evaluation.grade} /{evaluationReportResponse.solution.assignment.maxPoints}
+                                {evaluationReportResponse.evaluation.result} / {evaluationReportResponse.solution.assignment.maxPoints}
                             </p>
                         </Link>
                     </li>

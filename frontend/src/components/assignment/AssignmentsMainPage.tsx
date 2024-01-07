@@ -17,12 +17,12 @@ export default function AssignmentsMainPage() {
   const userNonExpiredUndoneAssignments = useGetAssignmentsByStudent(userState?.id, 'nonExpiredUndone')
 
   if(userDoneAssignments.length === 0 && userExpiredUndoneAssignments.length === 0 && userNonExpiredUndoneAssignments.length === 0)
-    return (<>Tu będą informacje o zadaniach z każdej grupy, w której jesteś uczeniem. Nie jesteś uczeniem w żadnej grupie albo nie dostałeś jeszcze żadnych zadań do zrobienia.</>)
+      return (<div className='bg-lilly-bg mx-[7.5%] rounded-xl pt-32  h-96 mt-6 text-center '><span className='underline underline-offset-4 hover:text-pink hover:decoration-white hover:cursor-default select-none'>Tu będą informacje o zadaniach z każdej grupy, w której jesteś uczeniem. Nie jesteś uczeniem w żadnej grupie albo nie dostałeś jeszcze żadnych zadań do zrobienia.</span></div>)
 
   return <div className='mt-4 flex flex-col h-[calc(100vh-80px)] overflow-y-hidden '>
 
-      <section className='flex flex-col box-content overflow-y-auto mb-4'>
-          <div className='bg-lilly-bg mx-[7.5%] rounded-xl pt-4 pb-4'>
+      <section className='flex flex-col box-content overflow-y-auto mb-4 '>
+          <div className='bg-lilly-bg mx-[7.5%] rounded-xl pt-4 pb-4 '>
               <div>
             <p className='ml-[5.5%] font-semibold text-lg'>Zaległe niezrobione zadania:</p>
           {userExpiredUndoneAssignments.length > 0 ? <AssignmentsDisplayer assignments={userExpiredUndoneAssignments}/>: <p className='ml-[7.5%] mt-2'>Brak</p>}

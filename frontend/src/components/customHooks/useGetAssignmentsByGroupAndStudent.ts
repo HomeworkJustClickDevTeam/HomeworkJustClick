@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { AssignmentInterface } from "../../types/AssignmentInterface"
+import { AssignmentModel } from "../../types/Assignment.model"
 import {
   getAssignmentsDoneByGroupAndStudentPostgresService,
   getAssignmentsExpiredUndoneByGroupAndStudentPostgresService,
@@ -12,7 +12,7 @@ import { AssignmentsType } from "../../types/AssignmentsType"
 
 export const useGetAssignmentsByGroupAndStudent = (groupId: number|undefined|null, userId: number|undefined|null, filter:AssignmentsType) => {
   const dispatch = useAppDispatch()
-  const [assignments, setAssignments] = useState<AssignmentInterface[]>([])
+  const [assignments, setAssignments] = useState<AssignmentModel[]>([])
 
   useEffect(() => {
     const fetchData = async () => {
