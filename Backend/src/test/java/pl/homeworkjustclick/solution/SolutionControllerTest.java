@@ -2,6 +2,7 @@ package pl.homeworkjustclick.solution;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.jdbc.Sql;
@@ -926,7 +927,8 @@ public class SolutionControllerTest extends BaseTestEntity {
         var size = solutionRepository.findAll().size();
         var solution = solutionRepository.findAll().get(0);
         evaluationRepository.deleteAll();
-        mockMvc.perform(delete("/api/solution/{id}", solution.getId()))
+        mockMvc.perform(delete("/api/solution/{id}", solution.getId())
+                        .headers(HttpHeaders.writableHttpHeaders(createHttpHeaders())))
                 .andExpect(status().isOk())
                 .andReturn();
         assertEquals(size - 1, solutionRepository.findAll().size());
@@ -936,7 +938,8 @@ public class SolutionControllerTest extends BaseTestEntity {
     void shouldNotDeleteSolutionWhenEvaluated() throws Exception {
         var size = solutionRepository.findAll().size();
         var solution = solutionRepository.findAll().get(0);
-        mockMvc.perform(delete("/api/solution/{id}", solution.getId()))
+        mockMvc.perform(delete("/api/solution/{id}", solution.getId())
+                        .headers(HttpHeaders.writableHttpHeaders(createHttpHeaders())))
                 .andExpect(status().isBadRequest())
                 .andReturn();
         assertEquals(size, solutionRepository.findAll().size());
@@ -945,7 +948,8 @@ public class SolutionControllerTest extends BaseTestEntity {
     @Test
     void shouldNotDeleteNotExistingSolution() throws Exception {
         var size = solutionRepository.findAll().size();
-        mockMvc.perform(delete("/api/solution/{id}", 9999))
+        mockMvc.perform(delete("/api/solution/{id}", 9999)
+                        .headers(HttpHeaders.writableHttpHeaders(createHttpHeaders())))
                 .andExpect(status().isNotFound())
                 .andReturn();
         assertEquals(size, solutionRepository.findAll().size());

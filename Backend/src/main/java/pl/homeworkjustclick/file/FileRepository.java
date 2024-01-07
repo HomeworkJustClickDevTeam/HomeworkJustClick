@@ -6,6 +6,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface FileRepository extends JpaRepository<File, Integer> {
@@ -15,4 +16,8 @@ public interface FileRepository extends JpaRepository<File, Integer> {
 
     @Query(value = "select * from _file where solution_id = :solutionId", nativeQuery = true)
     List<File> getFilesBySolutionId(@Param("solutionId") int solutionId);
+
+    Optional<File> findBySolutionId(Integer solutionId);
+
+    Optional<File> findByAssignmentId(Integer assignmentId);
 }
