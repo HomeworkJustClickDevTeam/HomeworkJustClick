@@ -14,7 +14,7 @@ import java.io.Serializable;
 public class EvaluationReportDto implements Serializable {
     private Integer id;
     @NotNull
-    @Size(max = 255)
+    @Size(max = 1500)
     private String comment;
     @NotNull
     private Integer evaluationId;
