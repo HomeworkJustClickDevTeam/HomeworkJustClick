@@ -51,12 +51,12 @@ export default function SolutionUncheckedStudentPage(props: {
       </p>
       <p>
         <span className="font-semibold">Opis zadania: </span>
-        {props.assignment.taskDescription}
+          <textarea disabled={true}>{props.assignment.taskDescription}</textarea>
       </p>
       {props.solution.comment.length > 0 && (
         <p>
           <span className="font-semibold">Twój komentarz: </span>
-          {props.solution.comment}
+            <textarea disabled={true}>{props.solution.comment}</textarea>
         </p>
       )}
       <div>

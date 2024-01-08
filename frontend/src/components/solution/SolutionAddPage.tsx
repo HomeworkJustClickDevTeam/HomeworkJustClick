@@ -122,7 +122,7 @@ function SolutionAddPage({assignment}: AssignmentPropsInterface) {
         <section className='flex flex-col overflow-y-hidden h-[calc(100dvh-270px)] xl:h-[calc(100dvh-360px)]'>
       <div className="relative flex flex-col mx-[7.5%] mt-4 border border-border_gray border-1 rounded-md pt-4 px-4 h-96 gap-2 box-content overflow-y-auto">
           <div className='pl-3 border-l-2 border-main_blue lg:border-none pb-12 lg:pb-3'>
-              <div className='flex flex-col lg:flex-row w-full h-[calc(100dvh-410px)] '>
+              <div className='flex flex-col lg:flex-row w-full h-full'>
                   <div className='flex flex-col mr-5 gap-2 '>
                       <div className='flex flex-row'>
                           <p className="pr-3 w-28 font-semibold">Tytuł zadania: </p>

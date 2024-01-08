@@ -128,7 +128,7 @@ function SolutionPage() {
                           />
                       </div>
                   </div>
-                  <div className='mb-4'>
+                  <div className='mb-5'>
                       <label className='flex align-top text-opacity-100 mt-4'> Komentarz: </label>
                       <textarea className='border rounder-sm border-border_gray ml-3 pl-2 pr-1 w-64 min-h-[120px]'
                                 onChange={(event) => setComment(event.target.value)} value={comment}

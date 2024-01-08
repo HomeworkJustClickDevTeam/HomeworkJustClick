@@ -64,7 +64,7 @@ export const ReportCreate = ({reportedObject, csvVersion, closeReportCreator}:
         if(response?.status === 200){
           const assignmentReport = response.data as AssignmentReportModel
           if(assignmentReport.students === null || assignmentReport.students?.length === 0){
-            toast.error("Żaden uczeń nie zrobił zadania w tej grupie, nie ma możliwości stworznia raportu")
+            toast.error("Żaden uczeń nie zrobił zadania w tej grupie, nie ma możliwości stworzenia raportu")
             return
           }
           navigate(`/group/${group!.id}/report`, {state:{
@@ -78,7 +78,7 @@ export const ReportCreate = ({reportedObject, csvVersion, closeReportCreator}:
         if(response?.status === 200){
           const groupReport = response.data as GroupReportModel
           if(groupReport.assignments === null){
-            toast.error("Brak zadań w tej grupie, nie ma możliwości stworznia raportu")
+            toast.error("Brak zadań w tej grupie, nie ma możliwości stworzenia raportu")
             return
           }
           navigate(`/group/${group!.id}/report`, {state:{report: groupReport,
@@ -137,7 +137,7 @@ export const ReportCreate = ({reportedObject, csvVersion, closeReportCreator}:
   }, []);
 
   if(reportCreate !== undefined) {
-    return <div className='w-[400px]  border-4 border-black rounded-md pl-3 shadow-lg align-center'>
+    return <div className='min-w-[400px] min-h-[200px]  border-2 border-light_gray  rounded-md pl-3 shadow-lg align-center hover:backdrop-blur'>
       <div className='text-center mb-6 mt-2 font-bold'>RAPORT</div>
 
       {'title' in reportedObject?
@@ -149,7 +149,7 @@ export const ReportCreate = ({reportedObject, csvVersion, closeReportCreator}:
           <div><span className='font-semibold mr-1'>Punkty do zdobycia:</span> {(reportedObject as AssignmentModel).maxPoints}</div>
           <br/>
         </div>
-          : <div><span className='font-semibold mr-1'>Nazwa grupy:</span> {(reportedObject as GroupInterface).name}</div>}
+          : <div><span className='font-semibold mr-1 mt-2'>Nazwa grupy:</span> {(reportedObject as GroupInterface).name}</div>}
 
       <form onSubmit={(event) => {csvVersion ? handleCsvCreation(event) : handleReportCreation(event)}}>
         {csvVersion &&
@@ -185,8 +185,8 @@ export const ReportCreate = ({reportedObject, csvVersion, closeReportCreator}:
                 </div>
             </fieldset>}
         <div className='flex justify-between pr-4 mb-2  align-bottom mt-4'>
-          <button className='bg-main_blue text-white rounded-md text-sm p-1 px-2' type={"submit"}>Utwórz</button>
-          <button type={'button'} onClick={() => closeReportCreator()} className='bg-berry_red text-white rounded-md text-sm p-1 w-8'>X</button>
+          <button className='absolute bottom-3 left-3 bg-main_blue text-white rounded-md text-sm p-1 px-2' type={"submit"}>Utwórz</button>
+          <button type={'button'} onClick={() => closeReportCreator()} className='absolute right-3 bottom-3 bg-berry_red text-white rounded-md text-sm p-1 w-8'>X</button>
         </div>
       </form>
     </div>

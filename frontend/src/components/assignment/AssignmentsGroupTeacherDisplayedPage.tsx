@@ -46,7 +46,7 @@ function AssignmentsGroupTeacherDisplayedPage() {
               </li>
             ))}
         </ul>
-        <div className='fixed left-[calc(7.5%+700px)] top-[350px] bg-white'>
+        <div className='fixed top-[50%] left-[40%] bg-white'>
           {chosenObjectsReport && <ReportCreate closeReportCreator={()=> setChosenObjectsReport(undefined)} csvVersion={false} reportedObject={chosenObjectsReport}/>}
         </div>
       </div>
