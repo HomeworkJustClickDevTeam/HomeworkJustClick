@@ -19,7 +19,7 @@ export const EvaluationReportedPage = () => {
     }, [role])
 
     return (
-        <div className='flex flex-col h-[calc(100vh-335x)] overflow-y-hidden ml-[7.5%] mt-3'>
+        <div className='flex flex-col h-[calc(100dvh-335x)] overflow-y-hidden ml-[7.5%] mt-3'>
             <ul className='flex flex-col box-content overflow-y-auto mb-4'>
                 {reportedEvaluations?.map((evaluationReportResponse) => (
                     <li key={evaluationReportResponse.id

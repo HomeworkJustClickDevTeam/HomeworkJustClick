@@ -44,9 +44,8 @@ function SolutionPage() {
     }, [evaluation?.result])
     console.table(solutionExtended.assignment)
     return (
-        <div className='flex flex-col h-[calc(100vh-340px)] overflow-y-hidden mb-4'>
-            <div
-              className="relative flex-col mx-[7.5%] mt-4 border border-border_gray border-1 rounded-md pt-4 px-4 gap-2 box-content overflow-y-auto grid grid-cols-2">
+        <div className='flex flex-col h-[calc(100dvh-320px)] overflow-y-hidden mb-4 '>
+            <div className="relative flex-col mx-[7.5%] mt-4 border border-border_gray border-1 rounded-md pt-4 px-4 gap-2 box-content overflow-y-auto grid grid-cols-2 h-full mb-5 xl:h-[800px]">
                 <div className='flex flex-col gap-3'>
                     <div className='flex flex-col gap-3 border-b-2 border-main_blue pb-2 w-fit'>
                         <div className='flex flex-row mt-2'>
@@ -70,7 +69,7 @@ function SolutionPage() {
                           </div>
                         )}
                     </div>
-                    <div className="fixed right-[calc(7.5%+28px)] top-[340px] mr-8 mt-2 flex flex-col">
+                    <div className="absolute top-3 right-3   flex flex-col">
                         <div className="mb-4 font-semibold">Punkty:</div>
                         <div className="ml-20 font-bold text-xl ">
                             {points} / {solutionExtended.assignment.maxPoints}
@@ -93,9 +92,6 @@ function SolutionPage() {
                           Zadanie wysłane po terminie, zostanie automatycznie naliczona
                           kara {solutionExtended.assignment.autoPenalty}%
                       </div>)}
-
-
-
                 </div>
                 <div className='px-4 py-2 h-36 w-96 flex rounded-md text-bottom flex-col'>
                     <div className='mb-2'>{(evaluation === undefined || reportedEvaluation !== undefined) ? (
@@ -131,10 +127,12 @@ function SolutionPage() {
                             />
                         </div>
                     </div>
+                    <div className='mb-4'>
                     <label className='flex align-top text-opacity-100 mt-4'> Komentarz: </label>
-                        <textarea className='border rounder-sm border-border_gray ml-3 pl-2 pr-1 w-64 min-h-[120px]'
+                        <textarea className='border rounder-sm border-border_gray ml-3 pl-2 pr-1 w-64 min-h-[120px] '
                                   onChange={(event) => setComment(event.target.value)} value={comment}
                                   defaultValue={comment}/>
+                    </div>
 
                 </div>
             </div>

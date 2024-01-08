@@ -39,7 +39,7 @@ export default function UserSecuritySettingsPage(): JSX.Element {
                      ...prevState,
                      "email": event.target.value
                    }))
-               }} className='pl-1 border-b solid black focus:border focus:border-solid'/>
+               }} className='pl-1 border-b  focus:outline-none focus:border-b focus:border-main_blue'/>
       <br/>
       </section>
             <section className='py-1'>
@@ -52,7 +52,7 @@ export default function UserSecuritySettingsPage(): JSX.Element {
                    "password": event.target.value
                  }))
                }
-             } className='pl-1 border-b solid black focus:border focus:border-solid'/>
+             } className='pl-1 border-b  focus:outline-none focus:border-b focus:border-main_blue'/>
       <br/>
             </section>
             <section className='py-1'>
@@ -65,14 +65,14 @@ export default function UserSecuritySettingsPage(): JSX.Element {
                    "newPassword": event.target.value
                  }))
                }
-             } className='pl-1 border-b solid black focus:border focus:border-solid'/>
+             } className='pl-1 border-b  focus:outline-none focus:border-b focus:border-main_blue'/>
       <br/>
             </section>
             <section className='py-1'>
       <label htmlFor="newPasswordApproval">Potwierdź nowe hasło: </label>
       <input type="password" id="newPasswordApproval" name="passwordApproval" onChange={(event) => {
         setNewPasswordApproval(event.target.value)
-      }} className='pl-1 border-b solid black mb-2 focus:border focus:border-solid'/><br/></section>
+      }} className='pl-1 border-b  focus:outline-none focus:border-b focus:border-main_blue'/><br/></section>
         <button type="submit" className='absolute bg-main_blue text-white rounded-md text-sm p-1 active:mt-0.5 active:shadow-md'>Potwierdź</button>
     </div>
       </form>

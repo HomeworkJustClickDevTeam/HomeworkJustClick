@@ -7,7 +7,7 @@ export const AssignmentsStudentGroupPage = () =>{
   const group = useSelector(selectGroup)
   const groupAssignments = useGetAssignmentsByGroup(group?.id)
 
-  return <div className='flex flex-col h-[calc(100vh-325px)] overflow-y-hidden'>
+  return <div className='flex flex-col h-[calc(100dvh-325px)] overflow-y-hidden'>
     <AssignmentsDisplayer assignments={groupAssignments}/>
   </div>
 }

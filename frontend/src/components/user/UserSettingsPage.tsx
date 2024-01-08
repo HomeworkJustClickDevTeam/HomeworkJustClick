@@ -7,7 +7,7 @@ import UserMarkingTablesSettingsPage from "./UserMarkingTablesSettingsPage"
 export default function UserSettingsPage(): JSX.Element {
 
   return (
-    <div className='flex bg-lilly-bg h-[calc(100vh-64px)] justify-center overflow-y-hidden'>
+    <div className='flex bg-lilly-bg h-[calc(100dvh-40px)] lg:h-[calc(100dvh-64px)] justify-center overflow-y-hidden'>
       <div className=' bg-white w-[40%] px-4 py-3 box-content overflow-y-auto'>
         <p className='text-lg font-bold mb-3'>Ustawienia</p>
         <ul className='relative '>

@@ -33,8 +33,8 @@ function AssignmentsGroupTeacherDisplayedPage() {
   }
 
   return (
-    <div className='flex flex-col h-[calc(100vh-325px)] overflow-y-hidden w-full'>
-      <div className='relative h-[420px] box-content overflow-y-auto w-full'>
+    <div className='flex flex-col h-[calc(100dvh-325px)] overflow-y-hidden w-full'>
+      <div className='relative h-full box-content overflow-y-auto w-full'>
         <ul className="flex flex-col  mb-4">
           {assignments.map((assignment) => (
               <li key={assignment.id} className='flex inline-block '>
