@@ -21,7 +21,7 @@ function SolutionsTypesPage({ type }: { type: ExtendedSolutionType }) {
   }
 
   return (
-    <div className='flex flex-col h-[calc(100vh-325px)] overflow-y-hidden'>
+    <div className='flex flex-col h-[calc(100dvh-325px)] overflow-y-hidden'>
       <ul className="flex flex-col gap-3 mt-4 ml-[7.5%] box-content overflow-y-auto mb-4">
         {solutionsExtended.map((solutionExtended) => (
           <li
