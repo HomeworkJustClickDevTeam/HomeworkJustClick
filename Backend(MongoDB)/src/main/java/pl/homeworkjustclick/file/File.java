@@ -13,9 +13,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class File {
     @Id
     private String id;
-    @Size(max = 255)
+    @Size(max = 300)
     private String name;
-    @Size(max = 255)
+    @Size(max = 10)
     private String format;
     private Binary file;
 
