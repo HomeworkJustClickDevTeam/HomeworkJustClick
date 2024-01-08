@@ -208,7 +208,7 @@ export const AssignmentSettingsPage = ({handleSubmit,
             </div>
             <button
               type={"submit"}
-              className="absolute lg:top-3 bottom-[-220px] lg:right-0 lg:mr-6 lg:mt-4 h-fit px-8 py-1 rounded-lg bg-main_blue text-white hover:bg-hover_blue hover:shadow-md active:shadow-none"
+              className="fixed mb-2 md:bottom-16 bottom-12 right-[calc(7.5%+28px)] px-8 py-1 rounded-lg bg-main_blue text-white hover:bg-hover_blue hover:shadow-md active:shadow-none"
             >
               Zapisz
             </button>
