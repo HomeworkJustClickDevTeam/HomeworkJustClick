@@ -36,19 +36,23 @@ export const ReportGrade = (props:
     return (
         <>
             {isButtonClicked ? (
-                <div className=' ml-8 border-2 border-berry_red px-4 py-2 h-36 w-96 flex rounded-md text-bottom'>
-                    <>
-                        <label className='flex align-top text-opacity-100'> Komentarz:
-                            <textarea
-                              maxLength={1500}
-                              className='h-32 border rounder-sm border-border_gray ml-3 pl-2 pr-1' onChange={(event) => changeComment(event)} value={comment}/>
-                        </label>
-                        <button className='h-fit absolute bottom-2 right-2 px-2 py-1 bg-main_blue text-white rounded' onClick={reportGrade}>Wyślij </button>
-                        <button className='h-fit absolute top-2 right-2 h-fit px-2 py-1 bg-berry_red text-white rounded' onClick={() => setIsButtonClicked(false)}>X</button>
-                    </>
+                <div className=' ml-8 border-2 border-light_gray px-4 py-2  min-w-[400px] flex flex-col rounded-md text-bottom shadow-md text-center bg-white h-[260px]'>
+                    <p className='mb-3 font-semibold'>Zgłoś ocenę</p>
+                    <div className='flex'>
+                        <div>
+                            <label className='flex align-top text-opacity-100'> Komentarz:
+                                <textarea
+                                  maxLength={1500}
+                                  className='min-h-[100px] border rounder-sm border-border_gray ml-3 pl-2 pr-1 max-h-[200px]' onChange={(event) => changeComment(event)} value={comment}/>
+                            </label>
+                            <button className='h-fit absolute bottom-2 right-2 px-3 py-1 bg-main_blue text-white rounded' onClick={reportGrade}>Wyślij </button>
+                            <button className='h-fit absolute top-2 right-2 h-fit px-3 py-1 bg-berry_red text-white rounded' onClick={() => setIsButtonClicked(false)}>X</button>
+                        </div>
+
+                    </div>
                 </div>
             ) : (
-                <button className=' px-6 py-1 bg-berry_red text-white rounded mt-[-5px]' onClick={() => setIsButtonClicked(true)}>Zgłoś ocenę</button>
+                <button className='fixed right-[calc(7.5%+25px)] px-6 py-1 bg-berry_red text-white rounded ' onClick={() => setIsButtonClicked(true)}>Zgłoś ocenę</button>
             )}
         </>
     )

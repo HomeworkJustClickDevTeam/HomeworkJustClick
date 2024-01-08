@@ -45,13 +45,13 @@ export default function SolutionCheckedPage(props: {
 
             )}
           <p className="font-semibold">Przesłane pliki: </p>
-          {fileFromDb !== undefined ? (
+          <div>{fileFromDb !== undefined ? (
             <SolutionFile fileFromDb={fileFromDb}/>
           ) : (
             <p>Brak</p>
-          )}
+          )}</div>
           <br/>
-          <div className="absolute bottom-1 left-48 mb-5 mr-4">{(userRole === 'Student' && evaluation) && (
+          <div className="fixed fixed top-[50%] left-[35%]">{(userRole === 'Student' && evaluation) && (
             (evaluationReport === undefined) ?
               <ReportGrade evaluationId={evaluation.id}/>
               : <div>Zadanie zostało zaznaczone jako niepoprawnie ocenione, z komentarzem:<br/>
@@ -72,7 +72,7 @@ export default function SolutionCheckedPage(props: {
               Komentarze prowadzącego do pliku
           </Link>}
         </div>
-        {evaluation?.comment !== undefined && (
+        <div>{evaluation?.comment !== undefined && (
           <div className='px-4 py-2 h-36 w-96 flex rounded-md text-bottom'>
             <label className='flex align-top text-opacity-100'> Komentarz prowadzącego:
               <textarea className='h-32 border rounder-sm border-border_gray ml-3 pl-2 pr-1'
@@ -80,7 +80,7 @@ export default function SolutionCheckedPage(props: {
                         defaultValue={evaluation?.comment}/>
             </label>
           </div>
-        )}
+        )}</div>
         <div className="absolute bottom-0 left-0 mb-6 ml-4">
           <p>Wynik: </p>
           <p className="font-bold text-xl mt-4">
