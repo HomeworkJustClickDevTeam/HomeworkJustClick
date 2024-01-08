@@ -137,7 +137,8 @@ export const ReportCreate = ({reportedObject, csvVersion, closeReportCreator}:
   }, []);
 
   if(reportCreate !== undefined) {
-    return <div className='min-w-[400px] min-h-[200px]  border-2 border-light_gray  rounded-md pl-3 shadow-lg align-center hover:backdrop-blur'>
+    return <div className='min-w-[400px] min-h-[200px]  border-2 border-light_gray  rounded-md pl-3 shadow-lg align-center hover:shadow-outside-blur hover:shadow-white'>
+
       <div className='text-center mb-6 mt-2 font-bold'>RAPORT</div>
 
       {'title' in reportedObject?
@@ -146,10 +147,10 @@ export const ReportCreate = ({reportedObject, csvVersion, closeReportCreator}:
           <br/>
           <div><span className='font-semibold mr-1'>Termin:</span> {format(new Date((reportedObject as AssignmentModel).completionDatetime.toString()), "dd.MM.yyyy, HH:mm")}</div>
           <br/>
-          <div><span className='font-semibold mr-1'>Punkty do zdobycia:</span> {(reportedObject as AssignmentModel).maxPoints}</div>
+          <div className='mb-2'><span className='font-semibold mr-1 '>Punkty do zdobycia:</span> {(reportedObject as AssignmentModel).maxPoints}</div>
           <br/>
         </div>
-          : <div><span className='font-semibold mr-1 mt-2'>Nazwa grupy:</span> {(reportedObject as GroupInterface).name}</div>}
+          : <div className='ml-1 pt-4'><span className='font-semibold'>Nazwa grupy:</span> {(reportedObject as GroupInterface).name}</div>}
 
       <form onSubmit={(event) => {csvVersion ? handleCsvCreation(event) : handleReportCreation(event)}}>
         {csvVersion &&
@@ -189,7 +190,8 @@ export const ReportCreate = ({reportedObject, csvVersion, closeReportCreator}:
           <button type={'button'} onClick={() => closeReportCreator()} className='absolute right-3 bottom-3 bg-berry_red text-white rounded-md text-sm p-1 w-8'>X</button>
         </div>
       </form>
-    </div>
+      </div>
+
 
   }
   else {return null}

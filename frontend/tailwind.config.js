@@ -29,6 +29,9 @@ module.exports = {
             backgroundImage: {
                 'notes_img': "url('./images/zadanie.png')",
                 'notes_img2': "url('./images/zad2.png')"
+            },
+            boxShadow: {
+                'outside-blur': '0px 0px 2px 8px rgb(0, 0, 0)',
             }
         },
     },
