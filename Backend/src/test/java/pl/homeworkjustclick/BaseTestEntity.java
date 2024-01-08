@@ -27,7 +27,7 @@ public abstract class BaseTestEntity {
     public HttpHeaders createHttpHeaders() {
         var headers = new HttpHeaders();
         headers.setAccept(List.of(MediaType.APPLICATION_JSON));
-        headers.setBearerAuth("eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkYWR3YWFAd2RhLmNvbSIsImlhdCI6MTcwNDYyOTgyMiwiZXhwIjoxNzA0NjY1ODIyfQ.K9FGWwFOG2oXaAJGtH-5Zjk39YPzYCRV0dZVCAGA2ax8DmZju-uN8sVeQC7lQvcATZ1QyBafwbEONP2kazZz1A");
+        headers.setBearerAuth("eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkYWR3YUB3ZGEuY29tIiwiaWF0IjoxNzA0NzI4Mjc1LCJleHAiOjI2NTA4MDgyNzV9.1jpkUaR90d8tS7xqFys8wS8MI-iF2Caz5chhrirJg5wrGYYwscRusTwVGWa_O_vRpQkZdC1HwHaKk8k82T2w0g");
         return headers;
     }
 }
