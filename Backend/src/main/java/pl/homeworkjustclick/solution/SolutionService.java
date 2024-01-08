@@ -1,19 +1,23 @@
 package pl.homeworkjustclick.solution;
 
 import jakarta.persistence.EntityManager;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.homeworkjustclick.assignment.Assignment;
 import pl.homeworkjustclick.assignment.AssignmentRepository;
 import pl.homeworkjustclick.assignment.AssignmentResponseDto;
 import pl.homeworkjustclick.evaluation.EvaluationUtilsService;
+import pl.homeworkjustclick.file.FileFindService;
 import pl.homeworkjustclick.group.Group;
 import pl.homeworkjustclick.group.GroupRepository;
 import pl.homeworkjustclick.group.GroupResponseDto;
 import pl.homeworkjustclick.infrastructure.enums.CalendarStatus;
 import pl.homeworkjustclick.infrastructure.exception.EntityNotFoundException;
 import pl.homeworkjustclick.infrastructure.exception.InvalidArgumentException;
+import pl.homeworkjustclick.infrastructure.rest.MongoClientService;
 import pl.homeworkjustclick.user.User;
 import pl.homeworkjustclick.user.UserRepository;
 import pl.homeworkjustclick.user.UserResponseDto;
@@ -34,6 +38,8 @@ public class SolutionService {
     private final AssignmentRepository assignmentRepository;
     private final GroupRepository groupRepository;
     private final EvaluationUtilsService evaluationUtilsService;
+    private final FileFindService fileFindService;
+    private final MongoClientService mongoClientService;
 
     public Solution findById(Integer id) {
         return solutionRepository.findById(id)
@@ -89,7 +95,7 @@ public class SolutionService {
     }
 
     @Transactional
-    public SolutionResponseDto addWithUserAndAssignment(Solution solution, int userId, int assignmentId) {
+    public SolutionResponseDto addWithUserAndAssignment(@Valid Solution solution, int userId, int assignmentId) {
         Optional<User> user = userRepository.findById(userId);
         Optional<Assignment> assignment = assignmentRepository.findById(assignmentId);
         if (user.isPresent() && assignment.isPresent()) {
@@ -126,11 +132,14 @@ public class SolutionService {
     }
 
     @Transactional
-    public void delete(int id) {
+    public void delete(int id, HttpServletRequest request) {
+        var token = request.getHeader("Authorization").substring(7);
         var solution = findById(id);
         if (evaluationUtilsService.existsBySolutionId(id)) {
             throw new InvalidArgumentException("Evaluation to solution with id = " + id + " already exists");
         }
+        var file = fileFindService.findFileBySolutionId(id);
+        file.ifPresent(value -> mongoClientService.deleteFile(token, value.getMongoId()));
         solutionRepository.delete(solution);
     }
 

@@ -68,8 +68,8 @@ public class ReportService {
             var avgResult = roundDouble(calculateAvgResult(studentsResults));
             var avgResultPercent = roundDouble(avgResult * 100 / maxPoints);
             var late = solutionService.getLateSolutionsByAssignment(assignment.getId()).size();
-            var hist = assignmentReportDto.getHist();
-            if (hist != null && !hist.isEmpty()) {
+            if (assignmentReportDto.getHist() != null && !assignmentReportDto.getHist().isEmpty()) {
+                var hist = validateHist(assignmentReportDto.getHist());
                 var studentsHist = calculateHistogram(studentsResults, hist);
                 return AssignmentReportResponseDto.builder()
                         .assignment(assignmentMapper.map(assignment))
@@ -164,7 +164,7 @@ public class ReportService {
         }
         var hist = new ArrayList<Integer>();
         if (groupReportDto.getHist() != null && !groupReportDto.getHist().isEmpty()) {
-            hist = (ArrayList<Integer>) groupReportDto.getHist();
+            hist = (ArrayList<Integer>) validateHist(groupReportDto.getHist());
             if (hist.get(0) != 0) {
                 hist.add(0);
             }
@@ -220,17 +220,21 @@ public class ReportService {
                     endLine[k] = String.valueOf(Double.parseDouble(endLine[k]) + assignment.getLate());
                 }
                 for (int i = finalHeaderLength; i < finalHeaderLength + hist.size() - 1; i++) {
-                    line[i] = String.valueOf(assignment.getStudentsHist().get(i - finalHeaderLength));
-                    endLine[i] = String.valueOf(Double.parseDouble(endLine[i]) + assignment.getStudentsHist().get(i - finalHeaderLength));
+                    if (assignment.getStudentsHist() != null && !assignment.getStudentsHist().isEmpty()) {
+                        line[i] = String.valueOf(assignment.getStudentsHist().get(i - finalHeaderLength));
+                        endLine[i] = String.valueOf(Double.parseDouble(endLine[i]) + assignment.getStudentsHist().get(i - finalHeaderLength));
+                    }
                 }
                 var j = 0;
                 if (!hist.isEmpty()) {
                     for (int i = finalHeaderLength + hist.size() - 1; i < header.size(); i += 2) {
-                        line[i] = String.valueOf(assignment.getStudents().get(j).getResult());
-                        endLine[i] = String.valueOf(Double.parseDouble(endLine[i]) + assignment.getStudents().get(j).getResult());
-                        line[i + 1] = String.valueOf(assignment.getStudents().get(j).getResultPercent());
-                        endLine[i + 1] = String.valueOf(Double.parseDouble(endLine[i + 1]) + assignment.getStudents().get(j).getResultPercent());
-                        j += 1;
+                        if (assignment.getStudents() != null && !assignment.getStudents().isEmpty()) {
+                            line[i] = String.valueOf(assignment.getStudents().get(j).getResult());
+                            endLine[i] = String.valueOf(Double.parseDouble(endLine[i]) + assignment.getStudents().get(j).getResult());
+                            line[i + 1] = String.valueOf(assignment.getStudents().get(j).getResultPercent());
+                            endLine[i + 1] = String.valueOf(Double.parseDouble(endLine[i + 1]) + assignment.getStudents().get(j).getResultPercent());
+                            j += 1;
+                        }
                     }
                 } else {
                     for (int i = finalHeaderLength; i < header.size(); i += 2) {
@@ -295,7 +299,7 @@ public class ReportService {
         }
         var hist = new ArrayList<Integer>();
         if (assignmentReportDto.getHist() != null && !assignmentReportDto.getHist().isEmpty()) {
-            hist = (ArrayList<Integer>) assignmentReport.getHist();
+            hist = (ArrayList<Integer>) validateHist(assignmentReport.getHist());
             if (hist.get(0) != 0) {
                 hist.add(0);
             }
@@ -382,7 +386,7 @@ public class ReportService {
 
     private String escapeSpecialCharacters(String data) {
         if (data == null) {
-            throw new IllegalArgumentException("Input data cannot be null");
+            return "";
         }
         String escapedData = data.replaceAll("\\R", " ");
         if (data.contains(",") || data.contains("\"") || data.contains("'")) {
@@ -485,5 +489,11 @@ public class ReportService {
 
     private Double roundDouble(Double d) {
         return new BigDecimal(d.toString()).setScale(2, RoundingMode.HALF_UP).doubleValue();
+    }
+
+    private List<Integer> validateHist(List<Integer> hist) {
+        var h = new ArrayList<>(hist.stream().distinct().toList());
+        Collections.sort(h);
+        return h;
     }
 }

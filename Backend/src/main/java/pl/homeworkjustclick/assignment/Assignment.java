@@ -56,7 +56,7 @@ public class Assignment implements Serializable {
 
     @Column(name = "taskDescription")
     @Schema(example = "Example desc")
-    @Size(max = 1000)
+    @Size(max = 1500)
     private String taskDescription;
 
     @Column(name = "creationDatetime", updatable = false, nullable = false)
