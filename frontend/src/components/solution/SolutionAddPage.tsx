@@ -130,7 +130,7 @@ function SolutionAddPage({assignment}: AssignmentPropsInterface) {
                       </div>
                       <div>
                           <p className="font-semibold mb-1">Opis zadania: </p>
-                          <p className='border border-light_gray rounded-md pl-1 pr-1 pb-3 pt-1 shadow-md w-80 lg:w-full'>{assignment.taskDescription}</p>
+                          <textarea disabled={true} className='border border-light_gray rounded-md pl-1 pr-1 pb-3 pt-1 shadow-md w-80 lg:w-full'>{assignment.taskDescription}</textarea>
                       </div>
                   </div>
                   <div className='flex flex-col gap-3  lg:pl-5 lg:border-l-2 lg:border-main_blue w-fit'>
@@ -156,7 +156,7 @@ function SolutionAddPage({assignment}: AssignmentPropsInterface) {
                               <textarea
                                 className="pl-2 ml-1 border border-light_gray rounded-md shadow-md w-80 min-h-[125px] mt-2 px-2 py-1"
                                 name="comment"
-
+                                maxLength={1500}
                                 onChange={(e) => handleChangeComment(e)} />
 
                           </div>

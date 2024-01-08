@@ -625,6 +625,10 @@ export const deleteFilePostgresService = async (fileId: string) => {
 export const deleteGroupPostgresService = async (groupId: string) => {
     return await postgresqlDatabaseJSON.delete("/group/" + groupId)
 }
+
+export const deleteSolutionPostgresService = async (solutionId: string) => {
+    return await postgresqlDatabaseJSON.delete("/solution/" + solutionId)
+}
 export const deleteCommentImagePostgresService = async (commentId: string) => {
     return await postgresqlDatabaseJSON.delete(`/comment_file_img/${commentId}`)
 }

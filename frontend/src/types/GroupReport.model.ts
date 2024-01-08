@@ -5,7 +5,7 @@ import {AssignmentReportModel} from "./AssignmentReport.model";
 export class GroupReportModel{
   constructor(
     public group: GroupInterface,
-    public assignments: AssignmentReportModel[]
+    public assignments: AssignmentReportModel[]|null
   ) {
   }
 }

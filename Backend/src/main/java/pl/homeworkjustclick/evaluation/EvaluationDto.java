@@ -21,7 +21,7 @@ public class EvaluationDto implements Serializable {
     @NotNull
     private Integer groupId;
     private Double grade;
-    @Size(max = 500)
+    @Size(max = 1500)
     private String comment;
 
 }

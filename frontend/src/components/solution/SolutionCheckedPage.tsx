@@ -35,15 +35,15 @@ export default function SolutionCheckedPage(props: {
           </p>
           <p>
             <span className="font-semibold">Opis zadania: </span>
-            {props.assignment.taskDescription}
+            <textarea disabled={true}>{props.assignment.taskDescription}</textarea>
           </p>
           {props.solution.comment.length > 0 && (
             <p>
               <span className="font-semibold">Komentarz ucznia: </span>
-              {props.solution.comment}
+              <textarea disabled={true}>{props.solution.comment}</textarea>
             </p>
 
-          )}
+            )}
           <p className="font-semibold">Przesłane pliki: </p>
           {fileFromDb !== undefined ? (
             <SolutionFile fileFromDb={fileFromDb}/>
@@ -55,8 +55,8 @@ export default function SolutionCheckedPage(props: {
             (evaluationReport === undefined) ?
               <ReportGrade evaluationId={evaluation.id}/>
               : <div>Zadanie zostało zaznaczone jako niepoprawnie ocenione, z komentarzem:<br/>
-                {evaluationReport!.comment}</div>
-          )}
+                <textarea disabled={true}>{evaluationReport!.comment}</textarea></div>
+            )}
           </div>
           {((commentsImage.length !== 0) || (txtComments.length !== 0)) && <Link
               to={`/group/${props.solution.groupId}/advancedAssignment`}

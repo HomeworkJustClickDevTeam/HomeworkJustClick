@@ -38,8 +38,7 @@ export const AssignmentPieChart = ({assignment}:{assignment:AssignmentModel}) =>
 
   }, []);
 
-  if(studentsResults===undefined) return null
-  else if(typeof studentsResults === 'string') return <div>{studentsResults}</div>
+  if(studentsResults===undefined || studentsResults.length === 1) return (null)
   return <Chart
     chartType={"PieChart"}
     data={studentsResults}
