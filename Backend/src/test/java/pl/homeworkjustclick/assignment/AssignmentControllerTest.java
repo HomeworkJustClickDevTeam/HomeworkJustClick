@@ -659,6 +659,52 @@ public class AssignmentControllerTest extends BaseTestEntity {
     }
 
     @Test
+    void shouldAddAssignmentWithUserAndGroupWithLongestFields() throws Exception {
+        var assignment = Assignment.builder()
+                .taskDescription("a".repeat(1500))
+                .completionDatetime(OffsetDateTime.now())
+                .title("a".repeat(255))
+                .visible(true)
+                .maxPoints(10)
+                .autoPenalty(0)
+                .build();
+        var body = objectMapper.writeValueAsString(assignment);
+        var user = userRepository.findByEmail("jan_kowalski@gmail.com").get();
+        var group = groupRepository.getGroupsByTeacherId(user.getId()).get(0);
+        var size = assignmentRepository.findAll().size();
+        mockMvc.perform(post("/api/assignment/withUserAndGroup/{userId}/{groupId}", user.getId(), group.getId())
+                        .content(body)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isOk())
+                .andReturn();
+        assertEquals(size + 1, assignmentRepository.findAll().size());
+    }
+
+    @Test
+    void shouldNotAddAssignmentWithUserAndGroupWithTooLongFields() throws Exception {
+        var assignment = Assignment.builder()
+                .taskDescription("a".repeat(1501))
+                .completionDatetime(OffsetDateTime.now())
+                .title("a".repeat(256))
+                .visible(true)
+                .maxPoints(10)
+                .autoPenalty(0)
+                .build();
+        var body = objectMapper.writeValueAsString(assignment);
+        var user = userRepository.findByEmail("jan_kowalski@gmail.com").get();
+        var group = groupRepository.getGroupsByTeacherId(user.getId()).get(0);
+        var size = assignmentRepository.findAll().size();
+        mockMvc.perform(post("/api/assignment/withUserAndGroup/{userId}/{groupId}", user.getId(), group.getId())
+                        .content(body)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+        assertEquals(size, assignmentRepository.findAll().size());
+    }
+
+    @Test
     void shouldNotAddAssignmentWithNotExistingUserAndGroup() throws Exception {
         var assignment = Assignment.builder()
                 .taskDescription("desc")

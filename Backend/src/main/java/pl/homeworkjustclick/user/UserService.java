@@ -33,11 +33,6 @@ public class UserService {
                 .orElseThrow(() -> new EntityNotFoundException("User with email = " + email + " not found"));
     }
 
-    public Boolean add(User user) {
-        userRepository.save(user);
-        return true;
-    }
-
     public Boolean update(int id, User updatedUser) {
         if (userRepository.findById(id).isPresent()) {
             User user = findById(id);

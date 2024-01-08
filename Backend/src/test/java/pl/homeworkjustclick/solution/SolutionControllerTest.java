@@ -818,6 +818,39 @@ public class SolutionControllerTest extends BaseTestEntity {
     }
 
     @Test
+    void shouldAddSolutionWithUserAndAssignmentWithLongComment() throws Exception {
+        evaluationRepository.deleteAll();
+        solutionRepository.deleteAll();
+        var user = userRepository.findAll().get(0);
+        var assignment = assignmentRepository.getAllAssignmentsByStudent(user.getId()).get(0);
+        var solution = Solution.builder().comment("a".repeat(1500)).build();
+        var body = objectMapper.writeValueAsString(solution);
+        mockMvc.perform(post("/api/solution/withUserAndAssignment/{userId}/{assignmentId}", user.getId(), assignment.getId())
+                        .content(body)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.comment").value("a".repeat(1500)))
+                .andReturn();
+    }
+
+    @Test
+    void shouldNotAddSolutionWithUserAndAssignmentWithTooLongComment() throws Exception {
+        evaluationRepository.deleteAll();
+        solutionRepository.deleteAll();
+        var user = userRepository.findAll().get(0);
+        var assignment = assignmentRepository.getAllAssignmentsByStudent(user.getId()).get(0);
+        var solution = Solution.builder().comment("a".repeat(1501)).build();
+        var body = objectMapper.writeValueAsString(solution);
+        mockMvc.perform(post("/api/solution/withUserAndAssignment/{userId}/{assignmentId}", user.getId(), assignment.getId())
+                        .content(body)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+    }
+
+    @Test
     void shouldNotAddSolutionWithTeacherAndAssignment() throws Exception {
         evaluationRepository.deleteAll();
         solutionRepository.deleteAll();

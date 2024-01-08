@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -92,7 +93,7 @@ public class GroupController {
 
     @PostMapping("/group")
     @Hidden
-    public ResponseEntity<GroupResponseDto> add(@RequestBody Group group) {
+    public ResponseEntity<GroupResponseDto> add(@RequestBody @Valid Group group) {
         GroupResponseDto response = groupService.add(group);
         return ResponseEntity.ok(response);
     }
