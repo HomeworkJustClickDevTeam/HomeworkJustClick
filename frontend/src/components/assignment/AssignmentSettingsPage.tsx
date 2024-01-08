@@ -106,31 +106,29 @@ export const AssignmentSettingsPage = ({handleSubmit,
             <label className="pr-3 w-28">
               Tytuł:
             </label>
-
-              <input
-                name="title"
-                type="text"
-                onChange={(event)=>handleTextTitleChange(event)}
-                value={assignment.title}
-                placeholder="Nazwa zadania"
-                className="pl-1 ml-2 border-b-2 border-b-light_gray w-72"
-
-              />
-
-
+                <input
+                  name="title"
+                  type="text"
+                  maxLength={255}
+                  onChange={(event) => handleTextTitleChange(event)}
+                  value={assignment.title}
+                  placeholder="Nazwa zadania"
+                  className="pl-1 ml-2 border-b-2 border-b-light_gray w-72"
+                />
               </div>
-            <div>
-            <label className='flex align-top mt-2 w-24'>
-              Opis zadania:
-            </label>
-              <textarea
-                name="taskDescription"
-                onChange={(event)=>handleTextDescChange(event)}
-                value={assignment.taskDescription}
-                placeholder="Opis zadania"
-                className="pl-1 ml-28 border border-light_gray rounded-md shadow-md w-80 min-h-[125px] mt-2 px-2 py-1"
-              />
-            </div>
+              <div>
+                <label className='flex align-top mt-2 w-24'>
+                  Opis zadania:
+                </label>
+                <textarea
+                  maxLength={1500}
+                  name="taskDescription"
+                  onChange={(event) => handleTextDescChange(event)}
+                  value={assignment.taskDescription}
+                  placeholder="Opis zadania"
+                  className="pl-1 ml-28 border border-light_gray rounded-md shadow-md w-80 min-h-[125px] mt-2 px-2 py-1"
+                />
+              </div>
             </div>
             <div className='flex flex-col gap-3 w-full lg:pl-5 lg:border-l-2 lg:border-main_blue'>
               <div className='flex flex-row'>
@@ -154,66 +152,60 @@ export const AssignmentSettingsPage = ({handleSubmit,
               </select>
               </div>
               <div className='flex flex-row'>
-            <label className='w-60'>
-              {" "}
-              Kara za wysłanie po terminie (%):</label>
-              <input
-                name="autoPenalty"
-                type="number"
-                onChange={handleNumberChange}
-                min="0"
-                max="100"
-                step="25"
-                value={assignment.autoPenalty}
-                className="pl-1 ml-2 border-b-2 border-b-light_gray cursor-pointer w-12"
-              />
-            </div>
-            <label className="flex flex-row">
-              <p className="lg:w-[335px]">Data wykonania: </p>
-              <ReactDatePicker
-                name="completionDatetime"
-                selected={new Date(assignment.completionDatetime)}
-                onChange={handleDateChange}
-                showTimeSelect
-                timeFormat="HH:mm"
-                minDate={new Date()}
-                minTime={new Date()}
-                maxTime={setHours(setMinutes(new Date(), 59), 23)}
-                timeIntervals={15}
-                dateFormat="yyyy-MM-dd HH:mm"
-                className="pl-1 ml-2 border-b-2 border-b-light_gray w-36 cursor-pointer"
-              />
-            </label>
+                <label className='w-60'>
+                  {" "}
+                  Kara za wysłanie po terminie (%):</label>
+                <input
+                  name="autoPenalty"
+                  type="number"
+                  onChange={handleNumberChange}
+                  min="0"
+                  max="100"
+                  step="25"
+                  value={assignment.autoPenalty}
+                  className="pl-1 ml-2 border-b-2 border-b-light_gray cursor-pointer w-12"
+                />
+              </div>
+              <label className="flex flex-row">
+                <p className="lg:w-[335px]">Data wykonania: </p>
+                <ReactDatePicker
+                  name="completionDatetime"
+                  selected={new Date(assignment.completionDatetime)}
+                  onChange={handleDateChange}
+                  showTimeSelect
+                  timeFormat="HH:mm"
+                  minDate={new Date()}
+                  timeIntervals={15}
+                  dateFormat="yyyy-MM-dd HH:mm"
+                  className="pl-1 ml-2 border-b-2 border-b-light_gray w-36 cursor-pointer"
+                />
+              </label>
               <div className='flex flex-row mt-2'>
-            <label className=' mr-3'>
-              Widoczne:
-            </label>
-              <input
-                name="visible"
-                type="checkbox"
-                checked={assignment.visible}
-                onChange={(event)=>handleCheckboxChange(event)}
-                className="mt-1 before:content[''] peer relative h-4 w-4 cursor-pointer  rounded-md border border-main_blue transition-all before:absolute before:top-2/4 before:left-2/4 before:block before:h-8 before:w-8 before:-translate-y-2/4 before:-translate-x-2/4 before:rounded-full before:bg-main_blue before:opacity-0 before:transition-opacity checked:border-main_lily checked:bg-main_blue checked:before:bg-main_lily hover:before:opacity-20"
-              />
-
-            </div>
+                <label className=' mr-3'>
+                  Widoczne:
+                </label>
+                <input
+                  name="visible"
+                  type="checkbox"
+                  checked={assignment.visible}
+                  onChange={(event) => handleCheckboxChange(event)}
+                  className="mt-1 before:content[''] peer relative h-4 w-4 cursor-pointer  rounded-md border border-main_blue transition-all before:absolute before:top-2/4 before:left-2/4 before:block before:h-8 before:w-8 before:-translate-y-2/4 before:-translate-x-2/4 before:rounded-full before:bg-main_blue before:opacity-0 before:transition-opacity checked:border-main_lily checked:bg-main_blue checked:before:bg-main_lily hover:before:opacity-20"
+                />
+              </div>
               <div className='flex flex-row '>
-
-                  <label
-                      className="mr-3 cursor-help transititext-primary text-primary transition duration-75 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
-                      data-te-toggle='tooltip'
-                      title='Włączenie tej opcji spowoduje ograniczenie rozszerzeń plików przesyłanych odpowiedzi do: .xml, .json, .txt, .png, .jpg'>
-                    Ogranicz format plików:</label>
-                  <input
-                      className="mt-1 before:content[''] peer relative h-4 w-4 cursor-pointer  rounded-md border border-main_blue transition-all before:absolute before:top-2/4 before:left-2/4 before:block before:h-8 before:w-8 before:-translate-y-2/4 before:-translate-x-2/4 before:rounded-full before:bg-main_blue before:opacity-0 before:transition-opacity checked:border-main_lily checked:bg-main_blue checked:before:bg-main_lily hover:before:opacity-20"
-                      type="checkbox"
-                      name='advancedEvaluation'
-                      checked={assignment.advancedEvaluation}
-                      onChange={(event)=>handleCheckboxChange(event)}/>
-
+                <label
+                  className="mr-3 cursor-help transititext-primary text-primary transition duration-75 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
+                  data-te-toggle='tooltip'
+                  title='Włączenie tej opcji spowoduje ograniczenie rozszerzeń plików przesyłanych odpowiedzi do: .xml, .json, .txt, .png, .jpg'>
+                  Ogranicz format plików:</label>
+                <input
+                  className="mt-1 before:content[''] peer relative h-4 w-4 cursor-pointer  rounded-md border border-main_blue transition-all before:absolute before:top-2/4 before:left-2/4 before:block before:h-8 before:w-8 before:-translate-y-2/4 before:-translate-x-2/4 before:rounded-full before:bg-main_blue before:opacity-0 before:transition-opacity checked:border-main_lily checked:bg-main_blue checked:before:bg-main_lily hover:before:opacity-20"
+                  type="checkbox"
+                  name='advancedEvaluation'
+                  checked={assignment.advancedEvaluation}
+                  onChange={(event) => handleCheckboxChange(event)} />
+              </div>
             </div>
-            </div>
-
             <button
               type={"submit"}
               className="absolute lg:top-3 bottom-[-220px] lg:right-0 lg:mr-6 lg:mt-4 h-fit px-8 py-1 rounded-lg bg-main_blue text-white hover:bg-hover_blue hover:shadow-md active:shadow-none"

@@ -134,6 +134,7 @@ export default function PointsTableForm(props: {
           <input
             name="name"
             type="text"
+            maxLength={255}
             onChange={handleValueChange}
             value={isEditForm ? table.name : undefined}
             className='ml-1 pl-1 border-b solid black'

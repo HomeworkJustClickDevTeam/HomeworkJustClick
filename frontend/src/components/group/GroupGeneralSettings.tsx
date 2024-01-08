@@ -22,9 +22,16 @@ export default function GroupGeneralSettings() {
 
   const groupDeletionHandler = async () => {
     await deleteGroupPostgresService(group?.id as unknown as string)
-      .catch((error: AxiosError) => console.log(error))
-    dispatch(setGroup(null))
-    navigate("/")
+      .catch((error: AxiosError) => {
+        toast.error("Nie udało się usunąć grupy")
+        console.log(error)
+      })
+      .then(()=>{
+        dispatch(setGroup(null))
+        navigate("/")
+        toast.success("Usunięto grupę")
+      })
+
   }
   const archivizationHandler = async () => {
     group?.archived
@@ -95,7 +102,9 @@ export default function GroupGeneralSettings() {
             <label htmlFor="groupName">
               Nazwa Grupy:
               <input
+                maxLength={65}
                 type="text"
+                required={true}
                 name="groupName"
                 defaultValue={group?.name}
                 onChange={(event) =>{
@@ -116,6 +125,8 @@ export default function GroupGeneralSettings() {
             <label htmlFor="groupDescription">
               Opis Grupy:
               <input
+                maxLength={65}
+                required={true}
                 type="text"
                 name="groupDescription"
                 defaultValue={group?.description}

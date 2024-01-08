@@ -49,6 +49,7 @@ function GroupCreatePage() {
         <input
           name="name"
           placeholder="Nazwa grupy"
+          maxLength={65}
           onChange={handleChange}
           type="text"
           value={group.name}
@@ -58,6 +59,7 @@ function GroupCreatePage() {
         <input
           name="description"
           placeholder="Krótki opis grupy"
+          maxLength={65}
           onChange={handleChange}
           type="text"
           value={group.description}

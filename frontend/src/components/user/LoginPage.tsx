@@ -61,6 +61,10 @@ const LoginPage = () => {
               pattern: {
                 value: /\S+@\S+\.\S+/,
                 message: "Nieprawidłowy adres e-mail"
+              },
+              maxLength: {
+                value: 255,
+                message: "E-mail może zawierać maksymalnie 255 znaków"
               }
             })}
             name="email"
@@ -80,6 +84,10 @@ const LoginPage = () => {
               minLength: {
                 value: 8,
                 message: "Hasło musi mieć conajmnej 8 znaków"
+              },
+              maxLength: {
+                value: 255,
+                message: "Hasło może zawierać maksymalnie 255 znaków"
               }
             })}
             type={showPassword ? "text" : "password"}

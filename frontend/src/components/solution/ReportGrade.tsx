@@ -39,7 +39,9 @@ export const ReportGrade = (props:
                 <div className=' ml-8 border-2 border-berry_red px-4 py-2 h-36 w-96 flex rounded-md text-bottom'>
                     <>
                         <label className='flex align-top text-opacity-100'> Komentarz:
-                            <textarea className='h-32 border rounder-sm border-border_gray ml-3 pl-2 pr-1' onChange={(event) => changeComment(event)} value={comment}/>
+                            <textarea
+                              maxLength={1500}
+                              className='h-32 border rounder-sm border-border_gray ml-3 pl-2 pr-1' onChange={(event) => changeComment(event)} value={comment}/>
                         </label>
                         <button className='h-fit absolute bottom-2 right-2 px-2 py-1 bg-main_blue text-white rounded' onClick={reportGrade}>Wyślij </button>
                         <button className='h-fit absolute top-2 right-2 h-fit px-2 py-1 bg-berry_red text-white rounded' onClick={() => setIsButtonClicked(false)}>X</button>

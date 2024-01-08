@@ -6,6 +6,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa"
 import { UserRegisterInterface } from "../../types/UserRegisterInterface"
 import { FieldValues, useForm } from "react-hook-form"
 import { useState } from "react"
+import {toast} from "react-toastify";
 
 const RegisterPage = () => {
   const {
@@ -28,6 +29,7 @@ const RegisterPage = () => {
     };
     try {
       await registerPostgresService(userFormData)
+      toast.success("Udało się zarejestrować 🎉")
       navigate("/home")
     } catch (error) {
       setError('firstname', { type: 'manual', message: '' });
@@ -57,6 +59,10 @@ const RegisterPage = () => {
                 pattern: {
                   value: /^[A-Za-zĄąĆćĘęŁłŃńÓóŚśŹźŻż]+$/i,
                   message: "Imię może zawierać tylko litery"
+                },
+                maxLength: {
+                  value: 255,
+                  message: "Imię może zawierać maksymalnie 255 znaków"
                 }
               })}
               type="text"
@@ -76,6 +82,10 @@ const RegisterPage = () => {
                 pattern: {
                   value: /^[A-Za-zĄąĆćĘęŁłŃńÓóŚśŹźŻż]+-?[A-Za-zĄąĆćĘęŁłŃńÓóŚśŹźŻż]+$/i,
                   message: "Nazwisko może zawierać tylko litery i \"-\" "
+                },
+                maxLength: {
+                  value: 255,
+                  message: "Nazwisko może zawierać maksymalnie 255 znaków"
                 }
               })}
               type="text"
@@ -95,6 +105,10 @@ const RegisterPage = () => {
                 pattern: {
                   value: /\S+@\S+\.\S+/,
                   message: "Nieprawidłowy adres e-mail"
+                },
+                maxLength: {
+                  value: 255,
+                  message: "E-mail może zawierać maksymalnie 255 znaków"
                 }
               })}
               placeholder="Adres e-mail"
@@ -113,6 +127,10 @@ const RegisterPage = () => {
                 minLength: {
                   value: 8,
                   message: "Hasło musi mieć conajmnej 8 znaków"
+                },
+                maxLength: {
+                  value: 255,
+                  message: "Hasło może zawierać maksymalnie 255 znaków"
                 }
               })}
               type={showPassword ? "text" : "password"}
