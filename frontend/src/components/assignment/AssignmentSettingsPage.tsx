@@ -217,7 +217,7 @@ export const AssignmentSettingsPage = ({handleSubmit,
               Zapisz
             </button>
           </form>
-          <p className="mt-4 mb-2">Plik do zadania (max. 1): </p>
+          <p className="mt-4 mb-2">Plik do zadania (1 plik o rozmiarze do 5MB): </p>
           {(assignment as AssignmentModel).id !== undefined && newAssignmentId === undefined ?
           <AssignmentFile
             setNewFile={setNewFile}
