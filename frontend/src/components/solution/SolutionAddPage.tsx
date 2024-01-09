@@ -87,8 +87,11 @@ function SolutionAddPage({assignment}: AssignmentPropsInterface) {
             .then(() => {
                 navigate(-1)
             })
-            .catch((e) => console.log(e))
-
+            .catch((error) => {
+                if(error !== null && error !== undefined && error.response.status === 413){
+                    toast.error("Twój plik jest za duży")
+                }
+            })
     }
 
     function createSolutionWithCommentOnly() {
