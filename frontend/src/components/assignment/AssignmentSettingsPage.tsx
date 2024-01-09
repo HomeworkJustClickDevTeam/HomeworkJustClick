@@ -212,12 +212,12 @@ export const AssignmentSettingsPage = ({handleSubmit,
               </button>}
             <button
               type={"submit"}
-              className="fixed mb-2 md:bottom-16 bottom-12 right-[calc(7.5%+28px)] px-8 py-1 rounded-lg bg-main_blue text-white hover:bg-hover_blue hover:shadow-md active:shadow-none"
+              className="absolute mb-2 md:bottom-0 bottom-3 right-4 px-8 py-1 rounded-lg bg-main_blue text-white hover:bg-hover_blue hover:shadow-md active:shadow-none"
             >
               Zapisz
             </button>
           </form>
-          <p className="mt-4 mb-2">Plik do zadania (1 plik o rozmiarze do 5MB): </p>
+          <p className="xl:mt-4 mb-2 mt-5">Plik do zadania (1 plik o rozmiarze do 5MB): </p>
           {(assignment as AssignmentModel).id !== undefined && newAssignmentId === undefined ?
           <AssignmentFile
             setNewFile={setNewFile}
