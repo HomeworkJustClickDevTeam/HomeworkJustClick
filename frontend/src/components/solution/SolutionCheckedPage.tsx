@@ -29,9 +29,9 @@ export default function SolutionCheckedPage(props: {
     return (
         <div className='flex flex-col overflow-y-hidden h-[calc(100dvh-270px)] xl:h-[calc(100dvh-360px)] '>
       <div
-        className="relative mx-[7.5%] mt-4 border border-border_gray border-1 rounded-md pt-4 px-4 h-fit gap-2 pb-3 box-content overflow-y-auto">
-        <div className=' flex flex-col xl:flex-row xl:border-none border-b-2 border-main_blue pb-3 w-fit'>
-          <div className='mr-8 xl:mr-16'>
+        className="relative mx-[7.5%] mt-4 border border-border_gray border-1 rounded-md pt-4 px-2 h-fit gap-2 pb-3 box-content overflow-y-auto ">
+        <div className=' flex flex-col xl:flex-row xl:border-none xl:border-b-2 border-main_blue pb-3 w-fit border-l-2 pl-2'>
+          <div className='mr-8 xl:mr-12'>
               <div className='flex'>
                 <p className="font-semibold mr-2">Zadanie: </p>
                 {props.assignment.title}{" "}
@@ -40,6 +40,8 @@ export default function SolutionCheckedPage(props: {
                 <label className='flex align-top mt-2 w-fit font-semibold mr-2'>Opis zadania: </label>
                 <textarea disabled={true} className='mt-3  border border-light_gray rounded-md pl-1 pr-1 pb-3 pt-1 shadow-md w-96 lg:w-fit lg:min-w-[300px] min-h-[80px] lg:ml-0 ml-32 mb-5 xl:mb-0'>{props.assignment.taskDescription}</textarea>
               </div>
+          </div>
+              <div className='flex flex-col xl:border-l-2 xl:border-main_blue xl:pl-6'>
               <div className='mt-2'>
                   <p className="font-semibold">Przesłane pliki: </p>
                   <div>{fileFromDb !== undefined ? (
@@ -53,10 +55,11 @@ export default function SolutionCheckedPage(props: {
               {props.solution.comment.length > 0 && (
                 <div>
                     <label className='flex align-top mt-2 w-fit font-semibold mr-2'>Komentarz ucznia: </label>
-                  <textarea disabled={true} className='mt-3  border border-light_gray rounded-md pl-1 pr-1 pb-3 pt-1 shadow-md w-80 lg:w-fit lg:min-w-[300px] min-h-[80px] lg:ml-0 ml-32 mb-5 xl:mb-0'>{props.solution.comment}</textarea>
+                  <textarea disabled={true} className='mt-3  border border-light_gray rounded-md pl-1 pr-1 pb-3 pt-1 shadow-md w-80 lg:w-fit lg:min-w-[300px] min-h-[150px] lg:ml-0 ml-32 mb-5 xl:mb-0'>{props.solution.comment}</textarea>
                 </div>
 
               )}</div>
+
 
 
               <div className="fixed fixed top-[50%] left-[35%]">{(userRole === 'Student' && evaluation) && (
@@ -81,8 +84,8 @@ export default function SolutionCheckedPage(props: {
           </Link>}
         </div>
         <div>{evaluation?.comment !== undefined && (
-          <div className='pl-8 xl:border-l-2 xl:border-main_blue '>
-              <label className='flex align-top mt-2 w-fit font-semibold mr-2'> Komentarz prowadzącego:</label>
+          <div className='xl:pl-8 '>
+              <label className='flex align-top xl:mt-[62px] w-fit font-semibold mr-2'> Komentarz prowadzącego:</label>
               <textarea className='mt-3  border border-light_gray rounded-md pl-1 pr-1 pb-3 pt-1 shadow-md w-80  lg:min-w-[350px] min-h-[150px] lg:ml-0 ml-32 mb-5 xl:mb-0'
                         disabled={true}
                         defaultValue={evaluation?.comment}/>
@@ -90,9 +93,9 @@ export default function SolutionCheckedPage(props: {
           </div>
         )}</div>
         </div>
-        <div className="relative mt-6">
+        <div className="absolute top-0 right-4 font-bold text-xl mt-4">
           <p>Wynik: </p>
-          <p className="font-bold text-xl mt-4">
+          <p className="">
             {evaluation?.result} / {props.assignment.maxPoints}
           </p>
         </div>

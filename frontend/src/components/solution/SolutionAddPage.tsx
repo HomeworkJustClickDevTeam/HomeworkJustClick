@@ -120,7 +120,7 @@ function SolutionAddPage({assignment}: AssignmentPropsInterface) {
 
     return (
         <section className='flex flex-col overflow-y-hidden h-[calc(100dvh-265px)] xl:h-[calc(100dvh-360px)]'>
-      <div className="relative flex flex-col mx-[7.5%] mt-4 border border-border_gray border-1 rounded-md pt-4 px-4 h-96 gap-2 box-content overflow-y-auto">
+      <div className="relative flex flex-col mx-[7.5%] mt-4 border border-border_gray border-1 rounded-md pt-4 px-4 h-fit gap-2 box-content overflow-y-auto">
           <div className='pl-3 border-l-2 border-main_blue lg:border-none pb-12 lg:pb-3'>
               <div className='flex flex-col lg:flex-row w-full h-full'>
                   <div className='flex flex-col mr-5 gap-2  min-w-[320px] max-w-[500px]'>
