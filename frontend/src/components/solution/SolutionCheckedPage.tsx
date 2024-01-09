@@ -29,7 +29,7 @@ export default function SolutionCheckedPage(props: {
     return (
         <div className='flex flex-col overflow-y-hidden h-[calc(100dvh-270px)] xl:h-[calc(100dvh-360px)] '>
       <div
-        className="relative mx-[7.5%] mt-4 border border-border_gray border-1 rounded-md pt-4 px-2 h-fit gap-2 pb-3 box-content overflow-y-auto ">
+        className="relative mx-[7.5%] xl:flex  mt-4 border border-border_gray border-1 rounded-md pt-4 px-2 h-fit gap-2 pb-3 box-content overflow-y-auto ">
         <div className=' flex flex-col xl:flex-row xl:border-none xl:border-b-2 border-main_blue pb-3 w-fit border-l-2 pl-2'>
           <div className='mr-8 xl:mr-12'>
               <div className='flex'>

@@ -155,6 +155,7 @@ export default function PointsTableForm(props: {
             type="number"
             name="width"
             max="5"
+            min="1"
             onChange={handleValueChange}
             value={isEditForm ? table.width : undefined}
             className='ml-1 pl-1 border-b solid black w-10 focus:outline-none focus:border-b-main_blue'
