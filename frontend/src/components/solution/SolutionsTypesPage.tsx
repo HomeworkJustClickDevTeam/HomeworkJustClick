@@ -21,7 +21,7 @@ function SolutionsTypesPage({ type }: { type: ExtendedSolutionType }) {
   }
 
   return (
-    <div className='flex flex-col h-[calc(100dvh-325px)] overflow-y-hidden'>
+    <div className='flex flex-col xl:h-[calc(100dvh-325px)] h-[calc(100dvh-260px)] overflow-y-hidden'>
       <ul className="flex flex-col gap-3 mt-4 ml-[7.5%] box-content overflow-y-auto mb-4">
         {solutionsExtended.map((solutionExtended) => (
           <li
@@ -34,12 +34,12 @@ function SolutionsTypesPage({ type }: { type: ExtendedSolutionType }) {
             <Link
               to={`/group/${solutionExtended.assignment.groupId}/solution/${solutionExtended.user.id}/${solutionExtended.assignment.id}`}
               state={{ solution: solutionExtended }}
-              className="flex relative border-border_gray border w-[42.5%] h-16 rounded-lg font-lato text-xl items-center text-center gap-2"
+              className="flex relative border-border_gray border min-w-[500px] max-w-[900px] h-16 rounded-lg font-lato text-xl items-center text-center gap-2"
             >
               <div className="flex-col pl-10 w-40 text-left">
                 <div>{solutionExtended.user.firstname}<br/> {solutionExtended.user.lastname}</div>
               </div>
-              <div className="font-semibold underline text-left w-[40%]">
+              <div className="font-semibold underline text-left w-[40%] truncate text-ellipsis  h-8">
                 {solutionExtended.assignment.title}
               </div>
               <p className="absolute right-0 mr-10 font-semibold text-[28px]">

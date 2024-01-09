@@ -123,14 +123,14 @@ function SolutionAddPage({assignment}: AssignmentPropsInterface) {
       <div className="relative flex flex-col mx-[7.5%] mt-4 border border-border_gray border-1 rounded-md pt-4 px-4 h-96 gap-2 box-content overflow-y-auto">
           <div className='pl-3 border-l-2 border-main_blue lg:border-none pb-12 lg:pb-3'>
               <div className='flex flex-col lg:flex-row w-full h-full'>
-                  <div className='flex flex-col mr-5 gap-2 w-fit min-w-[320px] max-w-[500px]'>
+                  <div className='flex flex-col mr-5 gap-2  min-w-[320px] max-w-[500px]'>
                       <div className='flex flex-row'>
-                          <p className="pr-3 w-28 font-semibold">Tytuł zadania: </p>
-                          <p className='max-w-48'>{assignment.title}</p>
+                          <p className="w-48 font-semibold flex flex-row">Tytuł zadania: </p>
+                          <p className='w-fit max-w-24'>{assignment.title}</p>
                       </div>
                       <div>
                           <p className="font-semibold mb-1">Opis zadania: </p>
-                          <textarea disabled={true} className='border border-light_gray rounded-md pl-1 pr-1 pb-3 pt-1 shadow-md w-80 lg:w-full'>{assignment.taskDescription}</textarea>
+                          <textarea disabled={true} className='border border-light_gray rounded-md pl-1 pr-1 pb-3 pt-1 shadow-md w-80 lg:w-full min-h-[120px] lg:ml-0 ml-32 mb-5 xl:mb-0'>{assignment.taskDescription}</textarea>
                       </div>
                   </div>
                   <div className='flex flex-col gap-3  lg:pl-5 lg:border-l-2 lg:border-main_blue w-fit'>
