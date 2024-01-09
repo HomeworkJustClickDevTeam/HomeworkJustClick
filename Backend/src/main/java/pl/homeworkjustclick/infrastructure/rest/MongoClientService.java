@@ -14,16 +14,15 @@ public class MongoClientService {
     private final WebClient postgresWebClient;
     private final MongoConfigProps mongoConfigProps;
 
-    public Boolean deleteFile(String token, String fileId) {
+    public void deleteFile(String token, String fileId) {
         String uri = mongoConfigProps.getUrl() + "/file/" + fileId;
-        var valid = postgresWebClient.delete()
+        postgresWebClient.delete()
                 .uri(uri)
                 .headers(httpHeaders -> httpHeaders.addAll(createHttpHeaders(token)))
                 .retrieve()
                 .bodyToMono(Boolean.class)
                 .onErrorComplete()
                 .block();
-        return Boolean.TRUE.equals(valid);
     }
 
     private HttpHeaders createHttpHeaders(String jwtToken) {

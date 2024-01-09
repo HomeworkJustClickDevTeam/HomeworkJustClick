@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,7 +46,7 @@ public class AuthenticationController {
                     )
             }
     )
-    public ResponseEntity<AuthenticationResponseDto> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<AuthenticationResponseDto> register(@RequestBody @Valid RegisterRequest request) {
         AuthenticationResponseDto response = authenticationService.registerUser(request);
         if (response.getMessage().equals("ok")){
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -84,7 +85,7 @@ public class AuthenticationController {
                     )
             }
     )
-    public ResponseEntity<AuthenticationResponseDto> authenticate(@RequestBody AuthenticationRequest request) {
+    public ResponseEntity<AuthenticationResponseDto> authenticate(@RequestBody @Valid AuthenticationRequest request) {
         AuthenticationResponseDto response = authenticationService.authenticate(request);
         return switch (response.getMessage()) {
             case "ok" -> new ResponseEntity<>(response, HttpStatus.OK);

@@ -2,6 +2,7 @@ package pl.homeworkjustclick.solution;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.jdbc.Sql;
@@ -15,6 +16,7 @@ import pl.homeworkjustclick.user.UserRepository;
 
 import java.nio.charset.StandardCharsets;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -816,6 +818,39 @@ public class SolutionControllerTest extends BaseTestEntity {
     }
 
     @Test
+    void shouldAddSolutionWithUserAndAssignmentWithLongComment() throws Exception {
+        evaluationRepository.deleteAll();
+        solutionRepository.deleteAll();
+        var user = userRepository.findAll().get(0);
+        var assignment = assignmentRepository.getAllAssignmentsByStudent(user.getId()).get(0);
+        var solution = Solution.builder().comment("a".repeat(1500)).build();
+        var body = objectMapper.writeValueAsString(solution);
+        mockMvc.perform(post("/api/solution/withUserAndAssignment/{userId}/{assignmentId}", user.getId(), assignment.getId())
+                        .content(body)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.comment").value("a".repeat(1500)))
+                .andReturn();
+    }
+
+    @Test
+    void shouldNotAddSolutionWithUserAndAssignmentWithTooLongComment() throws Exception {
+        evaluationRepository.deleteAll();
+        solutionRepository.deleteAll();
+        var user = userRepository.findAll().get(0);
+        var assignment = assignmentRepository.getAllAssignmentsByStudent(user.getId()).get(0);
+        var solution = Solution.builder().comment("a".repeat(1501)).build();
+        var body = objectMapper.writeValueAsString(solution);
+        mockMvc.perform(post("/api/solution/withUserAndAssignment/{userId}/{assignmentId}", user.getId(), assignment.getId())
+                        .content(body)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+    }
+
+    @Test
     void shouldNotAddSolutionWithTeacherAndAssignment() throws Exception {
         evaluationRepository.deleteAll();
         solutionRepository.deleteAll();
@@ -920,36 +955,36 @@ public class SolutionControllerTest extends BaseTestEntity {
                 .andReturn();
     }
 
-//    @Test
-//    void shouldDeleteSolutionWhenNotEvaluated() throws Exception {
-//        var size = solutionRepository.findAll().size();
-//        var solution = solutionRepository.findAll().get(0);
-//        evaluationRepository.deleteAll();
-//        mockMvc.perform(delete("/api/solution/{id}", solution.getId())
-//                        .headers(HttpHeaders.writableHttpHeaders(createHttpHeaders())))
-//                .andExpect(status().isOk())
-//                .andReturn();
-//        assertEquals(size - 1, solutionRepository.findAll().size());
-//    }
-//
-//    @Test
-//    void shouldNotDeleteSolutionWhenEvaluated() throws Exception {
-//        var size = solutionRepository.findAll().size();
-//        var solution = solutionRepository.findAll().get(0);
-//        mockMvc.perform(delete("/api/solution/{id}", solution.getId())
-//                        .headers(HttpHeaders.writableHttpHeaders(createHttpHeaders())))
-//                .andExpect(status().isBadRequest())
-//                .andReturn();
-//        assertEquals(size, solutionRepository.findAll().size());
-//    }
-//
-//    @Test
-//    void shouldNotDeleteNotExistingSolution() throws Exception {
-//        var size = solutionRepository.findAll().size();
-//        mockMvc.perform(delete("/api/solution/{id}", 9999)
-//                        .headers(HttpHeaders.writableHttpHeaders(createHttpHeaders())))
-//                .andExpect(status().isNotFound())
-//                .andReturn();
-//        assertEquals(size, solutionRepository.findAll().size());
-//    }
+    @Test
+    void shouldDeleteSolutionWhenNotEvaluated() throws Exception {
+        var size = solutionRepository.findAll().size();
+        var solution = solutionRepository.findAll().get(0);
+        evaluationRepository.deleteAll();
+        mockMvc.perform(delete("/api/solution/{id}", solution.getId())
+                        .headers(HttpHeaders.writableHttpHeaders(createHttpHeaders())))
+                .andExpect(status().isOk())
+                .andReturn();
+        assertEquals(size - 1, solutionRepository.findAll().size());
+    }
+
+    @Test
+    void shouldNotDeleteSolutionWhenEvaluated() throws Exception {
+        var size = solutionRepository.findAll().size();
+        var solution = solutionRepository.findAll().get(0);
+        mockMvc.perform(delete("/api/solution/{id}", solution.getId())
+                        .headers(HttpHeaders.writableHttpHeaders(createHttpHeaders())))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+        assertEquals(size, solutionRepository.findAll().size());
+    }
+
+    @Test
+    void shouldNotDeleteNotExistingSolution() throws Exception {
+        var size = solutionRepository.findAll().size();
+        mockMvc.perform(delete("/api/solution/{id}", 9999)
+                        .headers(HttpHeaders.writableHttpHeaders(createHttpHeaders())))
+                .andExpect(status().isNotFound())
+                .andReturn();
+        assertEquals(size, solutionRepository.findAll().size());
+    }
 }

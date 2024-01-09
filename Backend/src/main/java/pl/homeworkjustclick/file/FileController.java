@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -95,7 +96,7 @@ public class FileController {
                     )
             }
     )
-    public ResponseEntity<FileResponseDto> addWithAssignment(@RequestBody File file, @PathVariable("assignmentId") int id) {
+    public ResponseEntity<FileResponseDto> addWithAssignment(@RequestBody @Valid File file, @PathVariable("assignmentId") int id) {
         FileResponseDto response = fileService.addWithAssignment(file, id);
         if (response == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -123,7 +124,7 @@ public class FileController {
                     )
             }
     )
-    public ResponseEntity<FileResponseDto> addWithSolution(@RequestBody File file, @PathVariable("solutionId") int id) {
+    public ResponseEntity<FileResponseDto> addWithSolution(@RequestBody @Valid File file, @PathVariable("solutionId") int id) {
         FileResponseDto response = fileService.addWithSolution(file, id);
         if (response == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
