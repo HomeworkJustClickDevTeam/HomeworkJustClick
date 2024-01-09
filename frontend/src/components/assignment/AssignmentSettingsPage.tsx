@@ -216,7 +216,7 @@ export const AssignmentSettingsPage = ({ handleSubmit,
               className="fixed mb-2 md:bottom-16 bottom-12 right-[calc(7.5%+28px)] px-8 py-1 rounded-lg bg-main_blue text-white hover:bg-hover_blue hover:shadow-md active:shadow-none"
             >Zapisz </button>
           </form>
-          <p className="mt-4 mb-2">Plik do zadania (max. 1): </p>
+          <p className="mt-4 mb-2">Plik do zadania (1 plik o rozmiarze do 5MB): </p>
           {(assignment as AssignmentModel).id !== undefined && newAssignmentId === undefined ?
             <AssignmentFile
               setNewFile={setNewFile}
