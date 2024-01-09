@@ -113,7 +113,7 @@ export const AssignmentSettingsPage = ({handleSubmit,
                   onChange={(event) => handleTextTitleChange(event)}
                   value={assignment.title}
                   placeholder="Nazwa zadania"
-                  className="pl-1 ml-2 border-b-2 border-b-light_gray w-72"
+                  className="pl-1 ml-2 border-b-2 border-b-light_gray w-72 focus:outline-none focus:border-b-main_blue"
                 />
               </div>
               <div>
@@ -126,7 +126,7 @@ export const AssignmentSettingsPage = ({handleSubmit,
                   onChange={(event) => handleTextDescChange(event)}
                   value={assignment.taskDescription}
                   placeholder="Opis zadania"
-                  className="pl-1 ml-28 border border-light_gray rounded-md shadow-md w-80 min-h-[125px] mt-2 px-2 py-1"
+                  className="pl-1 focus:outline-main_blue ml-28 border border-light_gray rounded-md shadow-md w-80 min-h-[125px] mt-2 px-2 py-1"
                 />
               </div>
             </div>
@@ -146,8 +146,8 @@ export const AssignmentSettingsPage = ({handleSubmit,
 
               </div>
               <div className='flex flex-row'>
-              <label className='w-60'>Wybierz tabelę: </label>
-              <select className="ml-2 pr-1 border-2 border-border_gray border-solid rounded-md" onChange={(event) => handleTableChange(event)} value={chosenEvaluationTable}>
+              <label className='w-60 '>Wybierz tabelę: </label>
+              <select className="ml-2 pr-1 border-2 border-border_gray border-solid rounded-md focus:border-main_blue" onChange={(event) => handleTableChange(event)} value={chosenEvaluationTable}>
                 {evaluationTables()}
               </select>
               </div>

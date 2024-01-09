@@ -192,8 +192,7 @@ export function Rating({maxPoints,
     return (
         <div className="mt-4">
             <div className="relative flex w-72 gap-2 flex-wrap ">{renderButtons()}</div>
-            <button onClick={() => handleMark()} className="fixed bottom-8 right-[calc(7.5%+28px)] px-3 py-1 bg-main_blue text-white rounded mb-4">Prześlij
-                Ocenę
+            <button onClick={() => handleMark()} className="absolute h-fit top-3 xl:bottom-1 xl:top-auto right-3 px-3 py-1 bg-main_blue text-white rounded mb-4">Prześlij Ocenę
             </button>
         </div>
     )
