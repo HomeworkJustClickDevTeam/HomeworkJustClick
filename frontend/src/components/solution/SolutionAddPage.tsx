@@ -119,11 +119,11 @@ function SolutionAddPage({assignment}: AssignmentPropsInterface) {
     }
 
     return (
-        <section className='flex flex-col overflow-y-hidden h-[calc(100dvh-270px)] xl:h-[calc(100dvh-360px)]'>
+        <section className='flex flex-col overflow-y-hidden h-[calc(100dvh-265px)] xl:h-[calc(100dvh-360px)]'>
       <div className="relative flex flex-col mx-[7.5%] mt-4 border border-border_gray border-1 rounded-md pt-4 px-4 h-96 gap-2 box-content overflow-y-auto">
           <div className='pl-3 border-l-2 border-main_blue lg:border-none pb-12 lg:pb-3'>
               <div className='flex flex-col lg:flex-row w-full h-full'>
-                  <div className='flex flex-col mr-5 gap-2 '>
+                  <div className='flex flex-col mr-5 gap-2 w-fit min-w-[320px] max-w-[500px]'>
                       <div className='flex flex-row'>
                           <p className="pr-3 w-28 font-semibold">Tytuł zadania: </p>
                           <p className='max-w-48'>{assignment.title}</p>
@@ -165,7 +165,7 @@ function SolutionAddPage({assignment}: AssignmentPropsInterface) {
                           <button
                             type={"submit"}
                             onClick={(e) => handleUploadClick(e)}
-                            className="fixed mb-2 md:bottom-16 bottom-16 right-[calc(7.5%+28px)]  bg-main_blue text-white px-4 py-1 rounded   hover:bg-hover_blue hover:shadow-md active:shadow-none"
+                            className="absolute mb-2 bottom-4 md:bottom-3  right-4  bg-main_blue text-white px-4 py-1 rounded   hover:bg-hover_blue hover:shadow-md active:shadow-none"
                           >
                               Wyślij rozwiązanie
                           </button>

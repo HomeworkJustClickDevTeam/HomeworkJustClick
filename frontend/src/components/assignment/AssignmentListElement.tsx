@@ -24,7 +24,7 @@ function AssignmentListElement({assignment,
       <Link to={idGroup!==undefined ? `/group/${idGroup}/assignment/${assignment.id}`: "#"} onClick={() => {handleAssignmentClick && handleAssignmentClick(assignment)}} state={optionalUserId}
             className="flex flex-row mt-4  border h-16 rounded-lg font-lato text-xl items-center  w-[900px] bg-white border-border_gray">
         <div className="flex-col ml-10 basis-3/5 ">
-          <div className='text-xl w-full overflow-hidden'>{assignment.title}</div>
+          <div className='text-xl w-96  truncate text-ellipsis  h-8'>{assignment.title}</div>
           <div className={(CalculateIfHandedLate(assignment.completionDatetime) && resultPoints === undefined && unfoldedPieChartAssignment === undefined && handleGenerateReportButtonClick === undefined)
             ? "text-berry_red"
             : "text-border_gray"}>
@@ -33,7 +33,7 @@ function AssignmentListElement({assignment,
         </div>
           <div className='basis-1/5 text-lg mr-4 h-full leading-[60px]'>
               {createReportButton && handleGenerateReportButtonClick && <Link to={`#`} type={"button"} onClick={()=>{handleGenerateReportButtonClick()}}>Wygeneruj raport</Link>}</div>
-        <div className="mr-10 text-right font-semibold text-[28px] basis-1/5">{(resultPoints !== undefined) ? resultPoints + " /" : "max. "} {assignment.maxPoints} pkt.</div>
+        <div className="mr-10 text-right font-semibold text-[20px] basis-1/5">{(resultPoints !== undefined) ? resultPoints + " /" : "max. "} {assignment.maxPoints} pkt.</div>
       </Link>
       {unfoldedPieChartAssignment?.id === assignment.id && <div><br/><AssignmentPieChart assignment={assignment}/></div>}
     </div>
