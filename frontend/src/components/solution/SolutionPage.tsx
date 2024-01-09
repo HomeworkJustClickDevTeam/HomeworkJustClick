@@ -59,7 +59,7 @@ function SolutionPage() {
                       {reportedEvaluation !== undefined &&
                           <div className='flex'>
                               <p className='mr-2 underline underline-offset-2 decoration-berry_red'>Uwaga ucznia do zadania:</p>
-                              <textarea disabled={true} className='border border-light-grey px-2 py-1 rounded-md shadow-md w-80 '>{reportedEvaluation!.comment}</textarea> </div>}
+                              <textarea disabled={true} className='border border-berry_red px-2 py-1 rounded-md shadow-md w-80 '>{reportedEvaluation!.comment}</textarea> </div>}
                       <div className='flex flex-row mt-2'>
                           <p className="font-semibold w-48 mr-2">Nazwa zadania: </p>
                           {solutionExtended.assignment.title}

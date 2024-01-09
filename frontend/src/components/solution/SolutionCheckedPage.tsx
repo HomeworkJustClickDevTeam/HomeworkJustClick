@@ -31,7 +31,15 @@ export default function SolutionCheckedPage(props: {
       <div
         className="relative mx-[7.5%] xl:flex  mt-4 border border-border_gray border-1 rounded-md pt-4 px-2 h-fit gap-2 pb-3 box-content overflow-y-auto ">
         <div className=' flex flex-col xl:flex-row xl:border-none xl:border-b-2 border-main_blue pb-3 w-fit border-l-2 pl-2'>
-          <div className='mr-8 xl:mr-12'>
+
+            <div className='mr-8 xl:mr-12'>
+                <div className="">{(userRole === 'Student' && evaluation) && (
+                    (evaluationReport === undefined) ?
+                        <ReportGrade evaluationId={evaluation.id}/>
+                        : <div className='underline underline-offset-2 decoration-berry_red'>Zadanie zostało zaznaczone jako niepoprawnie ocenione, z komentarzem:<br/>
+                            <textarea disabled={true} className='mt-3  border border-berry_red rounded-md pl-1 pr-1 pb-3 pt-1 shadow-md w-96 lg:w-fit lg:min-w-[300px] min-h-[80px] lg:ml-0 ml-32 mb-5 xl:mb-0'>{evaluationReport!.comment}</textarea></div>
+                )}
+                </div>
               <div className='flex'>
                 <p className="font-semibold mr-2">Zadanie: </p>
                 {props.assignment.title}{" "}
@@ -62,13 +70,6 @@ export default function SolutionCheckedPage(props: {
 
 
 
-              <div className="fixed fixed top-[50%] left-[35%]">{(userRole === 'Student' && evaluation) && (
-                (evaluationReport === undefined) ?
-                  <ReportGrade evaluationId={evaluation.id}/>
-                  : <div>Zadanie zostało zaznaczone jako niepoprawnie ocenione, z komentarzem:<br/>
-                    <textarea disabled={true}>{evaluationReport!.comment}</textarea></div>
-                )}
-              </div>
               {((commentsImage.length !== 0) || (txtComments.length !== 0)) && <Link
                   to={`/group/${props.solution.groupId}/advancedAssignment`}
                   state={{
