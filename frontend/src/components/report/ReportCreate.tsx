@@ -137,7 +137,7 @@ export const ReportCreate = ({reportedObject, csvVersion, closeReportCreator}:
   }, []);
 
   if(reportCreate !== undefined) {
-    return <div className='min-w-[400px] min-h-[200px]  border-2 border-light_gray  rounded-md pl-3 shadow-lg align-center hover:shadow-outside-blur hover:shadow-white'>
+    return <div className='min-w-[400px] min-h-[200px]  border-2 border-light_gray  rounded-md pl-3 shadow-lg align-center bg-lilly-bg'>
 
       <div className='text-center mb-6 mt-2 font-bold'>RAPORT</div>
 

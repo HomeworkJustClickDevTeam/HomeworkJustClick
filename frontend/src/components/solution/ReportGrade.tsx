@@ -43,7 +43,7 @@ export const ReportGrade = (props:
                             <label className='flex align-top text-opacity-100'> Komentarz:
                                 <textarea
                                   maxLength={1500}
-                                  className='min-h-[100px] border rounder-sm border-border_gray ml-3 pl-2 pr-1 max-h-[200px]' onChange={(event) => changeComment(event)} value={comment}/>
+                                  className='min-h-[200px] border rounder-sm border-border_gray ml-3 pl-2 pr-1 max-h-[200px]' onChange={(event) => changeComment(event)} value={comment}/>
                             </label>
                             <button className='h-fit absolute bottom-2 right-2 px-3 py-1 bg-main_blue text-white rounded' onClick={reportGrade}>Wyślij </button>
                             <button className='h-fit absolute top-2 right-2 h-fit px-3 py-1 bg-berry_red text-white rounded' onClick={() => setIsButtonClicked(false)}>X</button>
@@ -52,7 +52,7 @@ export const ReportGrade = (props:
                     </div>
                 </div>
             ) : (
-                <button className='fixed right-[calc(7.5%+25px)] px-6 py-1 bg-berry_red text-white rounded ' onClick={() => setIsButtonClicked(true)}>Zgłoś ocenę</button>
+                <button className='fixed right-[calc(7.5%+25px)] mb-44 xl:mb-0 px-6 py-1 bg-berry_red text-white rounded ' onClick={() => setIsButtonClicked(true)}>Zgłoś ocenę</button>
             )}
         </>
     )

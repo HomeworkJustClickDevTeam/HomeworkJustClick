@@ -42,7 +42,7 @@ function SolutionsTypesPage({ type }: { type: ExtendedSolutionType }) {
               <div className="font-semibold underline text-left w-[40%] truncate text-ellipsis  h-8">
                 {solutionExtended.assignment.title}
               </div>
-              <p className="absolute right-0 mr-10 font-semibold text-[28px]">
+              <p className="absolute right-0 mr-10 font-semibold text-[22px]">
                 {type!=="unchecked" && evaluations.find(evaluation => evaluation.solutionId === solutionExtended.id)?.result} / {solutionExtended.assignment.maxPoints} pkt.
               </p>
             </Link>

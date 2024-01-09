@@ -46,11 +46,10 @@ export default function SolutionUncheckedStudentPage(props: {
   return (
       <div className='flex flex-col overflow-y-hidden h-[calc(100dvh-270px)] xl:h-[calc(100dvh-360px)] '>
     <div className="relative mx-[7.5%] mt-4 border border-border_gray border-1 rounded-md pt-4 px-4 h-fit gap-2 pb-3 box-content overflow-y-auto">
-
         <div className=' flex flex-col xl:flex-row xl:border-none border-b-2 border-main_blue pb-3 w-fit '>
         <div className='mr-2'>
             <div>
-                <span className="font-semibold">Zadanie: </span>
+                <p className="font-semibold">Zadanie: </p>
                 {props.assignment.title}{" "}
             </div>
               <div className=''>

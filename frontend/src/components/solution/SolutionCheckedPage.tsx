@@ -12,6 +12,7 @@ import {useGetFile} from "../customHooks/useGetFile";
 import {useGetCommentsImageByFile} from "../customHooks/useGetCommentsImageByFile";
 import {useGetCommentsTextByFile} from "../customHooks/useGetCommentsTextByFile";
 import {useGetReportedEvaluation} from "../customHooks/useGetReportedEvaluation";
+import { FaDownload } from "react-icons/fa6";
 
 export default function SolutionCheckedPage(props: {
     solution: SolutionInterface
@@ -26,68 +27,76 @@ export default function SolutionCheckedPage(props: {
     const {comments: txtComments} = useGetCommentsTextByFile(fileFromDb?.id, "size=1")
 
     return (
+        <div className='flex flex-col overflow-y-hidden h-[calc(100dvh-270px)] xl:h-[calc(100dvh-360px)] '>
       <div
-        className="relative grid grid-cols-2 mx-[7.5%] mt-4 border border-border_gray border-1 rounded-md pt-4 px-4 h-80 gap-2">
-        <div>
-          <p>
-            <span className="font-semibold">Zadanie: </span>
-            {props.assignment.title}{" "}
-          </p>
-          <p>
-            <span className="font-semibold">Opis zadania: </span>
-            <textarea disabled={true}>{props.assignment.taskDescription}</textarea>
-          </p>
-          {props.solution.comment.length > 0 && (
-            <p>
-              <span className="font-semibold">Komentarz ucznia: </span>
-              <textarea disabled={true}>{props.solution.comment}</textarea>
-            </p>
+        className="relative mx-[7.5%] mt-4 border border-border_gray border-1 rounded-md pt-4 px-4 h-fit gap-2 pb-3 box-content overflow-y-auto">
+        <div className=' flex flex-col xl:flex-row xl:border-none border-b-2 border-main_blue pb-3 w-fit'>
+          <div className='mr-8 xl:mr-16'>
+              <div className='flex'>
+                <p className="font-semibold mr-2">Zadanie: </p>
+                {props.assignment.title}{" "}
+              </div>
+              <div>
+                <label className='flex align-top mt-2 w-fit font-semibold mr-2'>Opis zadania: </label>
+                <textarea disabled={true} className='mt-3  border border-light_gray rounded-md pl-1 pr-1 pb-3 pt-1 shadow-md w-96 lg:w-fit lg:min-w-[300px] min-h-[80px] lg:ml-0 ml-32 mb-5 xl:mb-0'>{props.assignment.taskDescription}</textarea>
+              </div>
+              <div className='mt-2'>
+                  <p className="font-semibold">Przesłane pliki: </p>
+                  <div>{fileFromDb !== undefined ? (
+                      <div className='flex'><FaDownload className='mt-1 mr-2'/><SolutionFile fileFromDb={fileFromDb}/></div>
+                  ) : (
+                      <p>Brak</p>
+                  )}
+                  </div>
+              </div>
+              <div>
+              {props.solution.comment.length > 0 && (
+                <div>
+                    <label className='flex align-top mt-2 w-fit font-semibold mr-2'>Komentarz ucznia: </label>
+                  <textarea disabled={true} className='mt-3  border border-light_gray rounded-md pl-1 pr-1 pb-3 pt-1 shadow-md w-80 lg:w-fit lg:min-w-[300px] min-h-[80px] lg:ml-0 ml-32 mb-5 xl:mb-0'>{props.solution.comment}</textarea>
+                </div>
 
-            )}
-          <p className="font-semibold">Przesłane pliki: </p>
-          <div>{fileFromDb !== undefined ? (
-            <SolutionFile fileFromDb={fileFromDb}/>
-          ) : (
-            <p>Brak</p>
-          )}</div>
-          <br/>
-          <div className="fixed fixed top-[50%] left-[35%]">{(userRole === 'Student' && evaluation) && (
-            (evaluationReport === undefined) ?
-              <ReportGrade evaluationId={evaluation.id}/>
-              : <div>Zadanie zostało zaznaczone jako niepoprawnie ocenione, z komentarzem:<br/>
-                <textarea disabled={true}>{evaluationReport!.comment}</textarea></div>
-            )}
-          </div>
-          {((commentsImage.length !== 0) || (txtComments.length !== 0)) && <Link
-              to={`/group/${props.solution.groupId}/advancedAssignment`}
-              state={{
-                solutionExtended: {
-                  id: props.solution.id,
-                  user: userState!,
-                  assignment: props.assignment,
-                  comment: props.solution.comment
-                }
-              }}
-              className="underline font-semibold bottom-0 left-0 mb-2">
+              )}</div>
+
+
+              <div className="fixed fixed top-[50%] left-[35%]">{(userRole === 'Student' && evaluation) && (
+                (evaluationReport === undefined) ?
+                  <ReportGrade evaluationId={evaluation.id}/>
+                  : <div>Zadanie zostało zaznaczone jako niepoprawnie ocenione, z komentarzem:<br/>
+                    <textarea disabled={true}>{evaluationReport!.comment}</textarea></div>
+                )}
+              </div>
+              {((commentsImage.length !== 0) || (txtComments.length !== 0)) && <Link
+                  to={`/group/${props.solution.groupId}/advancedAssignment`}
+                  state={{
+                    solutionExtended: {
+                      id: props.solution.id,
+                      user: userState!,
+                      assignment: props.assignment,
+                      comment: props.solution.comment
+                    }
+                  }}
+                  className="underline font-semibold bottom-0 left-0 mb-2">
               Komentarze prowadzącego do pliku
           </Link>}
         </div>
         <div>{evaluation?.comment !== undefined && (
-          <div className='px-4 py-2 h-36 w-96 flex rounded-md text-bottom'>
-            <label className='flex align-top text-opacity-100'> Komentarz prowadzącego:
-              <textarea className='h-32 border rounder-sm border-border_gray ml-3 pl-2 pr-1'
+          <div className='pl-8 xl:border-l-2 xl:border-main_blue '>
+              <label className='flex align-top mt-2 w-fit font-semibold mr-2'> Komentarz prowadzącego:</label>
+              <textarea className='mt-3  border border-light_gray rounded-md pl-1 pr-1 pb-3 pt-1 shadow-md w-80  lg:min-w-[350px] min-h-[150px] lg:ml-0 ml-32 mb-5 xl:mb-0'
                         disabled={true}
                         defaultValue={evaluation?.comment}/>
-            </label>
+
           </div>
         )}</div>
-        <div className="absolute bottom-0 left-0 mb-6 ml-4">
+        </div>
+        <div className="relative mt-6">
           <p>Wynik: </p>
           <p className="font-bold text-xl mt-4">
             {evaluation?.result} / {props.assignment.maxPoints}
           </p>
         </div>
-
+      </div>
       </div>
     )
 }
