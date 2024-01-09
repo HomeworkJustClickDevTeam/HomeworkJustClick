@@ -11,6 +11,7 @@ import {EvaluationCreateModel} from "../../types/EvaluationCreate.model";
 import {toast} from "react-toastify";
 import {EvaluationReport} from "../../types/EvaluationReport.model";
 import {EvaluationReportResponse} from "../../types/EvaluationReportResponseModel";
+import { FaLongArrowAltLeft } from "react-icons/fa";
 
 interface RatingPropsInterface {
     maxPoints: number | undefined
@@ -157,7 +158,7 @@ export function Rating({maxPoints,
           setPointsResult('.');
         }}
                 className={`border border-black w-20 h-6 text-center rounded-md hover:bg-lilly-bg focus:border-hover_blue`}>
-          {'.'}
+            <p className='text-3xl leading-5 mt-[-8px]'>{'.'}</p>
         </button>
       )
       buttons.push(
@@ -173,7 +174,7 @@ export function Rating({maxPoints,
           setPointsResult('<-')
         }}
                 className={`border border-black w-20 h-6 text-center rounded-md hover:bg-lilly-bg focus:border-hover_blue`}>
-          {'<-'}
+          {<FaLongArrowAltLeft className='ml-8 text-lg'/>}
         </button>
       )
 
