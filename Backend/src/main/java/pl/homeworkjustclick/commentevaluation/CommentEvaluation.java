@@ -41,10 +41,4 @@ public class CommentEvaluation implements Serializable {
     @Schema(example = "Example desc")
     @Size(max = 255)
     private String description;
-
-    public CommentEvaluation(Evaluation evaluation, Comment comment, String description) {
-        this.evaluation = evaluation;
-        this.comment = comment;
-        this.description = description;
-    }
 }

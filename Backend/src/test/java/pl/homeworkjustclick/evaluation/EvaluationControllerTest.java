@@ -57,15 +57,18 @@ class EvaluationControllerTest extends BaseTestEntity {
 
     private static Stream<Arguments> prepareValidData() {
         return Stream.of(
-                Arguments.of(1.0, 1.0, false, 1, 1, 1),
-                Arguments.of(1.0, 1.0, null, 1, 1, 1)
+                Arguments.of(1.0, 1.0, false, 1, 1, 1, "comment"),
+                Arguments.of(1.0, 1.0, false, 1, 1, 1, ""),
+                Arguments.of(1.0, 1.0, false, 1, 1, 1, null),
+                Arguments.of(1.0, 1.0, null, 1, 1, 1, "a".repeat(255))
         );
     }
 
     private static Stream<Arguments> prepareInvalidData() {
         return Stream.of(
-                Arguments.of(null, 1.0, false, 1, 1, 1),
-                Arguments.of(1.0, 1.0, false, 1, 9999, 1)
+                Arguments.of(null, 1.0, false, 1, 1, 1, "comment"),
+                Arguments.of(1.0, 1.0, false, 1, 9999, 1, "comment"),
+                Arguments.of(1.0, 1.0, false, 1, 9999, 1, "a".repeat(256))
         );
     }
 
@@ -87,8 +90,8 @@ class EvaluationControllerTest extends BaseTestEntity {
 
     @ParameterizedTest
     @MethodSource("prepareValidData")
-    void shouldCreateEvaluation(Double result, Double grade, Boolean reported, Integer userId, Integer solutionId, Integer groupId) throws Exception {
-        var evaluationDto = createEvaluationDto(result, grade, reported, userId, solutionId, groupId);
+    void shouldCreateEvaluation(Double result, Double grade, Boolean reported, Integer userId, Integer solutionId, Integer groupId, String comment) throws Exception {
+        var evaluationDto = createEvaluationDto(result, grade, reported, userId, solutionId, groupId, comment);
         var body = objectMapper.writeValueAsString(evaluationDto);
         var expectedSize = evaluationRepository.findAll().size() + 1;
         mockMvc.perform(post("/api/evaluation")
@@ -102,8 +105,8 @@ class EvaluationControllerTest extends BaseTestEntity {
 
     @ParameterizedTest
     @MethodSource("prepareInvalidData")
-    void shouldNotCreateEvaluation(Double result, Double grade, Boolean reported, Integer userId, Integer solutionId, Integer groupId) throws Exception {
-        var evaluationDto = createEvaluationDto(result, grade, reported, userId, solutionId, groupId);
+    void shouldNotCreateEvaluation(Double result, Double grade, Boolean reported, Integer userId, Integer solutionId, Integer groupId, String comment) throws Exception {
+        var evaluationDto = createEvaluationDto(result, grade, reported, userId, solutionId, groupId, comment);
         var body = objectMapper.writeValueAsString(evaluationDto);
         var expectedSize = evaluationRepository.findAll().size();
         mockMvc.perform(post("/api/evaluation")
@@ -117,8 +120,8 @@ class EvaluationControllerTest extends BaseTestEntity {
 
     @ParameterizedTest
     @MethodSource("prepareValidData")
-    void shouldUpdateEvaluation(Double result, Double grade, Boolean reported, Integer userId, Integer solutionId, Integer groupId) throws Exception {
-        var evaluationDto = createEvaluationDto(result, grade, reported, userId, solutionId, groupId);
+    void shouldUpdateEvaluation(Double result, Double grade, Boolean reported, Integer userId, Integer solutionId, Integer groupId, String comment) throws Exception {
+        var evaluationDto = createEvaluationDto(result, grade, reported, userId, solutionId, groupId, comment);
         var body = objectMapper.writeValueAsString(evaluationDto);
         var expectedSize = evaluationRepository.findAll().size();
         var evaluationId = evaluationRepository.findAll().get(0).getId();
@@ -133,8 +136,8 @@ class EvaluationControllerTest extends BaseTestEntity {
 
     @ParameterizedTest
     @MethodSource("prepareInvalidData")
-    void shouldNotUpdateEvaluation(Double result, Double grade, Boolean reported, Integer userId, Integer solutionId, Integer groupId) throws Exception {
-        var evaluationDto = createEvaluationDto(result, grade, reported, userId, solutionId, groupId);
+    void shouldNotUpdateEvaluation(Double result, Double grade, Boolean reported, Integer userId, Integer solutionId, Integer groupId, String comment) throws Exception {
+        var evaluationDto = createEvaluationDto(result, grade, reported, userId, solutionId, groupId, comment);
         var body = objectMapper.writeValueAsString(evaluationDto);
         var expectedSize = evaluationRepository.findAll().size();
         var evaluationId = evaluationRepository.findAll().get(0).getId();
@@ -149,7 +152,7 @@ class EvaluationControllerTest extends BaseTestEntity {
 
     @Test
     void shouldNotUpdateNotExistingEvaluation() throws Exception {
-        var evaluationDto = createEvaluationDto(1.0, 1.0, false, 1, 1, 1);
+        var evaluationDto = createEvaluationDto(1.0, 1.0, false, 1, 1, 1, "comment");
         var body = objectMapper.writeValueAsString(evaluationDto);
         var evaluationId = evaluationRepository.findAll().get(0).getId();
         mockMvc.perform(put("/api/evaluation/" + 999)
@@ -445,7 +448,7 @@ class EvaluationControllerTest extends BaseTestEntity {
         var solution = solutionRepository.getSolutionsByGroupId(group.getId()).get(0);
         evaluationReportRepository.deleteAll();
         evaluationRepository.deleteAll();
-        var body = objectMapper.writeValueAsString(createEvaluationDto(5.0, 5.0, false, teacher.getId(), solution.getId(), group.getId()));
+        var body = objectMapper.writeValueAsString(createEvaluationDto(5.0, 5.0, false, teacher.getId(), solution.getId(), group.getId(), "comment"));
         mockMvc.perform(post("/api/evaluation/withUserAndSolution/{userId}/{solutionId}", teacher.getId(), solution.getId())
                         .content(body)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -463,7 +466,7 @@ class EvaluationControllerTest extends BaseTestEntity {
         var solution = solutionRepository.getSolutionsByGroupId(group.getId()).get(0);
         evaluationReportRepository.deleteAll();
         evaluationRepository.deleteAll();
-        var body = objectMapper.writeValueAsString(createEvaluationDto(5.0, 5.0, false, student.getId(), solution.getId(), group.getId()));
+        var body = objectMapper.writeValueAsString(createEvaluationDto(5.0, 5.0, false, student.getId(), solution.getId(), group.getId(), "comment"));
         mockMvc.perform(post("/api/evaluation/withUserAndSolution/{userId}/{solutionId}", student.getId(), solution.getId())
                         .content(body)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -479,7 +482,7 @@ class EvaluationControllerTest extends BaseTestEntity {
         var teacher = userRepository.findByEmail("jan_kowalski@gmail.com").get();
         var group = groupRepository.getGroupsByTeacherId(teacher.getId()).get(0);
         var solution = solutionRepository.getSolutionsByGroupId(group.getId()).get(0);
-        var body = objectMapper.writeValueAsString(createEvaluationDto(5.0, 5.0, false, teacher.getId(), solution.getId(), group.getId()));
+        var body = objectMapper.writeValueAsString(createEvaluationDto(5.0, 5.0, false, teacher.getId(), solution.getId(), group.getId(), "comment"));
         mockMvc.perform(post("/api/evaluation/withUserAndSolution/{userId}/{solutionId}", teacher.getId(), solution.getId())
                         .content(body)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -496,7 +499,7 @@ class EvaluationControllerTest extends BaseTestEntity {
         var solution = solutionRepository.getSolutionsByGroupId(group.getId()).get(0);
         evaluationReportRepository.deleteAll();
         evaluationRepository.deleteAll();
-        var body = objectMapper.writeValueAsString(createEvaluationDto(5.0, 5.0, false, teacher.getId(), solution.getId(), group.getId()));
+        var body = objectMapper.writeValueAsString(createEvaluationDto(5.0, 5.0, false, teacher.getId(), solution.getId(), group.getId(), "comment"));
         mockMvc.perform(post("/api/evaluation/withUserAndSolution/{userId}/{solutionId}", 9999, solution.getId())
                         .content(body)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -513,7 +516,7 @@ class EvaluationControllerTest extends BaseTestEntity {
         var solution = solutionRepository.getSolutionsByGroupId(group.getId()).get(0);
         evaluationReportRepository.deleteAll();
         evaluationRepository.deleteAll();
-        var body = objectMapper.writeValueAsString(createEvaluationDto(5.0, 5.0, false, teacher.getId(), solution.getId(), group.getId()));
+        var body = objectMapper.writeValueAsString(createEvaluationDto(5.0, 5.0, false, teacher.getId(), solution.getId(), group.getId(), "comment"));
         mockMvc.perform(post("/api/evaluation/withUserAndSolution/{userId}/{solutionId}", teacher.getId(), 9999)
                         .content(body)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -530,7 +533,7 @@ class EvaluationControllerTest extends BaseTestEntity {
         var solution = solutionRepository.getSolutionsByGroupId(group.getId()).get(0);
         evaluationReportRepository.deleteAll();
         evaluationRepository.deleteAll();
-        var body = objectMapper.writeValueAsString(createEvaluationDto(5.0, 5.0, false, teacher.getId(), solution.getId(), group.getId()));
+        var body = objectMapper.writeValueAsString(createEvaluationDto(5.0, 5.0, false, teacher.getId(), solution.getId(), group.getId(), "comment"));
         mockMvc.perform(post("/api/evaluation/withUserAndSolution/{userId}/{solutionId}", 9999, 9999)
                         .content(body)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -541,7 +544,7 @@ class EvaluationControllerTest extends BaseTestEntity {
     }
 
 
-    private EvaluationDto createEvaluationDto(Double result, Double grade, Boolean reported, Integer userId, Integer solutionId, Integer groupId) {
+    private EvaluationDto createEvaluationDto(Double result, Double grade, Boolean reported, Integer userId, Integer solutionId, Integer groupId, String comment) {
         if (userId == 1) {
             userId = userRepository.findByEmail("anna_malinowska@gmail.com").get().getId();
         }
@@ -557,6 +560,7 @@ class EvaluationControllerTest extends BaseTestEntity {
                 .userId(userId)
                 .solutionId(solutionId)
                 .groupId(groupId)
+                .comment(comment)
                 .build();
     }
 }

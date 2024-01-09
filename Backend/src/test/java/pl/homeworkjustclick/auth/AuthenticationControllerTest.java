@@ -39,7 +39,7 @@ class AuthenticationControllerTest extends BaseTestEntity {
                 .email("test@test.pl")
                 .firstname("test")
                 .lastname("test")
-                .password("123")
+                .password("12345678")
                 .build();
         var request = objectMapper.writeValueAsString(registerRequest);
         mockMvc.perform(post("/api/auth/register")
@@ -57,7 +57,7 @@ class AuthenticationControllerTest extends BaseTestEntity {
                 .email("test@test.pl")
                 .firstname("test")
                 .lastname("test")
-                .password("123")
+                .password("12345678")
                 .build();
         var request = objectMapper.writeValueAsString(registerRequest);
         mockMvc.perform(post("/api/auth/register")
@@ -81,7 +81,7 @@ class AuthenticationControllerTest extends BaseTestEntity {
                 .email("test")
                 .firstname("test")
                 .lastname("test")
-                .password("123")
+                .password("12345678")
                 .build();
         var request = objectMapper.writeValueAsString(registerRequest);
         mockMvc.perform(post("/api/auth/register")
@@ -98,7 +98,7 @@ class AuthenticationControllerTest extends BaseTestEntity {
                 .email("test@test.pl")
                 .firstname("test")
                 .lastname("test")
-                .password("123")
+                .password("12345678")
                 .build();
         var request = objectMapper.writeValueAsString(registerRequest);
         mockMvc.perform(post("/api/auth/register")
@@ -110,7 +110,7 @@ class AuthenticationControllerTest extends BaseTestEntity {
         assertNotNull(userRepository.findByEmail("test@test.pl"));
         var authRequest = AuthenticationRequest.builder()
                 .email("test@test.pl")
-                .password("123")
+                .password("12345678")
                 .build();
         request = objectMapper.writeValueAsString(authRequest);
         mockMvc.perform(post("/api/auth/authenticate")
@@ -128,7 +128,7 @@ class AuthenticationControllerTest extends BaseTestEntity {
                 .email("test@test.pl")
                 .firstname("test")
                 .lastname("test")
-                .password("123")
+                .password("12345678")
                 .build();
         var request = objectMapper.writeValueAsString(registerRequest);
         mockMvc.perform(post("/api/auth/register")
@@ -140,7 +140,7 @@ class AuthenticationControllerTest extends BaseTestEntity {
         assertNotNull(userRepository.findByEmail("test@test.pl"));
         var authRequest = AuthenticationRequest.builder()
                 .email("test@test.pl")
-                .password("321")
+                .password("87654321")
                 .build();
         request = objectMapper.writeValueAsString(authRequest);
         mockMvc.perform(post("/api/auth/authenticate")
@@ -157,7 +157,7 @@ class AuthenticationControllerTest extends BaseTestEntity {
                 .email("test@test.pl")
                 .firstname("test")
                 .lastname("test")
-                .password("123")
+                .password("12345678")
                 .build();
         var request = objectMapper.writeValueAsString(registerRequest);
         mockMvc.perform(post("/api/auth/register")
@@ -169,7 +169,7 @@ class AuthenticationControllerTest extends BaseTestEntity {
         assertNotNull(userRepository.findByEmail("test@test.pl"));
         var authRequest = AuthenticationRequest.builder()
                 .email("test1@test.pl")
-                .password("321")
+                .password("87654321")
                 .build();
         request = objectMapper.writeValueAsString(authRequest);
         mockMvc.perform(post("/api/auth/authenticate")
@@ -186,7 +186,7 @@ class AuthenticationControllerTest extends BaseTestEntity {
                 .email("test@test.pl")
                 .firstname("test")
                 .lastname("test")
-                .password("123")
+                .password("12345678")
                 .build();
         var request = objectMapper.writeValueAsString(registerRequest);
         var response = mockMvc.perform(post("/api/auth/register")

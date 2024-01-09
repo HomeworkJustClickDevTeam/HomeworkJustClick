@@ -85,20 +85,53 @@ public class ReportService {
                         .students(studentsResults)
                         .description(description)
                         .build();
+            } else {
+                return AssignmentReportResponseDto.builder()
+                        .assignment(assignmentMapper.map(assignment))
+                        .maxResult(maxResult)
+                        .maxResultPercent(maxResultPercent)
+                        .minResult(minResult)
+                        .minResultPercent(minResultPercent)
+                        .avgResult(avgResult)
+                        .avgResultPercent(avgResultPercent)
+                        .late(late)
+                        .students(studentsResults)
+                        .description(description)
+                        .build();
+            }
+        } else {
+            if (assignmentReportDto.getHist() != null && !assignmentReportDto.getHist().isEmpty()) {
+                var hist = validateHist(assignmentReportDto.getHist());
+                var studentsHist = calculateHistogram(studentsResults, hist);
+                return AssignmentReportResponseDto.builder()
+                        .assignment(assignmentMapper.map(assignment))
+                        .maxResult(0.0)
+                        .maxResultPercent(0.0)
+                        .minResult(0.0)
+                        .minResultPercent(0.0)
+                        .avgResult(0.0)
+                        .avgResultPercent(0.0)
+                        .late(0)
+                        .students(studentsResults)
+                        .hist(hist)
+                        .studentsHist(studentsHist)
+                        .description(description)
+                        .build();
+            } else {
+                return AssignmentReportResponseDto.builder()
+                        .assignment(assignmentMapper.map(assignment))
+                        .maxResult(0.0)
+                        .maxResultPercent(0.0)
+                        .minResult(0.0)
+                        .minResultPercent(0.0)
+                        .avgResult(0.0)
+                        .avgResultPercent(0.0)
+                        .late(0)
+                        .students(studentsResults)
+                        .description(description)
+                        .build();
             }
         }
-        return AssignmentReportResponseDto.builder()
-                .assignment(assignmentMapper.map(assignment))
-                .maxResult(0.0)
-                .maxResultPercent(0.0)
-                .minResult(0.0)
-                .minResultPercent(0.0)
-                .avgResult(0.0)
-                .avgResultPercent(0.0)
-                .late(0)
-                .students(List.of())
-                .description(description)
-                .build();
     }
 
     @Transactional(readOnly = true)
@@ -226,9 +259,19 @@ public class ReportService {
                     }
                 }
                 var j = 0;
-                if (!hist.isEmpty()) {
-                    for (int i = finalHeaderLength + hist.size() - 1; i < header.size(); i += 2) {
-                        if (assignment.getStudents() != null && !assignment.getStudents().isEmpty()) {
+                if (assignment.getStudents() != null && !assignment.getStudents().isEmpty()) {
+                    if (!hist.isEmpty()) {
+                        for (int i = finalHeaderLength + hist.size() - 1; i < header.size(); i += 2) {
+                            if (assignment.getStudents() != null && !assignment.getStudents().isEmpty()) {
+                                line[i] = String.valueOf(assignment.getStudents().get(j).getResult());
+                                endLine[i] = String.valueOf(Double.parseDouble(endLine[i]) + assignment.getStudents().get(j).getResult());
+                                line[i + 1] = String.valueOf(assignment.getStudents().get(j).getResultPercent());
+                                endLine[i + 1] = String.valueOf(Double.parseDouble(endLine[i + 1]) + assignment.getStudents().get(j).getResultPercent());
+                                j += 1;
+                            }
+                        }
+                    } else {
+                        for (int i = finalHeaderLength; i < header.size(); i += 2) {
                             line[i] = String.valueOf(assignment.getStudents().get(j).getResult());
                             endLine[i] = String.valueOf(Double.parseDouble(endLine[i]) + assignment.getStudents().get(j).getResult());
                             line[i + 1] = String.valueOf(assignment.getStudents().get(j).getResultPercent());
@@ -237,12 +280,20 @@ public class ReportService {
                         }
                     }
                 } else {
-                    for (int i = finalHeaderLength; i < header.size(); i += 2) {
-                        line[i] = String.valueOf(assignment.getStudents().get(j).getResult());
-                        endLine[i] = String.valueOf(Double.parseDouble(endLine[i]) + assignment.getStudents().get(j).getResult());
-                        line[i + 1] = String.valueOf(assignment.getStudents().get(j).getResultPercent());
-                        endLine[i + 1] = String.valueOf(Double.parseDouble(endLine[i + 1]) + assignment.getStudents().get(j).getResultPercent());
-                        j += 1;
+                    if (!hist.isEmpty()) {
+                        for (int i = finalHeaderLength + hist.size() - 1; i < header.size(); i += 2) {
+                            line[i] = String.valueOf(0);
+                            endLine[i] = String.valueOf(0);
+                            line[i + 1] = String.valueOf(0);
+                            endLine[i + 1] = String.valueOf(0);
+                        }
+                    } else {
+                        for (int i = finalHeaderLength; i < header.size(); i += 2) {
+                            line[i] = String.valueOf(0);
+                            endLine[i] = String.valueOf(0);
+                            line[i + 1] = String.valueOf(0);
+                            endLine[i + 1] = String.valueOf(0);
+                        }
                     }
                 }
                 dataLines.add(line);
@@ -256,8 +307,14 @@ public class ReportService {
             if (finalHeaderLength >= 9) {
                 endLine[7] = String.valueOf(roundDouble(Double.parseDouble(endLine[7]) / (dataLines.size() - 1)));
             }
-            for (int i = finalHeaderLength + hist.size(); i < header.size(); i += 2) {
-                endLine[i] = String.valueOf(roundDouble(Double.parseDouble(endLine[i]) / (dataLines.size() - 1)));
+            if (!hist.isEmpty()) {
+                for (int i = finalHeaderLength + hist.size(); i < header.size(); i += 2) {
+                    endLine[i] = String.valueOf(roundDouble(Double.parseDouble(endLine[i]) / (dataLines.size() - 1)));
+                }
+            } else {
+                for (int i = finalHeaderLength + 1; i < header.size(); i += 2) {
+                    endLine[i] = String.valueOf(roundDouble(Double.parseDouble(endLine[i]) / (dataLines.size() - 1)));
+                }
             }
             dataLines.add(endLine);
         }

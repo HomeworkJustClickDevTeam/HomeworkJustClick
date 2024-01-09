@@ -111,6 +111,34 @@ class EvaluationReportControllerTest extends BaseTestEntity {
     }
 
     @Test
+    void shouldCreateEvaluationReportWithLongComment() throws Exception {
+        var evaluationId = evaluationRepository.findAll().get(0).getId();
+        var evaluationReportDto = createEvaluationReportDto("a".repeat(1500), evaluationId);
+        var body = objectMapper.writeValueAsString(evaluationReportDto);
+        mockMvc.perform(post("/api/evaluation_report")
+                        .content(body)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.comment").value("a".repeat(1500)))
+                .andExpect(jsonPath("$.evaluation.id").value(evaluationId))
+                .andReturn();
+    }
+
+    @Test
+    void shouldNotCreateEvaluationReportWithTooLongComment() throws Exception {
+        var evaluationId = evaluationRepository.findAll().get(0).getId();
+        var evaluationReportDto = createEvaluationReportDto("a".repeat(1501), evaluationId);
+        var body = objectMapper.writeValueAsString(evaluationReportDto);
+        mockMvc.perform(post("/api/evaluation_report")
+                        .content(body)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+    }
+
+    @Test
     void shouldCreateEvaluationReportWithEmptyComment() throws Exception {
         var evaluationId = evaluationRepository.findAll().get(0).getId();
         var evaluationReportDto = createEvaluationReportDto("", evaluationId);

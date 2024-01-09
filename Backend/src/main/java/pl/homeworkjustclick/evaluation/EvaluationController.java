@@ -186,7 +186,7 @@ public class EvaluationController {
             deprecated = true
     )
     @PostMapping("/evaluation/withUserAndSolution/{userId}/{solutionId}")
-    public ResponseEntity<EvaluationResponseDto> addWithUserAndSolution(@RequestBody Evaluation evaluation, @PathVariable("userId") int userId, @PathVariable("solutionId") int solutionId) {
+    public ResponseEntity<EvaluationResponseDto> addWithUserAndSolution(@RequestBody @Valid Evaluation evaluation, @PathVariable("userId") int userId, @PathVariable("solutionId") int solutionId) {
         EvaluationResponseDto response = evaluationService.addWithUserAndSolution(evaluation, userId, solutionId);
         if (response.getId() != 0) {
             return new ResponseEntity<>(response, HttpStatus.OK);
