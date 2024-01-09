@@ -125,7 +125,7 @@ function SolutionAddPage({assignment}: AssignmentPropsInterface) {
               <div className='flex flex-col lg:flex-row w-full h-full'>
                   <div className='flex flex-col mr-5 gap-2  min-w-[320px] max-w-[500px]'>
                       <div className='flex flex-row'>
-                          <p className="w-48 font-semibold flex flex-row">Tytuł zadania: </p>
+                          <p className="w-32 xl:w-28 font-semibold flex flex-row">Tytuł zadania: </p>
                           <p className='w-fit max-w-24'>{assignment.title}</p>
                       </div>
                       <div>
@@ -141,7 +141,7 @@ function SolutionAddPage({assignment}: AssignmentPropsInterface) {
                           <div className= 'flex flex-row'>{fileFromDb !== undefined && <><span className='w-48'>Plik do zadania:</span><FaDownload className='mt-1 mr-2'/><AssignmentFile assignmentId={assignment.id}/></>}</div>
                           <div className=''>
                               <label >
-                                  Moje rozwiązania (max. 1):</label>
+                                  Moje rozwiązanie (max. 5MB):</label>
 
                                   <input
                                     name="file"
