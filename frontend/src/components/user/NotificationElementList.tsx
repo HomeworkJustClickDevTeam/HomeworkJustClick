@@ -1,8 +1,12 @@
 import {useNavigate} from "react-router-dom";
-import {deleteUserNotification, readNotification} from "../../services/postgresDatabaseServices";
+import {
+    checkIfUserIsTeacherInGroup,
+    deleteUserNotification,
+    readNotification
+} from "../../services/postgresDatabaseServices";
 import {Notification} from "../../types/Notification.model";
 import {useAppSelector} from "../../types/HooksRedux";
-import {selectRole} from "../../redux/roleSlice";
+import {selectUserState} from "../../redux/userStateSlice";
 
 export function NotificationElementList(props: {
     description: string
@@ -12,21 +16,26 @@ export function NotificationElementList(props: {
     setNotifications: (evaluationTable: Notification[]) => void
     setNumberOfNotification: (numberOfNotification: number) => void
     numberOfNotification: number
-    assigmentId:number
-    setMenuOpen: (menuOpen:boolean) => void
+    assigmentId: number
+    setMenuOpen: (menuOpen: boolean) => void
     menuOpen: boolean
 }) {
     const navigate = useNavigate()
-    const role = useAppSelector(selectRole)
+    const userState = useAppSelector(selectUserState)
+
     function goToAssigment() {
         readNotification(props.notificationId).then(
             () => {
                 props.setMenuOpen(!props.menuOpen)
-                if(role === "Teacher") {
-                    navigate('evaluation/reported')
-                }else {
-                    navigate(`group/${props.groupId}/assignment/${props.assigmentId}`)
-                }
+                checkIfUserIsTeacherInGroup(userState?.id as unknown as number, props.groupId).then(
+                    (response) => {
+                        if (response.data) {
+                            navigate('evaluation/reported')
+                        } else {
+                            navigate(`group/${props.groupId}/assignment/${props.assigmentId}`)
+                        }
+                    }
+                )
             }
         )
     }
