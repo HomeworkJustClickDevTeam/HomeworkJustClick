@@ -13,10 +13,11 @@ export default function GroupAppearanceSettings() {
       if(group !== null){
         let _group = {...group}
         _group.color = +event.target.value
-        dispatch(setGroup(_group))
-        changeGroupColorPostgresService(group?.id as unknown as string, +event.target.value).catch((error: AxiosError) => {
+        changeGroupColorPostgresService(group?.id as unknown as string, +event.target.value)
+          .catch((error: AxiosError) => {
           console.log("AXIOS ERROR: ", error)
         })
+          .then(()=>dispatch(setGroup(_group)))
       }
   }
   return (
