@@ -42,7 +42,6 @@ function SolutionPage() {
             setComment(evaluation.comment)
         }
     }, [evaluation?.result])
-    console.table(solutionExtended.assignment)
     return (
         <div className='flex flex-col h-[calc(100vh-340px)] overflow-y-hidden mb-4'>
             <div
