@@ -37,7 +37,7 @@ export default function UserGeneralSettingsPage() {
           name="index"
           defaultValue={index}
           onChange={(e) => setIndex(+e.target.value)}
-          className='pl-2 w-24 '
+          className='pl-2 w-24 focus:outline-none border-b focus:border-b-main_blue'
         />
         <button type="submit" className='absolute bg-main_blue text-white rounded-md text-sm p-1 ml-2 active:mt-0.5 active:shadow-md'>Potwierdź</button>
       </form>

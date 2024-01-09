@@ -154,7 +154,7 @@ function SolutionAddPage({assignment}: AssignmentPropsInterface) {
                           <label className='flex align-top'>
                               Twój komentarz do zadania: </label>
                               <textarea
-                                className="pl-2 ml-1 border border-light_gray rounded-md shadow-md w-80 min-h-[125px] mt-2 px-2 py-1"
+                                className="pl-2 ml-1 border border-light_gray rounded-md shadow-md w-80 min-h-[125px] mt-2 px-2 py-1 focus:outline focus:outline-2 focus:outline-main_blue"
                                 name="comment"
                                 maxLength={1500}
                                 onChange={(e) => handleChangeComment(e)} />

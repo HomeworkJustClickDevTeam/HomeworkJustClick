@@ -114,7 +114,7 @@ export default function GroupGeneralSettings() {
                     setUpdatedGroup(_group as GroupInterface)
                   }}
                 }
-                className='border-b-2 border-b-light_gray mx-2 mr-8'
+                className='border-b-2 border-b-light_gray mx-2 mr-8 focus:outline-none focus:border-b-main_blue'
               />
               <button type="submit" className='bg-main_blue px-4 text-white rounded-md'>Potwierdź</button>
             </label>
@@ -138,7 +138,7 @@ export default function GroupGeneralSettings() {
                     }
                 }
                }
-                className='border-b-2 border-b-light_gray mx-2 mr-8'
+                className='border-b-2 border-b-light_gray mx-2 mr-8 focus:outline-none focus:border-b-main_blue'
               />
               <button className='bg-main_blue px-4 text-white rounded-md'>Potwierdź</button>
             </label>

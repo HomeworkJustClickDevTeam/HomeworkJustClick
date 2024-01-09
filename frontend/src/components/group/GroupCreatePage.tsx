@@ -53,7 +53,7 @@ function GroupCreatePage() {
           onChange={handleChange}
           type="text"
           value={group.name}
-          className='mb-12 border-b-2 border-b-light_gray placeholder:text-light_gray placeholder:text-base  mr-4 w-52 text-center'
+          className='mb-12 border-b-2 border-b-light_gray placeholder:text-light_gray placeholder:text-base  mr-4 w-52 text-center focus:outline-none focus:border-b-main_blue'
 
         />
         <input
@@ -63,12 +63,12 @@ function GroupCreatePage() {
           onChange={handleChange}
           type="text"
           value={group.description}
-          className='mb-12 border-b-2 border-b-light_gray placeholder:text-light_gray placeholder:text-base w-72 text-center'
+          className='mb-12 border-b-2 border-b-light_gray placeholder:text-light_gray placeholder:text-base w-72 text-center focus:outline-none focus:border-b-main_blue'
 
         />
         <br />
         <button
-          className='px-6 py-2 border-solid border-main_blue border-2 rounded bg-main_blue text-white text-lg'>Stwórz
+          className='px-6 py-2 border-solid border-main_blue border-2 rounded bg-main_blue text-white text-lg '>Stwórz
           grupę
         </button>
       </form>
