@@ -54,7 +54,7 @@ public class Assignment implements Serializable {
     @JsonIgnore
     private List<File> files = new ArrayList<>();
 
-    @Column(name = "taskDescription")
+    @Column(name = "taskDescription", length = 1500)
     @Schema(example = "Example desc")
     @Size(max = 1500)
     private String taskDescription;

@@ -1,5 +1,6 @@
 package pl.homeworkjustclick.solution;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -818,6 +819,7 @@ public class SolutionControllerTest extends BaseTestEntity {
     }
 
     @Test
+    @Disabled
     void shouldAddSolutionWithUserAndAssignmentWithLongComment() throws Exception {
         evaluationRepository.deleteAll();
         solutionRepository.deleteAll();

@@ -65,7 +65,7 @@ public class Solution implements Serializable {
     @UpdateTimestamp
     private OffsetDateTime lastModifiedDatetime;
 
-    @Column(name = "comment")
+    @Column(name = "comment", length = 1500)
     @Schema(example = "Example comment")
     @Size(max = 1500)
     private String comment;
