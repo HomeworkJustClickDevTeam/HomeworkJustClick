@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom"
 import {format, parseISO} from "date-fns"
 import { AssignmentPropsInterface } from "../../types/AssignmentPropsInterface"
-import {AssignmentInterface} from "../../types/AssignmentInterface";
+import {AssignmentModel} from "../../types/Assignment.model";
 import {AssignmentPieChart} from "../evaluation/AssignmentPieChart";
 import React, {useState} from "react";
 import {AssignmentListElementPropsInterface} from "../../types/AssignmentListElementPropsInterface";

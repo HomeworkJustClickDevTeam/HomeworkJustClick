@@ -19,5 +19,6 @@ public class AuthenticationRequest implements Serializable {
     private String email;
     @Schema(example = "d092")
     @Size(max = 255)
+    @Size(min = 8)
     private String password;
 }

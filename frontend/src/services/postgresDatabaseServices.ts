@@ -1,5 +1,5 @@
-import {AssignmentInterface} from "../types/AssignmentInterface"
-import {AssignmentToSendInterface} from "../types/AssignmentToSendInterface"
+import {AssignmentModel} from "../types/Assignment.model"
+import {AssignmentCreateModel} from "../types/AssignmentCreate.model"
 import {GroupCreateInterface} from "../types/GroupCreateInterface"
 import {SolutionCreateInterface} from "../types/SolutionCreateInterface"
 import {UserLoginInterface} from "../types/UserLoginInterface"
@@ -111,7 +111,7 @@ postgresqlDatabaseTextPlain.interceptors.response.use(
 export const createAssignmentWithUserAndGroupPostgresService = async (
     userId: string,
     groupId: string,
-    assignment: AssignmentToSendInterface
+    assignment: AssignmentCreateModel
 ) => {
     return await postgresqlDatabaseJSON.post(
         `/assignment/withUserAndGroup/${userId}/${groupId}`,
@@ -177,12 +177,10 @@ export const createFileWithSolutionPostgresService = async (
 }
 
 export const createEvaluationWithUserAndSolutionPostgresService = async (
-    userId: string,
-    solutionId: string,
     evaluation: EvaluationCreateModel
 ) => {
     return await postgresqlDatabaseJSON.post(
-        `/evaluation/withUserAndSolution/${userId}/${solutionId}`,
+        `/evaluation`,
         evaluation
     )
 }
@@ -491,7 +489,7 @@ export const getUserRoleInGroupPostgresService = async (
 }
 
 export const changeAssignmentPostgresService = async (
-    assignment: AssignmentInterface
+    assignment: AssignmentModel
 ) => {
     return await postgresqlDatabaseJSON.put(
         `/assignment/${assignment.id}`,

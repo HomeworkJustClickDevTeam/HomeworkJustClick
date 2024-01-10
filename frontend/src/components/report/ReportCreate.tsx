@@ -3,7 +3,7 @@ import React, {useEffect, useState} from "react";
 import {AssignmentCreateReportModel} from "../../types/AssignmentCreateReport.model";
 import {GroupCreateReportModel} from "../../types/GroupCreateReport.model";
 import {GroupInterface} from "../../types/GroupInterface";
-import {AssignmentInterface} from "../../types/AssignmentInterface";
+import {AssignmentModel} from "../../types/Assignment.model";
 import {f} from "msw/lib/core/RequestHandler-bb5cbb8f";
 import {
   createReportAssignment,
@@ -22,7 +22,7 @@ import * as domain from "domain";
 
 
 export const ReportCreate = ({reportedObject, csvVersion, closeReportCreator}:
-                               {reportedObject: GroupInterface|AssignmentInterface,
+                               {reportedObject: GroupInterface|AssignmentModel,
                                 csvVersion: boolean,
                                 closeReportCreator: ()=>void}) =>{
   const [reportCreate, setReportCreate] = useState<AssignmentCreateReportModel|GroupCreateReportModel|undefined>(undefined)
@@ -129,9 +129,9 @@ export const ReportCreate = ({reportedObject, csvVersion, closeReportCreator}:
         <div>
           <div > <span className='font-semibold mr-1'>Nazwa zadania:</span> {reportedObject.title}</div>
           <br/>
-          <div><span className='font-semibold mr-1'>Termin:</span> {format(new Date((reportedObject as AssignmentInterface).completionDatetime.toString()), "dd.MM.yyyy, HH:mm")}</div>
+          <div><span className='font-semibold mr-1'>Termin:</span> {format(new Date((reportedObject as AssignmentModel).completionDatetime.toString()), "dd.MM.yyyy, HH:mm")}</div>
           <br/>
-          <div><span className='font-semibold mr-1'>Punkty do zdobycia:</span> {(reportedObject as AssignmentInterface).maxPoints}</div>
+          <div><span className='font-semibold mr-1'>Punkty do zdobycia:</span> {(reportedObject as AssignmentModel).maxPoints}</div>
           <br/>
         </div>
           : <div><span className='font-semibold mr-1'>Nazwa grupy:</span> {(reportedObject as GroupInterface).name}</div>}

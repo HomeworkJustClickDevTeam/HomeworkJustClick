@@ -97,17 +97,21 @@ function AssignmentModifySettingsPageWrapper({
         const formData = new FormData()
         formData.append('file', newFile)
         response = await postFileMongoService(formData)
+        if(response?.status === 413){
+          toast.error("Twój plik jest za duży")
+          return
+        }
         if(response?.status !== 200) return
         response = await createFileWithAssignmentPostgresService(
           `${response.data.id}`,
           response.data.format,
           response.data.name,
           assignment.id.toString())
-        if(response?.status == 200)
-          toast.success("Pomyślnie zaktualizowano zadanie.")
-        else toast.error("Błąd podczas zmiany pliku.")
+        if(response?.status !== 200)
+          toast.error("Błąd podczas zmiany pliku.")
       }
       navigate(`/group/${group?.id}/assignments/`)
+      toast.success("Pomyślnie zaktualizowano zadanie.")
     }
     catch (e){
       toast.error("Błąd podczas zmiany zadania.")

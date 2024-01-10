@@ -33,7 +33,7 @@ public class File implements Serializable {
     private String name;
 
     @Column(name="format")
-    @Schema(example = ".txt")
+    @Schema(example = "txt")
     @Size(max = 255)
     private String format;
 

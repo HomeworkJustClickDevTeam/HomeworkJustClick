@@ -1,10 +1,10 @@
-import {AssignmentInterface} from "./AssignmentInterface";
+import {AssignmentModel} from "./Assignment.model";
 import {StudentModel} from "./Student.model";
 import {StudentResultModel} from "./StudentResult.model";
 
 export class AssignmentReportModel {
   constructor(
-    public assignment: AssignmentInterface,
+    public assignment: AssignmentModel,
     public maxResult: number,
     public maxResultPercent: number,
     public minResult: number,

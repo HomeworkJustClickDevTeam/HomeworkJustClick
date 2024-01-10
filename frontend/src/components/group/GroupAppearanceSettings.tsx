@@ -9,20 +9,16 @@ import { useAppDispatch, useAppSelector } from "../../types/HooksRedux"
 export default function GroupAppearanceSettings() {
   const dispatch:AppDispatch = useAppDispatch()
   const group= useAppSelector(selectGroup)
-  const handleColorChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    try {
+  const handleColorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       if(group !== null){
         let _group = {...group}
         _group.color = +event.target.value
-        dispatch(setGroup(_group))
-        await changeGroupColorPostgresService(group?.id as unknown as string, +event.target.value).catch((error: AxiosError) => {
+        changeGroupColorPostgresService(group?.id as unknown as string, +event.target.value)
+          .catch((error: AxiosError) => {
           console.log("AXIOS ERROR: ", error)
         })
-
+          .then(()=>dispatch(setGroup(_group)))
       }
-    } catch (e) {
-      console.log(e);
-    }
   }
   return (
 

@@ -1,10 +1,10 @@
 import {UserInterface} from "./UserInterface"
-import {AssignmentInterface} from "./AssignmentInterface"
+import {AssignmentModel} from "./Assignment.model"
 
 export interface SolutionExtendedInterface {
     id: number
     user: UserInterface
-    assignment: AssignmentInterface
+    assignment: AssignmentModel
     comment: string
     creationDateTime: Date
 }

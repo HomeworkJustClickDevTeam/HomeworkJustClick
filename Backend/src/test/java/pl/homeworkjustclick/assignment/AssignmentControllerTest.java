@@ -1,7 +1,9 @@
 package pl.homeworkjustclick.assignment;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.jdbc.Sql;
@@ -658,6 +660,53 @@ public class AssignmentControllerTest extends BaseTestEntity {
     }
 
     @Test
+    @Disabled
+    void shouldAddAssignmentWithUserAndGroupWithLongestFields() throws Exception {
+        var assignment = Assignment.builder()
+                .taskDescription("a".repeat(1500))
+                .completionDatetime(OffsetDateTime.now())
+                .title("a".repeat(255))
+                .visible(true)
+                .maxPoints(10)
+                .autoPenalty(0)
+                .build();
+        var body = objectMapper.writeValueAsString(assignment);
+        var user = userRepository.findByEmail("jan_kowalski@gmail.com").get();
+        var group = groupRepository.getGroupsByTeacherId(user.getId()).get(0);
+        var size = assignmentRepository.findAll().size();
+        mockMvc.perform(post("/api/assignment/withUserAndGroup/{userId}/{groupId}", user.getId(), group.getId())
+                        .content(body)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isOk())
+                .andReturn();
+        assertEquals(size + 1, assignmentRepository.findAll().size());
+    }
+
+    @Test
+    void shouldNotAddAssignmentWithUserAndGroupWithTooLongFields() throws Exception {
+        var assignment = Assignment.builder()
+                .taskDescription("a".repeat(1501))
+                .completionDatetime(OffsetDateTime.now())
+                .title("a".repeat(256))
+                .visible(true)
+                .maxPoints(10)
+                .autoPenalty(0)
+                .build();
+        var body = objectMapper.writeValueAsString(assignment);
+        var user = userRepository.findByEmail("jan_kowalski@gmail.com").get();
+        var group = groupRepository.getGroupsByTeacherId(user.getId()).get(0);
+        var size = assignmentRepository.findAll().size();
+        mockMvc.perform(post("/api/assignment/withUserAndGroup/{userId}/{groupId}", user.getId(), group.getId())
+                        .content(body)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+        assertEquals(size, assignmentRepository.findAll().size());
+    }
+
+    @Test
     void shouldNotAddAssignmentWithNotExistingUserAndGroup() throws Exception {
         var assignment = Assignment.builder()
                 .taskDescription("desc")
@@ -939,7 +988,8 @@ public class AssignmentControllerTest extends BaseTestEntity {
     void shouldDeleteAssignment() throws Exception {
         var assignment = assignmentRepository.findAll().get(0);
         var size = assignmentRepository.findAll().size();
-        mockMvc.perform(delete("/api/assignment/{id}", assignment.getId()))
+        mockMvc.perform(delete("/api/assignment/{id}", assignment.getId())
+                        .headers(HttpHeaders.writableHttpHeaders(createHttpHeaders())))
                 .andExpect(status().isOk())
                 .andReturn();
         assertEquals(size - 1, assignmentRepository.findAll().size());
@@ -948,7 +998,8 @@ public class AssignmentControllerTest extends BaseTestEntity {
     @Test
     void shouldNotDeleteNotExistingAssignment() throws Exception {
         var size = assignmentRepository.findAll().size();
-        mockMvc.perform(delete("/api/assignment/{id}", 9999))
+        mockMvc.perform(delete("/api/assignment/{id}", 9999)
+                        .headers(HttpHeaders.writableHttpHeaders(createHttpHeaders())))
                 .andExpect(status().isNotFound())
                 .andReturn();
         assertEquals(size, assignmentRepository.findAll().size());

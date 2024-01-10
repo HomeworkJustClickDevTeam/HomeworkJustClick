@@ -22,6 +22,7 @@ public class EvaluationReport implements Serializable {
     @Column(name = "id", updatable = false, unique = true, nullable = false)
     @Schema(example = "0")
     private Integer id;
+    @Column(length = 1500)
     private String comment;
     @OneToOne()
     @JoinColumn(name = "evaluation_id", referencedColumnName = "id")

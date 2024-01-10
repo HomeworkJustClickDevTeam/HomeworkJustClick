@@ -1,6 +1,5 @@
 package pl.homeworkjustclick.user;
 
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -8,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -79,16 +79,6 @@ public class UserController {
         }
     }
 
-    @PostMapping("/user")
-    @Hidden
-    public ResponseEntity<Void> add(@RequestBody User user) {
-        if (userService.add(user).equals(Boolean.TRUE)) {
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        } else {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
-    }
-
     @PutMapping("/user/{userId}")
     @Operation(
             summary = "Changes user with given id.",
@@ -116,7 +106,7 @@ public class UserController {
     )
 
     public ResponseEntity<Void> update(
-            @PathVariable("userId") int id, @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Empty fields will be ignored. Id field is ignored but needed in JSON.") @RequestBody User updatedUser) {
+            @PathVariable("userId") int id, @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Empty fields will be ignored. Id field is ignored but needed in JSON.") @RequestBody @Valid User updatedUser) {
         if (userService.update(id, updatedUser).equals(Boolean.TRUE)) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else if (userService.update(id, updatedUser) == null) {
@@ -253,7 +243,7 @@ public class UserController {
                     )
             }
     )
-    public ResponseEntity<AuthenticationResponseDto> changePassword(@RequestBody ChangePasswordRequest request) {
+    public ResponseEntity<AuthenticationResponseDto> changePassword(@RequestBody @Valid ChangePasswordRequest request) {
         AuthenticationResponseDto response = authenticationService.changePassword(request);
         return switch (response.getMessage()) {
             case "ok" -> new ResponseEntity<>(response, HttpStatus.OK);

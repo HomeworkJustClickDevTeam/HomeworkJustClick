@@ -31,4 +31,5 @@ public class EvaluationResponseDto implements Serializable {
     private Double grade;
     @JsonIgnore
     private boolean forbidden;
+    private String comment;
 }

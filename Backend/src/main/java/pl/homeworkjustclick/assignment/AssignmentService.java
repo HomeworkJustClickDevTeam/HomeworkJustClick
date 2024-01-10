@@ -1,16 +1,19 @@
 package pl.homeworkjustclick.assignment;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.homeworkjustclick.evaluation.EvaluationRepository;
 import pl.homeworkjustclick.evaluation.EvaluationService;
+import pl.homeworkjustclick.file.FileFindService;
 import pl.homeworkjustclick.group.Group;
 import pl.homeworkjustclick.group.GroupRepository;
 import pl.homeworkjustclick.group.GroupResponseDto;
 import pl.homeworkjustclick.group.GroupService;
 import pl.homeworkjustclick.infrastructure.enums.CalendarStatus;
 import pl.homeworkjustclick.infrastructure.exception.EntityNotFoundException;
+import pl.homeworkjustclick.infrastructure.rest.MongoClientService;
 import pl.homeworkjustclick.notification.NotificationCreateService;
 import pl.homeworkjustclick.solution.SolutionRepository;
 import pl.homeworkjustclick.user.User;
@@ -38,6 +41,8 @@ public class AssignmentService {
     private final GroupService groupService;
     private final EvaluationService evaluationService;
     private final AssignmentMapper assignmentMapper;
+    private final FileFindService fileFindService;
+    private final MongoClientService mongoClientService;
 
     public Assignment findById(Integer id) {
         return assignmentRepository.findById(id)
@@ -82,6 +87,7 @@ public class AssignmentService {
                 .title(assignment.getTitle())
                 .visible(assignment.getVisible())
                 .maxPoints(assignment.getMaxPoints())
+                .advancedEvaluation(assignment.getAdvancedEvaluation())
                 .build();
     }
 
@@ -116,6 +122,7 @@ public class AssignmentService {
                         .title(assignment.getTitle())
                         .visible(assignment.getVisible())
                         .maxPoints(assignment.getMaxPoints())
+                        .advancedEvaluation(assignment.getAdvancedEvaluation())
                         .build();
             } else {
                 return AssignmentResponseDto.builder().forbidden(true).build();
@@ -163,8 +170,11 @@ public class AssignmentService {
     }
 
     @Transactional
-    public Boolean delete(int id) {
+    public Boolean delete(int id, HttpServletRequest request) {
+        var token = request.getHeader("Authorization").substring(7);
         if(assignmentRepository.existsById(id)) {
+            var file = fileFindService.findFileByAssignmentId(id);
+            file.ifPresent(value -> mongoClientService.deleteFile(token, value.getMongoId()));
             assignmentRepository.deleteById(id);
             return true;
         } else {
@@ -288,6 +298,7 @@ public class AssignmentService {
                     .title(assignment.getTitle())
                     .visible(assignment.getVisible())
                     .maxPoints(assignment.getMaxPoints())
+                    .advancedEvaluation(assignment.getAdvancedEvaluation())
                     .build());
         }
         return assignmentResponsDtos;
@@ -313,6 +324,7 @@ public class AssignmentService {
                                 .title(assignment.getTitle())
                                 .visible(assignment.getVisible())
                                 .maxPoints(assignment.getMaxPoints())
+                                .advancedEvaluation(assignment.getAdvancedEvaluation())
                                 .build()
                 );
             }
@@ -545,6 +557,7 @@ public class AssignmentService {
         assignmentList.forEach(assignment -> {
             var evaluation = evaluationService.findAllEvaluationsByStudentAndAssignment(userId, assignment.getId());
             responseList.add(assignmentMapper.map(assignment, evaluation));
+            responseList.sort(Comparator.comparing(AssignmentWithEvaluationResponseDto::getCompletionDatetime).reversed());
         });
         return responseList;
     }
@@ -555,6 +568,7 @@ public class AssignmentService {
         assignmentList.forEach(assignment -> {
             var evaluation = evaluationService.findAllEvaluationsByStudentAndAssignment(userId, assignment.getId());
             responseList.add(assignmentMapper.map(assignment, evaluation));
+            responseList.sort(Comparator.comparing(AssignmentWithEvaluationResponseDto::getCompletionDatetime).reversed());
         });
         return responseList;
     }
@@ -572,6 +586,7 @@ public class AssignmentService {
                 .visible(assignment.getVisible())
                 .maxPoints(assignment.getMaxPoints())
                 .autoPenalty(assignment.getAutoPenalty())
+                .advancedEvaluation(assignment.getAdvancedEvaluation())
                 .build();
     }
 
@@ -608,6 +623,7 @@ public class AssignmentService {
                 .visible(assignment.getVisible())
                 .maxPoints(assignment.getMaxPoints())
                 .autoPenalty(assignment.getAutoPenalty())
+                .advancedEvaluation(assignment.getAdvancedEvaluation())
                 .build();
     }
 

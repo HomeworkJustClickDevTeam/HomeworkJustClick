@@ -2,6 +2,7 @@ package pl.homeworkjustclick.notification;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import pl.homeworkjustclick.assignment.Assignment;
 import pl.homeworkjustclick.user.User;
@@ -22,6 +23,7 @@ public class Notification implements Serializable {
     @Basic(optional = false)
     private Integer id;
     @Column(name = "description")
+    @Size(max = 500)
     private String description;
     @Column(name = "read")
     private Boolean read = false;

@@ -1,6 +1,7 @@
 package pl.homeworkjustclick.evaluation;
 
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.io.Serializable;
@@ -20,4 +21,7 @@ public class EvaluationDto implements Serializable {
     @NotNull
     private Integer groupId;
     private Double grade;
+    @Size(max = 1500)
+    private String comment;
+
 }

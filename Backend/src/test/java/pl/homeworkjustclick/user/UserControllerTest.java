@@ -96,7 +96,7 @@ public class UserControllerTest extends BaseTestEntity {
                 .email("test@test.pl")
                 .firstname("test")
                 .lastname("test")
-                .password("123")
+                .password("12345678")
                 .build();
         var request = objectMapper.writeValueAsString(registerRequest);
         mockMvc.perform(post("/api/auth/register")
@@ -107,8 +107,8 @@ public class UserControllerTest extends BaseTestEntity {
                 .andReturn();
         var changePasswordRequest = ChangePasswordRequest.builder()
                 .email("test@test.pl")
-                .password("123")
-                .newPassword("321")
+                .password("12345678")
+                .newPassword("87654321")
                 .build();
         var body = objectMapper.writeValueAsString(changePasswordRequest);
         mockMvc.perform(post("/api/changePassword")
@@ -119,7 +119,7 @@ public class UserControllerTest extends BaseTestEntity {
                 .andReturn();
         var authRequest = AuthenticationRequest.builder()
                 .email("test@test.pl")
-                .password("321")
+                .password("87654321")
                 .build();
         body = objectMapper.writeValueAsString(authRequest);
         mockMvc.perform(post("/api/auth/authenticate")
@@ -152,7 +152,7 @@ public class UserControllerTest extends BaseTestEntity {
                 .email("test@test.pl")
                 .firstname("test")
                 .lastname("test")
-                .password("123")
+                .password("12345678")
                 .build();
         var request = objectMapper.writeValueAsString(registerRequest);
         mockMvc.perform(post("/api/auth/register")
@@ -163,8 +163,8 @@ public class UserControllerTest extends BaseTestEntity {
                 .andReturn();
         var changePasswordRequest = ChangePasswordRequest.builder()
                 .email("test@test.pl")
-                .password("bad")
-                .newPassword("321")
+                .password("badpassword")
+                .newPassword("87654321")
                 .build();
         var body = objectMapper.writeValueAsString(changePasswordRequest);
         mockMvc.perform(post("/api/changePassword")
@@ -175,7 +175,7 @@ public class UserControllerTest extends BaseTestEntity {
                 .andReturn();
         var authRequest = AuthenticationRequest.builder()
                 .email("test@test.pl")
-                .password("123")
+                .password("12345678")
                 .build();
         body = objectMapper.writeValueAsString(authRequest);
         mockMvc.perform(post("/api/auth/authenticate")

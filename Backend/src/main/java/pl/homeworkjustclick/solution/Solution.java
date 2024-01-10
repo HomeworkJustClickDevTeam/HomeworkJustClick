@@ -3,6 +3,7 @@ package pl.homeworkjustclick.solution;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -64,8 +65,9 @@ public class Solution implements Serializable {
     @UpdateTimestamp
     private OffsetDateTime lastModifiedDatetime;
 
-    @Column(name = "comment")
+    @Column(name = "comment", length = 1500)
     @Schema(example = "Example comment")
+    @Size(max = 1500)
     private String comment;
 
     public Solution(User user, Assignment assignment, Group group, OffsetDateTime creationDatetime, OffsetDateTime lastModifiedDatetime, String comment) {

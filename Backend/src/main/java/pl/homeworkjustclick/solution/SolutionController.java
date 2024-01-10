@@ -7,9 +7,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 import pl.homeworkjustclick.assignment.AssignmentResponseDto;
 
@@ -148,8 +151,8 @@ public class SolutionController {
             }
     )
 
-    public void delete(@PathVariable("solutionId") int id) {
-        solutionService.delete(id);
+    public void delete(@NonNull HttpServletRequest request, @PathVariable("solutionId") int id) {
+        solutionService.delete(id, request);
     }
 
     @PostMapping("/solution/withUserAndAssignment/{userId}/{assignmentId}")
@@ -184,7 +187,7 @@ public class SolutionController {
     )
     public ResponseEntity<SolutionResponseDto> addWithUserAndAssignment(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Fields: 'creationDatetime', 'lastModifiedDatetime', 'id' can not be changed manually but are needed in JSON. 'lastModifiedDatetime' updates by itself when the solution object changes. 'creationDatetime' is unchangeable.")
-            @RequestBody Solution solution, @PathVariable("userId") int userId, @PathVariable("assignmentId") int assignmentId) {
+            @RequestBody @Valid Solution solution, @PathVariable("userId") int userId, @PathVariable("assignmentId") int assignmentId) {
         SolutionResponseDto response = solutionService.addWithUserAndAssignment(solution, userId, assignmentId);
         if (response.getId() != 0) {
             return new ResponseEntity<>(response, HttpStatus.OK);
