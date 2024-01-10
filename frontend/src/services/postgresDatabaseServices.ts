@@ -1,41 +1,41 @@
-import {AssignmentModel} from "../types/Assignment.model"
-import {AssignmentCreateModel} from "../types/AssignmentCreate.model"
-import {GroupCreateInterface} from "../types/GroupCreateInterface"
-import {SolutionCreateInterface} from "../types/SolutionCreateInterface"
-import {UserLoginInterface} from "../types/UserLoginInterface"
-import {UserRegisterInterface} from "../types/UserRegisterInterface"
-import {CredentialsInterface} from "../types/CredentialsInterface"
-import {getUser} from "./otherServices"
-import {CommentCreateInterface} from "../types/CommentCreateInterface"
-import {AdvancedEvaluationTextCommentCreateInterface} from "../types/AdvancedEvaluationTextCommentCreateInterface"
-import {CommentInterface} from "../types/CommentInterface"
-import {AdvancedEvaluationImageCommentModel} from "../types/AdvancedEvaluationImageComment.model"
-import {AdvancedEvaluationTextCommentModel} from "../types/AdvancedEvaluationTextComment.model"
-import {AdvancedEvaluationImageCommentCreateInterface} from "../types/AdvancedEvaluationImageCommentCreateInterface"
+import { AssignmentModel } from "../types/Assignment.model"
+import { AssignmentCreateModel } from "../types/AssignmentCreate.model"
+import { GroupCreateInterface } from "../types/GroupCreateInterface"
+import { SolutionCreateInterface } from "../types/SolutionCreateInterface"
+import { UserLoginInterface } from "../types/UserLoginInterface"
+import { UserRegisterInterface } from "../types/UserRegisterInterface"
+import { CredentialsInterface } from "../types/CredentialsInterface"
+import { getUser } from "./otherServices"
+import { CommentCreateInterface } from "../types/CommentCreateInterface"
+import { AdvancedEvaluationTextCommentCreateInterface } from "../types/AdvancedEvaluationTextCommentCreateInterface"
+import { CommentInterface } from "../types/CommentInterface"
+import { AdvancedEvaluationImageCommentModel } from "../types/AdvancedEvaluationImageComment.model"
+import { AdvancedEvaluationTextCommentModel } from "../types/AdvancedEvaluationTextComment.model"
+import { AdvancedEvaluationImageCommentCreateInterface } from "../types/AdvancedEvaluationImageCommentCreateInterface"
 import axios from "axios";
-import {Table} from "../types/Table.model"
-import {EvaluationPanelAssignmentCreateInterface} from "../types/EvaluationPanelAssignmentCreateInterface";
-import {EvaluationPanelAssignmentInterface} from "../types/EvaluationPanelAssignmentInterface";
-import {EvaluationCreateModel} from "../types/EvaluationCreate.model";
-import {GroupCreateReportModel} from "../types/GroupCreateReport.model";
-import {AssignmentCreateReportModel} from "../types/AssignmentCreateReport.model";
-import {EvaluationReport} from "../types/EvaluationReport.model";
+import { Table } from "../types/Table.model"
+import { EvaluationPanelAssignmentCreateInterface } from "../types/EvaluationPanelAssignmentCreateInterface";
+import { EvaluationPanelAssignmentInterface } from "../types/EvaluationPanelAssignmentInterface";
+import { EvaluationCreateModel } from "../types/EvaluationCreate.model";
+import { GroupCreateReportModel } from "../types/GroupCreateReport.model";
+import { AssignmentCreateReportModel } from "../types/AssignmentCreateReport.model";
+import { EvaluationReport } from "../types/EvaluationReport.model";
 
 
 const postgresqlDatabaseJSON = axios.create({
-    baseURL: "http://localhost:8080/api",
+    baseURL: "process.env.REACT_APP_API_URL",
     timeout: 8000,
     headers: {
-        "Access-Control-Allow-Origin": "http://localhost:3000/",
+        "Access-Control-Allow-Origin": "process.env.REACT_APP_CORS_URL",
         "Content-Type": "application/json",
     },
 })
 
 const postgresqlDatabaseTextPlain = axios.create({
-    baseURL: "http://localhost:8080/api",
+    baseURL: "process.env.REACT_APP_API_URL",
     timeout: 8000,
     headers: {
-        "Access-Control-Allow-Origin": "http://localhost:3000/",
+        "Access-Control-Allow-Origin": "process.env.REACT_APP_CORS_URL",
         "Content-Type": "text/plain",
     },
 })
@@ -186,12 +186,12 @@ export const createEvaluationWithUserAndSolutionPostgresService = async (
 }
 
 export const updateEvaluationByIdPostgresService = async (
-  evaluationId: string,
-  evaluation: EvaluationCreateModel
+    evaluationId: string,
+    evaluation: EvaluationCreateModel
 ) => {
     return await postgresqlDatabaseJSON.put(
-      `/evaluation/${evaluationId}`,
-      evaluation
+        `/evaluation/${evaluationId}`,
+        evaluation
     )
 }
 
@@ -300,10 +300,10 @@ export const getEvaluationBySolutionPostgresService = async (
 }
 
 export const getEvaluationsByGroupPostgresService = async (
-  groupId: string | number
+    groupId: string | number
 ) => {
     return await postgresqlDatabaseJSON.get(
-      `/evaluation/byGroupId/${groupId}`
+        `/evaluation/byGroupId/${groupId}`
     )
 }
 
@@ -316,10 +316,10 @@ export const getExtendedSolutionsLateByGroupPostgresService = async (
 }
 
 export const getSolutionsLateByGroupPostgresService = async (
-  groupId: string
+    groupId: string
 ) => {
     return await postgresqlDatabaseJSON.get(
-      `/solutions/lateByGroup/${groupId}`
+        `/solutions/lateByGroup/${groupId}`
     )
 }
 
@@ -332,10 +332,10 @@ export const getExtendedSolutionsUncheckedByGroupPostgresService = async (
 }
 
 export const getSolutionsUncheckedByGroupPostgresService = async (
-  groupId: string
+    groupId: string
 ) => {
     return await postgresqlDatabaseJSON.get(
-      `/solutions/uncheckedByGroup/${groupId}`
+        `/solutions/uncheckedByGroup/${groupId}`
     )
 }
 
@@ -348,10 +348,10 @@ export const getExtendedSolutionsCheckedByGroupPostgresService = async (
 }
 
 export const getSolutionsCheckedByGroupPostgresService = async (
-  groupId: string
+    groupId: string
 ) => {
     return await postgresqlDatabaseJSON.get(
-      `/solutions/checkedByGroup/${groupId}`
+        `/solutions/checkedByGroup/${groupId}`
     )
 }
 
@@ -362,38 +362,38 @@ export const getAssignmentsByStudentPostgresService = async (
 }
 
 export const getAssignmentsDoneByStudentPostgresService = async (
-  userId: string
+    userId: string
 ) => {
     return await postgresqlDatabaseJSON.get("/assignments/doneByStudent/" + userId)
 }
 
 export const getAssignmentsUndoneByStudentPostgresService = async (
-  userId: string
+    userId: string
 ) => {
     return await postgresqlDatabaseJSON.get("/assignments/undoneByStudent/" + userId)
 }
 
 export const getAssignmentsExpiredUndoneByStudentPostgresService = async (
-  userId: string
+    userId: string
 ) => {
     return await postgresqlDatabaseJSON.get("/assignments/expiredUndoneByStudent/" + userId)
 }
 
 export const getAssignmentsWithEvaluationByStudentAndGroupPostgresService = async (
-  userId: string,
-  groupId: string
+    userId: string,
+    groupId: string
 ) => {
     return await postgresqlDatabaseJSON.get(`/assignments/byStudentAndGroupWithEvaluation/${userId}/${groupId}`)
 }
 
 export const getAssignmentsWithEvaluationByStudentPostgresService = async (
-  userId: string
+    userId: string
 ) => {
     return await postgresqlDatabaseJSON.get("/assignments/byStudentWithEvaluation/" + userId)
 }
 
 export const getAssignmentsNonExpiredUndoneByStudentPostgresService = async (
-  userId: string
+    userId: string
 ) => {
     return await postgresqlDatabaseJSON.get("/assignments/nonExpiredUndoneByStudent/" + userId)
 }
@@ -408,14 +408,14 @@ export const getAssignmentsDoneByGroupAndStudentPostgresService = async (
 }
 
 export const getAssignmentsExpiredUndoneByGroupAndStudentPostgresService = async (groupId: string, userId: string) => {
-        return await postgresqlDatabaseJSON.get(
-            `/assignments/expiredUndoneByGroupAndStudent/${groupId}/${userId}`
-        )
+    return await postgresqlDatabaseJSON.get(
+        `/assignments/expiredUndoneByGroupAndStudent/${groupId}/${userId}`
+    )
 }
 
 export const getAssignmentsNonExpiredUndoneByGroupAndStudentPostgresService = async (groupId: string, userId: string) => {
     return await postgresqlDatabaseJSON.get(
-      `/assignments/nonExpiredUndoneByGroupAndStudent/${groupId}/${userId}`
+        `/assignments/nonExpiredUndoneByGroupAndStudent/${groupId}/${userId}`
     )
 }
 
@@ -523,14 +523,14 @@ export const changeCommentImageColorByCommentIdPostgresService = async (
     commentId: string,
     color: string
 ) => {
-    return await postgresqlDatabaseJSON.put(`/comment_file_img/colorByCommentId/${commentId}`, {color: color})
+    return await postgresqlDatabaseJSON.put(`/comment_file_img/colorByCommentId/${commentId}`, { color: color })
 }
 
 export const changeCommentTextColorByCommentIdPostgresService = async (
     commentId: string,
     color: string
 ) => {
-    return await postgresqlDatabaseJSON.put(`/comment_file_text/colorByCommentId/${commentId}`, {color: color})
+    return await postgresqlDatabaseJSON.put(`/comment_file_text/colorByCommentId/${commentId}`, { color: color })
 }
 
 export const changeUserIndexPostgresService = async (
@@ -568,14 +568,14 @@ export const changeCommentTextPostgresService = async (
 ) => {
     return await postgresqlDatabaseJSON.put(
         `/comment_file_text/${comment.id}`,
-      {
-          id: comment.id,
-          highlightStart: comment.highlightStart,
-          highlightEnd: comment.highlightEnd,
-          color: comment.color,
-          commentId: comment.comment.id,
-          fileId: comment.file.id
-      }
+        {
+            id: comment.id,
+            highlightStart: comment.highlightStart,
+            highlightEnd: comment.highlightEnd,
+            color: comment.color,
+            commentId: comment.comment.id,
+            fileId: comment.file.id
+        }
     )
 }
 
@@ -681,21 +681,21 @@ export const createListOfCommentsPostgresService = async (commentsList: CommentC
         .post('/comment/list', commentsList)
 }
 
-export const createReportGroup = async (groupReportCreator: GroupCreateReportModel) =>{
+export const createReportGroup = async (groupReportCreator: GroupCreateReportModel) => {
     return await postgresqlDatabaseJSON
-      .post('/report/group', groupReportCreator)
+        .post('/report/group', groupReportCreator)
 }
-export const createReportGroupCSV = async (groupReportCreator: GroupCreateReportModel) =>{
+export const createReportGroupCSV = async (groupReportCreator: GroupCreateReportModel) => {
     return await postgresqlDatabaseJSON
-      .post('/report/group_csv', groupReportCreator)
+        .post('/report/group_csv', groupReportCreator)
 }
-export const createReportAssignmentCSV = async (assignmentReportCreator: AssignmentCreateReportModel) =>{
+export const createReportAssignmentCSV = async (assignmentReportCreator: AssignmentCreateReportModel) => {
     return await postgresqlDatabaseJSON
-      .post('/report/assignment_csv', assignmentReportCreator)
+        .post('/report/assignment_csv', assignmentReportCreator)
 }
-export const createReportAssignment = async (assignmentReportCreator: AssignmentCreateReportModel) =>{
+export const createReportAssignment = async (assignmentReportCreator: AssignmentCreateReportModel) => {
     return await postgresqlDatabaseJSON
-      .post('/report/assignment', assignmentReportCreator)
+        .post('/report/assignment', assignmentReportCreator)
 }
 
 
@@ -732,19 +732,19 @@ export const deleteEvaluationPanelService = async (
 }
 
 export const deleteEvaluationReportPostgresService = async (
-  evaluationReportId: number | string
+    evaluationReportId: number | string
 ) => {
     return await postgresqlDatabaseJSON.delete(
-      `/evaluation_report/${evaluationReportId}`
+        `/evaluation_report/${evaluationReportId}`
     )
 }
 export const addEvaluationReport = async (evaluationReport: EvaluationReport) => {
     return await postgresqlDatabaseJSON.post(`/evaluation_report`, evaluationReport);
 
 }
-export const getEvaluationReportByGroup = async (groupId : number) =>{
+export const getEvaluationReportByGroup = async (groupId: number) => {
     return await postgresqlDatabaseJSON.get(`evaluation_report/byGroupId/${groupId}`);
 }
-export const getEvaluationReportByEvaluationId = async (evaluationId:number) =>{
+export const getEvaluationReportByEvaluationId = async (evaluationId: number) => {
     return await postgresqlDatabaseJSON.get(`evaluation_report/byEvaluationId/${evaluationId}`)
 }
