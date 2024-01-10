@@ -8,11 +8,11 @@ export const ReportGroupTable = ({groupReport}:{groupReport: GroupReportModel}) 
   const [studentsFullNames, setStudentsFullNames] = useState<Set<string>>(new Set())
   const [studentsResults] = useState<Map<string,Map<string, number|undefined>>>(()=>{
     const output = new Map<string, Map<string, number|undefined>>()
-    groupReport.assignments
+    groupReport.assignments!
       .filter((assignmentReport)=>assignmentReport.students !== null)
       .forEach(assignmentReport => {
         let studentResultMap = new Map<string, number|undefined>()
-        assignmentReport.students.forEach((studentResult)=>{
+        assignmentReport.students!.forEach((studentResult)=>{
           const studentFullName = studentResult.student.firstname + " " + studentResult.student.lastname
           if(!studentsFullNames.has(studentFullName)) setStudentsFullNames(prevState => new Set(prevState.add(studentFullName)))
           studentResultMap.set(studentFullName, studentResult.result)
@@ -49,7 +49,7 @@ export const ReportGroupTable = ({groupReport}:{groupReport: GroupReportModel}) 
         <th className='pb-2 text-sm px-2 border-r-2 border-b-2 border-light_gray font-semibold w-16'>Studenci: </th>
         {renderStudentsFullNames()}
       </tr>
-      {groupReport.assignments
+      {groupReport.assignments!
         .filter((assignmentReport)=> assignmentReport.students!==null)
         .map((assignmentReport, index) => {
           return(

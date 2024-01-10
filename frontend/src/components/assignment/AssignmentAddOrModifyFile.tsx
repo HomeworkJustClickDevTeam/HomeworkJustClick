@@ -24,8 +24,8 @@ export function AssignmentFile(props: {
   return (
     <div>
       <input type="file" onChange={(event)=>handleChangeFile(event)}/><br/>
-      {props.databaseFile && <>Plik w bazie danych: <br/>
-          <button onClick={()=>CreateFileUrlAndClick(props.databaseFile!)}> {`${props.databaseFile!.name}`}</button></>}
+      {props.databaseFile && <div className='flex mt-2'><span className='mr-3'>Aktualnie wybrany plik: </span>
+          <button onClick={()=>CreateFileUrlAndClick(props.databaseFile!)}> {`${props.databaseFile!.name}`}</button></div>}
       {" "}
     </div>
   )

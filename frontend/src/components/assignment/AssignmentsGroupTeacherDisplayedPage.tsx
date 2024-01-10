@@ -33,8 +33,8 @@ function AssignmentsGroupTeacherDisplayedPage() {
   }
 
   return (
-    <div className='flex flex-col h-[calc(100vh-325px)] overflow-y-hidden w-full'>
-      <div className='relative h-[420px] box-content overflow-y-auto w-full'>
+    <div className='flex flex-col xl:h-[calc(100dvh-325px)] h-[calc(100dvh-265px)] overflow-y-hidden w-full'>
+      <div className='relative h-full box-content overflow-y-auto w-full'>
         <ul className="flex flex-col  mb-4">
           {assignments.map((assignment) => (
               <li key={assignment.id} className='flex inline-block '>
@@ -46,7 +46,7 @@ function AssignmentsGroupTeacherDisplayedPage() {
               </li>
             ))}
         </ul>
-        <div className='fixed left-[calc(7.5%+700px)] top-[350px] bg-white'>
+        <div className='fixed top-[50%] left-[40%] bg-white'>
           {chosenObjectsReport && <ReportCreate closeReportCreator={()=> setChosenObjectsReport(undefined)} csvVersion={false} reportedObject={chosenObjectsReport}/>}
         </div>
       </div>

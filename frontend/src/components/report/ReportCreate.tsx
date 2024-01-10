@@ -19,6 +19,7 @@ import {el} from "date-fns/locale";
 import {useUpdateEffect} from "usehooks-ts";
 import * as fs from "fs";
 import * as domain from "domain";
+import {toast} from "react-toastify";
 
 
 export const ReportCreate = ({reportedObject, csvVersion, closeReportCreator}:
@@ -37,6 +38,24 @@ export const ReportCreate = ({reportedObject, csvVersion, closeReportCreator}:
       setReportCreate(newState as GroupCreateReportModel)
     }
   }
+
+  function checkForDuplicates(array:number[]) {
+    return (new Set(array)).size !== array.length;
+  }
+  const checkHistFormat = () =>{
+    if(histTextValue.length === 0) return []
+    const histTextWithoutWhitespaces = histTextValue.replace(/\s+/g, '')
+    if(!(/^(0|[1-9][0-9]?|100)(,(0|[1-9][0-9]?|100))*$/.test(histTextWithoutWhitespaces))){//returns undefined if histTextValue is not in correct format
+      toast.error("Liczby histogramu muszą być 0-100 oddzielone spacjami")
+      return undefined
+    }
+    const histTextAsArray = histTextWithoutWhitespaces.split(",").map(number=>parseInt(number))
+    if(checkForDuplicates(histTextAsArray)) {
+      toast.error("Liczby histogramu nie mogą się powtarzać")
+      return undefined
+    }
+    return histTextAsArray
+  }
   const handleReportCreation = async (event:React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     if(reportCreate === undefined) return
@@ -45,7 +64,12 @@ export const ReportCreate = ({reportedObject, csvVersion, closeReportCreator}:
         const response = await createReportAssignment(reportCreate)
         if(response?.status === 200){
           const assignmentReport = response.data as AssignmentReportModel
-          navigate(`/group/${group!.id}/report`, {state:{report: assignmentReport,
+          if(assignmentReport.students === null || assignmentReport.students?.length === 0){
+            toast.error("Żaden uczeń nie zrobił zadania w tej grupie, nie ma możliwości stworzenia raportu")
+            return
+          }
+          navigate(`/group/${group!.id}/report`, {state:{
+              report: assignmentReport,
               date: 'completionDatetime' in reportedObject ? reportedObject.completionDatetime : undefined,
               reportedObject: reportedObject}})
         }
@@ -54,6 +78,10 @@ export const ReportCreate = ({reportedObject, csvVersion, closeReportCreator}:
         const response = await createReportGroup(reportCreate)
         if(response?.status === 200){
           const groupReport = response.data as GroupReportModel
+          if(groupReport.assignments === null){
+            toast.error("Brak zadań w tej grupie, nie ma możliwości stworzenia raportu")
+            return
+          }
           navigate(`/group/${group!.id}/report`, {state:{report: groupReport,
               reportedObject: reportedObject}})
         }
@@ -61,13 +89,17 @@ export const ReportCreate = ({reportedObject, csvVersion, closeReportCreator}:
     }
     catch (e) {console.error(e)}
   }
+
   const handleCsvCreation = async (event:React.FormEvent<HTMLFormElement>) =>{
     event.preventDefault()
     if(reportCreate === undefined) return
     try {
+      const histTextAsArrayNumbers = checkHistFormat()
+      if(histTextAsArrayNumbers === undefined) return
+      const reportCreateWithHist = {...reportCreate, hist: histTextAsArrayNumbers}
       let response = null
-      if('assignmentId' in reportCreate) response = await createReportAssignmentCSV(reportCreate)
-      else response = await createReportGroupCSV(reportCreate)
+      if('assignmentId' in reportCreateWithHist) response = await createReportAssignmentCSV(reportCreateWithHist)
+      else response = await createReportGroupCSV(reportCreateWithHist)
       if(response?.status === 200){
         const file = new Blob([response.data], {type:'text/plain;charset=utf8'})
         const href = URL.createObjectURL(file)
@@ -82,22 +114,6 @@ export const ReportCreate = ({reportedObject, csvVersion, closeReportCreator}:
     catch (e) {console.error(e)}
   }
 
-  useUpdateEffect(()=>{
-    const checkHistFormat = (inputTextValue: string) =>{
-      const histNumList = inputTextValue.replace(/\s+/g, '').split(",").map((numberAsString)=>{
-        const numberAsInt = parseInt(numberAsString, 10)
-        if(numberAsInt > 100 || numberAsInt < 1) return NaN
-        return numberAsInt
-      })
-        .filter((number) => !isNaN(number))
-      setHistTextValue(histNumList.join(","))
-      const tempObj = {...reportCreate!, hist: [...histNumList]}
-      handleChangingState(tempObj)
-    }
-    const timeoutId = setTimeout(()=>checkHistFormat(histTextValue), 500)
-
-    return () => clearTimeout(timeoutId)
-  }, [histTextValue])
   useEffect(() => {
     if('name' in reportedObject){
       setReportCreate({
@@ -122,7 +138,8 @@ export const ReportCreate = ({reportedObject, csvVersion, closeReportCreator}:
   }, []);
 
   if(reportCreate !== undefined) {
-    return <div className='w-[400px]  border-4 border-black rounded-md pl-3 shadow-lg '>
+    return <div className='relative min-w-[400px] min-h-[200px]  border-2 border-light_gray  rounded-md pl-3 shadow-lg align-center bg-lilly-bg'>
+
       <div className='text-center mb-6 mt-2 font-bold'>RAPORT</div>
 
       {'title' in reportedObject?
@@ -131,10 +148,10 @@ export const ReportCreate = ({reportedObject, csvVersion, closeReportCreator}:
           <br/>
           <div><span className='font-semibold mr-1'>Termin:</span> {format(new Date((reportedObject as AssignmentModel).completionDatetime.toString()), "dd.MM.yyyy, HH:mm")}</div>
           <br/>
-          <div><span className='font-semibold mr-1'>Punkty do zdobycia:</span> {(reportedObject as AssignmentModel).maxPoints}</div>
+          <div className='mb-2'><span className='font-semibold mr-1 '>Punkty do zdobycia:</span> {(reportedObject as AssignmentModel).maxPoints}</div>
           <br/>
         </div>
-          : <div><span className='font-semibold mr-1'>Nazwa grupy:</span> {(reportedObject as GroupInterface).name}</div>}
+          : <div className='ml-1 pt-4'><span className='font-semibold'>Nazwa grupy:</span> {(reportedObject as GroupInterface).name}</div>}
 
       <form onSubmit={(event) => {csvVersion ? handleCsvCreation(event) : handleReportCreation(event)}}>
         {csvVersion &&
@@ -170,11 +187,12 @@ export const ReportCreate = ({reportedObject, csvVersion, closeReportCreator}:
                 </div>
             </fieldset>}
         <div className='flex justify-between pr-4 mb-2  align-bottom mt-4'>
-          <button className='bg-main_blue text-white rounded-md text-sm p-1 px-2' type={"submit"}>Utwórz</button>
-          <button type={'button'} onClick={() => closeReportCreator()} className='bg-berry_red text-white rounded-md text-sm p-1 w-8'>X</button>
+          <button className='absolute bottom-3 left-3 bg-main_blue text-white rounded-md text-sm p-1 px-2' type={"submit"}>Utwórz</button>
+          <button type={'button'} onClick={() => closeReportCreator()} className='absolute right-3 bottom-3 bg-berry_red text-white rounded-md text-sm p-1 w-8'>X</button>
         </div>
       </form>
-    </div>
+      </div>
+
 
   }
   else {return null}

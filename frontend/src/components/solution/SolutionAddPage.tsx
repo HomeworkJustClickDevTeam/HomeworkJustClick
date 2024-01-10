@@ -122,21 +122,21 @@ function SolutionAddPage({assignment}: AssignmentPropsInterface) {
     }
 
     return (
-        <section className='flex flex-col overflow-y-hidden h-[calc(100vh-270px)] xl:h-[calc(100vh-360px)]'>
-      <div className="relative flex flex-col mx-[7.5%] mt-4 border border-border_gray border-1 rounded-md pt-4 px-4 h-96 gap-2 box-content overflow-y-auto">
+        <section className='flex flex-col overflow-y-hidden h-[calc(100dvh-265px)] xl:h-[calc(100dvh-360px)]'>
+      <div className="relative flex flex-col mx-[7.5%] mt-4 border border-border_gray border-1 rounded-md pt-4 px-4 h-fit gap-2 box-content overflow-y-auto">
           <div className='pl-3 border-l-2 border-main_blue lg:border-none pb-12 lg:pb-3'>
-              <div className='flex flex-col lg:flex-row w-full h-[calc(100vh-410px)] '>
-                  <div className='flex flex-col mr-5 gap-2 '>
+              <div className='flex flex-col lg:flex-row w-full h-full'>
+                  <div className='flex flex-col mr-5 gap-2  min-w-[320px] max-w-[500px]'>
                       <div className='flex flex-row'>
-                          <p className="pr-3 w-28 font-semibold">Tytuł zadania: </p>
-                          <p className='max-w-48'>{assignment.title}</p>
+                          <p className="w-32 xl:w-28 font-semibold flex flex-row">Tytuł zadania: </p>
+                          <p className='w-fit max-w-24'>{assignment.title}</p>
                       </div>
                       <div>
                           <p className="font-semibold mb-1">Opis zadania: </p>
-                          <p className='border border-light_gray rounded-md pl-1 pr-1 pb-3 pt-1 shadow-md w-80 lg:w-full'>{assignment.taskDescription}</p>
+                          <textarea disabled={true} className='border border-light_gray rounded-md pl-1 pr-1 pb-3 pt-1 shadow-md w-80 lg:w-full min-h-[120px] lg:ml-0 ml-32 mb-5 xl:mb-0'>{assignment.taskDescription}</textarea>
                       </div>
                   </div>
-                      <div className='flex flex-col gap-3  lg:pl-5 lg:border-l-2 lg:border-main_blue w-fit'>
+                  <div className='flex flex-col gap-3  lg:pl-5 lg:border-l-2 lg:border-main_blue w-fit'>
                           <div className='flex flex-row'>
                               <p className="font-semibold mr-1 w-48">Data ukończenia: </p>
                               {format(new Date(assignment.completionDatetime.toString()), "dd.MM.yyyy, HH:mm")}
@@ -144,7 +144,7 @@ function SolutionAddPage({assignment}: AssignmentPropsInterface) {
                           <div className= 'flex flex-row'>{fileFromDb !== undefined && <><span className='w-48'>Plik do zadania:</span><FaDownload className='mt-1 mr-2'/><AssignmentFile assignmentId={assignment.id}/></>}</div>
                           <div className=''>
                               <label >
-                                  Moje rozwiązania (max. 1):</label>
+                                  Moje rozwiązanie (max. 5MB):</label>
 
                                   <input
                                     name="file"
@@ -157,9 +157,9 @@ function SolutionAddPage({assignment}: AssignmentPropsInterface) {
                           <label className='flex align-top'>
                               Twój komentarz do zadania: </label>
                               <textarea
-                                className="pl-2 ml-1 border border-light_gray rounded-md shadow-md w-80 min-h-[125px] mt-2 px-2 py-1"
+                                className="pl-2 ml-1 border border-light_gray rounded-md shadow-md w-80 min-h-[125px] mt-2 px-2 py-1 focus:outline focus:outline-2 focus:outline-main_blue"
                                 name="comment"
-
+                                maxLength={1500}
                                 onChange={(e) => handleChangeComment(e)} />
 
                           </div>
@@ -168,7 +168,7 @@ function SolutionAddPage({assignment}: AssignmentPropsInterface) {
                           <button
                             type={"submit"}
                             onClick={(e) => handleUploadClick(e)}
-                            className="fixed mb-2 md:bottom-16 bottom-16 right-[calc(7.5%+28px)]  bg-main_blue text-white px-4 py-1 rounded   hover:bg-hover_blue hover:shadow-md active:shadow-none"
+                            className="absolute mb-2 bottom-4 md:bottom-3  right-4  bg-main_blue text-white px-4 py-1 rounded   hover:bg-hover_blue hover:shadow-md active:shadow-none"
                           >
                               Wyślij rozwiązanie
                           </button>

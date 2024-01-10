@@ -125,7 +125,7 @@ export default function PointsTableForm(props: {
   }
 
   return (
-    <div className={isEditForm ? 'border-t border-border_gray w-full my-2 pt-1':'mt-6 border-2 border-border_gray p-2 rounded-md'}>
+    <div className={isEditForm ? 'border-t border-border_gray w-full my-2 pt-1':'mt-6 border-2 border-border_gray p-2 rounded-md max-w-[500px]'}>
       {isEditForm ? <h1 className='font-semibold mb-2'>EDYTUJ TABELĘ</h1> : <h1 className='font-semibold mb-2'>NOWA TABELA</h1>}
       <div className='flex relative'>
       <form onSubmit={handleSubmit} className='flex flex-col gap-2'>
@@ -134,9 +134,10 @@ export default function PointsTableForm(props: {
           <input
             name="name"
             type="text"
+            maxLength={255}
             onChange={handleValueChange}
             value={isEditForm ? table.name : undefined}
-            className='ml-1 pl-1 border-b solid black'
+            className='ml-1 pl-1 border-b solid black focus:outline-none focus:border-b-main_blue'
           />
         </label>
         <label>Punkty:
@@ -145,23 +146,24 @@ export default function PointsTableForm(props: {
           type="text"
           onChange={handlePointsTableChange}
           value={isEditForm ? pointsInString : undefined}
-          className='ml-1 pl-1 border-b solid black'
+          className='ml-1 pl-1 border-b solid black focus:outline-none focus:border-b-main_blue'
         />
         </label>
-        <label>
+        <label className='pb-2'>
           Wiersze w tabeli (max 5):
           <input
             type="number"
             name="width"
             max="5"
+            min="1"
             onChange={handleValueChange}
             value={isEditForm ? table.width : undefined}
-            className='ml-1 pl-1 border-b solid black w-10'
+            className='ml-1 pl-1 border-b solid black w-10 focus:outline-none focus:border-b-main_blue'
           />
         </label>
         <button
           type="submit"
-          className="flex w-24 justify-center mr-6 mt-4 px-10 py-1 rounded-lg bg-main_blue text-white hover:bg-hover_blue hover:shadow-md active:shadow-none"
+          className="absolute right-0 bottom-0 w-24 text-center justify-center px-2 py-1 mr-2 rounded-lg bg-main_blue text-white hover:bg-hover_blue hover:shadow-md active:shadow-none"
         >
           {isEditForm ? "Zatwierdź" : "Prześlij"}
         </button>
@@ -169,13 +171,13 @@ export default function PointsTableForm(props: {
       {!isEditForm ? (
         <button
           onClick={() => handleCancel()}
-          className="absolute bottom-2.5 right-0 mr-6 px-4 py-1 rounded-lg bg-berry_red text-white"
+          className="absolute top-[-30px] right-[-10px] mr-6 px-4 py-1 rounded-lg bg-berry_red text-white"
         >
           {" "}
           X{" "}
         </button>
       ) : (
-        <button onClick={() => deleteEvaluationTable()} className="absolute bottom-0 right-0 mr-6 px-4 py-1 rounded-lg bg-berry_red text-white"> Usuń</button>
+        <button onClick={() => deleteEvaluationTable()} className="absolute top-[-30px] right-[-10px] mr-6 px-4 py-1 rounded-lg bg-berry_red text-white"> Usuń</button>
       )}
       </div>
     </div>

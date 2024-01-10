@@ -1,39 +1,39 @@
 import ReactDatePicker from "react-datepicker";
-import { AssignmentFile } from "./AssignmentAddOrModifyFile";
-import React, { ChangeEvent, SetStateAction, useEffect, useState } from "react";
-import { AssignmentModel } from "../../types/Assignment.model";
-import { Table } from "../../types/Table.model";
-import { AssignmentCreateModel } from "../../types/AssignmentCreate.model";
-import { GroupInterface } from "../../types/GroupInterface";
-import { useNavigate } from "react-router-dom";
-import { setHours, setMinutes } from "date-fns";
-import { FileInterface } from "../../types/FileInterface";
+import {AssignmentFile} from "./AssignmentAddOrModifyFile";
+import React, {ChangeEvent, SetStateAction, useEffect, useState} from "react";
+import {AssignmentModel} from "../../types/Assignment.model";
+import {Table} from "../../types/Table.model";
+import {AssignmentCreateModel} from "../../types/AssignmentCreate.model";
+import {GroupInterface} from "../../types/GroupInterface";
+import {useNavigate} from "react-router-dom";
+import {setHours, setMinutes} from "date-fns";
+import {FileInterface} from "../../types/FileInterface";
 import { FaQuestion } from "react-icons/fa";
 import { FaRegCheckCircle } from "react-icons/fa";
 
-interface AssignmentSettingsPagePropsInterface {
+interface AssignmentSettingsPagePropsInterface{
   handleSubmit: (event: React.FormEvent) => void,
-  assignment: AssignmentModel | AssignmentCreateModel,
-  chosenEvaluationTable: number,
-  handleDelete?: (event: React.FormEvent) => void,
-  setChosenEvaluationTable: (tableId: number) => void,
-  evaluationTable: Table[],
+  assignment: AssignmentModel|AssignmentCreateModel,
+  chosenEvaluationTable:number,
+  handleDelete?:(event: React.FormEvent) => void,
+  setChosenEvaluationTable:(tableId: number)=>void,
+  evaluationTable:Table[],
   setAssignment: (assignment: (prevState: any) => any) => void,
   newAssignmentId?: number,
-  setNewFile: React.Dispatch<React.SetStateAction<File | undefined>>
+  setNewFile: React.Dispatch<React.SetStateAction<File|undefined>>
   databaseFile?: FileInterface
 }
 
-export const AssignmentSettingsPage = ({ handleSubmit,
-  assignment,
-  chosenEvaluationTable,
-  handleDelete,
-  setChosenEvaluationTable,
-  evaluationTable,
-  setAssignment,
-  setNewFile,
-  databaseFile,
-  newAssignmentId }: AssignmentSettingsPagePropsInterface) => {
+export const AssignmentSettingsPage = ({handleSubmit,
+                                         assignment,
+                                         chosenEvaluationTable,
+                                         handleDelete,
+                                         setChosenEvaluationTable,
+                                         evaluationTable,
+                                         setAssignment,
+                                         setNewFile,
+                                         databaseFile,
+                                         newAssignmentId}:AssignmentSettingsPagePropsInterface) =>{
 
   const handleTextTitleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target
@@ -74,22 +74,21 @@ export const AssignmentSettingsPage = ({ handleSubmit,
   }
 
 
-  const handleTableChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    if (+event.target.value === -1)
+  const handleTableChange = (event:React.ChangeEvent<HTMLSelectElement>) => {
+    if(+event.target.value === -1)
       setChosenEvaluationTable(-1)
-    else {
+    else
+    {
       setChosenEvaluationTable(+event.target.value)
       const chosenTable = evaluationTable.filter(table => table.id === +event.target.value)[0]
       setAssignment(prevState => (
-        {
-          ...assignment,
-          maxPoints: Math.max(...chosenTable.buttons.map(button => button.points))
-        })
+        {...assignment,
+          maxPoints: Math.max(...chosenTable.buttons.map(button => button.points))})
       )
     }
 
   }
-  const evaluationTables = (): JSX.Element[] => {
+  const evaluationTables = ():JSX.Element[] => {
     const options = evaluationTable.map(table =>
       <option value={table.id} key={table.id}>{table.name}</option>
     )
@@ -98,23 +97,23 @@ export const AssignmentSettingsPage = ({ handleSubmit,
   }
   return (
 
-    <div className='flex flex-col overflow-y-hidden h-[calc(100vh-270px)] xl:h-[calc(100vh-360px)] '>
+    <div className='flex flex-col overflow-y-hidden h-[calc(100dvh-270px)] xl:h-[calc(100dvh-360px)] '>
       <div className="relative flex flex-col mx-[7.5%] mt-4 border border-border_gray border-1 rounded-md pt-4 px-4 fit pb-4 box-content overflow-y-auto">
         <div className='pl-3 border-l-2 border-main_blue lg:border-none pb-12 lg:pb-3'>
           <form onSubmit={(event) => handleSubmit(event)} className="flex flex-col gap-3 lg:flex-row">
             <div className='flex flex-col'>
               <div className='flex flex-row'>
-                <label className="pr-3 w-28">
-                  Tytuł:
-                </label>
-
+            <label className="pr-3 w-28">
+              Tytuł:
+            </label>
                 <input
                   name="title"
                   type="text"
+                  maxLength={255}
                   onChange={(event) => handleTextTitleChange(event)}
                   value={assignment.title}
                   placeholder="Nazwa zadania"
-                  className="pl-1 ml-2 border-b-2 border-b-light_gray w-72"
+                  className="pl-1 ml-2 border-b-2 border-b-light_gray w-72 focus:outline-none focus:border-b-main_blue"
                 />
               </div>
               <div>
@@ -122,33 +121,35 @@ export const AssignmentSettingsPage = ({ handleSubmit,
                   Opis zadania:
                 </label>
                 <textarea
+                  maxLength={1500}
                   name="taskDescription"
                   onChange={(event) => handleTextDescChange(event)}
                   value={assignment.taskDescription}
                   placeholder="Opis zadania"
-                  className="pl-1 ml-28 border border-light_gray rounded-md shadow-md w-80 min-h-[125px] mt-2 px-2 py-1"
+                  className="pl-1 focus:outline-main_blue ml-28 border border-light_gray rounded-md shadow-md w-80 min-h-[125px] mt-2 px-2 py-1"
                 />
               </div>
             </div>
             <div className='flex flex-col gap-3 w-full lg:pl-5 lg:border-l-2 lg:border-main_blue'>
               <div className='flex flex-row'>
-                <label className='w-60'>
-                  Maksymalne punkty:  </label>
-                <input
-                  disabled={chosenEvaluationTable !== -1}
-                  name="maxPoints"
-                  type="number"
-                  onChange={(event) => handleNumberChange(event)}
-                  min="0"
-                  value={assignment.maxPoints}
-                  className="pl-1 ml-2 border-b-2 border-b-light_gray cursor-pointer w-12"
-                />
+            <label className='w-60'>
+              Maksymalne punkty:  </label>
+              <input
+                disabled={chosenEvaluationTable !== -1}
+                name="maxPoints"
+                type="number"
+                onChange={(event)=>handleNumberChange(event)}
+                min="0"
+                value={assignment.maxPoints}
+                className="pl-1 ml-2 border-b-2 border-b-light_gray cursor-pointer w-12"
+              />
+
               </div>
               <div className='flex flex-row'>
-                <label className='w-60'>Wybierz tabelę: </label>
-                <select className="ml-2 pr-1 border-2 border-border_gray border-solid rounded-md" onChange={(event) => handleTableChange(event)} value={chosenEvaluationTable}>
-                  {evaluationTables()}
-                </select>
+              <label className='w-60 '>Wybierz tabelę: </label>
+              <select className="ml-2 pr-1 border-2 border-border_gray border-solid rounded-md focus:border-main_blue" onChange={(event) => handleTableChange(event)} value={chosenEvaluationTable}>
+                {evaluationTables()}
+              </select>
               </div>
               <div className='flex flex-row'>
                 <label className='w-60'>
@@ -174,8 +175,6 @@ export const AssignmentSettingsPage = ({ handleSubmit,
                   showTimeSelect
                   timeFormat="HH:mm"
                   minDate={new Date()}
-                  minTime={new Date()}
-                  maxTime={setHours(setMinutes(new Date(), 59), 23)}
                   timeIntervals={15}
                   dateFormat="yyyy-MM-dd HH:mm"
                   className="pl-1 ml-2 border-b-2 border-b-light_gray w-36 cursor-pointer"
@@ -213,23 +212,25 @@ export const AssignmentSettingsPage = ({ handleSubmit,
               </button>}
             <button
               type={"submit"}
-              className="fixed mb-2 md:bottom-16 bottom-12 right-[calc(7.5%+28px)] px-8 py-1 rounded-lg bg-main_blue text-white hover:bg-hover_blue hover:shadow-md active:shadow-none"
-            >Zapisz </button>
+              className="absolute mb-2 md:bottom-0 bottom-3 right-4 px-8 py-1 rounded-lg bg-main_blue text-white hover:bg-hover_blue hover:shadow-md active:shadow-none"
+            >
+              Zapisz
+            </button>
           </form>
-          <p className="mt-4 mb-2">Plik do zadania (1 plik o rozmiarze do 5MB): </p>
+          <p className="xl:mt-4 mb-2 mt-5">Plik do zadania (1 plik o rozmiarze do 5MB): </p>
           {(assignment as AssignmentModel).id !== undefined && newAssignmentId === undefined ?
-            <AssignmentFile
-              setNewFile={setNewFile}
-              assignmentId={(assignment as AssignmentModel).id}
-              databaseFile={databaseFile}
-            /> :
+          <AssignmentFile
+            setNewFile={setNewFile}
+            assignmentId={(assignment as AssignmentModel).id}
+            databaseFile={databaseFile}
+          />:
             <AssignmentFile
               setNewFile={setNewFile}
               assignmentId={newAssignmentId!}
             />}
         </div>
       </div>
-    </div>
+      </div>
 
   )
 }

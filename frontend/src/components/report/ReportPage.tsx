@@ -48,7 +48,7 @@ export const ReportPage = () =>{
       setReportedObject(state.reportedObject)
       setReport(state.report)
       if(state.report.assignment !== undefined){
-        const preparedData:any = (state.report as AssignmentReportModel).students
+        const preparedData:any = (state.report as AssignmentReportModel).students!
           .filter(studentResult=>studentResult!==null)
           .map(studentResult=>{
             return [studentResult.student.firstname + ' ' + studentResult.student.lastname, studentResult.resultPercent/100]
@@ -58,7 +58,7 @@ export const ReportPage = () =>{
         setHistogramData(preparedData)
       }
       else{
-        let preparedData:any = (state.report as GroupReportModel).assignments
+        let preparedData:any = (state.report as GroupReportModel).assignments!
           .filter(assignmentResult=>assignmentResult.assignment !== null)
           .map((assignmentResult)=>{
           return [assignmentResult.assignment.title, assignmentResult.avgResultPercent/100]
@@ -71,7 +71,7 @@ export const ReportPage = () =>{
   }, [state])
 
   if(report === undefined || state === undefined) return null
-  return <div className='relative flex h-[calc(100vh-332px)] overflow-hidden mb-3 justify-center'><div className='absolute h-[99.5%] border border-border_gray rounded-md  w-[1200px] box-content overflow-y-auto shadow-xl pl-8'>
+  return <div className='relative flex h-[calc(100dvh-332px)] overflow-hidden mb-3 justify-center'><div className='absolute h-[99.5%] border border-border_gray rounded-md  w-[1200px] box-content overflow-y-auto shadow-xl pl-8'>
     {(reportedObject! as AssignmentModel).title !== undefined &&
     (reportedObject! as AssignmentModel).completionDatetime !== undefined &&
     (reportedObject! as AssignmentModel).maxPoints !== undefined ?

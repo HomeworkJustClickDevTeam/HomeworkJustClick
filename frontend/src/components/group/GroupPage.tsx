@@ -9,6 +9,7 @@ import {selectRole} from "../../redux/roleSlice"
 import {useAppSelector} from "../../types/HooksRedux"
 import {useGetGroupAndRole} from "../customHooks/useGetGroupAndRole"
 import GroupLogIn from "./GroupLogIn";
+import {toast} from "react-toastify";
 
 function GroupPage() {
 
@@ -32,7 +33,14 @@ function GroupPage() {
 
     async function addToGroup() {
         await addStudentToGroupPostgresService(userState?.id as unknown as string, group?.id as unknown as string)
-            .then(() => navigate("/"))
+            .then(() => {
+                navigate("/")
+                toast.success(`Pomyślnie dołączyłeś do grupy ${group!.name}`)
+            })
+          .catch(e=>{
+              console.error(e)
+              toast.error("Coś poszło nie tak")
+          })
     }
 
 

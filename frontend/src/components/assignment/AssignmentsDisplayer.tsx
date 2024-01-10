@@ -16,6 +16,11 @@ export const AssignmentsDisplayer = ({assignments}:{assignments:AssignmentModel[
   const user = useAppSelector(selectUserState)
   const groupAssignmentsWithEvaluation = useGetAssignmentsWithEvaluationByGroupAndStudent(group?.id, user!.id)
   const assignmentsWithEvaluation = useGetAssignmentsWithEvaluationByStudent(user!.id)
+  console.log(assignments.length)
+  if(assignments.length === 0){
+    return <p className='ml-[7.5%] mt-2'>Brak</p>
+  }
+
   return (
     <ul className='box-content overflow-y-auto mb-2'>
       {assignments.map(assignment=> (

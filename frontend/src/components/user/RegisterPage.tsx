@@ -6,6 +6,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa"
 import { UserRegisterInterface } from "../../types/UserRegisterInterface"
 import { FieldValues, useForm } from "react-hook-form"
 import { useState } from "react"
+import {toast} from "react-toastify";
 
 const RegisterPage = () => {
   const {
@@ -28,6 +29,7 @@ const RegisterPage = () => {
     };
     try {
       await registerPostgresService(userFormData)
+      toast.success("Udało się zarejestrować 🎉")
       navigate("/home")
     } catch (error) {
       setError('firstname', { type: 'manual', message: '' });
@@ -44,7 +46,7 @@ const RegisterPage = () => {
       <img className="fixed left-[4%]  bottom-[6%] scale-50 xl:scale-100 -z-50" src={left_circle}
         alt="Kółko po lewej stronie"></img>
       <div className='flex justify-center items-center text-center flex-col'>
-        <h1 className='xl:mt-16 mt-8 mb-4 xl:mb-16 text-4xl xl:text-6xl ml-12'>Dołącz do nas!
+        <h1 className='xl:mt-16 mt-8 mb-4 xl:mb-8 text-4xl xl:text-6xl ml-12'>Dołącz do nas!
           <img className="relative right-8 xl:right-0  scale-50 translate-x-[25%] xl:transform-none -z-50 inline-block xl:pl-10"
             src={Smile} alt="Kółko smile"></img>
         </h1>
@@ -57,6 +59,10 @@ const RegisterPage = () => {
                 pattern: {
                   value: /^[A-Za-zĄąĆćĘęŁłŃńÓóŚśŹźŻż]+$/i,
                   message: "Imię może zawierać tylko litery"
+                },
+                maxLength: {
+                  value: 255,
+                  message: "Imię może zawierać maksymalnie 255 znaków"
                 }
               })}
               type="text"
@@ -76,6 +82,10 @@ const RegisterPage = () => {
                 pattern: {
                   value: /^[A-Za-zĄąĆćĘęŁłŃńÓóŚśŹźŻż]+-?[A-Za-zĄąĆćĘęŁłŃńÓóŚśŹźŻż]+$/i,
                   message: "Nazwisko może zawierać tylko litery i \"-\" "
+                },
+                maxLength: {
+                  value: 255,
+                  message: "Nazwisko może zawierać maksymalnie 255 znaków"
                 }
               })}
               type="text"
@@ -95,6 +105,10 @@ const RegisterPage = () => {
                 pattern: {
                   value: /\S+@\S+\.\S+/,
                   message: "Nieprawidłowy adres e-mail"
+                },
+                maxLength: {
+                  value: 255,
+                  message: "E-mail może zawierać maksymalnie 255 znaków"
                 }
               })}
               placeholder="Adres e-mail"
@@ -113,6 +127,10 @@ const RegisterPage = () => {
                 minLength: {
                   value: 8,
                   message: "Hasło musi mieć conajmnej 8 znaków"
+                },
+                maxLength: {
+                  value: 255,
+                  message: "Hasło może zawierać maksymalnie 255 znaków"
                 }
               })}
               type={showPassword ? "text" : "password"}

@@ -5,6 +5,7 @@ import { GroupCreateInterface } from "../../types/GroupCreateInterface"
 import { selectUserState } from "../../redux/userStateSlice"
 import { setHomePageIn } from "../../redux/homePageInSlice"
 import { useAppDispatch, useAppSelector } from "../../types/HooksRedux"
+import {toast} from "react-toastify";
 
 
 function GroupCreatePage() {
@@ -23,8 +24,10 @@ function GroupCreatePage() {
     try {
       await createGroupWithTeacherPostgresService(userState?.id as unknown as string, group)
       navigate("/")
+      toast.success("Pomyślnie stworzono grupę")
     } catch (e) {
       console.log(e)
+      toast.error("Coś poszło nie tak przy tworzeniu grupy")
     }
   }
 
@@ -46,24 +49,26 @@ function GroupCreatePage() {
         <input
           name="name"
           placeholder="Nazwa grupy"
+          maxLength={65}
           onChange={handleChange}
           type="text"
           value={group.name}
-          className='mb-12 border-b-2 border-b-light_gray placeholder:text-light_gray placeholder:text-base  mr-4 w-52 text-center'
+          className='mb-12 border-b-2 border-b-light_gray placeholder:text-light_gray placeholder:text-base  mr-4 w-52 text-center focus:outline-none focus:border-b-main_blue'
 
         />
         <input
           name="description"
           placeholder="Krótki opis grupy"
+          maxLength={65}
           onChange={handleChange}
           type="text"
           value={group.description}
-          className='mb-12 border-b-2 border-b-light_gray placeholder:text-light_gray placeholder:text-base w-72 text-center'
+          className='mb-12 border-b-2 border-b-light_gray placeholder:text-light_gray placeholder:text-base w-72 text-center focus:outline-none focus:border-b-main_blue'
 
         />
         <br />
         <button
-          className='px-6 py-2 border-solid border-main_blue border-2 rounded bg-main_blue text-white text-lg'>Stwórz
+          className='px-6 py-2 border-solid border-main_blue border-2 rounded bg-main_blue text-white text-lg '>Stwórz
           grupę
         </button>
       </form>
