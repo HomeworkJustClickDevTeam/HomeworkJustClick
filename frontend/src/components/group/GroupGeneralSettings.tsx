@@ -20,22 +20,15 @@ export default function GroupGeneralSettings() {
   const dispatch = useAppDispatch()
   const [updatedGroup, setUpdatedGroup] = React.useState<GroupInterface>(group!)
 
-  const groupDeletionHandler = async () => {
-    await deleteGroupPostgresService(group?.id as unknown as string)
-      .catch((error: AxiosError) => {
-        toast.error("Nie udało się usunąć grupy")
-        console.log(error)
-      })
-      .then(()=>{
-        dispatch(setGroup(null))
-        navigate("/")
-        toast.success("Usunięto grupę")
-      })
-
+  const groupDeletionHandler = () => {
+    deleteGroupPostgresService(group?.id as unknown as string)
+      .catch((error: AxiosError) => console.log(error))
+    dispatch(setGroup(null))
+    navigate("/")
   }
-  const archivizationHandler = async () => {
+  const archivizationHandler = () => {
     group?.archived
-      ? await unarchiveGroupPostgresService(group?.id as unknown as string)
+      ? unarchiveGroupPostgresService(group?.id as unknown as string)
         .catch((error: AxiosError) => console.log(error))
         .then(() =>{
           let _group = group
@@ -44,7 +37,7 @@ export default function GroupGeneralSettings() {
             dispatch(setGroup(_group))
           }
         })
-      : await archiveGroupPostgresService(group?.id as unknown as string)
+      : archiveGroupPostgresService(group?.id as unknown as string)
         .catch((error: AxiosError) => console.log(error))
         .then(() =>{
           let _group = {...group}
@@ -55,10 +48,10 @@ export default function GroupGeneralSettings() {
         })
   }
 
-  const setGroupName = async (event: React.FormEvent<HTMLFormElement>) => {
+  const setGroupName = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     if(group !== null) {
-      await changeGroupNamePostgresService(group?.id as unknown as string, updatedGroup.name)
+      changeGroupNamePostgresService(group?.id as unknown as string, updatedGroup.name)
         .then(()=>{
           toast.success("Udało się zmienić nazwę grupy.")
           dispatch(setGroup(updatedGroup))
@@ -69,12 +62,12 @@ export default function GroupGeneralSettings() {
         })
     }
   }
-  const setGroupDescription = async (
+  const setGroupDescription = (
     event: React.FormEvent<HTMLFormElement>
   ) => {
     event.preventDefault()
     if(group !== null) {
-      await changeGroupDescriptionPostgresService(group.id as unknown as string, updatedGroup.description)
+      changeGroupDescriptionPostgresService(group.id as unknown as string, updatedGroup.description)
         .then(()=>{
           toast.success("Udało się zmienić opis grupy.")
           dispatch(setGroup(updatedGroup))
@@ -90,8 +83,7 @@ export default function GroupGeneralSettings() {
       await navigator.clipboard.writeText(currentURL)
       toast.success('Link został skopiowany!')
     } catch (error) {
-      console.error(error)
-      toast.error('Wystąpił błąd przy kopiowaniu linku')
+      console.log(error)
     }
   }
   return (

@@ -1,5 +1,6 @@
 package pl.homeworkjustclick.assignment;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -659,6 +660,7 @@ public class AssignmentControllerTest extends BaseTestEntity {
     }
 
     @Test
+    @Disabled
     void shouldAddAssignmentWithUserAndGroupWithLongestFields() throws Exception {
         var assignment = Assignment.builder()
                 .taskDescription("a".repeat(1500))

@@ -2,7 +2,6 @@ package pl.homeworkjustclick.evaluationreport;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 import pl.homeworkjustclick.evaluation.Evaluation;
 
@@ -23,7 +22,7 @@ public class EvaluationReport implements Serializable {
     @Column(name = "id", updatable = false, unique = true, nullable = false)
     @Schema(example = "0")
     private Integer id;
-    @Size(max = 1500)
+    @Column(length = 1500)
     private String comment;
     @OneToOne()
     @JoinColumn(name = "evaluation_id", referencedColumnName = "id")

@@ -69,6 +69,10 @@ function AssignmentAddSettingsPageWrapper() {
       const formData = new FormData()
       formData.append('file', newFile)
       let responseMongo = await postFileMongoService(formData)
+      if(responseMongo?.status === 413){
+        toast.error("Twój plik jest za duży")
+        return
+      }
       if(responseMongo?.status !== 200) return
       response = await createFileWithAssignmentPostgresService(
         `${responseMongo.data.id}`,
