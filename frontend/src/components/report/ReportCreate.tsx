@@ -43,6 +43,7 @@ export const ReportCreate = ({reportedObject, csvVersion, closeReportCreator}:
     return (new Set(array)).size !== array.length;
   }
   const checkHistFormat = () =>{
+    if(histTextValue.length === 0) return []
     const histTextWithoutWhitespaces = histTextValue.replace(/\s+/g, '')
     if(!(/^(0|[1-9][0-9]?|100)(,(0|[1-9][0-9]?|100))*$/.test(histTextWithoutWhitespaces))){//returns undefined if histTextValue is not in correct format
       toast.error("Liczby histogramu muszą być 0-100 oddzielone spacjami")
@@ -137,7 +138,7 @@ export const ReportCreate = ({reportedObject, csvVersion, closeReportCreator}:
   }, []);
 
   if(reportCreate !== undefined) {
-    return <div className='min-w-[400px] min-h-[200px]  border-2 border-light_gray  rounded-md pl-3 shadow-lg align-center bg-lilly-bg'>
+    return <div className='relative min-w-[400px] min-h-[200px]  border-2 border-light_gray  rounded-md pl-3 shadow-lg align-center bg-lilly-bg'>
 
       <div className='text-center mb-6 mt-2 font-bold'>RAPORT</div>
 
