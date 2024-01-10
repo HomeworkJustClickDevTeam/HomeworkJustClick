@@ -34,6 +34,7 @@ import { useUpdateEffect } from "usehooks-ts"
 import {useGetCommentsByUserAndAssignment} from "../customHooks/useGetCommentsByUserAndAssignment";
 import {SolutionExtendedInterface} from "../../types/SolutionExtendedInterface";
 import {useDetermineFileType} from "../customHooks/useDetermineFileType";
+import {IoIosArrowBack} from "react-icons/io";
 
 
 
@@ -72,8 +73,8 @@ export default function AdvancedEvaluationPage() {
     return (
       <div>
         {solutionExtended.assignment.groupId !== undefined && userState?.id !== undefined &&
-        <div style={{width: "100%"}}  ref={onBackButtonRefChange}>
-          <Link to = {`/group/${solutionExtended.assignment.groupId}/solution/${solutionExtended.user.id}/${solutionExtended.assignment.id}`} state={{solution: solutionExtended}}>Wróć</Link>
+        <div className='w-full border-b border-border_gray'  ref={onBackButtonRefChange}>
+          <Link to = {`/group/${solutionExtended.assignment.groupId}/solution/${solutionExtended.user.id}/${solutionExtended.assignment.id}`} state={{solution: solutionExtended}} className='flex'><IoIosArrowBack className='ml-2 mr-1 mt-1'/>Wróć</Link>
         </div>}
           <AdvancedEvaluationCommentPanel
             onCommentPanelListRefChange={onCommentPanelListRefChange}
