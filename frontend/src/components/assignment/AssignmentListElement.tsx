@@ -20,11 +20,11 @@ function AssignmentListElement({assignment,
                                  handleGenerateReportButtonClick}: AssignmentListElementPropsInterface) {
 
   return (
-    <div className='ml-[7.5%]'>
+    <div className='ml-[7.5%] max-w-[900px]'>
       <Link to={idGroup!==undefined ? `/group/${idGroup}/assignment/${assignment.id}`: "#"} onClick={() => {handleAssignmentClick && handleAssignmentClick(assignment)}} state={optionalUserId}
             className="flex flex-row mt-4  border h-16 rounded-lg font-lato text-xl items-center  w-[900px] bg-white border-border_gray">
         <div className="flex-col ml-10 basis-3/5 ">
-          <div className='text-xl w-96  truncate text-ellipsis  h-8'>{assignment.title}</div>
+          <div className='text-xl max-w-[400px]  truncate text-ellipsis  h-8'>{assignment.title}</div>
           <div className={(CalculateIfHandedLate(assignment.completionDatetime) && resultPoints === undefined && unfoldedPieChartAssignment === undefined && handleGenerateReportButtonClick === undefined)
             ? "text-berry_red"
             : "text-border_gray"}>

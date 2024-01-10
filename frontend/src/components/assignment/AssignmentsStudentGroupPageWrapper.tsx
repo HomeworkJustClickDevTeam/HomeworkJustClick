@@ -16,7 +16,7 @@ export const AssignmentsStudentGroupPageWrapper = () =>{
   const nonExpiredUndoneAssignments = useGetAssignmentsByGroupAndStudent(group?.id, user!.id, 'nonExpiredUndone')
 
 
-  return <div className='flex flex-col h-[calc(100dvh-325px)] overflow-y-hidden'>
+  return <div className='flex flex-col xl:h-[calc(100dvh-325px)] h-[calc(100dvh-315px)] md:h-[calc(100dvh-275px)] overflow-y-hidden'>
     <AssignmentsViewPage expiredUndoneAssignments={expiredUndoneAssignments}
                          nonExpiredUndoneAssignments={nonExpiredUndoneAssignments}
                          doneAssignments={doneAssignments}

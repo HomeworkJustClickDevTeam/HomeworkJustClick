@@ -46,7 +46,7 @@ const RegisterPage = () => {
       <img className="fixed left-[4%]  bottom-[6%] scale-50 xl:scale-100 -z-50" src={left_circle}
         alt="Kółko po lewej stronie"></img>
       <div className='flex justify-center items-center text-center flex-col'>
-        <h1 className='xl:mt-16 mt-8 mb-4 xl:mb-16 text-4xl xl:text-6xl ml-12'>Dołącz do nas!
+        <h1 className='xl:mt-16 mt-8 mb-4 xl:mb-8 text-4xl xl:text-6xl ml-12'>Dołącz do nas!
           <img className="relative right-8 xl:right-0  scale-50 translate-x-[25%] xl:transform-none -z-50 inline-block xl:pl-10"
             src={Smile} alt="Kółko smile"></img>
         </h1>

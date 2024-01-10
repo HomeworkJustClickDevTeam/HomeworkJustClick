@@ -8,7 +8,7 @@ export const AssignmentsViewPage = (props:{
   doneAssignments: AssignmentModel[],
   backgroundColor: string}) =>{
   return <section className='flex flex-col box-content overflow-y-auto mb-4 '>
-    <div className={`${props.backgroundColor} mx-[7.5%] rounded-xl pt-4 pb-4`}>
+    <div className={`${props.backgroundColor} ml-[7.5%] rounded-xl pt-4 pb-4`}>
       <div>
         <p className='ml-[5.5%] font-semibold text-lg'>Zaległe niezrobione zadania:</p>
         {<AssignmentsDisplayer assignments={props.expiredUndoneAssignments}/>}

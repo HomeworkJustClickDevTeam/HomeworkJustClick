@@ -52,7 +52,7 @@ export const ReportGrade = (props:
                     </div>
                 </div>
             ) : (
-                <button className='fixed right-[calc(7.5%+25px)] mb-44 xl:mb-0 px-6 py-1 bg-berry_red text-white rounded ' onClick={() => setIsButtonClicked(true)}>Zgłoś ocenę</button>
+                <button className='fixed 2xl:right-[calc(7.5%+25px)] right-[calc(7.5%+125px)] 2xl:top-[425px] xl:mb-0 px-6 py-1 bg-berry_red text-white rounded ' onClick={() => setIsButtonClicked(true)}>Zgłoś ocenę</button>
             )}
         </>
     )
